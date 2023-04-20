@@ -65,14 +65,12 @@
 get_mun_census_data <-
   function(type_elec, year, month) {
 
-    # Code of election
-    cod_elec <- type_to_code_election(type_elec = type_elec)
-
     # Check: if elections required are allowed
     char_month <- str_pad(month, pad = "0", width = 2)
     join_result <-
       dates_elections_spain |>
-      inner_join(tibble(cod_elec, type_elec, year, month),
+      inner_join(tibble(cod_elec = type_to_code_election(type_elec),
+                        type_elec, year, month),
                  by = c("cod_elec", "type_elec", "year", "month")) |>
       nrow()
     if (join_result == 0) {
@@ -81,14 +79,14 @@ get_mun_census_data <-
 
     }
 
-    # Build query
-    query <- tibble(type_elec, year, month)
+    # Raw data
+    historical_raw_mun_data <-
+      read_csv(file = "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/historical_raw_mun_data.csv")
 
     # Collect poll stations data (polling station level)
     mun_data <-
-      query |>
-      rowwise() |>
-      reframe(import_raw_mun_MIR_files(type_elec, year, month))
+      historical_raw_mun_data |>
+      filter(type_elec == type_elec & year == year & month == month)
 
     # Join MIR and INE information
     mun_data <-

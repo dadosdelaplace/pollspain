@@ -165,15 +165,14 @@ historical_raw_candidates_senate <-
   reframe(import_raw_candidates_file(type_elec, year, month))
 
 # ----- use data -----
-usethis::use_data(historical_raw_candidates_congress, overwrite = TRUE,
-                  compress = "xz")
-usethis::use_data(historical_raw_candidates_senate, overwrite = TRUE,
+historical_raw_candidates <-
+  bind_rows(historical_raw_candidates_congress,
+            historical_raw_candidates_senate)
+usethis::use_data(historical_raw_candidates, overwrite = TRUE,
                   compress = "xz")
 
 # ----- write_csv -----
-write_csv(historical_raw_candidates_congress,
-          "./data/historical_raw_candidates_congress.csv")
-write_csv(historical_raw_candidates_senate,
-          "./data/historical_raw_candidates_senate.csv")
+write_csv(historical_raw_candidates,
+          "./data/historical_raw_candidates.csv")
 
 
