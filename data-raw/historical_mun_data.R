@@ -154,7 +154,7 @@ usethis::use_data(historical_raw_mun_data_congress, overwrite = TRUE,
 
 # ----- write_csv -----
 write_csv(historical_raw_mun_data_congress,
-          "./data/historical_raw_mun_congress.csv")
+          "./data/historical_raw_mun_data_congress.csv")
 
 
 
