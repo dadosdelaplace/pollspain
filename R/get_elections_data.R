@@ -86,7 +86,8 @@ get_mun_census_data <-
     # Collect poll stations data (polling station level)
     mun_data <-
       historical_raw_mun_data |>
-      filter(type_elec == type_elec & year == year & month == month)
+      filter(type_elec %in% type_elec & year(date_elec) %in% year &
+               month(date_elec) %in% month)
 
     # Join MIR and INE information
     mun_data <-
