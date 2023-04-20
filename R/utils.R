@@ -216,6 +216,9 @@ extract_code <-
 #' @export
 import_raw_candidacies_file <-
   function(type_elec, year, month,
+           agg_level =
+             if_else(cod_elec == "01", "TOTA",
+                     if_else(cod_elec == "04", "MUNI", "MESA")),
            base_url =
              "https://infoelectoral.interior.gob.es/estaticos/docxl/apliextr/",
            encoding = "Latin1", starts = c(1, 3, 7, 9, 15, 65, 215, 221, 227),
@@ -252,14 +255,13 @@ import_raw_candidacies_file <-
     }
 
     # Build the url (.zip file)
-    url <- glue("{base_url}{cod_elec}{year}{char_month}_MESA.zip")
+    url <- glue("{base_url}{cod_elec}{year}{char_month}_{agg_level}.zip")
 
     # Build temporal directory
     temp <- tempfile(tmpdir = tempdir(), fileext = ".zip")
     download.file(url, temp, mode = "wb")
     unzip(temp, overwrite = TRUE, exdir = tempdir())
 
-    # Import raw data (files 03 from MIR)
     path <-
       glue("{tempdir()}/03{cod_elec}{str_sub(year, start = 3, end = 4)}{char_month}.DAT")
     raw_file <-
