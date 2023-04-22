@@ -67,8 +67,6 @@ get_mun_census_data <-
   function(type_elec, year, month) {
 
     # Check: if elections required are allowed
-    char_month <- str_pad(month, pad = "0", width = 2)
-
     elections_allowed <-
       dates_elections_spain |>
       inner_join(tibble(cod_elec = type_to_code_election(type_elec),
@@ -82,7 +80,6 @@ get_mun_census_data <-
     }
 
     # Set of urls
-
     url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/csv/mun_data"
     urls <- glue("{url_raw_data}/raw_mun_data_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
 
@@ -166,8 +163,12 @@ get_mun_census_data <-
 get_poll_station_data <-
   function(type_elec, year, month, prec_round = 3) {
 
-    # Code of election
-    cod_elec <- type_elec |> map_chr(type_to_code_election)
+    elections_allowed <-
+      dates_elections_spain |>
+      inner_join(tibble(cod_elec = type_to_code_election(type_elec),
+                        type_elec, year, month),
+                 by = c("cod_elec", "type_elec", "year", "month"))
+    join_result <- elections_allowed |> nrow()
 
     # Check: if elections required are allowed
     join_result <-
@@ -187,6 +188,16 @@ get_poll_station_data <-
       stop("Parameter 'prec_round' must be a positive integer greater than 0")
 
     }
+
+    # Set of urls
+    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/csv/mun_data"
+    urls <- glue("{url_raw_data}/raw_mun_data_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
+
+    # Collect raw data
+    mun_data <-
+      urls |>
+      map_dfr(function(x) { read_csv(file = x, show_col_types = FALSE) })
+
 
     # Build query
     query <- tibble(type_elec, year, month)
