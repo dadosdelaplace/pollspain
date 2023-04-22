@@ -1,4 +1,11 @@
 
+#
+# cod_elec, type_elec: type of election
+# date_elec: date of election
+# id_candidacies, abbrev_candidacies, name_candidacies: id,
+# abbreviation and name of candidacies
+# cod_candidacies_prov, cod_candidacies_ccaa, cod_candidacies_nat
+
 # ----- packages -----
 
 library(tidyverse)

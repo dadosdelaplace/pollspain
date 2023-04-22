@@ -1,4 +1,17 @@
 
+#
+# cod_elec, type_elec: type of election
+# date_elec: date of election
+# turn: (except referendums, first turn)
+# cod_INE_prov: INE code for province
+# cod_mun_district: cod municipal district
+# cod_INE_mun: cod for municipalities
+# id_candidacies: id of candidacies
+# order: order of candidate
+# holder: holder positions?
+# name, surname, sex, id_card: data about candidate
+# elected: was it elected?
+
 # ----- packages -----
 
 library(tidyverse)
@@ -168,6 +181,7 @@ historical_raw_candidates_senate <-
 historical_raw_candidates <-
   bind_rows(historical_raw_candidates_congress,
             historical_raw_candidates_senate)
+
 usethis::use_data(historical_raw_candidates, overwrite = TRUE,
                   compress = "xz")
 

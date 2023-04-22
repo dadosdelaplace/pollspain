@@ -1,3 +1,17 @@
+
+#
+# cod_elec, type_elec: type of election
+# date_elec: date of election
+# id_MIR_mun: MIR's id for the municipalities
+# cod_MIR_ccaa: MIR's code for ccaa
+# cod_INE_prov, cod_INE_mun: INE's code for province and mun
+# cod_mun_jud_district, cod_mun_prov_council
+# n_poll_stations: number of poll stations
+# pop_res_mun: census of people who are living (CER + CERA).
+# census_INE_mun: people from pop_res_mun who are allowed to vote
+# census_counting_mun: people from census_INE_mun after claims
+# census_CERE_mun: census of foreigners, just for EU elections.
+
 # ----- packages -----
 
 library(tidyverse)
