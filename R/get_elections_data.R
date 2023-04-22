@@ -30,6 +30,7 @@
 #' municipalities.}
 #' \item{cod_mun_jud_district, cod_mun_prov_council}{codes of judicial
 #' district and province council.}
+#' \item{n_poll_stations}{number of poll stations at each mun}
 #' \item{pop_res_mun}{census of people who are living (CER + CERA).}
 #' \item{census_INE_mun}{people from \code{pop_res_mun} who are
 #' allowed to vote.}
@@ -63,31 +64,32 @@
 #'
 #' @export
 get_mun_census_data <-
-  function(type_elec, year, month,
-           url_raw_data = "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/historical_raw_mun_data.csv") {
+  function(type_elec, year, month) {
 
     # Check: if elections required are allowed
     char_month <- str_pad(month, pad = "0", width = 2)
-    join_result <-
+
+    elections_allowed <-
       dates_elections_spain |>
       inner_join(tibble(cod_elec = type_to_code_election(type_elec),
                         type_elec, year, month),
-                 by = c("cod_elec", "type_elec", "year", "month")) |>
-      nrow()
+                 by = c("cod_elec", "type_elec", "year", "month"))
+    join_result <- elections_allowed |> nrow()
     if (join_result == 0) {
 
       stop(glue("No {type_elec} elections are available in {char_month}-{year}"))
 
     }
 
-    # Raw data
-    historical_raw_mun_data <- read_csv(file = url_raw_data)
+    # Set of urls
 
-    # Collect poll stations data (polling station level)
+    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/csv/mun_data"
+    urls <- glue("{url_raw_data}/raw_mun_data_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
+
+    # Collect raw data
     mun_data <-
-      historical_raw_mun_data |>
-      filter(type_elec %in% type_elec & year(date_elec) %in% year &
-               month(date_elec) %in% month)
+      urls |>
+      map_dfr(function(x) { read_csv(file = x, show_col_types = FALSE) })
 
     # Join MIR and INE information
     mun_data <-
@@ -103,13 +105,12 @@ get_mun_census_data <-
       relocate(id_INE_mun, .before = id_MIR_mun) |>
       relocate(cd_INE_mun, mun, .after = cod_INE_mun) |>
       relocate(ccaa, .after = cod_MIR_ccaa) |>
-      relocate(prov, .after = cod_INE_prov) |>
-      # Remove variables
-      select(-n_poll_stations)
+      relocate(prov, .after = cod_INE_prov)
 
     # output
     return(mun_data)
 }
+
 
 
 # # poll_station_data <- get_poll_station_data("congress", 2019, 4)
