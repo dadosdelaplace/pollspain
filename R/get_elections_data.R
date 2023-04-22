@@ -63,7 +63,8 @@
 #'
 #' @export
 get_mun_census_data <-
-  function(type_elec, year, month) {
+  function(type_elec, year, month,
+           url_raw_data = "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/historical_raw_mun_data.csv") {
 
     # Check: if elections required are allowed
     char_month <- str_pad(month, pad = "0", width = 2)
@@ -80,8 +81,7 @@ get_mun_census_data <-
     }
 
     # Raw data
-    historical_raw_mun_data <-
-      read_csv(file = "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/historical_raw_mun_data.csv")
+    historical_raw_mun_data <- read_csv(file = url_raw_data)
 
     # Collect poll stations data (polling station level)
     mun_data <-

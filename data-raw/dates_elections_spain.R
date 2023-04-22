@@ -75,4 +75,4 @@ usethis::use_data(dates_elections_spain, overwrite = TRUE,
                   compress = "xz")
 
 # ----- write_csv -----
-write_csv(dates_elections_spain, "./data/dates_elections_spain.csv")
+write_csv(dates_elections_spain, "./data/csv/dates_elections_spain.csv")

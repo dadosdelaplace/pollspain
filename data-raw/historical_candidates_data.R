@@ -172,7 +172,16 @@ usethis::use_data(historical_raw_candidates, overwrite = TRUE,
                   compress = "xz")
 
 # ----- write_csv -----
-write_csv(historical_raw_candidates,
-          "./data/historical_raw_candidates.csv")
+historical_raw_candidates |>
+  split(historical_raw_candidates$type_elec) |>
+  map(function(x) { split(x, x$date_elec) }) |>
+  map(function(y) { map(y, function(x) {
+    write_csv(x, file =
+                glue("./data/csv/candidates/raw_candidates_{unique(x$type_elec)}_{year(unique(x$date_elec))}_{month(unique(x$date_elec))}.csv"))})})
+
+# ----- delete -----
+rm(list = c("historical_raw_candidates",
+            "historical_raw_candidates_congress",
+            "historical_raw_candidates_senate"))
 
 
