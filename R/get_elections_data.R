@@ -69,6 +69,7 @@ get_mun_census_data <-
     # Check: if elections required are allowed
     elections_allowed <-
       dates_elections_spain |>
+      filter(year >= 1986) |>
       inner_join(tibble(cod_elec = type_to_code_election(type_elec),
                         type_elec, year, month),
                  by = c("cod_elec", "type_elec", "year", "month"))
@@ -79,14 +80,12 @@ get_mun_census_data <-
 
     }
 
-    # Set of urls
-    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/csv/mun_data"
-    urls <- glue("{url_raw_data}/raw_mun_data_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
-
     # Collect raw data
     mun_data <-
-      urls |>
-      map_dfr(function(x) { read_csv(file = x, show_col_types = FALSE) })
+      historical_raw_mun_data |>
+      filter(type_elec %in% type_elec &
+               year(date_elec) %in% year &
+               month(date_elec) %in% month)
 
     # Join MIR and INE information
     mun_data <-
@@ -163,19 +162,15 @@ get_mun_census_data <-
 get_poll_station_data <-
   function(type_elec, year, month, prec_round = 3) {
 
+    # Check: if elections required are allowed
     elections_allowed <-
       dates_elections_spain |>
+      filter(year >= 1986) |>
       inner_join(tibble(cod_elec = type_to_code_election(type_elec),
                         type_elec, year, month),
                  by = c("cod_elec", "type_elec", "year", "month"))
     join_result <- elections_allowed |> nrow()
 
-    # Check: if elections required are allowed
-    join_result <-
-      dates_elections_spain |>
-      inner_join(tibble(cod_elec, year, month),
-                 by = c("cod_elec", "year", "month")) |>
-      nrow()
     if (join_result == 0) {
 
       stop("No elections on provided dates are available")
@@ -190,23 +185,13 @@ get_poll_station_data <-
     }
 
     # Set of urls
-    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/csv/mun_data"
-    urls <- glue("{url_raw_data}/raw_mun_data_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
+    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/csv/pollstation"
+    urls <- glue("{url_raw_data}/raw_poll_station_data_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
 
     # Collect raw data
-    mun_data <-
-      urls |>
-      map_dfr(function(x) { read_csv(file = x, show_col_types = FALSE) })
-
-
-    # Build query
-    query <- tibble(type_elec, year, month)
-
-    # Collect poll stations data (polling station level)
     poll_stations_file <-
-      query |>
-      rowwise() |>
-      reframe(import_poll_stations_MIR_files(type_elec, year, month)) |>
+      urls |>
+      map_dfr(function(x) { read_csv(file = x, show_col_types = FALSE) }) |>
       # Some basic statistics
       mutate(valid_ballots = blank_ballots + party_ballots,
              total_ballots = valid_ballots + invalid_ballots)
@@ -271,7 +256,7 @@ get_poll_station_data <-
       relocate(turnout_1, .after = ballots_1) |>
       relocate(turnout_2, .after = ballots_2)
 
-    # Select just a few variables
+    # Select just few variables
     poll_station_data <-
       poll_station_data |>
       mutate(id_INE_poll_station =

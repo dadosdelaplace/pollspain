@@ -9,9 +9,13 @@
 
 # ----- problemas -----
 
-# conflicto: agregar por partidos cuando no se ha incluido el dato
-# elecciones fuera de congreso de momento no testado ni prohibido
-# ver cuando se usa turn
+# summary data para senado da NA --> ver que sucede
+#
+
+# ----- check -----
+
+# summary data a nivel nacional coincide (tanto sin como con partidos)
+#
 
 # ----- mejoras -----
 
