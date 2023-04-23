@@ -108,33 +108,6 @@ get_mun_census_data <-
 }
 
 
-
-# # poll_station_data <- get_poll_station_data("congress", 2019, 4)
-# poll_station_data |>
-#   distinct(cod_elec, date_elec, id_INE_mun, .keep_all = TRUE) |>
-#   summarise(censo_INE_mun_files = sum(census_INE_mun),
-#             censo_escrutinio_mun_files = sum(census_counting_mun))
-# Censo escrutinio de mun files cuadra con
-# https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/resultados-electorales/
-# # A tibble: 1 × 2
-# censo_INE_mun_files censo_escrutinio_mun_files
-# <dbl>                      <dbl>
-#   1            36898570                   36898883
-
-# Censo escrutinio de file09 no cuadra con
-# https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/resultados-electorales/
-# todo lo demás sí
-# 60 038 mesas + 52 CERA = 60 090
-# poll_station_data |>
-#   summarise(censo_INE_mesas = sum(census_INE),
-#             censo_escrutinio_mesas = sum(census_counting),
-#             validos = sum(valid_ballots), nulos = sum(invalid_ballots),
-#             total = validos + nulos,
-#             porc_validos = round(100 * validos / total, 3),
-#             porc_nulos = round(100 * nulos / total, 3),
-#             blanco = sum(blank_ballots), partidos = sum(party_ballots),
-#             turnout = round(100 * total/censo_escrutinio_mesas, 3))
-
 #' @title Get poll station data
 #'
 #' @description ...
@@ -299,35 +272,31 @@ get_poll_station_data <-
 get_candidates_data <-
   function(type_elec, year, month) {
 
-    # Code of election
-    cod_elec <- type_elec |> map_chr(type_to_code_election)
-
     # Check: if elections required are allowed
-    char_month <- str_pad(month, pad = "0", width = 2)
-    join_result <-
+    elections_allowed <-
       dates_elections_spain |>
-      inner_join(tibble(cod_elec, year, month),
-                 by = c("cod_elec", "year", "month")) |>
-      nrow()
+      filter(year >= 1986) |>
+      inner_join(tibble(cod_elec = type_to_code_election(type_elec),
+                        type_elec, year, month),
+                 by = c("cod_elec", "type_elec", "year", "month"))
+    join_result <- elections_allowed |> nrow()
     if (join_result == 0) {
 
       stop("No elections on provided dates are available")
 
     }
 
-    # Build query
-    query <- tibble(type_elec, year, month)
-
     # Collect candidates data
     candidates_data <-
-      query |>
-      rowwise() |>
-      summarise(import_raw_candidates_file(type_elec, year, month)) |>
-      # mun district = "9" when elections are not that circumscription
+      historical_raw_candidates |>
+      filter(type_elec %in% type_elec &
+               year(date_elec) %in% year &
+               month(date_elec) %in% month) |>
+      # cod_mun_district = "9" when elections have not that circumscription
       # cod_INE_mun just for municipalities' elections or
       #  Senate's elections (senator's code). Otherwise, cod_INE_mun = "999"
       mutate(cod_mun_district =
-               ifelse(cod_mun_district == "9", NA, cod_district),
+               ifelse(cod_mun_district == "9", NA, cod_mun_district),
              cod_INE_mun =
                ifelse(cod_INE_mun == "999", NA, cod_INE_mun))
 
@@ -336,7 +305,7 @@ get_candidates_data <-
 }
 
 
-#' @title Get candidacies data
+#' @title Get candidacies data (at poll station level)
 #'
 #' @description ...
 #'
@@ -364,16 +333,14 @@ get_candidates_data <-
 get_candidacies_data <-
   function(type_elec, year, month, include_candidates = FALSE) {
 
-    # Code of election
-    cod_elec <- type_elec |> map_chr(type_to_code_election)
-
     # Check: if elections required are allowed
-    char_month <- str_pad(month, pad = "0", width = 2)
-    join_result <-
+    elections_allowed <-
       dates_elections_spain |>
-      inner_join(tibble(cod_elec, year, month),
-                 by = c("cod_elec", "year", "month")) |>
-      nrow()
+      filter(year >= 1986) |>
+      inner_join(tibble(cod_elec = type_to_code_election(type_elec),
+                        type_elec, year, month),
+                 by = c("cod_elec", "type_elec", "year", "month"))
+    join_result <- elections_allowed |> nrow()
     if (join_result == 0) {
 
       stop("No elections on provided dates are available")
@@ -387,18 +354,18 @@ get_candidacies_data <-
 
     }
 
-    # Build query
-    query <- tibble(type_elec, year, month)
+    # Set of urls
+    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/csv/candidacies_pollstation"
+    urls <- glue("{url_raw_data}/raw_candidacies_poll_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
 
-    # Collect candidacies ballots (polling station level)
-    candidacies_ballots <-
-      query |>
-      rowwise() |>
-      reframe(import_raw_candidacies_poll_file(type_elec, year, month))
+    # Collect raw data
+    candidacies_files <-
+      urls |>
+      map_dfr(function(x) { read_csv(file = x, show_col_types = FALSE) })
 
     # Join MIR and INE information
     candidacies_ballots <-
-      candidacies_ballots |>
+      candidacies_files |>
       left_join(cod_INE_mun |> # First include CERA codes
                   bind_rows(cod_INE_mun |>
                               distinct(cod_INE_ccaa, cod_INE_prov,
@@ -424,16 +391,13 @@ get_candidacies_data <-
                cod_INE_prov, prov, cod_INE_mun,
                cd_INE_mun, mun, .after = id_MIR_mun)
 
-    # Collect candidacies data
-    candidacies_files <-
-      query |>
-      rowwise() |>
-      reframe(import_raw_candidacies_file(type_elec, year, month))
-
     # Join candidacies data
     candidacies_data <-
       candidacies_ballots |>
-      left_join(candidacies_files,
+      left_join(historical_raw_candidacies |>
+                  filter(type_elec %in% type_elec &
+                           year(date_elec) %in% year &
+                           month(date_elec) %in% month),
                 by = c("cod_elec", "type_elec",
                        "date_elec", "id_candidacies"))
 
@@ -467,7 +431,9 @@ get_candidacies_data <-
                candidate_order, candidate_holder, candidate_sex,
                candidate_elected)
 
-    } else { # Without candidates file but n elected
+    } else {
+
+      # Without candidates files but number of elected
 
       # Collect candidates files
       candidates_files <- get_candidates_data(type_elec, year, month)
@@ -507,6 +473,7 @@ get_candidacies_data <-
     # output
     return(candidacies_data)
   }
+
 
 #' @title Get elections data
 #'

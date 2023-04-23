@@ -10,12 +10,13 @@
 # ----- problemas -----
 
 # summary data para senado da NA --> ver que sucede
-#
+# muchos DNI de candidatos (en historical_raw_candidates) vacíos
+# get_candidacies_data() da error con include_candidates = TRUE
 
 # ----- check -----
 
 # summary data a nivel nacional coincide (tanto sin como con partidos)
-#
+
 
 # ----- mejoras -----
 
