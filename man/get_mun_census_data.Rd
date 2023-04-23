@@ -41,6 +41,7 @@ municipalities.}
 municipalities.}
 \item{cod_mun_jud_district, cod_mun_prov_council}{codes of judicial
 district and province council.}
+\item{n_poll_stations}{number of poll stations at each mun}
 \item{pop_res_mun}{census of people who are living (CER + CERA).}
 \item{census_INE_mun}{people from \code{pop_res_mun} who are
 allowed to vote.}
