@@ -31,7 +31,7 @@ install.packages("devtools") # only if not already installed
 devtools::install_github("dadosdelaplace/pollspain")
 ```
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE}
 devtools::install_github("dadosdelaplace/pollspain")
 ```
 
@@ -45,6 +45,8 @@ library(pollspain)
 
 #### Census data
 
+
+Variables concerning population (`pop_res_mun`, `census_INE_mun`, `census_counting_mun`, `census_CERE_mun`)
 
 ```{r}
 mun_census_data <- get_mun_census_data("congress", 2019, 4)

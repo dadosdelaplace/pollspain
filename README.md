@@ -20,17 +20,14 @@ install.packages("devtools") # only if not already installed
 devtools::install_github("dadosdelaplace/pollspain")
 ```
 
-    #> Downloading GitHub repo dadosdelaplace/pollspain@HEAD
     #> 
     #> ── R CMD build ─────────────────────────────────────────────────────────────────
-    #> * checking for file ‘/private/var/folders/v8/rwlp504x0_s2b89pn8yrb6km0000gn/T/RtmpPJTghs/remotes456f4a0661e0/dadosdelaplace-pollspain-a60659c/DESCRIPTION’ ... OK
+    #> * checking for file ‘/private/var/folders/v8/rwlp504x0_s2b89pn8yrb6km0000gn/T/Rtmp6zMEwN/remotes47ea4ed20f1a/dadosdelaplace-pollspain-a60659c/DESCRIPTION’ ... OK
     #> * preparing ‘pollspain’:
     #> * checking DESCRIPTION meta-information ... OK
     #> * checking for LF line-endings in source and make files and shell scripts
     #> * checking for empty or unneeded directories
     #> * building ‘pollspain_0.1.0.9000.tar.gz’
-    #> Installing package into '/private/var/folders/v8/rwlp504x0_s2b89pn8yrb6km0000gn/T/RtmpfS6LqJ/temp_libpath42e458e967b'
-    #> (as 'lib' is unspecified)
 
 ``` r
 library(pollspain)
@@ -39,6 +36,11 @@ library(pollspain)
 ## Usage
 
 ### get functions
+
+#### Census data
+
+Variables concerning population (`pop_res_mun`, `census_INE_mun`,
+`census_counting_mun`, `census_CERE_mun`)
 
 ``` r
 mun_census_data <- get_mun_census_data("congress", 2019, 4)
