@@ -22,7 +22,7 @@ devtools::install_github("dadosdelaplace/pollspain")
 
     #> 
     #> ── R CMD build ─────────────────────────────────────────────────────────────────
-    #> * checking for file ‘/private/var/folders/v8/rwlp504x0_s2b89pn8yrb6km0000gn/T/Rtmp4d3m57/remotes5ced79466a5/dadosdelaplace-pollspain-a60659c/DESCRIPTION’ ... OK
+    #> * checking for file ‘/private/var/folders/v8/rwlp504x0_s2b89pn8yrb6km0000gn/T/RtmpIqUQ2y/remotes65f6213cc128/dadosdelaplace-pollspain-a60659c/DESCRIPTION’ ... OK
     #> * preparing ‘pollspain’:
     #> * checking DESCRIPTION meta-information ... OK
     #> * checking for LF line-endings in source and make files and shell scripts

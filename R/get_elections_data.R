@@ -469,6 +469,9 @@ get_candidacies_data <-
 
     }
 
+    # Recoding parties
+    candidacies_data <-
+      candidacies_data |> recod_parties()
 
     # output
     return(candidacies_data)
@@ -615,7 +618,7 @@ aggregate_election_data <-
 
     # Check: if level takes allowed values
     if (!(level %in% c("all", "ccaa", "prov", "mun",
-                    "mun-district", "sec", "poll-station"))) {
+                       "mun-district", "sec", "poll-station"))) {
 
       stop("Aggregation level provided by 'level' parameter should be taken from the following values: 'all', 'ccaa', 'prov', 'mun', 'mun-district', 'sec', 'poll-station'")
 
