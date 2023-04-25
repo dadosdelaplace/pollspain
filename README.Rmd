@@ -43,16 +43,42 @@ library(pollspain)
 
 ### get functions
 
-#### Census data
+#### Censo (nivel: municipal)
 
 
-Variables concerning population (`pop_res_mun`, `census_INE_mun`, `census_counting_mun`, `census_CERE_mun`)
+Variables relativas a población (`pop_res_mun`, `census_INE_mun`, `census_counting_mun`, `census_CERE_mun`)
 
 ```{r}
 mun_census_data <- get_mun_census_data("congress", 2019, 4)
 mun_census_data
 ```
 
+#### Datos de mesas electorales (nivel: mesa electoral)
+
+Datos generales de participación, votos en blanco, votos a candidaturas, etc.
+
+```{r}
+poll_data <- get_poll_station_data("congress", 2019, c(4, 11))
+poll_data
+```
+
+#### Datos de candidatos/as (nivel: circunscripción electoral)
+
+Datos de los/as candidatos que forman las listas (por circunscripción provincial en las generales)
+
+```{r}
+candidates_data <- get_candidates_data("congress", 2019, c(4, 11))
+candidates_data 
+```
+
+#### Datos de candidaturas (nivel: mesa electoral)
+
+Datos de las candidaturas por mesa electoral, con los votos obtenidos en cada mesa para cada candidatura, así como los electos por provincia obtenidos
+
+```{r}
+candidacies_data <- get_candidacies_data("congress", 2019, c(4, 11))
+candidacies_data
+```
 
 
 
