@@ -46,7 +46,8 @@
 #' @examples
 #'
 #' ## Get mun census data
-#'
+#' data("dates_elections_spain")
+#' \dontrun{
 #' # Right examples
 #' mun_census_data <- get_mun_census_data("congress", 2019, 4)
 #' mun_census_data <- get_mun_census_data("senate", 2019, 11)
@@ -55,7 +56,6 @@
 #'                                        c(11, 4, 6))
 #' mun_census_data <- get_mun_census_data(c("congress", "senate"),
 #'                                        c(2019, 2019), c(11, 4))
-#' \dontrun{
 #' # Wrong examples
 #' mun_census_data <- get_mun_census_data("national", 2019, 4)
 #' mun_census_data <- get_mun_census_data("congress", 2016, c(4, 11))
@@ -478,14 +478,254 @@ get_candidacies_data <-
   }
 
 
-#' @title Get elections data
+#' @title Get candidacies data (at poll station level)
 #'
 #' @description ...
 #'
-#' @inheritParams get_candidacies_data
-#' @inheritParams get_poll_station_data
-#' @param include_candidacies flag to indicate wheter it should be included data
-#' about candidacies or not. Defaults to \code{FALSE}.
+#' @inheritParams get_mun_census_data
+#' @param include_candidates flag to indicate wheter it should be included data
+#' about candidates or not. Defaults to \code{FALSE}.
+#'
+#' @return ...
+#'
+#' @author Javier Álvarez-Liébana.
+#' @source ...
+#' @keywords get_elections_data
+#' @name get_CERA_data
+#'
+#' @examples
+#'
+#' ## Get candidacies data
+#'
+#' # Right examples
+#' \dontrun{
+#' # Wrong examples
+#' }
+#'
+#' @export
+get_CERA_data <-
+  function(election_data, id_col = "id_INE_poll_station",
+           level = "all", cod_CERA = "999", prec_round = 3) {
+
+    # Aggregation of data
+    hierarchy_levels <- c("ccaa", "prov", "mun", "mun_district",
+                          "sec", "poll_station")
+    if (level == "all") {
+
+      levels <- "all"
+      group_vars <- "id_elec"
+
+    } else {
+
+      levels <- hierarchy_levels[1:which(hierarchy_levels == level)]
+      if (length(levels) <= 3) { # at mun level
+
+        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels)
+
+      } else {
+
+        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels[1:3])
+      }
+
+    }
+
+    # CERA summaries
+    data_cera <-
+      election_data |>
+      # Just CERA rows
+      filter(extract_code(.data[[id_col]], level = "mun") == cod_CERA) |>
+      group_by(across(group_vars)) |>
+      distinct(.data[[id_col]], .keep_all = TRUE) |>
+      reframe(type_elec = unique(type_elec),
+              date_elec = unique(date_elec),
+              census_cera = sum(census_counting),
+              total_ballots_cera = sum(total_ballots),
+              turnout_cera =
+                round(100 * total_ballots_cera / census_cera, prec_round)) |>
+      ungroup()
+
+    # Output
+    return(data_cera)
+
+  }
+
+#' @title Get candidacies data (at poll station level)
+#'
+#' @description ...
+#'
+#' @inheritParams get_mun_census_data
+#' @param include_candidates flag to indicate wheter it should be included data
+#' about candidates or not. Defaults to \code{FALSE}.
+#'
+#' @return ...
+#'
+#' @author Javier Álvarez-Liébana.
+#' @source ...
+#' @keywords get_elections_data
+#' @name aggregate_election_data
+#'
+#' @examples
+#'
+#' ## Get candidacies data
+#'
+#' # Right examples
+#' \dontrun{
+#' # Wrong examples
+#' }
+#'
+#' @export
+aggregate_election_data <-
+  function(election_data, level = "all", id_col = "id_INE_poll_station",
+           cod_CERA = "999", prec_round = 3) {
+
+    # Remove duplicates
+    election_data <-
+      election_data |>
+      distinct(id_elec, .data[[id_col]], .keep_all = TRUE)
+
+    # extract cod by level
+    if (level != "all") {
+
+      hierarchy_levels <- c("ccaa", "prov", "mun", "mun_district",
+                            "sec", "poll_station")
+
+      levels <- hierarchy_levels[1:which(hierarchy_levels == level)]
+
+      for (i in 1:length(levels)) {
+
+        election_data <-
+          election_data |>
+          mutate("cod_INE_{levels[i]}" :=
+                   extract_code(.data[[id_col]], level = levels[i]),
+                 .after = .data[[id_col]])
+
+      }
+    }
+
+    # Aggregation of data
+    if (level == "all") {
+
+      levels <- "all"
+      group_vars <- "id_elec"
+
+    } else {
+
+      if (length(levels) <= 3) { # at mun level
+
+        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels)
+
+      } else {
+
+        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels[1:3])
+      }
+
+    }
+
+    # n_poll_stations CERA data
+    if (length(levels) <= 2) { # at province level or greater
+
+      n_poll_stations_CERA <-
+        election_data |>
+        filter(mun == "CERA") |>
+        reframe(n_poll_stations = n(), .by = group_vars)
+
+      agg_data <-
+        election_data |>
+        left_join(n_poll_stations_CERA, by = group_vars) |>
+        # Replace NA
+        mutate(n_poll_stations = replace_na(n_poll_stations, 0)) |>
+        # Summary
+        reframe(type_elec = unique(type_elec),
+                date_elec = unique(date_elec),
+                n_poll_stations =
+                  n_distinct(.data[[id_col]]) - unique(n_poll_stations),
+                across(c("census_counting", "ballots_1",
+                         "ballots_2", "blank_ballots":"total_ballots"), sum),
+                turnout =
+                  round(100 * total_ballots / census_counting, prec_round),
+                porc_valid =
+                  round(100 * valid_ballots / total_ballots, prec_round),
+                porc_invalid =
+                  round(100 * invalid_ballots / total_ballots, prec_round),
+                porc_parties =
+                  round(100 * party_ballots / valid_ballots, prec_round),
+                porc_blank =
+                  round(100 * blank_ballots / valid_ballots, prec_round),
+                .by = group_vars)
+
+    } else {
+
+      agg_data <-
+        election_data |>
+        # Summary
+        reframe(type_elec = unique(type_elec),
+                date_elec = unique(date_elec),
+                n_poll_stations = n_distinct(.data[[id_col]]),
+                across(c("census_counting", "ballots_1",
+                         "ballots_2", "blank_ballots":"total_ballots"), sum),
+                turnout =
+                  round(100 * total_ballots / census_counting, prec_round),
+                porc_valid =
+                  round(100 * valid_ballots / total_ballots, prec_round),
+                porc_invalid =
+                  round(100 * invalid_ballots / total_ballots, prec_round),
+                porc_parties =
+                  round(100 * party_ballots / valid_ballots, prec_round),
+                porc_blank =
+                  round(100 * blank_ballots / valid_ballots, prec_round),
+                .by = group_vars) |>
+        mutate(n_poll_stations = if_else(mun == "CERA", 0, n_poll_stations))
+
+    }
+
+    agg_data <-
+      agg_data |>
+      left_join(get_CERA_data(election_data, id_col = id_col,
+                              level = level, cod_CERA = cod_CERA,
+                              prec_round = prec_round),
+                by = group_vars, suffix = c("", ".y")) |>
+      select(-contains(".y")) |>
+      # turnout_1 and turnout_2 over counting census without cera.
+      mutate(turnout_1 =
+               round(100 * ballots_1 / (census_counting - census_cera),
+                     prec_round),
+             turnout_2 =
+               round(100 * ballots_2 / (census_counting - census_cera),
+                     prec_round), .before = turnout) |>
+      # Relocate columns
+      relocate(type_elec, date_elec, .after = id_elec)
+
+    # Resident population (without CERA)
+    pop_res <-
+      election_data |>
+      mutate(id_INE_mun =
+               extract_code(.data[[id_col]], level = "mun",
+                            full_cod = TRUE)) |>
+      filter(!str_detect(id_INE_mun, "-999")) |>
+      distinct(id_elec, id_INE_mun, .keep_all = TRUE) |>
+      summarise(pop_res = sum(pop_res_mun),
+                .by = group_vars)
+
+    # Join with pop data
+    agg_data <-
+      agg_data |>
+      # Join pop res data
+      left_join(pop_res, by = group_vars) |>
+      # Relocate
+      relocate(pop_res, .after = date_elec)
+
+    # output
+    return(agg_data)
+
+  }
+
+#' @title Get candidacies data (at poll station level)
+#'
+#' @description ...
+#'
+#' @inheritParams get_mun_census_data
+#' @param include_candidates flag to indicate wheter it should be included data
+#' about candidates or not. Defaults to \code{FALSE}.
 #'
 #' @return ...
 #'
@@ -496,7 +736,7 @@ get_candidacies_data <-
 #'
 #' @examples
 #'
-#' ## Get whole elections data
+#' ## Get candidacies data
 #'
 #' # Right examples
 #' \dontrun{
@@ -505,21 +745,16 @@ get_candidacies_data <-
 #'
 #' @export
 get_elections_data <-
-  function(type_elec, year, month, prec_round = 3,
-           include_candidacies = FALSE,
-           include_candidates = FALSE) {
-
-    # Code of election
-    cod_elec <-
-      type_elec |>
-      map_chr(function(x) {
-        type_to_code_election(x)
-        })
+  function(type_elec, year, month, level = "all",
+           by_parties = TRUE, include_candidacies = FALSE,
+           include_candidates = FALSE,
+           id_col = "id_INE_poll_station", prec_round = 3) {
 
     # Check: if elections required are allowed
     join_result <-
       dates_elections_spain |>
-      inner_join(tibble(cod_elec, year, month),
+      inner_join(tibble(cod_elec = type_to_code_election(type_elec),
+                        year, month),
                  by = c("cod_elec", "year", "month")) |>
       nrow()
     if (join_result == 0) {
@@ -542,10 +777,39 @@ get_elections_data <-
 
     }
 
+    # Check: if level takes allowed values
+    if (!(level %in% c("all", "ccaa", "prov", "mun",
+                       "mun_district", "sec", "poll_station"))) {
+
+      stop("Aggregation level provided by 'level' parameter should be taken from the following values: 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec', 'poll_station'")
+
+    }
+
+    # Check: if by_parties is a logical variable
+    if (!is.logical(by_parties)) {
+
+      stop(glue("Parameter 'by_parties' must be a logical variable, just TRUE/FALSE are avoided"))
+
+    }
+
+    # Check: if by_parties is a logical variable
+    if (by_parties & !include_candidacies) {
+
+      warning("Since include_candidacies = FALSE, aggregating by parties has not been implemented")
+      by_parties <- FALSE
+
+    }
+
     # Getting data at poll station level (without candidacies)
     election_data <-
       get_poll_station_data(type_elec, year, month,
                             prec_round = prec_round)
+
+    # and then aggregate at provided level
+    election_data <-
+      election_data |>
+      aggregate_election_data(level = level, id_col = id_col,
+                              prec_round = prec_round)
 
     if (include_candidacies) {
 
@@ -561,8 +825,7 @@ get_elections_data <-
                   by = c("type_elec", "date_elec",
                          "id_INE_poll_station"),
                   suffix = c("", ".y"), multiple = "all") |>
-        select(-contains(".y")) |>
-        recod_parties()
+        select(-contains(".y"))
 
     }
 
@@ -572,838 +835,4 @@ get_elections_data <-
 }
 
 
-
-#' @title Aggregate elections data
-#'
-#' @description ...
-#'
-#' @param election_data tibble containing election data
-#' @param level level of territorial aggregation. Values allowed are "all"
-#' (national aggregation), "ccaa" (regional aggregation),
-#' "prov" (province aggregation), "mun" (municipal aggregation),
-#' "mun-district" (municipal district aggregation),
-#' "sec" (census section aggregation) or "poll-station" (without aggregation)
-#' @param by_parties flag to indicate wheter it should be aggregate data
-#' about ballots of parties (as long as \code{election_data} has been generated
-#' with the candidacies data). Defaults to \code{TRUE}.
-#' @param prec_round rounding accuracy. Defaults to \code{prec_round = 3}.
-#'
-#' @return ...
-#'
-#' @author Javier Álvarez-Liébana.
-#' @source ...
-#' @keywords get_elections_data
-#' @name aggregate_election_data
-#'
-#' @examples
-#'
-#' ## Aggregate election data
-#'
-#' # Right examples
-#' \dontrun{
-#' # Wrong examples
-#' }
-#'
-#' @export
-aggregate_election_data <-
-  function(election_data, level = "all",
-           by_parties = TRUE, prec_round = 3) {
-
-    # Check: if prec_round is a positive number
-    if (prec_round != as.integer(prec_round) | prec_round < 1) {
-
-      stop("Parameter 'prec_round' must be a positive integer greater than 0")
-
-    }
-
-    # Check: if level takes allowed values
-    if (!(level %in% c("all", "ccaa", "prov", "mun",
-                       "mun-district", "sec", "poll-station"))) {
-
-      stop("Aggregation level provided by 'level' parameter should be taken from the following values: 'all', 'ccaa', 'prov', 'mun', 'mun-district', 'sec', 'poll-station'")
-
-    }
-
-    # Check: if by_parties is a logical variable
-    if (!is.logical(by_parties)) {
-
-      stop(glue("Parameter 'by_parties' must be a logical variable, just TRUE/FALSE are avoided"))
-
-    }
-
-    # Remove duplicate rows (candidates), just one
-    # for type, date, poll station and party
-    if ("id_candidacies" %in% names(election_data)) {
-
-      election_data <-
-        election_data |>
-        distinct(id_elec, type_elec, date_elec, id_INE_poll_station,
-                 id_candidacies, .keep_all = TRUE)
-
-    } else {
-
-      election_data <-
-        election_data |>
-        distinct(id_elec, type_elec, date_elec, id_INE_poll_station,
-                 .keep_all = TRUE)
-    }
-
-    # Aggregation level: national
-    if (level == "all") {
-
-      # CERA summaries
-      data_cera <-
-        election_data |>
-        filter(extract_code(id_INE_poll_station, level = "mun") == "999") |>
-        group_by(id_elec, type_elec, date_elec) |>
-        distinct(id_INE_poll_station, .keep_all = TRUE) |>
-        reframe(census_cera = sum(census_counting),
-                total_ballots_cera = sum(total_ballots),
-                turnout_cera =
-                  round(100 * total_ballots_cera / census_cera, prec_round)) |>
-        ungroup()
-
-      # Resident population (without CERA)
-      pop_res <-
-        election_data |>
-        # Saving time
-        distinct(id_elec, type_elec, date_elec, id_INE_poll_station,
-                 .keep_all = TRUE) |>
-        mutate(id_INE_mun =
-                 extract_code(id_INE_poll_station, level = "mun",
-                              full_cod = TRUE)) |>
-        filter(!str_detect(id_INE_mun, "-999")) |>
-        distinct(id_elec, type_elec, date_elec, id_INE_mun,
-                 .keep_all = TRUE) |>
-        summarise(pop_res = sum(pop_res_mun),
-                  .by = c(id_elec, type_elec, date_elec))
-
-      # Aggregation of data
-      agg_data <-
-        election_data |>
-        # Ignore multiple rows due to candidacies
-        distinct(id_elec, type_elec, date_elec, id_INE_poll_station,
-                 .keep_all = TRUE) |>
-        # Summaries by type of election and date
-        reframe(# npoll stations without cera
-                n_poll_stations = n_distinct(id_INE_poll_station) - 52,
-                across(c("census_counting", "ballots_1",
-                         "ballots_2", "blank_ballots":"total_ballots"), sum),
-                turnout =
-                  round(100 * total_ballots / census_counting, prec_round),
-                porc_valid =
-                  round(100 * valid_ballots / total_ballots, prec_round),
-                porc_invalid =
-                  round(100 * invalid_ballots / total_ballots, prec_round),
-                porc_parties =
-                  round(100 * party_ballots / valid_ballots, prec_round),
-                porc_blank =
-                  round(100 * blank_ballots / valid_ballots, prec_round),
-                .by = c(id_elec, type_elec, date_elec)) |>
-        # Join CERA data
-        left_join(data_cera, by = c("id_elec", "type_elec", "date_elec")) |>
-        # turnout_1 and turnout_2 over counting census without cera.
-        mutate(turnout_1 =
-                 round(100 * ballots_1 / (census_counting - census_cera),
-                       prec_round),
-               turnout_2 =
-                 round(100 * ballots_2 / (census_counting - census_cera),
-                       prec_round)) |>
-        # Join pop res data
-        left_join(pop_res, by = c("id_elec", "type_elec", "date_elec")) |>
-        # Relocate
-        relocate(pop_res, .after = date_elec) |>
-        relocate(turnout_1, .after = ballots_1) |>
-        relocate(turnout_2, .after = ballots_2)
-
-      # Aggregation of parties' data
-      if (by_parties) {
-
-        # Use as name the "variant" of party most voted
-        most_party_data <-
-          election_data |>
-          group_by(id_elec, type_elec, date_elec, id_candidacies,
-                   abbrev_candidacies, name_candidacies) |>
-          summarise(ballots = sum(ballots)) |>
-          ungroup(abbrev_candidacies, name_candidacies) |>
-          slice_max(ballots, n = 1) |>
-          ungroup() |>
-          select(-ballots)
-
-        # Compute number of elected by election, province and parties
-        elected <-
-          election_data |>
-          distinct(id_elec, type_elec, date_elec, prov, id_candidacies,
-                   .keep_all = TRUE) |>
-          summarise(elected = sum(elected_by_prov),
-                    .by = c(id_elec, type_elec, date_elec, id_candidacies))
-
-        # Aggregation of parties' data
-        agg_party_data <-
-          election_data |>
-          summarise(ballots = sum(ballots),
-                    .by = c(id_elec, type_elec, date_elec, id_candidacies)) |>
-          # Name of party
-          left_join(most_party_data,
-                    by = c("id_elec", "type_elec", "date_elec", "id_candidacies"),
-                    suffix = c(".x", ""), multiple = "all") |>
-          select(-contains(".x")) |>
-          # Number of elected
-          left_join(elected, by = c("id_elec", "type_elec",
-                                    "date_elec", "id_candidacies"))
-
-        # Join parties data
-        agg_data <-
-          agg_data |>
-          left_join(agg_party_data, by = c("id_elec", "type_elec", "date_elec"),
-                    multiple = "all") |>
-          # Some summaries
-          # Votes required for each elected
-          mutate(votes_by_elected =
-                   ifelse(elected > 0, round(ballots / elected, 0),
-                          NA),
-                 .by = c(type_elec, date_elec, id_candidacies)) |>
-          # Summaries
-          mutate(porc_parties_valid =
-                   round(100 * ballots / valid_ballots, prec_round),
-                 porc_parties_census =
-                   round(100 * ballots / census_counting, prec_round),
-                 porc_parties_cand =
-                   round(100 * ballots / party_ballots, prec_round)) |>
-          # Relocate
-          relocate(ballots, .after = name_candidacies)
-
-      }
-
-      # output
-      return(agg_data)
-    }
-
-    # Aggregation level: ccaa
-    if (level == "ccaa") {
-
-      # If cod_INE_ccaa is not include, id is created
-      if (!("cod_INE_ccaa" %in% names(election_data))) {
-
-        election_data <-
-          election_data |>
-          mutate(cod_INE_ccaa =
-                   extract_code(id_INE_poll_station, level = "ccaa"))
-
-      }
-
-      # CERA summaries
-      data_cera <-
-        election_data |>
-        filter(extract_code(id_INE_poll_station, level = "mun") == "999") |>
-        group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa) |>
-        distinct(id_INE_poll_station, .keep_all = TRUE) |>
-        summarise(census_cera = sum(census_counting),
-                  total_ballots_cera = sum(total_ballots),
-                  turnout_cera =
-                    round(100 * total_ballots_cera / census_cera, prec_round)) |>
-        ungroup()
-
-      # Resident population (without CERA)
-      pop_res <-
-        election_data |>
-        mutate(id_INE_mun =
-                 extract_code(id_INE_poll_station, level = "mun",
-                              full_cod = TRUE)) |>
-        filter(!str_detect(id_INE_mun, "-999")) |>
-        distinct(id_elec, type_elec, date_elec, id_INE_mun, .keep_all = TRUE) |>
-        summarise(pop_res = sum(pop_res_mun),
-                  .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa))
-
-      # Aggregation of data
-      agg_data <-
-        election_data |>
-        # Ignore multiple rows due to candidacies
-        distinct(id_elec, type_elec, date_elec, id_INE_poll_station,
-                 .keep_all = TRUE) |>
-        reframe(n_poll_stations = n() - length(unique(prov)),
-                across(c("census_counting", "ballots_1",
-                         "ballots_2", "blank_ballots":"total_ballots"), sum),
-                turnout =
-                  round(100 * total_ballots / census_counting, prec_round),
-                porc_valid =
-                  round(100 * valid_ballots / total_ballots, prec_round),
-                porc_invalid =
-                  round(100 * invalid_ballots / total_ballots, prec_round),
-                porc_parties =
-                  round(100 * party_ballots / valid_ballots, prec_round),
-                porc_blank =
-                  round(100 * blank_ballots / valid_ballots, prec_round),
-                .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa)) |>
-        # Join CERA data
-        left_join(data_cera,
-                  by = c("id_elec", "type_elec", "date_elec",
-                         "cod_INE_ccaa", "ccaa")) |>
-        # turnout_1 and turnout_2 over counting census without cera.
-        mutate(turnout_1 =
-                 round(100 * ballots_1 / (census_counting - census_cera),
-                       prec_round),
-               turnout_2 =
-                 round(100 * ballots_2 / (census_counting - census_cera),
-                       prec_round)) |>
-        # Join pop res data
-        left_join(pop_res,
-                  by = c("id_elec", "type_elec", "date_elec",
-                         "cod_INE_ccaa", "ccaa")) |>
-        # Relocate
-        relocate(pop_res, .after = ccaa) |>
-        relocate(turnout_1, .after = ballots_1) |>
-        relocate(turnout_2, .after = ballots_2)
-
-
-      # Aggregation of parties' data
-      if (by_parties) {
-
-        # Use as name the "variant" of party most voted
-        # at each ccaa
-        most_party_data <-
-          election_data |>
-          group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                   id_candidacies, abbrev_candidacies, name_candidacies) |>
-          summarise(ballots = sum(ballots)) |>
-          ungroup(abbrev_candidacies, name_candidacies) |>
-          slice_max(ballots, n = 1) |>
-          ungroup() |>
-          select(-ballots)
-
-        # Compute number of elected
-        elected <-
-          election_data |>
-          distinct(id_elec, type_elec, date_elec, prov, id_candidacies,
-                   .keep_all = TRUE) |>
-          reframe(elected = sum(elected_by_prov),
-                  .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa,
-                          ccaa, id_candidacies))
-
-        # Aggregation of parties' data
-        agg_party_data <-
-          election_data |>
-          reframe(ballots = sum(ballots),
-                  .by = c(id_elec, type_elec, date_elec,
-                          cod_INE_ccaa, ccaa, id_candidacies)) |>
-          # Name of party
-          left_join(most_party_data,
-                    by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                           "ccaa", "id_candidacies"),
-                    suffix = c(".x", "")) |>
-          select(-contains(".x")) |>
-          # Number of elected
-          left_join(elected,
-                    by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                           "ccaa", "id_candidacies"))
-
-        # Join parties data
-        agg_data <-
-          agg_data |>
-          left_join(agg_party_data,
-                    by = c("id_elec", "type_elec", "date_elec",
-                           "cod_INE_ccaa", "ccaa")) |>
-          # Some summaries
-          # Votes required for each elected
-          mutate(votes_by_elected =
-                   ifelse(elected > 0, round(ballots / elected, 0),
-                          NA),
-                 .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa,
-                         ccaa, id_candidacies)) |>
-          # Summaries
-          mutate(porc_parties_valid =
-                   round(100 * ballots / valid_ballots, prec_round),
-                 porc_parties_census =
-                   round(100 * ballots / census_counting, prec_round),
-                 porc_parties_cand =
-                   round(100 * ballots / party_ballots, prec_round)) |>
-          # Relocate
-          relocate(ballots, .after = name_candidacies)
-
-      }
-
-      # output
-      return(agg_data)
-
-    }
-
-    # Aggregation level: prov
-    if (level == "prov") {
-
-      # If cod_INE_prov is not include, id is created
-      if (!("cod_INE_prov" %in% names(election_data))) {
-
-        election_data <-
-          election_data |>
-          mutate(cod_INE_ccaa =
-                   extract_code(id_INE_poll_station, level = "ccaa"),
-                 cod_INE_prov =
-                   extract_code(id_INE_poll_station, level = "prov"))
-
-      }
-
-
-      # CERA summaries
-      data_cera <-
-        election_data |>
-        filter(extract_code(id_INE_poll_station, level = "mun") == "999") |>
-        group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                 cod_INE_prov, prov) |>
-        distinct(id_INE_poll_station, .keep_all = TRUE) |>
-        reframe(census_cera = sum(census_counting),
-                total_ballots_cera = sum(total_ballots),
-                turnout_cera =
-                  round(100 * total_ballots_cera / census_cera, prec_round)) |>
-        ungroup()
-
-      # Resident population (without CERA)
-      pop_res <-
-        election_data |>
-        mutate(id_INE_mun =
-                 extract_code(id_INE_poll_station, level = "mun",
-                              full_cod = TRUE)) |>
-        filter(!str_detect(id_INE_mun, "-999")) |>
-        distinct(id_elec, type_elec, date_elec, id_INE_mun, .keep_all = TRUE) |>
-        summarise(pop_res = sum(pop_res_mun),
-                  .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                          cod_INE_prov, prov))
-
-      # Aggregation of data
-      agg_data <-
-        election_data |>
-        # Ignore multiple rows due to candidacies
-        distinct(id_elec, type_elec, date_elec, id_INE_poll_station,
-                 .keep_all = TRUE) |>
-        reframe(n_poll_stations = n() - 1,
-                across(c("census_counting", "ballots_1",
-                         "ballots_2", "blank_ballots":"total_ballots"), sum),
-                turnout =
-                  round(100 * total_ballots / census_counting, prec_round),
-                porc_valid =
-                  round(100 * valid_ballots / total_ballots, prec_round),
-                porc_invalid =
-                  round(100 * invalid_ballots / total_ballots, prec_round),
-                porc_parties =
-                  round(100 * party_ballots / valid_ballots, prec_round),
-                porc_blank =
-                  round(100 * blank_ballots / valid_ballots, prec_round),
-                .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                        cod_INE_prov, prov)) |>
-        # Join CERA data
-        left_join(data_cera,
-                  by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                         "ccaa", "cod_INE_prov", "prov")) |>
-        # turnout_1 and turnout_2 over counting census without cera.
-        mutate(turnout_1 =
-                 round(100 * ballots_1 / (census_counting - census_cera),
-                       prec_round),
-               turnout_2 =
-                 round(100 * ballots_2 / (census_counting - census_cera),
-                       prec_round)) |>
-        # Join pop res data
-        left_join(pop_res,
-                  by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                         "ccaa", "cod_INE_prov", "prov")) |>
-        # Relocate
-        relocate(pop_res, .after = prov) |>
-        relocate(turnout_1, .after = ballots_1) |>
-        relocate(turnout_2, .after = ballots_2)
-
-      # Aggregation of parties' data
-      if (by_parties) {
-
-        # Use as name the "variant" of party most voted
-        # at each ccaa
-        most_party_data <-
-          election_data |>
-          group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                   cod_INE_prov, prov, id_candidacies,
-                   abbrev_candidacies, name_candidacies) |>
-          summarise(ballots = sum(ballots)) |>
-          ungroup(abbrev_candidacies, name_candidacies) |>
-          slice_max(ballots, n = 1) |>
-          ungroup() |>
-          select(-ballots)
-
-        # Compute number of elected
-        elected <-
-          election_data |>
-          distinct(id_elec, type_elec, date_elec, prov, id_candidacies,
-                   .keep_all = TRUE) |>
-          reframe(elected = sum(elected_by_prov),
-                  .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                          cod_INE_prov, prov, id_candidacies))
-
-        # Aggregation of parties' data
-        agg_party_data <-
-          election_data |>
-          summarise(ballots = sum(ballots),
-                    .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                            cod_INE_prov, prov, id_candidacies)) |>
-          # Name of party
-          left_join(most_party_data,
-                    by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                           "ccaa", "cod_INE_prov", "prov",
-                           "id_candidacies"),
-                    suffix = c(".x", "")) |>
-          select(-contains(".x")) |>
-          # Number of elected
-          left_join(elected,
-                    by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                           "ccaa", "cod_INE_prov", "prov", "id_candidacies"))
-
-        # Join parties data
-        agg_data <-
-          agg_data |>
-          left_join(agg_party_data,
-                    by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                           "ccaa", "cod_INE_prov", "prov")) |>
-          # Some summaries
-          group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                   cod_INE_prov, prov, id_candidacies) |>
-          # Votes required for each elected
-          mutate(votes_by_elected =
-                   ifelse(elected > 0, round(ballots / elected, 0),
-                          NA)) |>
-          ungroup() |>
-          # Summaries
-          mutate(porc_parties_valid =
-                   round(100 * ballots / valid_ballots, prec_round),
-                 porc_parties_census =
-                   round(100 * ballots / census_counting, prec_round),
-                 porc_parties_cand =
-                   round(100 * ballots / party_ballots, prec_round)) |>
-          # Relocate
-          relocate(ballots, .after = name_candidacies)
-
-      }
-
-      # output
-      return(agg_data)
-
-    }
-
-    # Aggregation level: munipalities
-    if (level == "mun") {
-
-      # If cod_INE_prov is not include, id is created
-      if (!("cod_INE_mun" %in% names(election_data))) {
-
-        election_data <-
-          election_data |>
-          mutate(cod_INE_ccaa =
-                   extract_code(id_INE_poll_station, level = "ccaa"),
-                 cod_INE_prov =
-                   extract_code(id_INE_poll_station, level = "prov"),
-                 id_INE_mun =
-                   extract_code(id_INE_poll_station, level = "mun",
-                                full_cod = TRUE),
-                 cod_INE_mun =
-                   extract_code(id_INE_poll_station, level = "mun"))
-
-      }
-
-      # CERA summaries
-      data_cera <-
-        election_data |>
-        filter(str_detect(id_INE_mun, "-999")) |>
-        group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                 cod_INE_prov, prov, id_INE_mun, mun) |>
-        distinct(id_INE_poll_station, .keep_all = TRUE) |>
-        summarise(census_cera = sum(census_counting),
-                  total_ballots_cera = sum(total_ballots),
-                  turnout_cera =
-                    round(100 * total_ballots_cera / census_cera,
-                          prec_round)) |>
-        ungroup()
-
-      # Resident population (without CERA)
-      pop_res <-
-        election_data |>
-        filter(!str_detect(id_INE_mun, "999")) |>
-        distinct(id_elec, type_elec, date_elec, id_INE_mun, .keep_all = TRUE) |>
-        group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                 cod_INE_prov, prov, id_INE_mun, mun) |>
-        summarise(pop_res = sum(pop_res_mun)) |>
-        ungroup()
-
-      # Aggregation of data
-      agg_data <-
-        election_data |>
-        # Ignore multiple rows due to candidacies
-        distinct(id_elec, type_elec, date_elec, id_INE_poll_station,
-                 .keep_all = TRUE) |>
-        reframe(n_poll_stations = n(),
-                across(c("census_counting", "ballots_1",
-                         "ballots_2", "blank_ballots":"total_ballots"), sum),
-                turnout =
-                  round(100 * total_ballots / census_counting, prec_round),
-                porc_valid =
-                  round(100 * valid_ballots / total_ballots, prec_round),
-                porc_invalid =
-                  round(100 * invalid_ballots / total_ballots, prec_round),
-                porc_parties =
-                  round(100 * party_ballots / valid_ballots, prec_round),
-                porc_blank =
-                  round(100 * blank_ballots / valid_ballots, prec_round),
-                .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                        cod_INE_prov, prov, id_INE_mun, mun)) |>
-        # Join CERA data
-        left_join(data_cera,
-                  by = c("id_elec", "type_elec", "date_elec",
-                         "cod_INE_ccaa", "ccaa", "cod_INE_prov", "prov",
-                         "id_INE_mun", "mun")) |>
-        # turnout_1 and turnout_2 for municipalities CERA will be NA
-        mutate(turnout_1 =
-                 round(100 * ballots_1 / (census_counting - census_cera),
-                       prec_round),
-               turnout_1 = ifelse(is.nan(turnout_1), NA, turnout_1),
-               turnout_2 =
-                 round(100 * ballots_2 / (census_counting - census_cera),
-                       prec_round),
-               turnout_2 = ifelse(is.nan(turnout_2), NA, turnout_2)) |>
-        # Join pop res data
-        left_join(pop_res,
-                  by = c("id_elec", "type_elec", "date_elec",
-                         "cod_INE_ccaa", "ccaa", "cod_INE_prov", "prov",
-                         "id_INE_mun", "mun")) |>
-        # Relocate
-        relocate(pop_res, .after = mun) |>
-        relocate(turnout_1, .after = ballots_1) |>
-        relocate(turnout_2, .after = ballots_2) |>
-        # Remove CERA rows
-        mutate(n_poll_stations = ifelse(mun == "CERA", NA, n_poll_stations))
-
-      if (by_parties == TRUE) {
-
-        warning("A summary at municipality level cannot be done with party ballots for congress elections")
-
-      }
-
-      # output
-      return(agg_data)
-
-    }
-
-    # Aggregation level: electoral district
-    if (level == "mun-district") {
-
-      # If cod_INE_prov is not include, id is created
-      if (!("cod_mun_district" %in% names(election_data))) {
-
-        election_data <-
-          election_data |>
-          mutate(cod_INE_ccaa =
-                   extract_code(id_INE_poll_station, level = "ccaa"),
-                 cod_INE_prov =
-                   extract_code(id_INE_poll_station, level = "prov"),
-                 id_INE_mun =
-                   extract_code(id_INE_poll_station, level = "mun",
-                                full_cod = TRUE),
-                 cod_mun_district =
-                   extract_code(id_INE_poll_station, level = "mun-district"))
-
-      }
-
-      # CERA summaries
-      data_cera <-
-        election_data |>
-        filter(str_detect(id_INE_mun, "999")) |>
-        distinct(id_elec, id_INE_poll_station, .keep_all = TRUE) |>
-        group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                 cod_INE_prov, prov, id_INE_mun, mun) |>
-        summarise(census_cera = sum(census_counting),
-                  total_ballots_cera = sum(total_ballots),
-                  turnout_cera =
-                    round(100 * total_ballots_cera / census_cera,
-                          prec_round)) |>
-        ungroup()
-
-      # Resident population (without CERA)
-      pop_res <-
-        election_data |>
-        filter(!str_detect(id_INE_mun, "999")) |>
-        distinct(id_elec, type_elec, date_elec, id_INE_mun, .keep_all = TRUE) |>
-        group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                 cod_INE_prov, prov, id_INE_mun, mun) |>
-        summarise(pop_res_mun = sum(pop_res_mun)) |>
-        ungroup()
-
-      # Aggregation of data
-      agg_data <-
-        election_data |>
-        # Ignore multiple rows due to candidacies
-        distinct(id_elec, type_elec, date_elec, id_INE_poll_station,
-                 .keep_all = TRUE) |>
-        reframe(n_poll_stations = n(),
-                  across(c("census_counting", "ballots_1",
-                           "ballots_2", "blank_ballots":"total_ballots"), sum),
-                  turnout =
-                    round(100 * total_ballots / census_counting, prec_round),
-                  porc_valid =
-                    round(100 * valid_ballots / total_ballots, prec_round),
-                  porc_invalid =
-                    round(100 * invalid_ballots / total_ballots, prec_round),
-                  porc_parties =
-                    round(100 * party_ballots / valid_ballots, prec_round),
-                  porc_blank =
-                    round(100 * blank_ballots / valid_ballots, prec_round),
-                .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                        cod_INE_prov, prov, id_INE_mun, mun,
-                        cod_mun_district)) |>
-        # Join CERA data
-        left_join(data_cera,
-                  by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                         "ccaa", "cod_INE_prov", "prov", "id_INE_mun",
-                         "mun")) |>
-        # turnout_1 and turnout_2 for municipalities CERA will be NA
-        mutate(turnout_1 =
-                 round(100 * ballots_1 / (census_counting - census_cera),
-                       prec_round),
-               turnout_1 = ifelse(is.nan(turnout_1), NA, turnout_1),
-               turnout_2 =
-                 round(100 * ballots_2 / (census_counting - census_cera),
-                       prec_round),
-               turnout_2 = ifelse(is.nan(turnout_2), NA, turnout_2)) |>
-        # Join pop res data
-        left_join(pop_res,
-                  by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                         "ccaa", "cod_INE_prov", "prov", "id_INE_mun",
-                         "mun")) |>
-        # Relocate
-        relocate(pop_res_mun, .after = mun) |>
-        relocate(turnout_1, .after = ballots_1) |>
-        relocate(turnout_2, .after = ballots_2) |>
-        # Remove CERA rows
-        mutate(n_poll_stations = ifelse(mun == "CERA", NA, n_poll_stations))
-
-      if (by_parties == TRUE) {
-
-        warning("A summary at district level cannot be done with party ballots for congress elections")
-
-      }
-
-      # output
-      return(agg_data)
-
-    }
-
-    # Aggregation level: electoral section
-    if (level == "sec") {
-
-      # If cod_INE_prov is not include, id is created
-      if (!("sec" %in% names(election_data))) {
-
-        election_data <-
-          election_data |>
-          mutate(cod_INE_ccaa =
-                   extract_code(id_INE_poll_station, level = "ccaa"),
-                 cod_INE_prov =
-                   extract_code(id_INE_poll_station, level = "prov"),
-                 id_INE_mun =
-                   extract_code(id_INE_poll_station, level = "mun",
-                                full_cod = TRUE),
-                 cod_mun_district =
-                   extract_code(id_INE_poll_station, level = "mun-district"),
-                 cod_sec =
-                   extract_code(id_INE_poll_station, level = "sec"))
-
-      }
-
-
-      # CERA summaries
-      data_cera <-
-        election_data |>
-        filter(str_detect(id_INE_mun, "999")) |>
-        distinct(id_INE_poll_station, .keep_all = TRUE) |>
-        group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                 cod_INE_prov, prov, id_INE_mun, mun) |>
-        summarise(census_cera = sum(census_counting),
-                  total_ballots_cera = sum(total_ballots),
-                  turnout_cera =
-                    round(100 * total_ballots_cera / census_cera,
-                          prec_round)) |>
-        ungroup()
-
-      # Resident population (without CERA)
-      pop_res <-
-        election_data |>
-        filter(!str_detect(id_INE_mun, "999")) |>
-        distinct(id_elec, type_elec, date_elec,
-                 id_INE_mun, mun, .keep_all = TRUE) |>
-        group_by(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                 cod_INE_prov, prov, id_INE_mun, mun) |>
-        summarise(pop_res_mun = sum(pop_res_mun)) |>
-        ungroup()
-
-      # Aggregation of data
-      agg_data <-
-        election_data |>
-        # Ignore multiple rows due to candidacies
-        distinct(id_elec, type_elec, date_elec, id_INE_poll_station,
-                 .keep_all = TRUE) |>
-        reframe(n_poll_stations = n(),
-                  across(c("census_counting", "ballots_1",
-                           "ballots_2", "blank_ballots":"total_ballots"), sum),
-                  turnout =
-                    round(100 * total_ballots / census_counting, prec_round),
-                  porc_valid =
-                    round(100 * valid_ballots / total_ballots, prec_round),
-                  porc_invalid =
-                    round(100 * invalid_ballots / total_ballots, prec_round),
-                  porc_parties =
-                    round(100 * party_ballots / valid_ballots, prec_round),
-                  porc_blank =
-                    round(100 * blank_ballots / valid_ballots, prec_round),
-                  .by = c(id_elec, type_elec, date_elec, cod_INE_ccaa, ccaa,
-                          cod_INE_prov, prov, id_INE_mun, mun, cod_mun_district,
-                          cod_sec)) |>
-        # Join CERA data
-        left_join(data_cera,
-                  by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                         "ccaa", "cod_INE_prov", "prov", "id_INE_mun",
-                         "mun")) |>
-        # turnout_1 and turnout_2 for municipalities CERA will be NA
-        mutate(turnout_1 =
-                 round(100 * ballots_1 / (census_counting - census_cera),
-                       prec_round),
-               turnout_1 = ifelse(is.nan(turnout_1), NA, turnout_1),
-               turnout_2 =
-                 round(100 * ballots_2 / (census_counting - census_cera),
-                       prec_round),
-               turnout_2 = ifelse(is.nan(turnout_2), NA, turnout_2)) |>
-        # Join pop res data
-        left_join(pop_res,
-                  by = c("id_elec", "type_elec", "date_elec", "cod_INE_ccaa",
-                         "ccaa", "cod_INE_prov", "prov", "id_INE_mun",
-                         "mun")) |>
-        # Relocate
-        relocate(pop_res_mun, .after = mun) |>
-        relocate(turnout_1, .after = ballots_1) |>
-        relocate(turnout_2, .after = ballots_2) |>
-        # Remove CERA rows
-        mutate(n_poll_stations = ifelse(mun == "CERA", NA, n_poll_stations))
-
-      # output
-      return(agg_data)
-
-      if (by_parties == TRUE) {
-
-        warning("A summary at census section level cannot be done with party ballots for congress elections")
-
-      }
-
-    }
-
-    # Aggregation level: poll station
-    if (level == "poll-station") {
-
-      agg_data <- election_data
-
-      # output
-      return(agg_data)
-
-    }
-
-}
 

@@ -45,7 +45,7 @@ extract_code(id_INE_poll_station, level = "prov", full_cod = FALSE)
 extract_code(id_INE_poll_station, level = "prov", full_cod = TRUE)
 extract_code(id_INE_poll_station, level = "ccaa", full_cod = FALSE)
 extract_code(id_INE_poll_station, level = "ccaa", full_cod = TRUE)
-extract_code(id_INE_poll_station, level = "mun-district", full_cod = TRUE)
+extract_code(id_INE_poll_station, level = "mun_district", full_cod = TRUE)
 
 \dontrun{
 # Wrong examples

@@ -80,5 +80,48 @@ candidacies_data <- get_candidacies_data("congress", 2019, c(4, 11))
 candidacies_data
 ```
 
+#### Datos del CERA
+
+Según el INE:
+
+«El censo electoral contiene la inscripción de quienes reúnen los requisitos para ser elector y no se hallen privados, definitiva o temporalmente, del derecho de sufragio. El censo electoral está compuesto por:
+
+* El censo electoral de españoles residentes en España (CER).
+* El censo electoral de españoles residentes-ausentes que viven en el extranjero (CERA).
+
+El censo electoral de residentes en España que sean nacionales de países con Acuerdos para las elecciones municipales (CERE Acuerdos), y el censo electoral de ciudadanos de la Unión Europea residentes en España para las elecciones municipales y al Parlamento Europeo (CERE UE).»
+
+La función `get_CERA_data()` nos devuelve los datos relativos al CERA
+
+```{r eval = FALSE}
+ccaa_CERA_data <- get_CERA_data(election_data, level = "ccaa")
+```
+
+#### Datos electorales agregados
+
+La función `get_elections_data()` nos permite obtener los datos electorales de las elecciones pedidas y con el nivel (`level`) de agregación que queramos, pudiendo ser  `all`, `ccaa`, `prov`, `mun`, `mun_district`, `sec` (sección censal) y `poll_station` (a nivel de mesa electoral)
+
+```{r}
+prov_data <- get_elections_data("congress", year = 2019, month = c(4, 11), level = "prov")
+prov_data
+```
+
+Esta función combina `get_poll_station_data()` (el dato en bruto por mesa electoral) con `get_CERA_data()` y `aggregate_election_data()`, que nos proporciona la agregación pedida. El código anterior es equivalente a:
+
+```{r}
+# Raw data at poll station level
+election_data <-
+      get_poll_station_data("congress", year = 2019, month = c(4, 11))
+
+# and then aggregate at provided level
+agg_data <-
+  election_data |>
+  aggregate_election_data(level = "prov")
+agg_data
+```
 
 
+
+
+
+   

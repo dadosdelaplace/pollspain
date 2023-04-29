@@ -16,7 +16,7 @@
 # ----- check -----
 
 # summary data a nivel nacional coincide (tanto sin como con partidos)
-
+# aggregation correcta en get_elections para distintos niveles
 
 # ----- mejoras -----
 

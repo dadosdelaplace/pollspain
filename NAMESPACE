@@ -2,6 +2,7 @@
 
 export(aggregate_election_data)
 export(extract_code)
+export(get_CERA_data)
 export(get_candidacies_data)
 export(get_candidates_data)
 export(get_elections_data)

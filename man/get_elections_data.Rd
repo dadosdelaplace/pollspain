@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_elections_data.R
 \name{get_elections_data}
 \alias{get_elections_data}
-\title{Get elections data}
+\title{Get candidacies data (at poll station level)}
 \source{
 ...
 }
@@ -11,9 +11,12 @@ get_elections_data(
   type_elec,
   year,
   month,
-  prec_round = 3,
+  level = "all",
+  by_parties = TRUE,
   include_candidacies = FALSE,
-  include_candidates = FALSE
+  include_candidates = FALSE,
+  id_col = "id_INE_poll_station",
+  prec_round = 3
 )
 }
 \arguments{
@@ -26,11 +29,6 @@ or "EU".}
 Please be sure (see \code{dates_elections_spain}) that elections of the
 provided type are available for the given year and month.}
 
-\item{prec_round}{rounding accuracy. Defaults to \code{prec_round = 3}.}
-
-\item{include_candidacies}{flag to indicate wheter it should be included data
-about candidacies or not. Defaults to \code{FALSE}.}
-
 \item{include_candidates}{flag to indicate wheter it should be included data
 about candidates or not. Defaults to \code{FALSE}.}
 }
@@ -42,7 +40,7 @@ about candidates or not. Defaults to \code{FALSE}.}
 }
 \examples{
 
-## Get whole elections data
+## Get candidacies data
 
 # Right examples
 \dontrun{

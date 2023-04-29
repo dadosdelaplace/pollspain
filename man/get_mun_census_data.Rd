@@ -56,7 +56,8 @@ function for a set of elections
 \examples{
 
 ## Get mun census data
-
+data("dates_elections_spain")
+\dontrun{
 # Right examples
 mun_census_data <- get_mun_census_data("congress", 2019, 4)
 mun_census_data <- get_mun_census_data("senate", 2019, 11)
@@ -65,7 +66,6 @@ mun_census_data <- get_mun_census_data(rep("congress", 3),
                                        c(11, 4, 6))
 mun_census_data <- get_mun_census_data(c("congress", "senate"),
                                        c(2019, 2019), c(11, 4))
-\dontrun{
 # Wrong examples
 mun_census_data <- get_mun_census_data("national", 2019, 4)
 mun_census_data <- get_mun_census_data("congress", 2016, c(4, 11))

@@ -108,7 +108,7 @@ type_to_code_election <- function(type_elec) {
 #' extract_code(id_INE_poll_station, level = "prov", full_cod = TRUE)
 #' extract_code(id_INE_poll_station, level = "ccaa", full_cod = FALSE)
 #' extract_code(id_INE_poll_station, level = "ccaa", full_cod = TRUE)
-#' extract_code(id_INE_poll_station, level = "mun-district", full_cod = TRUE)
+#' extract_code(id_INE_poll_station, level = "mun_district", full_cod = TRUE)
 #'
 #' \dontrun{
 #' # Wrong examples
@@ -132,10 +132,10 @@ extract_code <-
     }
 
     # Check: if level takes an allowed value
-    if (!(level %in% c("ccaa", "prov", "mun", "mun-district",
-                       "sec", "poll-station"))) {
+    if (!(level %in% c("ccaa", "prov", "mun", "mun_district",
+                       "sec", "poll_station"))) {
 
-      stop("Aggregation level provided by 'level' parameter must be taken from the following values: 'ccaa', 'prov', 'mun', 'mun-district', 'sec', 'poll-station'")
+      stop("Aggregation level provided by 'level' parameter must be taken from the following values: 'ccaa', 'prov', 'mun', 'mun-district', 'sec', 'poll_station'")
 
     }
 
@@ -153,7 +153,7 @@ extract_code <-
     i <- ifelse(level == "ccaa", 1,
              ifelse(level == "prov", 2,
                     ifelse(level == "mun", 3,
-                           ifelse(level == "mun-district", 4,
+                           ifelse(level == "mun_district", 4,
                                   ifelse(level == "sec", 5, 6)))))
 
     # Access to elements of the list
