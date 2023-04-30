@@ -39,6 +39,7 @@
 #' @importFrom tidyr drop_na
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr pivot_wider
+#' @importFrom tidyr replace_na
 #' @importFrom tidyr separate
 #' @importFrom tidyr unite
 #' @importFrom utils download.file
