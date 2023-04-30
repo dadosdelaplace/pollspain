@@ -158,7 +158,7 @@ get_poll_station_data <-
     }
 
     # Set of urls
-    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/csv/pollstation"
+    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/main/data/csv/pollstation"
     urls <- glue("{url_raw_data}/raw_poll_station_data_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
 
     # Collect raw data
@@ -355,7 +355,7 @@ get_candidacies_data <-
     }
 
     # Set of urls
-    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/remove-import-raw/data/csv/candidacies_pollstation"
+    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/main/data/csv/candidacies_pollstation"
     urls <- glue("{url_raw_data}/raw_candidacies_poll_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
 
     # Collect raw data
