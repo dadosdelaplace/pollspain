@@ -114,10 +114,10 @@ election_data <-
       get_poll_station_data("congress", year = 2019, month = c(4, 11))
 
 # and then aggregate at provided level
-agg_data <-
+prov_data <-
   election_data |>
   aggregate_election_data(level = "prov")
-agg_data
+prov_data
 ```
 
 
