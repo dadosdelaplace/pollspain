@@ -1,0 +1,1314 @@
+cod_elec,type_elec,date_elec,turn,cod_INE_prov,cod_mun_district,cod_INE_mun,id_candidacies,order,holder,name,surname,sex,id_card,elected
+03,senate,2016-06-26,1,04,9,010,000013,1,TRUE,Juan Jesús,Cano Castañeda, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,011,000013,2,TRUE,Juana,Antequera Puertas, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,012,000013,3,TRUE,José Luis,Túnez Cano, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,024,000017,1,TRUE,Manuel José,Gallardo Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,025,000017,2,TRUE,Josefa María,Uribe Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,026,000017,3,TRUE,José María,García Vargas, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,023,000028,1,TRUE,Juan Antonio,Amate Navarro, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,013,000041,1,TRUE,María del,Carmen Maldonado Ureña, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,014,000041,2,TRUE,Manuel,Ramón Nieto, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,022,000049,1,TRUE,Daniel Jesús,Cruz Garzón, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,007,000062,1,TRUE,Mónica,Fernández Amador, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,008,000062,2,TRUE,Teresa,Novo García, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,009,000062,3,TRUE,Luis Jesús,López Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,001,000068,1,TRUE,Luis Rogelio,Rodríguez Comendador Pérez, ,          ,TRUE
+03,senate,2016-06-26,1,04,9,002,000068,2,TRUE,Eugenio Jesús,Gonzálvez García, ,          ,TRUE
+03,senate,2016-06-26,1,04,9,003,000068,3,TRUE,María Isabel,Sánchez Torregrosa, ,          ,TRUE
+03,senate,2016-06-26,1,04,9,004,000077,1,TRUE,Juan Carlos,Pérez Navas, ,          ,TRUE
+03,senate,2016-06-26,1,04,9,005,000077,2,TRUE,Rosa María,Pintos Muñoz, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,006,000077,3,TRUE,José,Berruezo Padilla, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,019,000081,1,TRUE,Ricardo José,Martínez Monllor, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,020,000081,2,TRUE,Zenaida,Gonzáles Cerón, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,021,000081,3,TRUE,Juan José,Jerez Collado, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,015,000093,1,TRUE,Hugo César,Castro Arellano, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,016,000094,1,TRUE,Consuelo,Sardón Montoya, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,017,000094,2,TRUE,Ramiro José,Téllez Sanz, ,          ,FALSE
+03,senate,2016-06-26,1,04,9,018,000094,3,TRUE,José Francisco,Berenguel Gutiérrez, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,010,000013,1,TRUE,María Jesús,García Tovar, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,011,000013,2,TRUE,Carlos,Pérez González, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,012,000013,3,TRUE,Francisco,López García, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,025,000028,1,TRUE,Joaquín Antonio,Fernández Foncubierta, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,013,000041,1,TRUE,Luis Alberto,Lozano Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,014,000041,2,TRUE,Cristina,Ibáñez Pozo, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,015,000041,3,TRUE,Merecedes,Álvarez Tobalina, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,023,000049,1,TRUE,Mario,Carrillo Trujillo, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,024,000053,1,TRUE,Carmen,Díaz López, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,007,000062,1,TRUE,José Manuel,Mariscal Cifuentes, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,008,000062,2,TRUE,María Emma,Martín Díaz, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,009,000062,3,TRUE,José,Abeledo González, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,001,000068,1,TRUE,José Ignacio,Landaluce Calleja, ,          ,TRUE
+03,senate,2016-06-26,1,11,9,002,000068,2,TRUE,María José,de Alba Castiñeira, ,          ,TRUE
+03,senate,2016-06-26,1,11,9,003,000068,3,TRUE,José,Ortiz Galván, ,          ,TRUE
+03,senate,2016-06-26,1,11,9,004,000077,1,TRUE,Francisco,González Cabaña, ,          ,TRUE
+03,senate,2016-06-26,1,11,9,005,000077,2,TRUE,María Dolores,Naval Zarazaga, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,006,000077,3,TRUE,Francisco Manuel,Lara Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,020,000081,1,TRUE,Manuel,Serrano Martín, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,021,000081,2,TRUE,Antonio,García-Galán Molina, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,022,000081,3,TRUE,Margarita,Orozco Alfonsín, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,016,000093,1,TRUE,Manuel,Villalpando Chanivet, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,017,000094,1,TRUE,Antonio,Palomar García, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,018,000094,2,TRUE,Susana,Candón Canales, ,          ,FALSE
+03,senate,2016-06-26,1,11,9,019,000094,3,TRUE,David,Romero Díaz, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,010,000013,1,TRUE,Isidoro,García-Escribano Acedo, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,011,000013,2,TRUE,María del,Carmen Jaime Mena, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,012,000013,3,TRUE,Israel,Ortega Padilla, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,017,000017,1,TRUE,Francisco,Infante Lisarte, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,018,000017,2,TRUE,María del,Mar Díaz Polonio, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,019,000017,3,TRUE,Carlos,Bermudo Munzón, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,025,000028,1,TRUE,Félix,Caballero Parreño, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,013,000041,1,TRUE,Ana María,Sánchez García, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,014,000041,2,TRUE,Manuel de,Toro Costa, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,015,000041,3,TRUE,María Araceli,Sánchez Rabasco, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,020,000049,1,TRUE,Antonio,Zurera Cañadillas, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,021,000049,2,TRUE,María del,Carmen Fernández Martín, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,022,000049,3,TRUE,Francisco,Cejas Moreno, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,007,000062,1,TRUE,María Alegría,Jiménez Abao, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,008,000062,2,TRUE,José Manuel,Blanco Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,009,000062,3,TRUE,Antonia,Naranjo Carmona, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,004,000068,1,TRUE,María Beatríz,Jurado Fernández de Córdoba, ,          ,TRUE
+03,senate,2016-06-26,1,14,9,005,000068,2,TRUE,Jesús Ramón,Aguirre Muñoz, ,          ,TRUE
+03,senate,2016-06-26,1,14,9,006,000068,3,TRUE,Fernando,Priego Chacón, ,          ,TRUE
+03,senate,2016-06-26,1,14,9,001,000077,1,TRUE,José Manuel,Mármol Servián, ,          ,TRUE
+03,senate,2016-06-26,1,14,9,002,000077,2,TRUE,María de,la Salud Navajas González, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,003,000077,3,TRUE,Juan,Díaz Caballero, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,023,000081,1,TRUE,Jorge Rafael,Padilla Maestre, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,024,000081,2,TRUE,Mercedes,Jiménez Ortiz, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,016,000093,1,TRUE,Emilio,Martínez Montilla, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,026,000094,1,TRUE,Rafael,Saco Ayllón, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,027,000094,2,TRUE,Raúl,Martínez Torres, ,          ,FALSE
+03,senate,2016-06-26,1,14,9,028,000094,3,TRUE,Elena,Garrido Dorado, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,010,000013,1,TRUE,Antonio Francisco,Suárez García, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,011,000013,2,TRUE,Silvia,Torres Contreras, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,012,000013,3,TRUE,Francisco Javier,Cardenete Herrera, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,013,000041,1,TRUE,Elena,López Román, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,014,000041,2,TRUE,Rafael,Vázquez García, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,015,000041,3,TRUE,Raquel,Cabrerizo Contreras, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,023,000049,1,TRUE,Juan José,Amezcua Medina, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,007,000062,1,TRUE,Jesús María,del Río Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,008,000062,2,TRUE,Eva María,Fernández Alberto, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,009,000062,3,TRUE,Francisco Javier,Fernández Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,004,000068,1,TRUE,Sebastián Jesús,Pérez Ortiz, ,          ,TRUE
+03,senate,2016-06-26,1,18,9,005,000068,2,TRUE,Luis,González Ruiz, ,          ,TRUE
+03,senate,2016-06-26,1,18,9,006,000068,3,TRUE,María José,Martín Gómez, ,          ,TRUE
+03,senate,2016-06-26,1,18,9,001,000077,1,TRUE,José,Martínez Olmos, ,          ,TRUE
+03,senate,2016-06-26,1,18,9,002,000077,2,TRUE,Ana María,Gámez Tapias, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,003,000077,3,TRUE,José María,Rueda Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,020,000081,1,TRUE,María Begoña,López Hernández, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,021,000081,2,TRUE,José,Gallego Torres, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,022,000081,3,TRUE,Clara,Lillo Flores, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,016,000093,1,TRUE,María Inmaculada,Ruiz Felipe, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,017,000093,2,TRUE,Manuel,Serrano Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,018,000093,3,TRUE,Pedro José,Navarrete Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,18,9,019,000094,1,TRUE,Ignacio,Nogueras Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,010,000013,1,TRUE,Juan José,Dionisio Vázquez, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,011,000013,2,TRUE,María Ángeles,Muriel Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,012,000013,3,TRUE,Ignacio,Ramírez Millán, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,013,000041,1,TRUE,María Amparo,Merina Ávila, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,014,000041,2,TRUE,Francisco José,Mulet Ferrer, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,015,000041,3,TRUE,María Dolores,Fernández Avanthay, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,021,000049,1,TRUE,Gregorio,Bermejo Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,007,000062,1,TRUE,Josefa,Gallardo Santos, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,008,000062,2,TRUE,María José,Beiras Torrado, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,009,000062,3,TRUE,Francisco Luis,Carrellán Andaluz, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,004,000068,1,TRUE,María Dolores,López Gabarro, ,          ,TRUE
+03,senate,2016-06-26,1,21,9,005,000068,2,TRUE,María Soledad,Guadamillas Mora, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,006,000068,3,TRUE,Pedro,Yorquez Sancha, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,001,000077,1,TRUE,Manuel,Guerra González, ,          ,TRUE
+03,senate,2016-06-26,1,21,9,002,000077,2,TRUE,Ana María,Pérez Castilleja, ,          ,TRUE
+03,senate,2016-06-26,1,21,9,003,000077,3,TRUE,Amaro,Huelva Betanzos, ,          ,TRUE
+03,senate,2016-06-26,1,21,9,020,000081,1,TRUE,José Antonio,González Vaz, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,016,000093,1,TRUE,Rubén,Villegas Jacinto, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,017,000094,1,TRUE,José,Vacas Barranco, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,018,000094,2,TRUE,Rafael,Segovia Brome, ,          ,FALSE
+03,senate,2016-06-26,1,21,9,019,000094,3,TRUE,Joaquina,Hernández Verde, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,020,000012,1,TRUE,Luis,Ortiz Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,021,000012,2,TRUE,Marta,Chinchilla García, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,010,000013,1,TRUE,Dolores,Ciudad Campoy, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,011,000013,2,TRUE,Gabriel,Soria Díaz, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,012,000013,3,TRUE,Antonio,Sutil Montero, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,013,000041,1,TRUE,Rocío,Román Labrador, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,014,000041,2,TRUE,Virginia,Rodríguez Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,015,000041,3,TRUE,Andrés,Carmona Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,023,000049,1,TRUE,Carlos Julián,Arjona Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,007,000062,1,TRUE,María Soledad,Gutiérrez Liebana, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,008,000062,2,TRUE,Antonio Ramón,Quesada Arias, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,009,000062,3,TRUE,José Miguel,López López, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,004,000068,1,TRUE,Gabino Puche,Rodríguez Acosta, ,          ,TRUE
+03,senate,2016-06-26,1,23,9,005,000068,2,TRUE,Juana María,Jiménez Cano, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,006,000068,3,TRUE,José Juan,Sánchez Barrera, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,001,000077,1,TRUE,Laura,Berja Vega, ,          ,TRUE
+03,senate,2016-06-26,1,23,9,002,000077,2,TRUE,David,Delgado Jiménez, ,          ,TRUE
+03,senate,2016-06-26,1,23,9,003,000077,3,TRUE,Pío Rómulo,Zelaya Castro, ,          ,TRUE
+03,senate,2016-06-26,1,23,9,022,000081,1,TRUE,María Teresa,García Recena, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,016,000093,1,TRUE,Miguel Ángel,Garrido Jurado, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,017,000094,1,TRUE,Amelia,Bueno Sagra, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,018,000094,2,TRUE,María Magdalena,Puentedura Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,23,9,019,000094,3,TRUE,Juan Antonio,Rama Calero, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,010,000013,1,TRUE,María Luisa,Valero González, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,011,000013,2,TRUE,Jesús Miguel,Pérez Lanzac Muela, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,012,000013,3,TRUE,María Isabel,Balbin Luque, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,013,000041,1,TRUE,Noemí,Pérez Carrasco, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,014,000041,2,TRUE,María Ascensión,Jaén Lara, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,015,000041,3,TRUE,Marcos,Navarro García, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,023,000049,1,TRUE,Juan Manuel,Fernández Martín, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,024,000049,2,TRUE,María Iluminada,Ordóñez Casado, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,025,000049,3,TRUE,Cristóbal,Pérez Anaya, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,007,000062,1,TRUE,Carlos,Hernández Pezzi, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,008,000062,2,TRUE,Ana Cruz,García Azcárate, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,009,000062,3,TRUE,Rosario María,Rodríguez Vacas, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,001,000068,1,TRUE,María Ángeles,Muñoz Uriol, ,          ,TRUE
+03,senate,2016-06-26,1,29,9,002,000068,2,TRUE,Joaquín Luis,Ramírez Rodríguez, ,          ,TRUE
+03,senate,2016-06-26,1,29,9,003,000068,3,TRUE,Manuel,Marmolejo Setién, ,          ,TRUE
+03,senate,2016-06-26,1,29,9,004,000077,1,TRUE,Antonio,Morales Lázaro, ,          ,TRUE
+03,senate,2016-06-26,1,29,9,005,000077,2,TRUE,Deborah,León Artacho, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,006,000077,3,TRUE,Francisco,Muñoz Rico, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,020,000081,1,TRUE,Francisco José,Rodríguez Marín, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,021,000081,2,TRUE,Rafael,Núñez Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,022,000081,3,TRUE,Verónica,Alarcón Albarrán, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,016,000093,1,TRUE,Mercedes,Poza Poza, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,017,000094,1,TRUE,Fermín,Parrondo Carretero, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,018,000094,2,TRUE,Eugenio,Moltó García, ,          ,FALSE
+03,senate,2016-06-26,1,29,9,019,000094,3,TRUE,María Fernanda,Fontanellas Crespo, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,010,000013,1,TRUE,Ana,González Pinto, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,011,000013,2,TRUE,María Cristina,Domenech Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,012,000013,3,TRUE,Pedro,Taborda Martín, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,020,000028,1,TRUE,Jorge Francisco,Luis Gil Lorenzo, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,021,000028,2,TRUE,Virginia Marina,Alba Álvarez, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,022,000028,3,TRUE,Gracia,Collado Montanero, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,013,000041,1,TRUE,Rosa María,Jiménez Toledo, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,014,000041,2,TRUE,Gonzalo,González Valencia, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,015,000041,3,TRUE,Margarita,Zamudio León, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,026,000049,1,TRUE,Ismael,Guillén Ortega, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,007,000062,1,TRUE,Teresa,García Azcarate, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,008,000062,2,TRUE,Francisco Ernesto,Rodríguez Cano, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,009,000062,3,TRUE,María del,Pilar Távora Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,004,000068,1,TRUE,José Luis,Sanz Ruiz, ,          ,TRUE
+03,senate,2016-06-26,1,41,9,005,000068,2,TRUE,María Carmen,Rodríguez Hornillo, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,006,000068,3,TRUE,Andrés,Parrado Parra, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,001,000077,1,TRUE,Juan Carlos,José Raffo Camarillo, ,          ,TRUE
+03,senate,2016-06-26,1,41,9,002,000077,2,TRUE,María José,Fernández Muñoz, ,          ,TRUE
+03,senate,2016-06-26,1,41,9,003,000077,3,TRUE,Antonio Casimiro,Gavira Moreno, ,          ,TRUE
+03,senate,2016-06-26,1,41,9,023,000081,1,TRUE,Francisco Javier,Marín Mauri, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,024,000081,2,TRUE,Ángel,Troncoso Navarro, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,025,000081,3,TRUE,Josefa,López Vallejo, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,016,000093,1,TRUE,Alejandro,Baeza Serrano, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,017,000094,1,TRUE,María Cristina,Peláez Izquierdo, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,018,000094,2,TRUE,María José,Piñero Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,41,9,019,000094,3,TRUE,Joaquín,Cortés Robledo, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,010,000013,1,TRUE,María Pilar,Casado Francés, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,011,000013,2,TRUE,David Jorge,Betrián Villas, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,012,000013,3,TRUE,Verónica,Calvillo Zubiaurre, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,013,000017,1,TRUE,Luis Javier,Tejada Francia, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,014,000017,2,TRUE,Rosa María,Royo Royo, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,015,000017,3,TRUE,Sergio,García García, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,022,000024,1,TRUE,María Laura,Barrabés Cónsul, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,026,000039,1,TRUE,María Carmen,Torres Albarracín, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,016,000041,1,TRUE,María Pilar,Gaspar Paraled, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,017,000041,2,TRUE,Marcos,Rastrilla Antón, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,018,000041,3,TRUE,Carolina Rut,Uréndez Gawthorpe, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,021,000049,1,TRUE,Luis Ladislao,Izquierdo Pradilla, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,007,000060,1,TRUE,Santiago Manuel,Perbech Sanz, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,008,000060,2,TRUE,Teresa,Juanals Llobet, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,009,000060,3,TRUE,Luis Domingo,Salamero Casado, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,001,000071,1,TRUE,Antonio Ignacio,Romero Santolaria, ,          ,TRUE
+03,senate,2016-06-26,1,22,9,002,000071,2,TRUE,María Belén,Ibarz Ibarz, ,          ,TRUE
+03,senate,2016-06-26,1,22,9,003,000071,3,TRUE,Antonio,Villacampa Duque, ,          ,TRUE
+03,senate,2016-06-26,1,22,9,004,000077,1,TRUE,Begoña,Nasarre Oliva, ,          ,TRUE
+03,senate,2016-06-26,1,22,9,005,000077,2,TRUE,José María,Becana Sanahuja, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,006,000077,3,TRUE,María Pilar,Vidal Cortés, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,020,000081,1,TRUE,Pablo,Martínez Escanciano, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,019,000093,1,TRUE,Luisa,Laborda Lalueza, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,023,000094,1,TRUE,Juan,Morató Mascaró, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,024,000094,2,TRUE,Gemma,García Porras, ,          ,FALSE
+03,senate,2016-06-26,1,22,9,025,000094,3,TRUE,Miguel,González Díaz, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,010,000013,1,TRUE,Juan Ramón,Castaño Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,011,000013,2,TRUE,Mario,Ortíz Griñón, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,012,000013,3,TRUE,Alejandra,Ferrer Zamora, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,013,000017,1,TRUE,Luís Mariano,Andrés Ramiro, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,014,000017,2,TRUE,María Carmen,Martínez Torres, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,015,000017,3,TRUE,Pedro José,García Garrido, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,023,000028,1,TRUE,Luís Javier,Simón Domingo, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,021,000034,1,TRUE,Hector Juan,Filloy Viver, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,022,000039,1,TRUE,Felix,García Ucar, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,016,000041,1,TRUE,Carlos,Monclús Mateo, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,017,000041,2,TRUE,Sonia,Matamoros Rivero, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,018,000041,3,TRUE,Rafael,Perelló Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,020,000049,1,TRUE,Desamparados,Rodríguez Aparicio, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,007,000061,1,TRUE,José Antonio,Benavente Serrano, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,008,000061,2,TRUE,José María,Valero Vicente, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,009,000061,3,TRUE,María Peña,Martínez Rubio, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,001,000071,1,TRUE,Carmen,Pobo Sánchez, ,          ,TRUE
+03,senate,2016-06-26,1,44,9,002,000071,2,TRUE,Miguel Ángel,Estevan Serrano, ,          ,TRUE
+03,senate,2016-06-26,1,44,9,003,000071,3,TRUE,Raquel,Clemente Muñoz, ,          ,TRUE
+03,senate,2016-06-26,1,44,9,004,000077,1,TRUE,María Perla,Borao Aguirre, ,          ,TRUE
+03,senate,2016-06-26,1,44,9,005,000077,2,TRUE,Joaquín,Noé Serrano, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,006,000077,3,TRUE,María José,Lázaro Burillo, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,019,000081,1,TRUE,Raul,Anadon Pedrola, ,          ,FALSE
+03,senate,2016-06-26,1,44,9,024,000087,1,TRUE,Hungría,Gómez Álvarez, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,010,000013,1,TRUE,Carlos,Aparicio Tejedor, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,011,000013,2,TRUE,María Trinidad,Arias Ferrero, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,012,000013,3,TRUE,Conrado,Molina Boloix, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,013,000017,1,TRUE,Alicia,Rodríguez Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,014,000017,2,TRUE,Jesús Angel,García Corzán, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,015,000017,3,TRUE,María Carmen,Tierz Mur, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,026,000034,1,TRUE,Jose María,Abad Torres, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,027,000034,2,TRUE,Rosa Elena,Barcelona Andrés, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,028,000034,3,TRUE,Juan Carlos,Guillén Fabregat, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,030,000039,1,TRUE,Fernando,Diaz Sanz, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,016,000041,1,TRUE,Luz Divina,Navarro Rubio, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,017,000041,2,TRUE,Nuria,Gabasa Alzás, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,018,000041,3,TRUE,Samuel,Royo Millán, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,029,000049,1,TRUE,Miguel Angel,Galindo Vicente, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,007,000061,1,TRUE,Luis Miguel,Clarimon Torrecillas, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,008,000061,2,TRUE,Anais,Cid Fortea, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,009,000061,3,TRUE,Cristina,Pemán Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,001,000071,1,TRUE,Octavio,López Rodríguez, ,          ,TRUE
+03,senate,2016-06-26,1,50,9,002,000071,2,TRUE,Rosa,Santos Fernández, ,          ,TRUE
+03,senate,2016-06-26,1,50,9,003,000071,3,TRUE,Ricardo,Canals Lizano, ,          ,TRUE
+03,senate,2016-06-26,1,50,9,004,000077,1,TRUE,Juan José,Rubio Ruiz, ,          ,TRUE
+03,senate,2016-06-26,1,50,9,005,000077,2,TRUE,Mª Nieves,Pérez Sevilla, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,006,000077,3,TRUE,Eugenio,Torrubia Acón, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,022,000081,1,TRUE,José María,Pallejá Piñol, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,023,000081,2,TRUE,María Jesús,Benedicto Ortiz, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,024,000081,3,TRUE,Santiago,Rubio Mesa, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,019,000093,1,TRUE,José Luís,Lajara Lagranja, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,020,000093,2,TRUE,María Elena,Bello Brau, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,021,000093,3,TRUE,Alfredo,Buisán Clemente, ,          ,FALSE
+03,senate,2016-06-26,1,50,9,025,000094,1,TRUE,David,Sancho Remón, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,010,000013,1,TRUE,Javier,Álvarez Peón, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,011,000013,2,TRUE,María Guadalupe,Fernández Brea, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,012,000013,3,TRUE,Carlos José,Rábade Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,016,000017,1,TRUE,José Constantino,García Medina, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,017,000017,2,TRUE,María Florentina,Vega Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,018,000017,3,TRUE,Manuel Ángel,Carril Suárez, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,013,000041,1,TRUE,David,Cienfuegos Cereijo, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,014,000041,2,TRUE,Laura,García García, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,015,000041,3,TRUE,María Flor,Vázquez Arango, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,027,000049,1,TRUE,Saúl,Fernández Garrote, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,028,000049,2,TRUE,José Antonio,Álvarez Méndez, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,029,000049,3,TRUE,Ana María,Turrero Orrio, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,030,000052,1,TRUE,Fernando,Tortonda Gaspar, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,004,000065,1,TRUE,Jara,González Villanueva, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,005,000065,2,TRUE,Lluis Miguel,Orviz Menéndez, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,006,000065,3,TRUE,Lisístrata,Suárez Pedre, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,001,000070,1,TRUE,Ovidio,Sánchez Díaz, ,          ,TRUE
+03,senate,2016-06-26,1,33,9,002,000070,2,TRUE,Mario,Arias Navia, ,          ,TRUE
+03,senate,2016-06-26,1,33,9,003,000070,3,TRUE,Rosa María,Domínguez de Posada Puertas, ,          ,TRUE
+03,senate,2016-06-26,1,33,9,007,000077,1,TRUE,Vicente Alberto,Álvarez Areces, ,          ,TRUE
+03,senate,2016-06-26,1,33,9,008,000077,2,TRUE,María,Fernández Álvarez, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,009,000077,3,TRUE,Pelayo,Prendes González, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,024,000081,1,TRUE,José Antonio,Lobato González, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,025,000081,2,TRUE,Eduardo,Madroñal Pedraza, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,026,000081,3,TRUE,Rosa María,Navarrete Sehnert, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,019,000093,1,TRUE,Emilio,Caveda Valle, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,020,000093,2,TRUE,María del,Carmen Llames Pereira, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,021,000093,3,TRUE,Pablo de,la Riva Muñiz, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,022,000094,1,TRUE,María Aránzazu,Martínez Riola, ,          ,FALSE
+03,senate,2016-06-26,1,33,9,023,000094,2,TRUE,Roberto,Fernández Argüelles, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,007,000013,1,TRUE,Francisco Javier,Giménez Borrás, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,008,000013,2,TRUE,Laura,Rodeño Hernández, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,009,000041,1,TRUE,Diana María,Martín Hämphälä, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,010,000041,2,TRUE,Arturo,Arévalo González, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,015,000051,1,TRUE,Gaspar,Buades Rul·lan, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,016,000051,2,TRUE,Mª Amalia,Schmidt Gil Moreno de Mora, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,001,000057,1,TRUE,Margarita,Quetglas Quesada, ,          ,TRUE
+03,senate,2016-06-26,1,07,1,002,000057,2,TRUE,Juan José,Martínez Riera, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,003,000068,1,TRUE,Miguel Ángel,Ramis Socias, ,          ,TRUE
+03,senate,2016-06-26,1,07,1,004,000068,2,TRUE,Catalina,Soler Torres, ,          ,TRUE
+03,senate,2016-06-26,1,07,1,005,000077,1,TRUE,Natalia,Troya Isern, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,006,000077,2,TRUE,Francisco,Ducrós Salvá, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,013,000081,1,TRUE,Juan José,Fernández Panadero, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,014,000081,2,TRUE,Ana María,Mingolla López, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,017,000085,1,TRUE,Josep de,Luis Ferrer, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,018,000085,2,TRUE,Maria Loreto,Amorós i Rotger, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,011,000093,1,TRUE,Antonio,Romero García, ,          ,FALSE
+03,senate,2016-06-26,1,07,1,012,000093,2,TRUE,Francina Catalina,Martí Capellá, ,          ,FALSE
+03,senate,2016-06-26,1,07,2,004,000013,1,TRUE,Manuel,Bonmatí Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,07,2,005,000041,1,TRUE,Catalina,Sastre Florit, ,          ,FALSE
+03,senate,2016-06-26,1,07,2,001,000057,1,TRUE,Margarita Juana,Benejam Coll, ,          ,FALSE
+03,senate,2016-06-26,1,07,2,002,000068,1,TRUE,Juana Francisca,Pons Vila, ,          ,TRUE
+03,senate,2016-06-26,1,07,2,003,000077,1,TRUE,Miquel,Company Pons, ,          ,FALSE
+03,senate,2016-06-26,1,07,3,004,000013,1,TRUE,Irene,Torres Cardona, ,          ,FALSE
+03,senate,2016-06-26,1,07,3,005,000041,1,TRUE,Raquel,Molina Costa, ,          ,FALSE
+03,senate,2016-06-26,1,07,3,007,000051,1,TRUE,Iván del,Alcázar Armada, ,          ,FALSE
+03,senate,2016-06-26,1,07,3,002,000058,1,TRUE,Mario Miguel,Devis Lujan, ,          ,FALSE
+03,senate,2016-06-26,1,07,3,001,000068,1,TRUE,Santiago,Marí Torres, ,          ,TRUE
+03,senate,2016-06-26,1,07,3,003,000077,1,TRUE,Antoni,Costa Costa, ,          ,FALSE
+03,senate,2016-06-26,1,07,3,008,000085,1,TRUE,Ferran,Moreno Castillón, ,          ,FALSE
+03,senate,2016-06-26,1,07,3,006,000093,1,TRUE,José,Segador Parra, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,009,000007,1,TRUE,Beatriz,Calzada Ojeda, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,010,000007,2,TRUE,Gustavo,Viera Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,007,000013,1,TRUE,Francisco de,Torres Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,008,000013,2,TRUE,Leticia,García Díaz, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,024,000036,1,TRUE,Bernardo Francisco,Medina Alonso, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,025,000036,2,TRUE,Maria Sabrina,Barnús Castro, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,026,000036,3,TRUE,Bernabé Ubay,Garcia Melián, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,011,000041,1,TRUE,José Carlos,Socorro Perdomo, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,012,000041,2,TRUE,María Reyes,Martell González, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,018,000045,1,TRUE,Francisca Carmen,Sánchez Macías, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,019,000045,2,TRUE,Joaquín,Ávila García, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,027,000052,1,TRUE,Mouhamadou Moustapha,Diot Wade, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,003,000059,1,TRUE,María del,Pino Alemán Guedes, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,004,000059,2,TRUE,José Antonio,de León Hernández, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,001,000068,1,TRUE,María Auxiliadora,Pérez Díaz, ,          ,TRUE
+03,senate,2016-06-26,1,35,1,002,000068,2,TRUE,Hipólito Alejandro,(Poli) Suárez Nuez, ,          ,TRUE
+03,senate,2016-06-26,1,35,1,005,000078,1,TRUE,Juan,Díaz Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,006,000078,2,TRUE,María José,López Santana, ,          ,TRUE
+03,senate,2016-06-26,1,35,1,016,000081,1,TRUE,Francisco,Ojeda Ramírez, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,017,000081,2,TRUE,Anastasia María,Ramírez González, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,022,000084,1,TRUE,Ángel,Rodríguez Calderín, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,023,000084,2,TRUE,Teresa de,Jesús García Miranda, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,014,000088,1,TRUE,Antonio Ramón,Blanco Ramos, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,015,000088,2,TRUE,Rosa María,Rodríguez Morales, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,013,000093,1,TRUE,Jesús Antonio,Urriza Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,020,000094,1,TRUE,Manuel,Vega Marrero, ,          ,FALSE
+03,senate,2016-06-26,1,35,1,021,000094,2,TRUE,María del,Carmen Santana Martín, ,          ,FALSE
+03,senate,2016-06-26,1,35,2,004,000007,1,TRUE,Marciano,Acuña Betancor, ,          ,FALSE
+03,senate,2016-06-26,1,35,2,005,000013,1,TRUE,María,Moreira León, ,          ,FALSE
+03,senate,2016-06-26,1,35,2,006,000041,1,TRUE,Ana Isabel,Díaz Cruces, ,          ,FALSE
+03,senate,2016-06-26,1,35,2,008,000045,1,TRUE,Jorge,García-Aráez Martín-Montalvo, ,          ,FALSE
+03,senate,2016-06-26,1,35,2,001,000059,1,TRUE,Juan Antonio,Valencia Naranjo, ,          ,FALSE
+03,senate,2016-06-26,1,35,2,003,000068,1,TRUE,Remigio Joel,Delgado Cáceres, ,          ,TRUE
+03,senate,2016-06-26,1,35,2,002,000078,1,TRUE,Ariagona,González Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,35,2,007,000081,1,TRUE,Neido Manuel,González Álvarez, ,          ,FALSE
+03,senate,2016-06-26,1,35,2,009,000094,1,TRUE,Antonia María,de los Ángeles León Armas, ,          ,FALSE
+03,senate,2016-06-26,1,35,3,004,000007,1,TRUE,Agustín David,Trujillo Saavedra, ,          ,FALSE
+03,senate,2016-06-26,1,35,3,005,000013,1,TRUE,Antonio,Olmedo Manzanares, ,          ,FALSE
+03,senate,2016-06-26,1,35,3,006,000041,1,TRUE,María de,los Ángeles Encabo López, ,          ,FALSE
+03,senate,2016-06-26,1,35,3,010,000045,1,TRUE,María del,Carmen Talavera Quevedo, ,          ,FALSE
+03,senate,2016-06-26,1,35,3,002,000059,1,TRUE,Rafael Juan,Rodríguez Marrero, ,          ,FALSE
+03,senate,2016-06-26,1,35,3,001,000068,1,TRUE,Claudio,Gutiérrez Vera, ,          ,TRUE
+03,senate,2016-06-26,1,35,3,003,000078,1,TRUE,Taishet,Fuentes Gutiérrez, ,          ,FALSE
+03,senate,2016-06-26,1,35,3,007,000081,1,TRUE,Humberto Manuel,González Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,35,3,008,000088,1,TRUE,Pablo,García Bolaños, ,          ,FALSE
+03,senate,2016-06-26,1,35,3,009,000094,1,TRUE,Ricardo Ramón,Baña Oubiña, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,001,000007,1,TRUE,Mariano,Pérez Hernández, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,002,000007,2,TRUE,María de,la O Gaspar González, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,011,000013,1,TRUE,José Manuel,Perera Quintana, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,012,000013,2,TRUE,Petra,Moyano Cachinero, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,009,000017,1,TRUE,Mateo Jesús,Pérez Marrero, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,010,000017,2,TRUE,María Cristina,Talavera Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,013,000036,1,TRUE,Federico,Galván Santana, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,014,000036,2,TRUE,María Teresa,García Lemus, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,007,000041,1,TRUE,María José,Martín Fagundo, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,008,000041,2,TRUE,Francisco Javier,Pérez Herrera, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,017,000045,1,TRUE,Leandro,González García, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,018,000045,2,TRUE,Sara María,Martín Pimentel, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,019,000059,1,TRUE,Manuel José,González Mauricio, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,020,000059,2,TRUE,Marta Esther,Jiménez Jaén, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,003,000068,1,TRUE,Antonio,Alarcó Hernández, ,          ,TRUE
+03,senate,2016-06-26,1,38,4,004,000068,2,TRUE,María Isabel,García Luis, ,          ,TRUE
+03,senate,2016-06-26,1,38,4,005,000078,1,TRUE,Olivia María,Delgado Oval, ,          ,TRUE
+03,senate,2016-06-26,1,38,4,006,000078,2,TRUE,José Vicente,González Bethencourt, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,015,000081,1,TRUE,José Ramón,Carrillo Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,38,4,016,000081,2,TRUE,Yuli Lizbeth,Prado Arango, ,          ,FALSE
+03,senate,2016-06-26,1,38,5,003,000007,1,TRUE,Marcos José,Lorenzo Martín, ,          ,FALSE
+03,senate,2016-06-26,1,38,5,005,000013,1,TRUE,María de,las Nieves Cobiella Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,38,5,006,000041,1,TRUE,Concepción Elena,Acosta Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,38,5,008,000045,1,TRUE,Carlos,Ruiz Miró, ,          ,FALSE
+03,senate,2016-06-26,1,38,5,004,000059,1,TRUE,Juan Carlos,Pérez Brito, ,          ,FALSE
+03,senate,2016-06-26,1,38,5,001,000068,1,TRUE,Mariano,Hernández Zapata, ,          ,TRUE
+03,senate,2016-06-26,1,38,5,002,000078,1,TRUE,Francisco Javier,Paz Expósito, ,          ,FALSE
+03,senate,2016-06-26,1,38,5,007,000081,1,TRUE,Rayco,Pérez Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,38,6,001,000003,1,TRUE,Yaiza,Castilla Herrera, ,          ,TRUE
+03,senate,2016-06-26,1,38,6,005,000007,1,TRUE,Christian,Méndez Benedetti, ,          ,FALSE
+03,senate,2016-06-26,1,38,6,006,000013,1,TRUE,Miguel Ángel,Rodríguez González, ,          ,FALSE
+03,senate,2016-06-26,1,38,6,007,000041,1,TRUE,María Urbana,Perdomo Pino, ,          ,FALSE
+03,senate,2016-06-26,1,38,6,009,000045,1,TRUE,Antonio Alexis,Dorta Macía, ,          ,FALSE
+03,senate,2016-06-26,1,38,6,004,000059,1,TRUE,Annabely,Plasencia Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,38,6,003,000068,1,TRUE,Victor David,Herrera Casanova, ,          ,FALSE
+03,senate,2016-06-26,1,38,6,002,000078,1,TRUE,Gregorio Ramón,Medina Tomé, ,          ,FALSE
+03,senate,2016-06-26,1,38,6,008,000081,1,TRUE,Manuel Ruymán,Delgado Méndez, ,          ,FALSE
+03,senate,2016-06-26,1,38,7,001,000006,1,TRUE,Pablo,Rodríguez Cejas, ,          ,TRUE
+03,senate,2016-06-26,1,38,7,005,000013,1,TRUE,Lisardo Gaspar,Cejas Padrón, ,          ,FALSE
+03,senate,2016-06-26,1,38,7,006,000041,1,TRUE,María Josefa,González Chinea, ,          ,FALSE
+03,senate,2016-06-26,1,38,7,008,000045,1,TRUE,Bruno,Díaz González, ,          ,FALSE
+03,senate,2016-06-26,1,38,7,004,000059,1,TRUE,Sandra Magdalena,Lima Casañas, ,          ,FALSE
+03,senate,2016-06-26,1,38,7,003,000068,1,TRUE,José Miguel,Sánchez Padrón, ,          ,FALSE
+03,senate,2016-06-26,1,38,7,002,000078,1,TRUE,Juan,Castañeda Acosta, ,          ,FALSE
+03,senate,2016-06-26,1,38,7,007,000081,1,TRUE,Selene,Benítez Ghersi, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,010,000013,1,TRUE,David,Acosta Desmedt, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,011,000013,2,TRUE,Carlos Javier,Fernández Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,012,000013,3,TRUE,Luisa Fernanda,Zárate Escalante, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,026,000017,1,TRUE,Jesús,Martínez Torrijos, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,027,000017,2,TRUE,María Carmen,Bahillo Suárez, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,028,000017,3,TRUE,Alejandro,Revuelta Iturbe, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,013,000041,1,TRUE,Noemí,Lago García, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,014,000041,2,TRUE,Agustín,Rodríguez López, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,015,000041,3,TRUE,Encarnación,García Aja, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,022,000049,1,TRUE,Eloy,Baro Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,025,000053,1,TRUE,Juan Mariano,Ordás García, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,007,000059,1,TRUE,Kevin,Botejara López, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,008,000059,2,TRUE,Mercedes,Boix Rovira, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,009,000059,3,TRUE,Montserrat,Obregón Crespo, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,001,000068,1,TRUE,Francisco Javier,Fernández González, ,          ,TRUE
+03,senate,2016-06-26,1,39,9,002,000068,2,TRUE,Blanca Azucena,Martínez Gómez, ,          ,TRUE
+03,senate,2016-06-26,1,39,9,003,000068,3,TRUE,María Esther,Merino Portugal, ,          ,TRUE
+03,senate,2016-06-26,1,39,9,004,000077,1,TRUE,Miguel Ángel,González Vega, ,          ,TRUE
+03,senate,2016-06-26,1,39,9,005,000077,2,TRUE,María Concepción,Linaza López, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,006,000077,3,TRUE,Manuel,Ceballos Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,023,000081,1,TRUE,Juan Salvador,Castañeda Morla, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,024,000084,1,TRUE,Íñigo,Ugarte Olano, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,016,000093,1,TRUE,María Victoria,Huerta Herrera, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,017,000093,2,TRUE,Jesús Manuel,López Zapatero, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,018,000093,3,TRUE,Vicente,Orduña Sáez, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,019,000094,1,TRUE,José Luis,Pérez López, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,020,000094,2,TRUE,María Concepción,Gutiérrez García, ,          ,FALSE
+03,senate,2016-06-26,1,39,9,021,000094,3,TRUE,Roque,Alonso Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,010,000013,1,TRUE,María Teresa,García Arce, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,011,000013,2,TRUE,Francisco Javier,Ramón Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,012,000013,3,TRUE,Julián,Ramón García, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,019,000028,1,TRUE,José Antonio,Marzal Dannequin, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,013,000041,1,TRUE,Cristina,Moreno Donate, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,014,000041,2,TRUE,Manuel Ángel,González Hidalgo, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,015,000041,3,TRUE,Jorge,Torres Zarza, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,017,000049,1,TRUE,Francisco Javier,Romero Galdón, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,007,000059,1,TRUE,Carmen,Fajardo Barba, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,008,000059,2,TRUE,María Teresa,Márquez González, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,009,000059,3,TRUE,Juan Miguel,Rodríguez Cuesta, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,001,000068,1,TRUE,Vicente,Aroca Sáez, ,          ,TRUE
+03,senate,2016-06-26,1,02,9,002,000068,2,TRUE,Antonio Marcial,Marín Hellín, ,          ,TRUE
+03,senate,2016-06-26,1,02,9,003,000068,3,TRUE,María Rosario,Rodríguez Rueda, ,          ,TRUE
+03,senate,2016-06-26,1,02,9,004,000077,1,TRUE,Matilde,Valentín Navarro, ,          ,TRUE
+03,senate,2016-06-26,1,02,9,005,000077,2,TRUE,Manuel,Martínez Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,006,000077,3,TRUE,Josefa,Moreno Docón, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,018,000081,1,TRUE,Eduardo,Puerta Cava, ,          ,FALSE
+03,senate,2016-06-26,1,02,9,016,000093,1,TRUE,Ana María,Martínez López, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,010,000013,1,TRUE,Ángela,López Castro, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,011,000013,2,TRUE,Virginia,Espinosa Gallego, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,012,000013,3,TRUE,Richard,Andrés Domínguez, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,013,000041,1,TRUE,Estefanía,Navas Díaz, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,014,000041,2,TRUE,Luis,Zamarreño Cosme, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,015,000041,3,TRUE,Ana,Martín Navas, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,007,000059,1,TRUE,Luis Benítez,de Lugo Enrich, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,008,000059,2,TRUE,Nuria,Moraga Yébenes, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,009,000059,3,TRUE,Clorinda Ivonne,Tejada Chauca, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,001,000068,1,TRUE,Carlos Manuel,Cotillas López, ,          ,TRUE
+03,senate,2016-06-26,1,13,9,002,000068,2,TRUE,Miguel Ángel,Valverde Menchero, ,          ,TRUE
+03,senate,2016-06-26,1,13,9,003,000068,3,TRUE,Cristina Flora,Molina Ciudad, ,          ,TRUE
+03,senate,2016-06-26,1,13,9,004,000077,1,TRUE,Jesús,Martín Rodríguez, ,          ,TRUE
+03,senate,2016-06-26,1,13,9,005,000077,2,TRUE,Ana María,Martínez Losa, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,006,000077,3,TRUE,Luis,Rubio Bremard, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,019,000081,1,TRUE,Alejandro Cerro,de Lara, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,016,000093,1,TRUE,Ángel María,Rico Navarro, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,017,000093,2,TRUE,Francisca,Mora Cruz, ,          ,FALSE
+03,senate,2016-06-26,1,13,9,018,000093,3,TRUE,Venancio del,Coso Molina, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,010,000013,1,TRUE,Adolfo,Fernández Grimaldos, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,011,000013,2,TRUE,Pedro de,la Torre García, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,012,000013,3,TRUE,Ofelia,Martínez Muñoz, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,013,000041,1,TRUE,Victoria Ángela,de la Vega Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,014,000041,2,TRUE,María Rosa,Martínez Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,015,000041,3,TRUE,Alejandro,Gallego Parra, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,021,000049,1,TRUE,José Luis,Gómez Gata, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,007,000059,1,TRUE,Ana María,Navarrete Tudela, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,008,000059,2,TRUE,Lorena,Gallego García, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,009,000059,3,TRUE,Francisco José,Torrecillas Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,001,000068,1,TRUE,Carlos Alberto,Algaba Soler, ,          ,TRUE
+03,senate,2016-06-26,1,16,9,002,000068,2,TRUE,María Montserrat,Martínez González, ,          ,TRUE
+03,senate,2016-06-26,1,16,9,003,000068,3,TRUE,Pedro,Jareño Paricio, ,          ,TRUE
+03,senate,2016-06-26,1,16,9,004,000077,1,TRUE,Manuela,Galiano López, ,          ,TRUE
+03,senate,2016-06-26,1,16,9,005,000077,2,TRUE,Eugenio,Heredia López, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,006,000077,3,TRUE,Gema María,Pradillo Ballestero, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,020,000081,1,TRUE,Armando,Yuste Mislata, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,016,000093,1,TRUE,Isabel,Arroyo Caballero, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,017,000094,1,TRUE,Juan Antonio,López Picazo, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,018,000094,2,TRUE,María Victoria,Alcarria Peña, ,          ,FALSE
+03,senate,2016-06-26,1,16,9,019,000094,3,TRUE,David,Alcántara López, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,007,000013,1,TRUE,Silvia,García Nieto, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,008,000013,2,TRUE,Juan Carlos,Gil Rodrigo, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,009,000013,3,TRUE,Carlos,Maceiras Teijeiro, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,026,000028,1,TRUE,José Antonio,Márquez Díaz, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,027,000028,2,TRUE,Ángel,Pozo Granados, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,028,000028,3,TRUE,María Eva,Lobato Galindo, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,013,000041,1,TRUE,Susana,Barrios García, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,014,000041,2,TRUE,Antonio,Navarro Zanón, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,015,000041,3,TRUE,Francisca,Caballero Valdivia, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,010,000059,1,TRUE,Begoña,Rojas Gutierrez, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,011,000059,2,TRUE,Juan Carlos,Ranz Alonso, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,012,000059,3,TRUE,Fernando,Plaza Minguez, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,001,000068,1,TRUE,Juan Pablo,Sánchez Sánchez-Seco, ,          ,TRUE
+03,senate,2016-06-26,1,19,9,002,000068,2,TRUE,Ana María,González García, ,          ,TRUE
+03,senate,2016-06-26,1,19,9,003,000068,3,TRUE,Juan Antonio,de las Heras Muela, ,          ,TRUE
+03,senate,2016-06-26,1,19,9,004,000077,1,TRUE,Riansares,Serrano Morales, ,          ,TRUE
+03,senate,2016-06-26,1,19,9,005,000077,2,TRUE,Angel,Villoria González, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,006,000077,3,TRUE,Sara,Martínez Bronchalo, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,022,000081,1,TRUE,Adoración,Durán González, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,023,000084,1,TRUE,Julián Ángel,García Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,024,000084,2,TRUE,Julio,Pérez Álvarez, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,025,000084,3,TRUE,Araceli,González Jiménez, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,016,000093,1,TRUE,José Joaquín,Ormazábal Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,017,000093,2,TRUE,Almudena,Fernández Santiago, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,018,000093,3,TRUE,María de,los Ángeles López Galdeano, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,019,000094,1,TRUE,Carlos Javier,Gutiérrez García, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,020,000094,2,TRUE,Juán Luis,Abellán Garcinuño, ,          ,FALSE
+03,senate,2016-06-26,1,19,9,021,000094,3,TRUE,Nélida Marina,Albacete Alonso, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,010,000013,1,TRUE,Jonatan,Bermejo Corrochano, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,011,000013,2,TRUE,Raúl,Casla Casla, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,012,000013,3,TRUE,María del,Pilar Barroso Durán, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,027,000027,1,TRUE,Florentino,López García, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,024,000028,1,TRUE,Julio,González Moreno, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,025,000028,2,TRUE,Ana Belén,Cuervo Aparicio, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,026,000028,3,TRUE,María,Martín Arija, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,013,000041,1,TRUE,Miriam,Tamayo Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,014,000041,2,TRUE,David,Palacios Esteban, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,015,000041,3,TRUE,María Isabel,Cuesta Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,023,000049,1,TRUE,David,Espinosa Cuadrado, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,007,000059,1,TRUE,Cecilia,Redondo Calabuig, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,008,000059,2,TRUE,Juan Turón,de Manuel, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,009,000059,3,TRUE,Sayla,Gutiérrez Íñigo, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,001,000068,1,TRUE,Carmen,Riolobos Regadera, ,          ,TRUE
+03,senate,2016-06-26,1,45,9,002,000068,2,TRUE,Tomás,Burgos Beteta, ,          ,TRUE
+03,senate,2016-06-26,1,45,9,003,000068,3,TRUE,Jesús,Labrador Encinas, ,          ,TRUE
+03,senate,2016-06-26,1,45,9,004,000077,1,TRUE,Félix,Ortega Fernández, ,          ,TRUE
+03,senate,2016-06-26,1,45,9,005,000077,2,TRUE,Nuria del,Rosario Herrero Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,006,000077,3,TRUE,David,Talavera Almendro, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,022,000081,1,TRUE,Ángel,Díaz García, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,016,000093,1,TRUE,Amanda de,Lucio Moreno, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,017,000093,2,TRUE,Ángel,Velasco Aroca, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,018,000093,3,TRUE,Oscar,Tejedor López, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,019,000094,1,TRUE,Daniel,Arias Vegas, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,020,000094,2,TRUE,Carmen Eileen,García Ortega, ,          ,FALSE
+03,senate,2016-06-26,1,45,9,021,000094,3,TRUE,Rodrigo,Rodríguez García, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,007,000013,1,TRUE,Miguel Luis,Jiménez Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,008,000013,2,TRUE,Benito,Gago Calvo, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,009,000013,3,TRUE,Margarita María,López Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,019,000028,1,TRUE,Anastasio,Rodríguez Martín, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,020,000028,2,TRUE,María Belén,Gómez Franco, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,016,000041,1,TRUE,Marina,Martínez Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,017,000041,2,TRUE,Vicente de,la Calle Avezuela, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,018,000041,3,TRUE,Miriam,Jiménez Quintero, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,010,000059,1,TRUE,Miriam,Martín Prieto, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,011,000059,2,TRUE,Pedro,Herrero García, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,012,000059,3,TRUE,María Teresa,Gloria López Alija, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,001,000068,1,TRUE,Sebastián,González Vázquez, ,          ,TRUE
+03,senate,2016-06-26,1,05,9,002,000068,2,TRUE,Miguel Ángel,García Nieto, ,          ,TRUE
+03,senate,2016-06-26,1,05,9,003,000068,3,TRUE,María del,Carmen de Aragón Amunarriz, ,          ,TRUE
+03,senate,2016-06-26,1,05,9,004,000077,1,TRUE,María del,Carmen Iglesias Parra, ,          ,TRUE
+03,senate,2016-06-26,1,05,9,005,000077,2,TRUE,José Antonio,Herráez Martín, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,006,000077,3,TRUE,María de,los Ángeles García Salcedo, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,021,000081,1,TRUE,Alvaro,Fernández Mateo, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,013,000093,1,TRUE,María de,los Ángeles Bartolomé González, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,014,000093,2,TRUE,Isabel,Romero Arévalo, ,          ,FALSE
+03,senate,2016-06-26,1,05,9,015,000093,3,TRUE,Rufino,Martín López, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,010,000013,1,TRUE,Javier,Batallé Sáiz, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,011,000013,2,TRUE,Julián,Ruiz Navazo, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,012,000013,3,TRUE,Mercedes,López Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,023,000033,1,TRUE,José,Casado Vadillo, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,024,000033,2,TRUE,Imanol,Santamaría Mera, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,025,000033,3,TRUE,Ana Isabel,López Torre, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,016,000041,1,TRUE,Alicia,Martínez Falcón, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,017,000041,2,TRUE,Christian,Rivero Paz, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,018,000041,3,TRUE,Paloma Sastre,Martín Moreno, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,027,000049,1,TRUE,Carlos,Presa Irazabal, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,007,000059,1,TRUE,Ignacio,Lacamara González, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,008,000059,2,TRUE,María Ángeles,Pizarro de la Fuente, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,009,000059,3,TRUE,Jorge,García Velasco, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,001,000068,1,TRUE,María Begoña,Contreras Olmedo, ,          ,TRUE
+03,senate,2016-06-26,1,09,9,002,000068,2,TRUE,Arturo,Pascual Madina, ,          ,TRUE
+03,senate,2016-06-26,1,09,9,003,000068,3,TRUE,Cristina,Ayala Santamaría, ,          ,TRUE
+03,senate,2016-06-26,1,09,9,004,000077,1,TRUE,Andrés,Gil García, ,          ,TRUE
+03,senate,2016-06-26,1,09,9,005,000077,2,TRUE,Susana,Pardo Gutiérrez, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,006,000077,3,TRUE,Gerardo,Triana Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,026,000081,1,TRUE,Enrique,Morales Zubizarreta, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,020,000084,1,TRUE,Hilda,Vizarro Taipe, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,021,000084,2,TRUE,Rodrigo del,Pozo Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,022,000084,3,TRUE,Jorge,Lara Izquierdo, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,013,000093,1,TRUE,Juan Antonio,Jorde González, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,014,000093,2,TRUE,Estefanía,García Marrón, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,015,000093,3,TRUE,Jesús,Gurruchaga Ríos, ,          ,FALSE
+03,senate,2016-06-26,1,09,9,019,000094,1,TRUE,Félix Lorenzo,Martín Moro, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,031,000001,1,TRUE,Cristina,Garrido Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,010,000013,1,TRUE,Ignacio Ramón,López Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,011,000013,2,TRUE,Miguel Ángel,Cuervo Santos, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,012,000013,3,TRUE,María del,Mar Ordóñez Álvarez, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,013,000041,1,TRUE,Nuria,Alcántara Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,014,000041,2,TRUE,Ramón,González Cimadevilla, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,015,000041,3,TRUE,María Begoña,Fernández García, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,027,000049,1,TRUE,David,García Valcarce, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,028,000049,2,TRUE,Marina Olivia,Alonso Pastor, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,029,000049,3,TRUE,David Guzmán,Pernía González, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,007,000059,1,TRUE,Emilia Luisa,Esteban Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,008,000059,2,TRUE,Raúl,Martín Gil, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,009,000059,3,TRUE,Susana,Carballo González, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,001,000068,1,TRUE,Luis,Aznar Fernández, ,          ,TRUE
+03,senate,2016-06-26,1,24,9,002,000068,2,TRUE,Esther Muñoz,de la Iglesia, ,          ,TRUE
+03,senate,2016-06-26,1,24,9,003,000068,3,TRUE,Alfonso Jesús,Rodríguez-Hevia González, ,          ,TRUE
+03,senate,2016-06-26,1,24,9,016,000072,1,TRUE,Emiliano,Alonso Seijas, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,017,000072,2,TRUE,Catalina,Antúnez García, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,018,000072,3,TRUE,Jesús,Fernández Villar, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,004,000077,1,TRUE,Graciliano,Palomo García, ,          ,TRUE
+03,senate,2016-06-26,1,24,9,005,000077,2,TRUE,Nuria Díaz,de Geras Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,006,000077,3,TRUE,José Luis,Martínez Matilla, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,025,000081,1,TRUE,Ángel,Álvarez Vega, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,026,000081,2,TRUE,María Carmen,Fernández Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,030,000091,1,TRUE,Luis Manuel,Esteban Gutiérrez, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,019,000093,1,TRUE,Ramón,Rodríguez Alaiz, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,020,000093,2,TRUE,Ángel,Atienza Carreño, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,021,000093,3,TRUE,Ana María,Eugenia Martínez García, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,022,000094,1,TRUE,Antonio,López Bouza, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,023,000094,2,TRUE,Isidoro,Fernández Cadenas, ,          ,FALSE
+03,senate,2016-06-26,1,24,9,024,000094,3,TRUE,María Pilar,Borrego Alonso, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,010,000013,1,TRUE,Enrique,Junco Navascués, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,011,000013,2,TRUE,Eduardo,Álvarez Redondo, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,012,000013,3,TRUE,Elena,León Hernández, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,016,000028,1,TRUE,Julio César,de Alaiz Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,013,000041,1,TRUE,Lucila Alba,Giner Mery, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,014,000041,2,TRUE,Óscar,Pastor Bárcenas, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,015,000041,3,TRUE,Marta,Aguiar Guerrero, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,007,000059,1,TRUE,Ana María,Rodríguez Vega, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,008,000059,2,TRUE,Julián Fernández,del Campo, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,009,000059,3,TRUE,Jerónimo,Aguado Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,001,000068,1,TRUE,José Antonio,Rubio Mielgo, ,          ,TRUE
+03,senate,2016-06-26,1,34,9,002,000068,2,TRUE,María Nuria,Simón González, ,          ,TRUE
+03,senate,2016-06-26,1,34,9,003,000068,3,TRUE,Manuel,Betegón Baeza, ,          ,TRUE
+03,senate,2016-06-26,1,34,9,004,000077,1,TRUE,Rosa María,Aldea Gómez, ,          ,TRUE
+03,senate,2016-06-26,1,34,9,005,000077,2,TRUE,Luis Fernando,Cantero Mena, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,006,000077,3,TRUE,María Arántzazu,Oblanca Colinas, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,017,000081,1,TRUE,Diego,Gaitero Ballinoto, ,          ,FALSE
+03,senate,2016-06-26,1,34,9,018,000084,1,TRUE,Ana María,Cuevas Reoyo, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,010,000013,1,TRUE,Liduvino,Barbado Sastre, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,011,000013,2,TRUE,Ana,Suárez Otero, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,012,000013,3,TRUE,José Ramón,Santos Santos, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,013,000041,1,TRUE,Susana,Alonso Porras, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,014,000041,2,TRUE,José María,Medina Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,015,000041,3,TRUE,María Teresa,Román Luis, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,023,000049,1,TRUE,Mario,López Pascua, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,007,000059,1,TRUE,José Antonio,Mateos Temprano, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,008,000059,2,TRUE,María Isabel,López Blázquez, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,009,000059,3,TRUE,Susana,Luengo Gallego, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,001,000068,1,TRUE,Gonzalo Jesús,Robles Orozco, ,          ,TRUE
+03,senate,2016-06-26,1,37,9,002,000068,2,TRUE,Francisco Javier,Iglesias García, ,          ,TRUE
+03,senate,2016-06-26,1,37,9,003,000068,3,TRUE,Esther Basilia,del Brio González, ,          ,TRUE
+03,senate,2016-06-26,1,37,9,019,000072,1,TRUE,Juan Manuel,Andrés López, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,020,000072,2,TRUE,Miguel Ángel,Diego Núñez, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,021,000072,3,TRUE,Manuela,Iglesias Carreño, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,004,000077,1,TRUE,Rosa María,López Alonso, ,          ,TRUE
+03,senate,2016-06-26,1,37,9,005,000077,2,TRUE,Alfonso Buenaventura,Calvo González, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,006,000077,3,TRUE,María del,Carmen Juanes Barciela, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,022,000081,1,TRUE,María Araceli,Noguera Montero, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,016,000093,1,TRUE,Vicente,Justo Hermida, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,017,000093,2,TRUE,Antonio,Cruz Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,37,9,018,000093,3,TRUE,María del,Pilar Sánchez Marcos, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,010,000013,1,TRUE,María Josefa,García Orejana, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,011,000013,2,TRUE,Santiago,Gancedo Baranda, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,012,000013,3,TRUE,Luís Mariano,Ortiz Esteban, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,018,000028,1,TRUE,Juan Manuel,de la Serna Lorenzo, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,014,000041,1,TRUE,Patricia,Marqués Tejedor, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,015,000041,2,TRUE,Enrique,Martín Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,016,000041,3,TRUE,Cristina,Gil Meneses, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,007,000067,1,TRUE,Francisco Javier,Lobo de Frutos, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,008,000067,2,TRUE,María del,Carmen Cuervo Rubio, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,009,000067,3,TRUE,María José,Bueno González, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,001,000068,1,TRUE,Paloma Inés,Sanz Jerónimo, ,          ,TRUE
+03,senate,2016-06-26,1,40,9,002,000068,2,TRUE,Juan Ramón,Represa Fernández, ,          ,TRUE
+03,senate,2016-06-26,1,40,9,003,000068,3,TRUE,Juan Carlos,Álvarez Cabrero, ,          ,TRUE
+03,senate,2016-06-26,1,40,9,004,000077,1,TRUE,Félix,Montes Jort, ,          ,TRUE
+03,senate,2016-06-26,1,40,9,005,000077,2,TRUE,Alba,Barrio Martín, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,006,000077,3,TRUE,Álvaro Serrano,del Pino, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,017,000081,1,TRUE,María Elena,Jorge Hernández, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,013,000093,1,TRUE,Antonio,García Dopico, ,          ,FALSE
+03,senate,2016-06-26,1,40,9,019,000094,1,TRUE,Nazario,Merino Giménez, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,010,000013,1,TRUE,María Ángeles,Morales Garijo, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,011,000013,2,TRUE,Rafael,López Campos, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,012,000013,3,TRUE,Enrique,Gonzalo Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,018,000028,1,TRUE,Enrique,Merino González, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,014,000041,1,TRUE,Alejandra Natalia,Garate Hallam, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,015,000041,2,TRUE,María Belén,Giménez Díaz-Oyuelos, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,016,000041,3,TRUE,Rafael,Rico Sáez, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,007,000059,1,TRUE,Jorge Juan,Ramiro Alcántara, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,008,000059,2,TRUE,Leonor Andrea,Lahoz Goig, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,009,000059,3,TRUE,Angel Alberto,Flores Gaitan, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,001,000068,1,TRUE,María del,Mar Angulo Martínez, ,          ,TRUE
+03,senate,2016-06-26,1,42,9,002,000068,2,TRUE,Gerardo,Martínez Martínez, ,          ,TRUE
+03,senate,2016-06-26,1,42,9,003,000068,3,TRUE,Tomás,Cabezón Casas, ,          ,TRUE
+03,senate,2016-06-26,1,42,9,004,000077,1,TRUE,María,Irigoyen Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,005,000077,2,TRUE,Jesús Manuel,Alonso Jiménez, ,          ,TRUE
+03,senate,2016-06-26,1,42,9,006,000077,3,TRUE,Asunción,Medrano Marina, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,017,000081,1,TRUE,Juan,Fuster Peiró, ,          ,FALSE
+03,senate,2016-06-26,1,42,9,013,000093,1,TRUE,Javier,Bao Patiño, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,033,000001,1,TRUE,José Ignacio,Moratinos Delgado, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,022,000009,1,TRUE,Félix Antonio,Calleja Bolado, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,023,000009,2,TRUE,María,Córcoles Gutiérrez, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,024,000009,3,TRUE,Mario,Fernández Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,010,000013,1,TRUE,Jesús Agustín,San José Sancho, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,011,000013,2,TRUE,Miguel Ángel,Parra Parra, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,012,000013,3,TRUE,Nuria,Duque Estaire, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,025,000028,1,TRUE,Iván,García Vázquez, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,026,000028,2,TRUE,María Macarena,Carazo Lefort, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,027,000028,3,TRUE,Francisco Javier,del Campo Velasco, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,016,000041,1,TRUE,Vanesa,García Sáez, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,017,000041,2,TRUE,Jesús,García Marciel, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,018,000041,3,TRUE,Laura,Vicente Cenamor, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,032,000049,1,TRUE,Iván Hernández,del Valle, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,034,000053,1,TRUE,José Luis,García Torrego, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,007,000066,1,TRUE,Andrés Iván,Dueñas Castrillo, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,008,000066,2,TRUE,Carmen,Duce Diáz, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,009,000066,3,TRUE,Carlos Sánchez-Reyes,de Palacio, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,001,000068,1,TRUE,Miguel Ángel,Cortés Martín, ,          ,TRUE
+03,senate,2016-06-26,1,47,9,002,000068,2,TRUE,María Arenales,Serrano Argüello, ,          ,TRUE
+03,senate,2016-06-26,1,47,9,003,000068,3,TRUE,Alberto,Gutiérrez Alberca, ,          ,TRUE
+03,senate,2016-06-26,1,47,9,004,000077,1,TRUE,Emilio,Álvarez Villazán, ,          ,TRUE
+03,senate,2016-06-26,1,47,9,005,000077,2,TRUE,Emiliana,Centeno Escudero, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,006,000077,3,TRUE,Juan de,Dios José Tomás-Biosca Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,028,000081,1,TRUE,Miguel Ángel,Martínez Sevilla, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,029,000084,1,TRUE,María Jesús,Herrero García, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,030,000084,2,TRUE,Diego,Velicia Miranda, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,031,000084,3,TRUE,Ana María,Sánchez Velasco, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,013,000093,1,TRUE,Cesáreo,Hernández Iglesias, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,014,000093,2,TRUE,Carlos,Velázquez Callado, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,015,000093,3,TRUE,Ana María,Cabero Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,019,000094,1,TRUE,Víctor Miguel,Menéndez Quintana, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,020,000094,2,TRUE,José Ignacio,García-Conde del Castillo, ,          ,FALSE
+03,senate,2016-06-26,1,47,9,021,000094,3,TRUE,Amelia Dolores,Sanz Chapado, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,010,000013,1,TRUE,Valentín,Iglesias Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,011,000013,2,TRUE,Magdalena,Fernández Ruano, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,012,000013,3,TRUE,Ruth,Míguez Ferrero, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,013,000041,1,TRUE,Pedro Manuel,Ruiz Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,014,000041,2,TRUE,Nieves,Masó Casadevall, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,015,000041,3,TRUE,María del,Carmen Varela de la Barrera, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,007,000064,1,TRUE,Marina,Elizondo Esteban, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,008,000064,2,TRUE,César Cocho,de la Croix, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,009,000064,3,TRUE,Fernando José,Martos Parra, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,001,000068,1,TRUE,Dionisio,García Carnero, ,          ,TRUE
+03,senate,2016-06-26,1,49,9,002,000068,2,TRUE,Clara Isabel,San Damián Hernández, ,          ,TRUE
+03,senate,2016-06-26,1,49,9,003,000068,3,TRUE,Javier,Faúndez Domínguez, ,          ,TRUE
+03,senate,2016-06-26,1,49,9,017,000072,1,TRUE,Teresita Loreto,Álvarez Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,018,000072,2,TRUE,Josefa,González Centeno, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,019,000072,3,TRUE,José Miguel,Trufero Barrios, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,004,000077,1,TRUE,José,Fernández Blanco, ,          ,TRUE
+03,senate,2016-06-26,1,49,9,005,000077,2,TRUE,María Ángeles,Martínez Blanco, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,006,000077,3,TRUE,Jesús Ángel,Antón Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,020,000081,1,TRUE,Carmen María,Menéndez Ledo, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,021,000091,1,TRUE,María José,González Pablos, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,022,000091,2,TRUE,Manuel,Herrero Alonso, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,023,000091,3,TRUE,Ángel María,Trilla Casquero, ,          ,FALSE
+03,senate,2016-06-26,1,49,9,016,000093,1,TRUE,José Luis,Díez Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,010,000010,1,TRUE,Miquel Calçada,i Olivella, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,011,000010,2,TRUE,Joaquim Clavaguera,i Vilà, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,012,000010,3,TRUE,M Clara,Tarrida i Felip, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,016,000015,1,TRUE,Francisco Javier,Alegre Buxeda, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,017,000015,2,TRUE,Nuria,Nadal Burgues, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,018,000015,3,TRUE,Juan (Nito),Foncuberta Riba, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,001,000022,1,TRUE,Óscar,Guardingo Martínez, ,          ,TRUE
+03,senate,2016-06-26,1,08,9,002,000022,2,TRUE,Maria,Freixanet Mateo, ,          ,TRUE
+03,senate,2016-06-26,1,08,9,003,000022,3,TRUE,Joan,Comorera Estarellas, ,          ,TRUE
+03,senate,2016-06-26,1,08,9,004,000025,1,TRUE,Santiago Vidal,i Marsal, ,          ,TRUE
+03,senate,2016-06-26,1,08,9,005,000025,2,TRUE,Mireia Ingla,i Mas, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,006,000025,3,TRUE,Josefina,Mascaró Bujaldon, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,019,000043,1,TRUE,Alba,García Roldán, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,020,000043,2,TRUE,Olga,Eyre Estrada, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,021,000043,3,TRUE,Xavier,Martí Vallés, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,025,000046,1,TRUE,Buenaventura,Ramos Bellés, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,013,000069,1,TRUE,Núria,Carreras Povill, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,014,000069,2,TRUE,Daniel,Gracia Álvarez, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,015,000069,3,TRUE,Josep,Tutusaus Besante, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,007,000074,1,TRUE,Carles,Martí Jufresa, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,008,000074,2,TRUE,Erika,Torregrossa Acuña, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,009,000074,3,TRUE,Francesc Xavier,Grau Roig, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,022,000081,1,TRUE,Manuel,Camuñas Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,023,000081,2,TRUE,Rosa Estefanía,Pérez Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,08,9,024,000081,3,TRUE,Antonio Joaquín,García Navarro, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,001,000010,1,TRUE,Joan Bagué,i Roura, ,          ,TRUE
+03,senate,2016-06-26,1,17,9,002,000010,2,TRUE,Clàudia Massó,i Fontàs, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,003,000010,3,TRUE,Romà Codina,i Maseras, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,013,000014,1,TRUE,Héctor,Amelló Montiu, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,014,000014,2,TRUE,Carles,Rovira Vives, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,015,000014,3,TRUE,Sheila,Arias Malpica, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,007,000022,1,TRUE,Deborah Coll,i Whittall, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,008,000022,2,TRUE,Anna Toro,i Recasens, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,009,000022,3,TRUE,Lluís Ciprés,i Paltre, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,004,000025,1,TRUE,Jordi,Martí Deulofeu, ,          ,TRUE
+03,senate,2016-06-26,1,17,9,005,000025,2,TRUE,Joaquim,Ayats Bartrina, ,          ,TRUE
+03,senate,2016-06-26,1,17,9,006,000025,3,TRUE,Elisenda,Pérez Esteve, ,          ,TRUE
+03,senate,2016-06-26,1,17,9,019,000043,1,TRUE,Albert,Benítez Hugas, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,020,000043,2,TRUE,Sandra,Brucet Balmaña, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,021,000043,3,TRUE,Mònica del,Mar Jordan Pujol, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,023,000046,1,TRUE,Miguel de,la Cruz Astasio, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,016,000068,1,TRUE,Marina,Guillén Campos, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,017,000068,2,TRUE,Joan,Menacho Gabardino, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,018,000068,3,TRUE,Abraham Alberto,Rodríguez Requena, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,010,000074,1,TRUE,Cristina,López González, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,011,000074,2,TRUE,Joan,Aguilar Destart, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,012,000074,3,TRUE,Raquel,Gallego Cristóbal, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,024,000080,1,TRUE,Daniel,Plana Farjas, ,          ,FALSE
+03,senate,2016-06-26,1,17,9,022,000081,1,TRUE,Carmen,Aleña Esteve, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,013,000010,1,TRUE,Maria Teresa,Rivero Segalàs, ,          ,TRUE
+03,senate,2016-06-26,1,25,9,014,000010,2,TRUE,Ramon,Alturo Lloan, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,015,000010,3,TRUE,Maria Dolors,Tella Albareda, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,018,000014,1,TRUE,Ramon,Vilaltella Domenjó, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,019,000014,2,TRUE,Daniel,Rubio Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,020,000014,3,TRUE,Cristina,Latorre López, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,022,000022,1,TRUE,Karim Adrian,Bouhout Calero, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,023,000022,2,TRUE,Mercè,Griñó Ortiz, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,024,000022,3,TRUE,Laura Teresa,Pérez Lacueva, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,004,000025,1,TRUE,Miquel Àngel,Estradé i Palau, ,          ,TRUE
+03,senate,2016-06-26,1,25,9,005,000025,2,TRUE,Anna Azamar,i Capdevila, ,          ,TRUE
+03,senate,2016-06-26,1,25,9,006,000025,3,TRUE,Xavier Castellana,i Gamisans, ,          ,TRUE
+03,senate,2016-06-26,1,25,9,010,000041,1,TRUE,Mercedes,Galindo Ochoa, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,011,000041,2,TRUE,Isidro,Prim Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,012,000041,3,TRUE,Francina,Plujà Pujol, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,021,000046,1,TRUE,Francesc Xavier,García i Llop, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,007,000068,1,TRUE,Simeó,Abad Moliné, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,008,000068,2,TRUE,Joaquim,Alexandre Faure, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,009,000068,3,TRUE,Ana,Cava Muñoz, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,001,000074,1,TRUE,Francesc,Boya Alós, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,002,000074,2,TRUE,Judith,Alcalá González, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,003,000074,3,TRUE,Silveri,Caro Cabrera, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,017,000081,1,TRUE,Idrissa,Kora Bojang, ,          ,FALSE
+03,senate,2016-06-26,1,25,9,016,000094,1,TRUE,José Antonio,Ortiz Cambray, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,004,000010,1,TRUE,Carles,Pellicer Punyed, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,005,000010,2,TRUE,Teresa,Moya Giné, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,006,000010,3,TRUE,Joan Maria,Basora Robert, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,016,000014,1,TRUE,Francisco,Ester Uruen, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,017,000014,2,TRUE,Fernando,Pecino Robles, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,018,000014,3,TRUE,Josefa,Aguirre Clapé, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,007,000022,1,TRUE,Celia,Cánovas Essard, ,          ,TRUE
+03,senate,2016-06-26,1,43,9,008,000022,2,TRUE,Jordi,Jordan Farnós, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,009,000022,3,TRUE,Ricardo,Redondo Moltó, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,001,000025,1,TRUE,Miquel Aubà,i Fleix, ,          ,TRUE
+03,senate,2016-06-26,1,43,9,002,000025,2,TRUE,Josep Rufà,i Gràcia, ,          ,TRUE
+03,senate,2016-06-26,1,43,9,003,000025,3,TRUE,Laura Castel,i Fort, ,          ,TRUE
+03,senate,2016-06-26,1,43,9,019,000043,1,TRUE,Sandra Janneth,Díaz Ramos, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,020,000043,2,TRUE,Carlos,Sánchez Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,021,000043,3,TRUE,Manuela,Perea Arroyo, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,022,000046,1,TRUE,José,Estrada Cruz, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,013,000068,1,TRUE,Sebastià,Domènech Bosch, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,014,000068,2,TRUE,José Juan,Acero de Dios, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,015,000068,3,TRUE,Núria,Gómez Granés, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,010,000074,1,TRUE,Joan,Sabaté Borràs, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,011,000074,2,TRUE,Maria Jesús,Sequera Garcia, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,012,000074,3,TRUE,Josep Fèlix,Ballesteros Casanova, ,          ,FALSE
+03,senate,2016-06-26,1,43,9,023,000081,1,TRUE,Antonio,Chapela Artime, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,020,000004,1,TRUE,Antonio,Manzano Marchirant, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,021,000004,2,TRUE,Rubén,Galea Gil, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,022,000004,3,TRUE,Olga María,Arroyo García, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,010,000013,1,TRUE,Nuria Josefa,Hernández Doncel, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,011,000013,2,TRUE,Jorge,Arias López, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,012,000013,3,TRUE,Guadalupe Figueredo,de Juan, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,013,000013,4,TRUE,Luis Miguel,Lospitao Sánchez-Porro, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,014,000041,1,TRUE,Antonio,Blanco Monterdez, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,015,000041,2,TRUE,Olga,Lama Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,016,000041,3,TRUE,Ramón,Cuscó Nicolás, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,007,000059,1,TRUE,Eugenio Salvador,Salvatierra de Toro, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,008,000059,2,TRUE,Rosa María,Fabián Romero, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,009,000059,3,TRUE,José Manuel,Vargas Verde, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,004,000068,1,TRUE,Antonio,Galván Porras, ,          ,TRUE
+03,senate,2016-06-26,1,06,9,005,000068,2,TRUE,Antonio,González Torres, ,          ,TRUE
+03,senate,2016-06-26,1,06,9,006,000068,3,TRUE,María Teresa,Tortonda Gordillo, ,          ,TRUE
+03,senate,2016-06-26,1,06,9,001,000077,1,TRUE,Juan María,Vázquez García, ,          ,TRUE
+03,senate,2016-06-26,1,06,9,002,000077,2,TRUE,Carmen,Pereira Santana, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,003,000077,3,TRUE,Valentín,Cortés Cabanillas, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,023,000081,1,TRUE,Sandra María,Tárraga Gutiérrez, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,017,000093,1,TRUE,José Francisco,Sigüenza García, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,018,000093,2,TRUE,José Miguel,Galán Sánchez-Cortés, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,019,000093,3,TRUE,Eusebia González,de la Natividad, ,          ,FALSE
+03,senate,2016-06-26,1,06,9,024,000094,1,TRUE,Carlos Aurelio,Caldito Aunión, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,010,000013,1,TRUE,Óscar,Redondo Hernández, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,011,000013,2,TRUE,Juan de,la Cruz Calvo Calvo, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,012,000013,3,TRUE,Sara,Iglesias Fornet, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,013,000041,1,TRUE,Raquel,Moreno Talavera, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,014,000041,2,TRUE,David,Ruiz Lebiere, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,015,000041,3,TRUE,María del,Pilar Rodríguez Lama, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,007,000059,1,TRUE,María del,Rosario Ávila Caballero, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,008,000059,2,TRUE,María del,Carmen Muñoz Donoso, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,009,000059,3,TRUE,Lorenzo Carlos,Clemente Muñoz, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,001,000068,1,TRUE,Laureano,León Rodríguez, ,          ,TRUE
+03,senate,2016-06-26,1,10,9,002,000068,2,TRUE,Amparo,Monroy Sánchez, ,          ,TRUE
+03,senate,2016-06-26,1,10,9,003,000068,3,TRUE,Rafael,Mateos Yuste, ,          ,TRUE
+03,senate,2016-06-26,1,10,9,004,000077,1,TRUE,Juan Andrés,Tovar Mena, ,          ,TRUE
+03,senate,2016-06-26,1,10,9,005,000077,2,TRUE,María Luisa,Gómez Blázquez, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,006,000077,3,TRUE,Pedro Eulogio,Pascua Luengo, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,016,000081,1,TRUE,Francisco José,Campón Chekroun, ,          ,FALSE
+03,senate,2016-06-26,1,10,9,017,000094,1,TRUE,Domingo,Jiménez Granado, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,013,000005,1,TRUE,Xosé Luis,Rivas Cruz (Mini), ,          ,FALSE
+03,senate,2016-06-26,1,15,9,014,000005,2,TRUE,Vanessa,Nieves Nieto, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,015,000005,3,TRUE,Secundino,García Casal, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,010,000013,1,TRUE,Gonzalo Julio,Iglesias López, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,011,000013,2,TRUE,María del,Carmen Vieites Pardo, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,012,000013,3,TRUE,Juan José,Chouza Sampedro, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,016,000042,1,TRUE,José Adrián,García Alonso, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,017,000042,2,TRUE,María Teresa,Puñal Barrientos, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,018,000042,3,TRUE,Saturnina,Fuentes Marín, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,020,000047,1,TRUE,Santiago,Vázquez Penido, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,004,000056,1,TRUE,José Manuel,García Buitrón, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,005,000056,2,TRUE,Iria,Otero Romero, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,006,000056,3,TRUE,Andrés,Seoane Antelo, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,001,000068,1,TRUE,Paula Prado,del Río, ,          ,TRUE
+03,senate,2016-06-26,1,15,9,002,000068,2,TRUE,María,Aparicio Calzada, ,          ,TRUE
+03,senate,2016-06-26,1,15,9,003,000068,3,TRUE,José Luis,Ramón Torres Colomer, ,          ,TRUE
+03,senate,2016-06-26,1,15,9,007,000075,1,TRUE,Ángel Manuel,Mato Escalona, ,          ,TRUE
+03,senate,2016-06-26,1,15,9,008,000075,2,TRUE,María del,Mar Debén Alfonso, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,009,000075,3,TRUE,Miguel Ángel,Paz Barreiro, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,019,000081,1,TRUE,Manuel,López González, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,021,000084,1,TRUE,María Teresa,de Vallejo Sancho de Sopranis, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,022,000084,2,TRUE,Adriano,Fernández Alves, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,023,000084,3,TRUE,Teresa,Redondo Sandoval, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,024,000094,1,TRUE,María Villar,Martín Barbadillo, ,          ,FALSE
+03,senate,2016-06-26,1,15,9,025,000094,2,TRUE,Manuel,Fernández-Castro Cancela, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,013,000005,1,TRUE,Rosa Ana,Prieto Florines, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,014,000005,2,TRUE,Mario,Pillado Mon, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,015,000005,3,TRUE,Luís Ángel,López Melle, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,010,000013,1,TRUE,Víctor,González García, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,011,000013,2,TRUE,María Victoria,García Vázquez, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,012,000013,3,TRUE,Elba,Cabo Ramos, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,016,000041,1,TRUE,Brais,Pena Gandoy, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,017,000041,2,TRUE,María Dolores,Jorge Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,018,000041,3,TRUE,María Nieves,Colubí Heres, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,007,000056,1,TRUE,Luís Manuel,Daporta Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,008,000056,2,TRUE,Carmen,Pérez González-Granxeiro, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,009,000056,3,TRUE,Modesto,Renda Santiso, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,001,000068,1,TRUE,José Manuel,Barreiro Fernández, ,          ,TRUE
+03,senate,2016-06-26,1,27,9,002,000068,2,TRUE,Dámaso,López Rodríguez, ,          ,TRUE
+03,senate,2016-06-26,1,27,9,003,000068,3,TRUE,Sandra,Vázquez Domínguez, ,          ,TRUE
+03,senate,2016-06-26,1,27,9,004,000075,1,TRUE,Ricardo Jacinto,Varela Sánchez, ,          ,TRUE
+03,senate,2016-06-26,1,27,9,005,000075,2,TRUE,Darya,Fernández Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,006,000075,3,TRUE,Manuel,Dacosta Ribera, ,          ,FALSE
+03,senate,2016-06-26,1,27,9,019,000081,1,TRUE,Josefa,Costas Padín, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,013,000005,1,TRUE,Xacobe,García Souto, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,014,000005,2,TRUE,Carmen,Bolaño Vázquez, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,015,000005,3,TRUE,Andrea,Marín Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,010,000013,1,TRUE,Ernesto,Rodríguez Cuervo, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,011,000013,2,TRUE,Mercedes,Marcos Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,012,000013,3,TRUE,Benito,Iglesias Padrón, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,016,000042,1,TRUE,Marina,Romero Floriano, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,017,000042,2,TRUE,Julio,Moreno Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,018,000042,3,TRUE,Ana Isabel,Paz Calvo, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,020,000048,1,TRUE,Jorge,Campos Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,007,000056,1,TRUE,María do,Pilar Barros Barco, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,008,000056,2,TRUE,Juan Luis,Villarino Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,009,000056,3,TRUE,María Dolores,Alonso Reverter, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,001,000068,1,TRUE,Edelmira,Barreira Diz, ,          ,TRUE
+03,senate,2016-06-26,1,32,9,002,000068,2,TRUE,María del,Carmen Leyte Coello, ,          ,TRUE
+03,senate,2016-06-26,1,32,9,003,000068,3,TRUE,Francisco José,Fernández Pérez, ,          ,TRUE
+03,senate,2016-06-26,1,32,9,004,000075,1,TRUE,Luis Manuel,García Mañá, ,          ,TRUE
+03,senate,2016-06-26,1,32,9,005,000075,2,TRUE,Ofelia,Puente Carracedo, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,006,000075,3,TRUE,Enrique,Barreiro Alonso, ,          ,FALSE
+03,senate,2016-06-26,1,32,9,019,000081,1,TRUE,Celia,Rodríguez Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,013,000005,1,TRUE,Alba,Cuba Dorado, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,014,000005,2,TRUE,Antón,Álvarez Merayo, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,015,000005,3,TRUE,Cecilia,Tarela Barreiro, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,010,000013,1,TRUE,Andrés,Cal Malleiro, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,011,000013,2,TRUE,Gregorio,Revenga Portela, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,012,000013,3,TRUE,María del,Carmen Santiso Rolán, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,022,000018,1,TRUE,Rosa María,Martín Bartolomé, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,023,000018,2,TRUE,César,Rubio Marco, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,024,000018,3,TRUE,Pilar,Gómez Gella, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,016,000042,1,TRUE,María Luisa,de Ceano-Vivas Hernández, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,017,000042,2,TRUE,Diego Raúl,Cordero Santamaría, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,018,000042,3,TRUE,Patricia,Álvarez Consalves, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,021,000047,1,TRUE,Laura,Quintillán Núñez, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,004,000056,1,TRUE,María Vanessa,Angustia Gómez, ,          ,TRUE
+03,senate,2016-06-26,1,36,9,005,000056,2,TRUE,Marta,Díaz Marcos, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,006,000056,3,TRUE,Xosé Luis,Méndez Ferrín, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,001,000068,1,TRUE,Marta,Lucio Gómez, ,          ,TRUE
+03,senate,2016-06-26,1,36,9,002,000068,2,TRUE,Miguel,Fidalgo Iglesias, ,          ,TRUE
+03,senate,2016-06-26,1,36,9,003,000068,3,TRUE,José,Crespo Iglesias, ,          ,TRUE
+03,senate,2016-06-26,1,36,9,007,000075,1,TRUE,Abel Fermín,Losada Álvarez, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,008,000075,2,TRUE,Emma,Torres Romay, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,009,000075,3,TRUE,Alfonso,Parada Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,020,000081,1,TRUE,José Carlos,Vázquez González, ,          ,FALSE
+03,senate,2016-06-26,1,36,9,019,000093,1,TRUE,Rubén,Couso Rosales, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,010,000013,1,TRUE,Antonio José,Pezzi Acosta, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,011,000013,2,TRUE,Carlos,Rodríguez Alemany, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,012,000013,3,TRUE,Eva,Sagardoy Cayetano, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,022,000028,1,TRUE,Jorge Garrido,San Román, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,023,000028,2,TRUE,Francisco José,Calduch Barraca, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,024,000028,3,TRUE,Esperanza,Sánchez Estefanía, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,016,000041,1,TRUE,Laura,Duarte Domínguez, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,017,000041,2,TRUE,Luis Víctor,Moreno Barbieri, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,018,000041,3,TRUE,Francisco,García Leal, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,028,000049,1,TRUE,Juan Luis,García Córdoba, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,029,000052,1,TRUE,Arturo,Viloria Fuentes, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,030,000052,2,TRUE,Gloria,Lopez Lopez, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,034,000053,1,TRUE,Juan José,Rández García, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,004,000064,1,TRUE,Eva,Abril Chaigne, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,005,000064,2,TRUE,Sergio,García Torres, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,006,000064,3,TRUE,Germán,Cano Cuenca, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,001,000068,1,TRUE,Pío,García-Escudero Márquez, ,          ,TRUE
+03,senate,2016-06-26,1,28,9,002,000068,2,TRUE,María Rosa,Vindel López, ,          ,TRUE
+03,senate,2016-06-26,1,28,9,003,000068,3,TRUE,Carlos,Aragonés Mendiguchía, ,          ,TRUE
+03,senate,2016-06-26,1,28,9,007,000077,1,TRUE,Francisco David,Lucas Parron, ,          ,TRUE
+03,senate,2016-06-26,1,28,9,008,000077,2,TRUE,Lydia,Martínez Mora, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,009,000077,3,TRUE,Domènec,Ruiz Devesa, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,025,000081,1,TRUE,Jorge Mario,Eines Landman, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,026,000081,2,TRUE,Raquel,Álvarez Peláez, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,027,000081,3,TRUE,Antonio,Zarco Fortes, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,031,000084,1,TRUE,Corina Viviana,Funks D'antoni, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,032,000084,2,TRUE,Ernesto,Calleja Garcia, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,033,000084,3,TRUE,Javier,Gil Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,013,000093,1,TRUE,Jorge,Ortega Lara, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,014,000093,2,TRUE,José Luis,Pozuelo Nicolas, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,015,000093,3,TRUE,María Celia,García Aguayo, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,019,000094,1,TRUE,Francisco Javier,Ortega Smith-Molina, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,020,000094,2,TRUE,Iván Espinosa,de los Monteros de Simón, ,          ,FALSE
+03,senate,2016-06-26,1,28,9,021,000094,3,TRUE,Margarita de,la Pisa Carrion, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,007,000013,1,TRUE,Manuel Jesús,Mozota Núñez, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,008,000013,2,TRUE,Begoña,Ibáñez Merino, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,009,000013,3,TRUE,Fernando,Sesma Urzaiz, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,021,000023,1,TRUE,Santi,Begiristain Madotz, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,022,000023,2,TRUE,Maider,Beloqui Unzu, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,023,000023,3,TRUE,Koldo Fernando,Ábrego Primo, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,024,000030,1,TRUE,Ana Carmen,Luján Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,020,000038,1,TRUE,Tomás,Urzainqui Mina, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,010,000041,1,TRUE,Olaia,Zabalza González, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,011,000041,2,TRUE,Antonio,Delgado Romero, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,012,000041,3,TRUE,Rocío,Botas Álvarez, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,025,000063,1,TRUE,Iñaki,Bernal Lumbreras, ,          ,TRUE
+03,senate,2016-06-26,1,31,9,026,000063,2,TRUE,Aurora,Sanz Diéguez, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,027,000063,3,TRUE,Aitor,Pescador Medrano, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,004,000077,1,TRUE,Antonio,Magdaleno Alegría, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,005,000077,2,TRUE,María Blanca,Yolanda González García, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,006,000077,3,TRUE,Iosu,Belio Añón, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,014,000081,1,TRUE,Alfonso,Campos Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,015,000081,2,TRUE,Pilar,Gracia Romero, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,016,000081,3,TRUE,Josefina,Castillo Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,017,000084,1,TRUE,Samuel,Valderrey Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,018,000084,2,TRUE,Nuria Sánchez,Díaz de Isla, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,019,000084,3,TRUE,Miguel Ángel,Otazu Ferrer, ,          ,FALSE
+03,senate,2016-06-26,1,31,9,001,000092,1,TRUE,José Cruz,Pérez Lapazarán, ,          ,TRUE
+03,senate,2016-06-26,1,31,9,002,000092,2,TRUE,Francisco Javier,Yanguas Fernández, ,          ,TRUE
+03,senate,2016-06-26,1,31,9,003,000092,3,TRUE,Cristina,Sanz Barrios, ,          ,TRUE
+03,senate,2016-06-26,1,31,9,013,000093,1,TRUE,Carlos,Manzano Martín, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,016,000013,1,TRUE,Jose Antonio,Mateo Rández, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,007,000016,1,TRUE,Almudena,Otaola Urkijo, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,008,000016,2,TRUE,Juan Carlos,Medina Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,009,000016,3,TRUE,Zuriñe,Rodríguez Bergara, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,013,000023,1,TRUE,Eva López,de Arroyabe Sáez de Maturana, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,014,000023,2,TRUE,Iker García,de Eulate Urdangarain, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,015,000023,3,TRUE,Izar,Mendiguren Cosgaya, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,021,000038,1,TRUE,Carlos,Úcar Lerga, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,017,000041,1,TRUE,Eva,Calleja Vaquero, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,018,000041,2,TRUE,Alfredo,Jorde Mateu, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,019,000041,3,TRUE,Blanca Amelia,Rodríguez Crespo, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,022,000049,1,TRUE,Mikel Tapia,García del Valle, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,001,000054,1,TRUE,Elvira,García Díaz, ,          ,TRUE
+03,senate,2016-06-26,1,01,9,002,000054,2,TRUE,María Concepción,Palencia García, ,          ,TRUE
+03,senate,2016-06-26,1,01,9,003,000054,3,TRUE,Ángel,Mesón Miguel, ,          ,TRUE
+03,senate,2016-06-26,1,01,9,004,000068,1,TRUE,Iñaki Oyarzábal,de Miguel, ,          ,TRUE
+03,senate,2016-06-26,1,01,9,005,000068,2,TRUE,Jorge,Ibarrondo Bajo, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,006,000068,3,TRUE,Marta,Alaña Alonso, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,010,000076,1,TRUE,Julia,Liberal Liberal, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,011,000076,2,TRUE,Miguel Ángel,Unzalu Hermosa, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,012,000076,3,TRUE,Aroa,Jilete González, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,020,000081,1,TRUE,Juan Luis,Costa Zuñiga, ,          ,FALSE
+03,senate,2016-06-26,1,01,9,023,000094,1,TRUE,Eugenio Luis,García López, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,016,000013,1,TRUE,Jonathan,Calvo Rueda, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,017,000013,2,TRUE,Beatriz,Olaizola Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,018,000013,3,TRUE,Francisco José,Fuentes Bustos, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,001,000016,1,TRUE,María Eugenia,Iparragirre Bemposta, ,          ,TRUE
+03,senate,2016-06-26,1,20,9,002,000016,2,TRUE,Victoriano,Gallastegui Altube, ,          ,TRUE
+03,senate,2016-06-26,1,20,9,003,000016,3,TRUE,Imanol,Querejeta Ayerdi, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,007,000023,1,TRUE,Alberto,Unamunzaga Osoro, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,008,000023,2,TRUE,Maite,Sarasua Letemendia, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,009,000023,3,TRUE,Joanes,Rodríguez Soraluze, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,019,000041,1,TRUE,María del,Pilar Nachón Cifuentes, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,020,000041,2,TRUE,José Luís,Triviño Ayala, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,021,000041,3,TRUE,Irene,Azkarate López, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,024,000049,1,TRUE,Jakes,Iñarra Lasagabaster, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,023,000053,1,TRUE,Juan José,Martis Bretal, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,004,000054,1,TRUE,José Ramón,(Josetxo) Arrieta Arrieta, ,          ,TRUE
+03,senate,2016-06-26,1,20,9,005,000054,2,TRUE,Pilar,Garrido Gutiérrez, ,          ,TRUE
+03,senate,2016-06-26,1,20,9,006,000054,3,TRUE,Julen,Bollain Urbieta, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,013,000068,1,TRUE,Juana de,Bengoechea Estrade, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,014,000068,2,TRUE,Jacobo,Caparrós Ruipérez, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,015,000068,3,TRUE,Manuel Palacio,de Ugarte, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,010,000076,1,TRUE,María Arrate,(Miren) Gallastegui Oyarzabal, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,011,000076,2,TRUE,Lucio,Hernando Albistegui, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,012,000076,3,TRUE,María Luisa,del Pilar García Gurruchaga, ,          ,FALSE
+03,senate,2016-06-26,1,20,9,022,000081,1,TRUE,Roberto,Gómez Egido, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,016,000013,1,TRUE,David,Pasarín-Gegunde Linares, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,017,000013,2,TRUE,María Magdalena,San Vicente de la Torre, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,018,000013,3,TRUE,Pedro María,Lastra Suso, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,001,000016,1,TRUE,José María,Cazalis Eiguren, ,          ,TRUE
+03,senate,2016-06-26,1,48,9,002,000016,2,TRUE,Nerea,Ahedo Ceza, ,          ,TRUE
+03,senate,2016-06-26,1,48,9,003,000016,3,TRUE,María Dolores,Etxano Varela, ,          ,TRUE
+03,senate,2016-06-26,1,48,9,022,000021,1,TRUE,Félix,García Ramos, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,023,000021,2,TRUE,María Cruz,Pascual Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,024,000021,3,TRUE,Aitor,Armas Azkona, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,007,000023,1,TRUE,«Bego»,Landa Torre, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,008,000023,2,TRUE,Arkaitz,Fullaondo Elordui-Zapaterietxe, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,009,000023,3,TRUE,Angelita,Burgoa Arkotxa, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,019,000041,1,TRUE,María Josefa,Sanz Ballve, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,020,000041,2,TRUE,Kepa Joseba,Lozano Calvo, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,021,000041,3,TRUE,Marta,Lezaola Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,028,000049,1,TRUE,Jon Ander,Martiarena Uña, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,004,000054,1,TRUE,Miren Edurne,Gorrotxategi Azurmendi, ,          ,TRUE
+03,senate,2016-06-26,1,48,9,005,000054,2,TRUE,Luis Prudencio,Alejos Escarpe, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,006,000054,3,TRUE,Eva Maria,Carbonero Alor, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,013,000068,1,TRUE,Raquel,González Díez-Andino, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,014,000068,2,TRUE,Angel,Rodrigo Izquierdo, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,015,000068,3,TRUE,Víctor,Rodríguez García, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,010,000076,1,TRUE,Isabel,Celaá Diéguez, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,011,000076,2,TRUE,Ignacio,Rodríguez Puertas, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,012,000076,3,TRUE,Isabel Cadaval,Vélez de Mendizabal, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,025,000081,1,TRUE,Pablo,Setién Pascual, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,026,000081,2,TRUE,Mª Soraya,Urrutia Santos, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,027,000081,3,TRUE,Pedro,Bis Lladó, ,          ,FALSE
+03,senate,2016-06-26,1,48,9,029,000094,1,TRUE,Rodrigo Rafael,Vilallonga Elorza, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,001,000013,1,TRUE,Francisco José,Caparrós Fernández, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,002,000013,2,TRUE,Francisco Javier,Real Aroca, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,003,000013,3,TRUE,Ana María,Guillén Conesa, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,024,000017,1,TRUE,José,Martínez Riquelme, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,025,000017,2,TRUE,Juana,Hernández Castillo, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,026,000017,3,TRUE,Martín,Ferrer López, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,004,000041,1,TRUE,Antonio Amalio,Alarcón Pedreño, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,005,000041,2,TRUE,Rosa María,Espín Amor, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,006,000041,3,TRUE,David,Núñez Escribano, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,017,000049,1,TRUE,José Antonio,Martínez Sánchez, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,027,000059,1,TRUE,José Daniel,Espejo Balanza, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,028,000059,2,TRUE,María Esther,Martos Moreno, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,029,000059,3,TRUE,Larbi,Hamuad Larbi, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,007,000068,1,TRUE,Pedro José,Pérez Ruiz, ,          ,TRUE
+03,senate,2016-06-26,1,30,9,008,000068,2,TRUE,María Pilar,Barreiro Álvarez, ,          ,TRUE
+03,senate,2016-06-26,1,30,9,009,000068,3,TRUE,Fulgencio,Gil Jódar, ,          ,TRUE
+03,senate,2016-06-26,1,30,9,013,000077,1,TRUE,Juan Luis,Soto Burillo, ,          ,TRUE
+03,senate,2016-06-26,1,30,9,014,000077,2,TRUE,Mireia Pilar,Ruiz Manresa, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,015,000077,3,TRUE,José Miguel,Muñoz Andreo, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,021,000081,1,TRUE,María Fuensanta,Garcés de los Fayos Montesinos, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,022,000081,2,TRUE,Jesús,Serrano Reverte, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,023,000081,3,TRUE,María José,Mas Hernández, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,010,000084,1,TRUE,Alicia,Nortes Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,011,000084,2,TRUE,José,González Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,012,000084,3,TRUE,Francisco Javier,García López, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,018,000093,1,TRUE,Celia,Martínez Vílchez, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,019,000093,2,TRUE,Juan José,Martínez Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,020,000093,3,TRUE,Antonio,Peñaranda García, ,          ,FALSE
+03,senate,2016-06-26,1,30,9,016,000094,1,TRUE,Pascual,Salvador Hernández, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,010,000013,1,TRUE,Alberto,Carrera Pagano, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,011,000013,2,TRUE,Alberto,Ojeda Estebas, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,012,000013,3,TRUE,Virginia,Domínguez Herrero, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,017,000017,1,TRUE,María del,Carmen Andrés Domínguez, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,018,000017,2,TRUE,José Carlos,Palacios Miguel, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,019,000017,3,TRUE,Sonia,Silvestrini García, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,024,000031,1,TRUE,Ángel,Vegas Casado, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,013,000041,1,TRUE,María del,Pilar Laencina Tomé, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,014,000041,2,TRUE,Gonzalo,Blanca Bonilla, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,015,000041,3,TRUE,Clara María,Ezquerra García, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,020,000049,1,TRUE,Juan Carlos,Martínez-Portillo Heras, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,007,000059,1,TRUE,Patricia,Mateos Cantabrana, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,008,000059,2,TRUE,Arturo Isidro,Manuel Villar Villar, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,009,000059,3,TRUE,María José,Dueñas Pozo, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,001,000068,1,TRUE,José Luis,Pérez Pastor, ,          ,TRUE
+03,senate,2016-06-26,1,26,9,002,000068,2,TRUE,Coloma Francisca,Mendiola Olarte, ,          ,TRUE
+03,senate,2016-06-26,1,26,9,003,000068,3,TRUE,María Teresa,Antoñanzas Garro, ,          ,TRUE
+03,senate,2016-06-26,1,26,9,004,000077,1,TRUE,Juan Francisco,Martínez Aldama Sáenz, ,          ,TRUE
+03,senate,2016-06-26,1,26,9,005,000077,2,TRUE,María del,Carmen Arana Álvarez, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,006,000077,3,TRUE,Javier,Ruiz Bartolomé, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,021,000081,1,TRUE,Benjamín de,Francisco Tundidor, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,016,000093,1,TRUE,Alberto José,Rioja Novoa, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,022,000094,1,TRUE,Daniel,Soriano Blanco, ,          ,FALSE
+03,senate,2016-06-26,1,26,9,023,000094,2,TRUE,María,Pérez Santos, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,020,000011,1,TRUE,Abelardo,Lloret López, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,010,000013,1,TRUE,María,Quiles Bailén, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,011,000013,2,TRUE,Faustino Cesar,Alonso Puig, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,012,000013,3,TRUE,María de,los Reyes Nogueiras Porras, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,014,000041,1,TRUE,Berta,Soria Bordera, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,015,000041,2,TRUE,Manuel,Fontan García, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,016,000041,3,TRUE,María Rosa,Miñana Benítez, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,021,000049,1,TRUE,Felix Crevillén,del Saz, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,025,000053,1,TRUE,José María,García Cabrera, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,004,000055,1,TRUE,Vicenta,Jiménez García, ,          ,TRUE
+03,senate,2016-06-26,1,03,9,005,000055,2,TRUE,Albert Ramón,Poveda Gadea, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,006,000055,3,TRUE,Isaac,Torregrosa Cecilia, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,001,000068,1,TRUE,María Adelaida,Pedrosa Roldán, ,          ,TRUE
+03,senate,2016-06-26,1,03,9,002,000068,2,TRUE,Asunción,Sánchez Zaplana, ,          ,TRUE
+03,senate,2016-06-26,1,03,9,003,000068,3,TRUE,Agustín,Almodobar Barceló, ,          ,TRUE
+03,senate,2016-06-26,1,03,9,007,000077,1,TRUE,Encarna,Llinares Cuesta, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,008,000077,2,TRUE,María Teresa,Maciá Milla, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,009,000077,3,TRUE,Pedro,Boj Giménez, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,022,000081,1,TRUE,Santiago Nahuel,Villegas Nieto, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,023,000081,2,TRUE,Carmen,Sáez Menchacatorre, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,024,000081,3,TRUE,Ignacio,Baos Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,013,000093,1,TRUE,Jorge,Payá Sagredo, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,017,000094,1,TRUE,Ricardo Díez,de Ulzurrún López, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,018,000094,2,TRUE,María Elvira,Gómez Bueno, ,          ,FALSE
+03,senate,2016-06-26,1,03,9,019,000094,3,TRUE,Juan Pablo,Perabá de las Heras, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,013,000008,1,TRUE,José Luis,Jiménez Lloret, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,014,000008,2,TRUE,Evaristo R,Millán Gómez, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,015,000008,3,TRUE,Concepción,Oya Recatalá, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,010,000013,1,TRUE,Felix del,Pozo Lopez, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,011,000013,2,TRUE,Maria de,los Desamparados Tirado Bou, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,012,000013,3,TRUE,Maria del,Rosario del Vigo Sanchez, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,027,000028,1,TRUE,Juan,Amoros Mezquita, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,016,000041,1,TRUE,Elisabet,Rodrigo Barreda, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,017,000041,2,TRUE,Carlos,Moreno García, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,018,000041,3,TRUE,Estefanía,Moreno Seglar, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,023,000050,1,TRUE,Jordi,Martín Pitarch, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,004,000055,1,TRUE,Jordi,Navarrete Pla, ,          ,TRUE
+03,senate,2016-06-26,1,12,9,005,000055,2,TRUE,Emilia,Sanchez-Pantoja Belenguer, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,006,000055,3,TRUE,Enric,Pla Vall, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,001,000068,1,TRUE,Salomé,Pradas Ten, ,          ,TRUE
+03,senate,2016-06-26,1,12,9,002,000068,2,TRUE,Manuel Guillermo,Altava Lavall, ,          ,TRUE
+03,senate,2016-06-26,1,12,9,003,000068,3,TRUE,Merche,Mallol Gil, ,          ,TRUE
+03,senate,2016-06-26,1,12,9,007,000077,1,TRUE,Josep Lluis,Grau Valles, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,008,000077,2,TRUE,Rocio,Ibañez Candelera, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,009,000077,3,TRUE,Benjamin,Dembilio Vall, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,024,000081,1,TRUE,José Mª,Castillo Gimeno, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,025,000081,2,TRUE,Kusi,Mora Zapata, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,026,000086,1,TRUE,Esther,Sanchis Almudever, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,019,000093,1,TRUE,Benjamín,Marco Arnau, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,020,000094,1,TRUE,Luciano,Ferrer Pons, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,021,000094,2,TRUE,María Viñas,Velasco Brogeras, ,          ,FALSE
+03,senate,2016-06-26,1,12,9,022,000094,3,TRUE,Antonio,Climent Baldayo, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,028,000008,1,TRUE,Manuel,Enciso Rodríguez, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,010,000013,1,TRUE,Fernando Juan,Mulas Delgado, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,011,000013,2,TRUE,Pablo,García Medrano, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,012,000013,3,TRUE,María del,Pilar Martínez Cócera, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,034,000028,1,TRUE,José,Portalés Talavera, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,013,000041,1,TRUE,Mario,Pérez Estruch, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,014,000041,2,TRUE,Ana María,Espinosa Belenguer, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,015,000041,3,TRUE,María del,Milagro Llopis Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,030,000049,1,TRUE,Simeón,Lezcano Serrano, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,031,000049,2,TRUE,María,Peiró Romero, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,032,000049,3,TRUE,Blas,Alvárez Moreno, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,033,000053,1,TRUE,Filemón,Galarza Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,004,000055,1,TRUE,Ferran,Martínez Ruiz, ,          ,TRUE
+03,senate,2016-06-26,1,46,9,005,000055,2,TRUE,Dolors,Pérez Martí, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,006,000055,3,TRUE,Pilar,Dasí Crespo, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,001,000068,1,TRUE,Pedro Agramunt,Font de Mora, ,          ,TRUE
+03,senate,2016-06-26,1,46,9,002,000068,2,TRUE,Marta Torrado,de Castro, ,          ,TRUE
+03,senate,2016-06-26,1,46,9,003,000068,3,TRUE,Susana,Camarero Benítez, ,          ,TRUE
+03,senate,2016-06-26,1,46,9,007,000077,1,TRUE,Jorge,Alarte Gorbe, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,008,000077,2,TRUE,Josefa,Andrés Barea, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,009,000077,3,TRUE,Robert,Martínez Correcher, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,022,000081,1,TRUE,Ricardo,Puchades Pérez, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,023,000081,2,TRUE,Mª Isabel,Rodríguez Molina, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,024,000081,3,TRUE,Mario de,Juan Alemany, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,029,000083,1,TRUE,Benjamín María,Lafarga Vázquez, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,019,000086,1,TRUE,Paco,Cano Sanchís, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,020,000086,2,TRUE,Mari Carmen,García Victoria, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,021,000086,3,TRUE,Chimo,Canet Ferrer, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,016,000093,1,TRUE,Juan Antonio,Ferrer González, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,017,000093,2,TRUE,Cristina,Mena Martínez, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,018,000093,3,TRUE,Lorenzo,Edú Makuy, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,025,000094,1,TRUE,Antonio María,Mañes Ferrer, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,026,000094,2,TRUE,Ángela,Mercader García, ,          ,FALSE
+03,senate,2016-06-26,1,46,9,027,000094,3,TRUE,Luís Francisco,de Pedro Sanchís, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,001,000013,1,TRUE,María Laura,Berrocal Castillo, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,002,000013,2,TRUE,Jaime Manuel,Suero Miret, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,008,000041,1,TRUE,Rosa María,Rivero Delgado, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,011,000059,1,TRUE,Luis Alberto,Zambrano Arenas, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,012,000059,2,TRUE,Ana Paloma,Manzano Quesada, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,003,000068,1,TRUE,Guillermo,Martínez Arcas, ,          ,TRUE
+03,senate,2016-06-26,1,51,9,004,000068,2,TRUE,Fátima Mohamed,Dos Santos, ,          ,TRUE
+03,senate,2016-06-26,1,51,9,005,000077,1,TRUE,Justino José,Lara Ostio, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,006,000077,2,TRUE,Suad,Mohamed Marzok, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,009,000081,1,TRUE,David,Jiménez Nieves, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,010,000081,2,TRUE,María África,Mateo Mateo, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,007,000093,1,TRUE,Raúl Rodolfo,Guerrero Morilla, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,013,000094,1,TRUE,Moisés,Mariscal Moreno, ,          ,FALSE
+03,senate,2016-06-26,1,51,9,014,000094,2,TRUE,María del,Carmen Virginia Gallo Virumbrales, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,005,000013,1,TRUE,Luis Julián,Escobar Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,006,000013,2,TRUE,María Luisa,Díaz Ruiz, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,007,000041,1,TRUE,Macarena,López López, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,001,000068,1,TRUE,Juan José,Imbroda Ortiz, ,          ,TRUE
+03,senate,2016-06-26,1,52,9,002,000068,2,TRUE,Sofía,Acedo Reyes, ,          ,TRUE
+03,senate,2016-06-26,1,52,9,003,000077,1,TRUE,Juan Ángel,Berbel Galera, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,004,000077,2,TRUE,Traima,Benhakeia Abdelkader, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,013,000089,2,TRUE,Rachid,Carroum Larbi, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,010,000081,1,TRUE,Manuel Homman,Freniche Zanari, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,011,000081,2,TRUE,Miriam Natty,Zambrana Cordero, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,012,000089,1,TRUE,Gema Carolina,Aguilar Maraver, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,008,000093,1,TRUE,María Soledad,Galán Montesinos, ,          ,FALSE
+03,senate,2016-06-26,1,52,9,009,000093,2,TRUE,Jesús,Rodríguez Moreno, ,          ,FALSE

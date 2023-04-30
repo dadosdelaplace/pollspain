@@ -41,6 +41,7 @@ municipalities.}
 municipalities.}
 \item{cod_mun_jud_district, cod_mun_prov_council}{codes of judicial
 district and province council.}
+\item{n_poll_stations}{number of poll stations at each mun}
 \item{pop_res_mun}{census of people who are living (CER + CERA).}
 \item{census_INE_mun}{people from \code{pop_res_mun} who are
 allowed to vote.}
@@ -55,7 +56,8 @@ function for a set of elections
 \examples{
 
 ## Get mun census data
-
+data("dates_elections_spain")
+\dontrun{
 # Right examples
 mun_census_data <- get_mun_census_data("congress", 2019, 4)
 mun_census_data <- get_mun_census_data("senate", 2019, 11)
@@ -64,7 +66,6 @@ mun_census_data <- get_mun_census_data(rep("congress", 3),
                                        c(11, 4, 6))
 mun_census_data <- get_mun_census_data(c("congress", "senate"),
                                        c(2019, 2019), c(11, 4))
-\dontrun{
 # Wrong examples
 mun_census_data <- get_mun_census_data("national", 2019, 4)
 mun_census_data <- get_mun_census_data("congress", 2016, c(4, 11))

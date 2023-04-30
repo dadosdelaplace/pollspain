@@ -9,9 +9,14 @@
 
 # ----- problemas -----
 
-# conflicto: agregar por partidos cuando no se ha incluido el dato
-# elecciones fuera de congreso de momento no testado ni prohibido
-# ver cuando se usa turn
+# summary data para senado da NA --> ver que sucede
+# muchos DNI de candidatos (en historical_raw_candidates) vacíos
+# get_candidacies_data() da error con include_candidates = TRUE
+
+# ----- check -----
+
+# summary data a nivel nacional coincide (tanto sin como con partidos)
+# aggregation correcta en get_elections para distintos niveles
 
 # ----- mejoras -----
 

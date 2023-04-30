@@ -1,2 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^LICENSE\.md$
+^data-raw$
+^data$
+^.*\.xlsx$
+^.*\.xls$
+^.*\.csv$
