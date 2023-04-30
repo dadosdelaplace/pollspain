@@ -121,10 +121,10 @@ usethis::use_data(cod_INE_mun, overwrite = TRUE,
 
 # ----- write_csv -----
 
-write_csv(cod_INE_prov_ccaa, "./data/cod_INE_prov_ccaa.csv")
-write_csv(cod_INE_prov, "./data/cod_INE_prov.csv")
-write_csv(cod_INE_ccaa, "./data/cod_INE_ccaa.csv")
-write_csv(cod_INE_mun, "./data/cod_INE_mun.csv")
+write_csv(cod_INE_prov_ccaa, "./data/csv/cod_INE/cod_INE_prov_ccaa.csv")
+write_csv(cod_INE_prov, "./data/csv/cod_INE/cod_INE_prov.csv")
+write_csv(cod_INE_ccaa, "./data/csv/cod_INE/cod_INE_ccaa.csv")
+write_csv(cod_INE_mun, "./data/csv/cod_INE/cod_INE_mun.csv")
 
 
 

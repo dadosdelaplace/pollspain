@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_elections_data.R
 \name{aggregate_election_data}
 \alias{aggregate_election_data}
-\title{Aggregate elections data}
+\title{Get candidacies data (at poll station level)}
 \source{
 ...
 }
@@ -10,24 +10,14 @@
 aggregate_election_data(
   election_data,
   level = "all",
-  by_parties = TRUE,
+  id_col = "id_INE_poll_station",
+  cod_CERA = "999",
   prec_round = 3
 )
 }
 \arguments{
-\item{election_data}{tibble containing election data}
-
-\item{level}{level of territorial aggregation. Values allowed are "all"
-(national aggregation), "ccaa" (regional aggregation),
-"prov" (province aggregation), "mun" (municipal aggregation),
-"mun-district" (municipal district aggregation),
-"sec" (census section aggregation) or "poll-station" (without aggregation)}
-
-\item{by_parties}{flag to indicate wheter it should be aggregate data
-about ballots of parties (as long as \code{election_data} has been generated
-with the candidacies data). Defaults to \code{TRUE}.}
-
-\item{prec_round}{rounding accuracy. Defaults to \code{prec_round = 3}.}
+\item{include_candidates}{flag to indicate wheter it should be included data
+about candidates or not. Defaults to \code{FALSE}.}
 }
 \value{
 ...
@@ -37,7 +27,7 @@ with the candidacies data). Defaults to \code{TRUE}.}
 }
 \examples{
 
-## Aggregate election data
+## Get candidacies data
 
 # Right examples
 \dontrun{

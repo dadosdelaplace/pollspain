@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_elections_data.R
 \name{get_candidacies_data}
 \alias{get_candidacies_data}
-\title{Get candidacies data}
+\title{Get candidacies data (at poll station level)}
 \source{
 ...
 }
