@@ -66,6 +66,13 @@
 get_mun_census_data <-
   function(type_elec, year, month) {
 
+    # At this time, just congress election
+    if (type_elec != "congress") {
+
+      stop("Development in process: at this time, just congress elections are allowed")
+
+    }
+
     # Check: if elections required are allowed
     elections_allowed <-
       dates_elections_spain |>
@@ -134,6 +141,13 @@ get_mun_census_data <-
 #' @export
 get_poll_station_data <-
   function(type_elec, year, month, prec_round = 3) {
+
+    # At this time, just congress election
+    if (type_elec != "congress") {
+
+      stop("Development in process: at this time, just congress elections are allowed")
+
+    }
 
     # Check: if elections required are allowed
     elections_allowed <-
@@ -272,6 +286,13 @@ get_poll_station_data <-
 get_candidates_data <-
   function(type_elec, year, month) {
 
+    # At this time, just congress election
+    if (type_elec != "congress") {
+
+      stop("Development in process: at this time, just congress elections are allowed")
+
+    }
+
     # Check: if elections required are allowed
     elections_allowed <-
       dates_elections_spain |>
@@ -332,6 +353,13 @@ get_candidates_data <-
 #' @export
 get_candidacies_data <-
   function(type_elec, year, month, include_candidates = FALSE) {
+
+    # At this time, just congress election
+    if (type_elec != "congress") {
+
+      stop("Development in process: at this time, just congress elections are allowed")
+
+    }
 
     # Check: if elections required are allowed
     elections_allowed <-
@@ -749,6 +777,13 @@ get_elections_data <-
            by_parties = TRUE, include_candidacies = FALSE,
            include_candidates = FALSE,
            id_col = "id_INE_poll_station", prec_round = 3) {
+
+    # At this time, just congress election
+    if (type_elec != "congress") {
+
+      stop("Development in process: at this time, just congress elections are allowed")
+
+    }
 
     # Check: if elections required are allowed
     join_result <-
