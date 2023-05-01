@@ -819,7 +819,7 @@ aggregate_candidacies_data <-
       candidacies_data |>
       reframe(abbrev_candidacies = unique(abbrev_candidacies),
               ballots = sum(ballots),
-              .by = group_vars) |>
+              .by = c(group_vars, abbrev_candidacies, name_candidacies)) |>
       slice_max(ballots, n = 1, by = group_vars, with_ties = FALSE) |>
       select(-ballots)
 
@@ -851,7 +851,9 @@ aggregate_candidacies_data <-
       mutate(ballots_by_elec = round(ballots / elected, prec_round),
              ballots_by_elec =
                if_else(is.infinite(ballots_by_elec),
-                       NA, ballots_by_elec))
+                       NA, ballots_by_elec)) |>
+      relocate(abbrev_candidacies, name_candidacies,
+               .after = id_candidacies)
 
     # output
     return(agg_data)
@@ -887,6 +889,7 @@ get_elections_data <-
   function(type_elec, year, month, level = "all",
            by_parties = TRUE, include_candidacies = FALSE,
            include_candidates = FALSE,
+           filter_porc_ballots = NA, filter_elected = NA,
            id_col_poll = "id_INE_poll_station",
            id_col_candidacies = "id_candidacies",
            id_col_candidacies_prov = "id_candidacies_prov",
@@ -986,6 +989,41 @@ get_elections_data <-
                   suffix = c("", ".y"), multiple = "all") |>
         select(-contains(".y"))
 
+      # Including some summaries
+      agg_data <-
+        agg_data |>
+        mutate(porc_candidacies_parties =
+                 round(100*ballots/party_ballots, prec_round),
+               porc_candidacies_valid =
+                 round(100*ballots/valid_ballots, prec_round),
+               porc_candidacies_census =
+                 round(100*ballots/census_counting, prec_round),
+               porc_elected = round(100*elected/360, prec_round),
+               anomaly_ballots_elected =
+                 round(100*((porc_elected / porc_candidacies_parties) - 1),
+                       prec_round))
+
+      if (!is.na(filter_porc_ballots)) {
+
+        agg_data <-
+          agg_data |>
+          filter(porc_candidacies_valid >= filter_porc_ballots)
+
+      }
+
+      if (!is.na(filter_elected)) {
+
+        agg_data <-
+          agg_data |>
+          filter(elected >= filter_elected)
+
+      }
+
+      # Relocate
+      agg_data <-
+        agg_data |>
+        select(c(id_elec:pop_res, id_candidacies, abbrev_candidacies,
+                 name_candidacies, ballots, everything()))
     }
 
     # output
