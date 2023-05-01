@@ -497,9 +497,17 @@ get_candidacies_data <-
 
     }
 
-    # Recoding parties
+    # Recoding parties and incluid id_elec
     candidacies_data <-
-      candidacies_data |> recod_parties()
+      candidacies_data |>
+      recod_parties() |>
+      mutate(id_elec = glue("{type_to_code_election(type_elec)}-{date_elec}"),
+             .before = everything())
+
+    # Remove NA ccaa-prov (CERA summary by ccaa-prov)
+    candidacies_data <-
+      candidacies_data |>
+      drop_na(ccaa, prov)
 
     # output
     return(candidacies_data)
@@ -747,6 +755,109 @@ aggregate_election_data <-
 
   }
 
+aggregate_candidacies_data <-
+  function(candidacies_data, level = "all",
+           id_col_poll = "id_INE_poll_station",
+           id_col_candidacies = "id_candidacies",
+           id_col_candidacies_prov = "id_candidacies_prov",
+           col_abrev_candidacies = "abbrev_candidacies",
+           prec_round = 3) {
+
+    # Remove duplicates
+    candidacies_data <-
+      candidacies_data |>
+      distinct(id_elec, .data[[id_col_poll]], .data[[id_col_candidacies]],
+               .keep_all = TRUE)
+
+    # Remove total by ccaa and prov of CERA
+    candidacies_data <-
+      candidacies_data |>
+      drop_na(ccaa, prov)
+
+
+    # extract cod by level
+    if (level != "all") {
+
+      hierarchy_levels <- c("ccaa", "prov", "mun", "mun_district",
+                            "sec", "poll_station")
+
+      levels <- hierarchy_levels[1:which(hierarchy_levels == level)]
+
+      for (i in 1:length(levels)) {
+
+        candidacies_data <-
+          candidacies_data |>
+          mutate("cod_INE_{levels[i]}" :=
+                   extract_code(.data[[id_col]], level = levels[i]),
+                 .after = .data[[id_col]])
+
+      }
+    }
+
+    # Aggregation of data
+    if (level == "all") {
+
+      levels <- "all"
+      group_vars <- "id_elec"
+
+    } else {
+
+      if (length(levels) <= 3) { # at mun level
+
+        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels)
+
+      } else {
+
+        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels[1:3])
+      }
+
+    }
+
+    # Use as name the "variant" of party most voted
+    group_vars <- c(group_vars, id_col_candidacies)
+    most_cand_voted <-
+      candidacies_data |>
+      reframe(abbrev_candidacies = unique(abbrev_candidacies),
+              ballots = sum(ballots),
+              .by = group_vars) |>
+      slice_max(ballots, n = 1, by = group_vars, with_ties = FALSE) |>
+      select(-ballots)
+
+    # Candidates elected
+    elected <-
+      candidacies_data |>
+      distinct(across(c(group_vars, prov)), .keep_all = TRUE) |>
+      summarise(elected = sum(elected_by_prov),
+                .by = group_vars)
+
+    # Aggregate data
+    agg_data <-
+      candidacies_data |>
+      reframe(type_elec = unique(type_elec),
+              date_elec = unique(date_elec),
+              ballots = sum(ballots),
+              .by = group_vars) |>
+      # Join with most voted parties: with multiple = "all"
+      # we allow, with the same abbrev, different regional names.
+      left_join(most_cand_voted, by = group_vars,
+                suffix = c(".x", ""), multiple = "all") |>
+      select(-contains(".x")) |>
+      group_by(across(group_vars)) |>
+      distinct(.keep_all = TRUE) |>
+      ungroup() |>
+      # Join with number of elected
+      left_join(elected, by = group_vars) |>
+      # Include votes required by elected
+      mutate(ballots_by_elec = round(ballots / elected, prec_round),
+             ballots_by_elec =
+               if_else(is.infinite(ballots_by_elec),
+                       NA, ballots_by_elec))
+
+    # output
+    return(agg_data)
+
+  }
+
 #' @title Get candidacies data (at poll station level)
 #'
 #' @description ...
@@ -776,7 +887,11 @@ get_elections_data <-
   function(type_elec, year, month, level = "all",
            by_parties = TRUE, include_candidacies = FALSE,
            include_candidates = FALSE,
-           id_col = "id_INE_poll_station", prec_round = 3) {
+           id_col_poll = "id_INE_poll_station",
+           id_col_candidacies = "id_candidacies",
+           id_col_candidacies_prov = "id_candidacies_prov",
+           col_abrev_candidacies = "abbrev_candidacies",
+           prec_round = 3) {
 
     # At this time, just congress election
     if (type_elec != "congress") {
@@ -841,9 +956,9 @@ get_elections_data <-
                             prec_round = prec_round)
 
     # and then aggregate at provided level
-    election_data <-
+    agg_data <-
       election_data |>
-      aggregate_election_data(level = level, id_col = id_col,
+      aggregate_election_data(level = level, id_col = id_col_poll,
                               prec_round = prec_round)
 
     if (include_candidacies) {
@@ -853,19 +968,28 @@ get_elections_data <-
         get_candidacies_data(type_elec, year, month,
                              include_candidates = include_candidates)
 
+      # and then aggregate at provided level
+      agg_data_candidacies <-
+        candidacies_data |>
+        aggregate_candidacies_data(level = level,
+                                   id_col_poll = id_col_poll,
+                                   id_col_candidacies = id_col_candidacies,
+                                   id_col_candidacies_prov = id_col_candidacies_prov,
+                                   col_abrev_candidacies = id_col_candidacies_prov,
+                                   prec_round = prec_round)
+
       # Join information
-      election_data <-
-        election_data |>
-        left_join(candidacies_data,
-                  by = c("type_elec", "date_elec",
-                         "id_INE_poll_station"),
+      agg_data <-
+        agg_data |>
+        left_join(agg_data_candidacies,
+                  by = c("id_elec"),
                   suffix = c("", ".y"), multiple = "all") |>
         select(-contains(".y"))
 
     }
 
     # output
-    return(election_data)
+    return(agg_data)
 
 }
 
