@@ -1030,6 +1030,3 @@ get_elections_data <-
     return(agg_data)
 
 }
-
-
-
