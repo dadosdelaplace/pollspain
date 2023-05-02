@@ -896,6 +896,10 @@ get_elections_data <-
            col_abrev_candidacies = "abbrev_candidacies",
            prec_round = 3) {
 
+    # Message: yellow for checks
+    message(yellow("🔎 Check if parameters are allowed..."))
+    Sys.sleep(1/10)
+
     # At this time, just congress election
     if (type_elec != "congress") {
 
@@ -953,10 +957,22 @@ get_elections_data <-
 
     }
 
+    # Message: blue for get data
+    message(blue("📦 Get poll station data..."))
+    Sys.sleep(1/10)
+
+    # Message: green details
+    message(green("   - Download poll station data..."))
+    Sys.sleep(1/10)
+
     # Getting data at poll station level (without candidacies)
     election_data <-
       get_poll_station_data(type_elec, year, month,
                             prec_round = prec_round)
+
+    # Message: green details
+    message(green(glue("   - Aggregating election data at {ifelse(level == 'all', 'national', level)} level...")))
+    Sys.sleep(1/10)
 
     # and then aggregate at provided level
     agg_data <-
@@ -966,10 +982,22 @@ get_elections_data <-
 
     if (include_candidacies) {
 
+      # Message: blue for get data
+      message(blue("📦 Get candidacies (parties) data..."))
+      Sys.sleep(1/10)
+
+      # Message: green for details
+      message(green("   - Download candidacies (parties) data... (please wait, intensive task)"))
+      Sys.sleep(1/10)
+
       # Getting candidacies data
       candidacies_data <-
         get_candidacies_data(type_elec, year, month,
                              include_candidates = include_candidates)
+
+      # Message: green for details
+      message(green(glue("   - Aggregating candidacies data at {ifelse(level == 'all', 'national', level)} level...")))
+      Sys.sleep(1/10)
 
       # and then aggregate at provided level
       agg_data_candidacies <-
@@ -981,6 +1009,10 @@ get_elections_data <-
                                    col_abrev_candidacies = id_col_candidacies_prov,
                                    prec_round = prec_round)
 
+      # Message: magenta for more
+      message(magenta("🖇 Join information..."))
+      Sys.sleep(1/10)
+
       # Join information
       agg_data <-
         agg_data |>
@@ -988,6 +1020,10 @@ get_elections_data <-
                   by = c("id_elec"),
                   suffix = c("", ".y"), multiple = "all") |>
         select(-contains(".y"))
+
+      # Message: yellow-black last message
+      message(bgYellow(black("✅ Last summaries and tasks...\n")))
+      Sys.sleep(1/10)
 
       # Including some summaries
       agg_data <-
@@ -1024,6 +1060,12 @@ get_elections_data <-
         agg_data |>
         select(c(id_elec:pop_res, id_candidacies, abbrev_candidacies,
                  name_candidacies, ballots, everything()))
+    } else {
+
+      # Message: yellow-black last message
+      message(bgYellow(black("✅ Last summaries and tasks...\n")))
+      Sys.sleep(1/10)
+
     }
 
     # output
