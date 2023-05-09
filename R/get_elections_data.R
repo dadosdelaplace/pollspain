@@ -755,6 +755,31 @@ aggregate_election_data <-
 
   }
 
+#' @title Get candidacies data (at poll station level)
+#'
+#' @description ...
+#'
+#' @inheritParams get_mun_census_data
+#' @param include_candidates flag to indicate wheter it should be included data
+#' about candidates or not. Defaults to \code{FALSE}.
+#'
+#' @return ...
+#'
+#' @author Javier Álvarez-Liébana.
+#' @source ...
+#' @keywords get_elections_data
+#' @name aggregate_candidacies_data
+#'
+#' @examples
+#'
+#' ## Get candidacies data
+#'
+#' # Right examples
+#' \dontrun{
+#' # Wrong examples
+#' }
+#'
+#' @export
 aggregate_candidacies_data <-
   function(candidacies_data, level = "all",
            id_col_poll = "id_INE_poll_station",
@@ -1105,10 +1130,5 @@ get_elections_data <-
     return(agg_data)
 
   }
-
-
-
-
-
 
 

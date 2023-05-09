@@ -20,6 +20,7 @@
 #' @import stringr
 #' @import tibble
 ## usethis namespace: start
+#' @importFrom dplyr arrange
 #' @importFrom glue glue
 #' @importFrom lubridate as_date
 #' @importFrom lubridate day

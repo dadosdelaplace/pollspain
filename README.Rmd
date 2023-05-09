@@ -126,9 +126,45 @@ prov_data
 Función principal, combinando la extracción y la agregación
 
 ```{r}
-national_data <- get_elections_data("congress", 2019, c(4, 11), include_candidacies = TRUE)
+national_data <-
+  get_elections_data("congress", 2019, c(4, 11), 
+                     include_candidacies = TRUE, level =  "all")
 national_data |> arrange(desc(ballots))
 ```
+
+
+```{r}
+ccaa_data <-
+  get_elections_data("congress", 2019, c(4, 11), 
+                     include_candidacies = TRUE, level = "ccaa")
+ccaa_data
+
+prov_data <-
+  get_elections_data("congress", 2019, c(4, 11), 
+                     include_candidacies = TRUE, level = "prov")
+prov_data
+```
+
+Es lo mismo extraer a nivel municipio que a un nivel más bajo y luego agrupar y sumarizar.
+
+```{r}
+mun_data <-
+  get_elections_data("congress", 2019, c(4, 11), 
+                     include_candidacies = TRUE, level = "mun")
+mun_data |> filter(date_elec == "2019-04-28" & mun == "Dos Hermanas")
+
+
+mun_district_data <- get_elections_data("congress", 2019, c(4, 11),
+                                        include_candidacies = TRUE,
+                                        level = "mun_district")
+mun_district_data |>
+  group_by(id_elec, type_elec, date_elec, cod_INE_mun, mun, id_candidacies) |>
+  summarise(sum(ballots)) |>
+  ungroup() |> 
+  filter(date_elec == "2019-04-28" & mun == "Dos Hermanas")
+```
+
+
 
 
 
