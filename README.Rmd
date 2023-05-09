@@ -121,6 +121,15 @@ prov_data
 ```
 
 
+#### Datos de elecciones
+
+Función principal, combinando la extracción y la agregación
+
+```{r}
+national_data <- get_elections_data("congress", 2019, c(4, 11), include_candidacies = TRUE)
+national_data |> arrange(desc(ballots))
+```
+
 
 
 

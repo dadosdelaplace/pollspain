@@ -24,7 +24,8 @@ Imports:
     tidyr (>= 1.3.0),
     utils,
     rvest,
-    stringi
+    stringi,
+    crayon
 Suggests:
     microbenchmark,
     knitr,
