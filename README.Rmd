@@ -37,6 +37,7 @@ devtools::install_github("dadosdelaplace/pollspain")
 
 ```{r}
 library(pollspain)
+library(tidyverse)
 ```
 
 ## Usage

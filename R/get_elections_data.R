@@ -42,7 +42,7 @@
 #' \url{https://www.ige.gal}
 #' @keywords get_elections_data
 #' @name get_mun_census_data
-#'
+#' @import crayon
 #' @examples
 #'
 #' ## Get mun census data
