@@ -788,8 +788,8 @@ aggregate_candidacies_data <-
         candidacies_data <-
           candidacies_data |>
           mutate("cod_INE_{levels[i]}" :=
-                   extract_code(.data[[id_col]], level = levels[i]),
-                 .after = .data[[id_col]])
+                   extract_code(.data[[id_col_poll]], level = levels[i]),
+                 .after = .data[[id_col_poll]])
 
       }
     }
@@ -852,6 +852,7 @@ aggregate_candidacies_data <-
              ballots_by_elec =
                if_else(is.infinite(ballots_by_elec),
                        NA, ballots_by_elec)) |>
+      relocate(type_elec, date_elec, .after = id_elec) |>
       relocate(abbrev_candidacies, name_candidacies,
                .after = id_candidacies)
 
@@ -952,7 +953,7 @@ get_elections_data <-
     # Check: if by_parties is a logical variable
     if (by_parties & !include_candidacies) {
 
-      warning("Since include_candidacies = FALSE, aggregating by parties has not been implemented")
+      message(red("   🔔 Since include_candidacies = FALSE, aggregating by parties has not been implemented"))
       by_parties <- FALSE
 
     }
@@ -1013,11 +1014,41 @@ get_elections_data <-
       message(magenta("🖇 Join information..."))
       Sys.sleep(1/10)
 
+      # extract cod by level
+      if (level != "all") {
+
+        hierarchy_levels <- c("ccaa", "prov", "mun", "mun_district",
+                              "sec", "poll_station")
+
+        levels <- hierarchy_levels[1:which(hierarchy_levels == level)]
+
+      }
+
+      # group vars
+      if (level == "all") {
+
+        levels <- "all"
+        group_vars <- "id_elec"
+
+      } else {
+
+        if (length(levels) <= 3) { # at mun level
+
+          group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels)
+
+        } else {
+
+          group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels[1:3])
+        }
+
+      }
+
+
       # Join information
       agg_data <-
         agg_data |>
         left_join(agg_data_candidacies,
-                  by = c("id_elec"),
+                  by = group_vars,
                   suffix = c("", ".y"), multiple = "all") |>
         select(-contains(".y"))
 
@@ -1058,8 +1089,10 @@ get_elections_data <-
       # Relocate
       agg_data <-
         agg_data |>
-        select(c(id_elec:pop_res, id_candidacies, abbrev_candidacies,
-                 name_candidacies, ballots, everything()))
+        select(c(id_elec:pop_res, group_vars[group_vars != "id_elec"],
+                 id_candidacies, abbrev_candidacies,
+                 name_candidacies, ballots:anomaly_ballots_elected,
+                 everything()))
     } else {
 
       # Message: yellow-black last message
@@ -1071,4 +1104,11 @@ get_elections_data <-
     # output
     return(agg_data)
 
-}
+  }
+
+
+
+
+
+
+

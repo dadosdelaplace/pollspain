@@ -23,6 +23,7 @@
 # ----- enhancements -----
 
 # añadir segundo partido ganador en encuestas
+# Orense (Ourense)
 # limpiar tablas de variables y parámetros en funciones: lo más simple posible
 # codificar partidos por bloques ideológicos: existe algo en literatura?
 # documentar todo
