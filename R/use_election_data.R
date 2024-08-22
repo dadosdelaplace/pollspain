@@ -1,12 +1,12 @@
 #' @title Allocate Seats Using the D'Hondt Method for the Spanish Congress
 #'
 #' @description
-#' This function allocates seats to political parties for the Spanish Congress of Deputies 
-#' using the D'Hondt method. It allows for aggregation of seat distribution at the provincial, 
+#' This function allocates seats to political parties for the Spanish Congress of Deputies
+#' using the D'Hondt method. It allows for aggregation of seat distribution at the provincial,
 #' autonomous community, or national level.
 #'
 #' @param last_election_ballots A data frame containing the votes for each polling station.
-#' @param level The aggregation level for the final seat distribution. Options are `"prov"` (default) 
+#' @param level The aggregation level for the final seat distribution. Options are `"prov"` (default)
 #'   for provincial level, `"ccaa"` for autonomous community level, and `"national"` for national level.
 #'
 #' @return
@@ -25,59 +25,59 @@
 #'
 #' @examples
 #' # Example usage:
-#' final_seat_distribution <- allocate_seats_dhondt(last_election_ballots, 
+#' final_seat_distribution <- allocate_seats_dhondt(last_election_ballots,
 #'                                                  level = "ccaa")
 #' print(final_seat_distribution)
 #'
-#' 
+#'
 #' @export
 
 allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
-  
+
   # Step 1: Aggregate votes by province, party, and ccaa
   votes_by_province <- last_election_ballots %>%
     group_by(cod_INE_prov, cod_MIR_ccaa, cod_candidacies_prov) %>%
     summarize(total_votes = sum(ballots), .groups = 'drop')
-  
+
   # Step 2: Determine seats per province for the election year
   election_year <- as.character(year(last_election_ballots$date_elec[1]))
-  
+
   # Access static datasets within the package environment
   seats_per_province <- seat_distribution_congress %>%
     filter(year == election_year) %>%
     select(cod_INE_prov, prov, seats)
-  
+
   # Step 3: Join the aggregated votes with seat distribution data
   votes_with_seats <- votes_by_province %>%
     left_join(seats_per_province, by = "cod_INE_prov")
-  
+
   # Step 4: Filter out candidacies that do not meet the 3% threshold
   votes_with_seats <- votes_with_seats %>%
     group_by(cod_INE_prov) %>%
     mutate(total_votes_prov = sum(total_votes)) %>%
     filter(total_votes / total_votes_prov >= 0.03) %>%
     ungroup()
-  
+
   # Define the D'Hondt allocation function
   distribute_seats_dhondt <- function(votes, num_seats) {
     num_parties <- length(votes)
     quotients <- matrix(0, nrow = num_parties, ncol = num_seats)
-    
+
     for (i in 1:num_parties) {
       quotients[i, ] <- votes[i] / 1:num_seats
     }
-    
+
     sorted_quotients <- sort(as.vector(quotients), decreasing = TRUE)
     cutoff <- sorted_quotients[num_seats]
-    
+
     seat_allocation <- integer(num_parties)
     for (i in 1:num_parties) {
       seat_allocation[i] <- sum(quotients[i, ] >= cutoff)
     }
-    
+
     return(seat_allocation)
   }
-  
+
   # Step 5: Apply the D'Hondt function to each province while preserving columns
   seat_distribution_results <- votes_with_seats %>%
     filter(cod_INE_prov != "99") %>%
@@ -87,11 +87,11 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
       party_codes = list(cod_candidacies_prov),
       .groups = 'drop'
     )
-  
+
   # Step 6: Expand the list columns to show seats per party
   seat_distribution_expanded <- seat_distribution_results %>%
     unnest(cols = c(seats_allocated, party_codes))
-  
+
   # Step 7: Join back with party names and get the ccaa column from cod_INE_mun
   final_seat_distribution <- seat_distribution_expanded %>%
     left_join(last_election_ballots %>%
@@ -102,7 +102,7 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
                 select(cod_INE_prov, ccaa) %>%
                 distinct(),
               by = "cod_INE_prov")
-  
+
   # Step 8: Aggregate results based on the selected level
   if (level == "ccaa") {
     final_seat_distribution <- final_seat_distribution %>%
@@ -117,11 +117,11 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
       group_by(cod_INE_prov, prov, cod_MIR_ccaa, abbrev_candidacies, name_candidacies, ccaa) %>%
       summarize(seats = sum(seats_allocated), .groups = 'drop')
   }
-  
+
   # Step 9: Filter out candidacies with 0 seats
   final_seat_distribution <- final_seat_distribution %>%
     filter(seats > 0)
-  
+
   # Return the final seat distribution
   return(final_seat_distribution)
 }
@@ -129,12 +129,12 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
 #' @title Plot Spanish Congress Election Results
 #'
 #' @description
-#' This function generates a map of Spain, visualizing the election results 
-#' for the Spanish Congress of Deputies. The map can display results by province 
-#' or autonomous community (CCAA) based on the `level` argument. The function 
+#' This function generates a map of Spain, visualizing the election results
+#' for the Spanish Congress of Deputies. The map can display results by province
+#' or autonomous community (CCAA) based on the `level` argument. The function
 #' colors each region according to the party with the most votes in that area.
 #'
-#' @param election_data A data frame containing the election results. It should include 
+#' @param election_data A data frame containing the election results. It should include
 #' the following columns:
 #' \describe{
 #'   \item{cod_INE_prov}{Character. The INE code for provinces.}
@@ -145,11 +145,11 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
 #'   \item{ccaa}{Character. The name of the autonomous community.}
 #'   \item{ballots}{Numeric. The number of ballots received by the party.}
 #' }
-#' @param level A character string indicating the geographic level to plot. 
-#' Options are `"prov"` (default) for province-level results, and `"ccaa"` for 
+#' @param level A character string indicating the geographic level to plot.
+#' Options are `"prov"` (default) for province-level results, and `"ccaa"` for
 #' autonomous community-level results.
-#' @param colors_url A character string specifying the URL from which to 
-#' download the color codes for the political parties. Default is 
+#' @param colors_url A character string specifying the URL from which to
+#' download the color codes for the political parties. Default is
 #' "https://github.com/mikadsr/Pollspain-data/raw/main/get%20auxiliary%20data/party_colors_hex.rda".
 #'
 #' @details
@@ -178,15 +178,15 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
 #' plot_election_results(election_data = a2023, level = "ccaa")
 #' }
 #'
-#' 
+#'
 #' @export
 plot_election_results <- function(election_data, level = "prov", colors_url = "https://github.com/mikadsr/Pollspain-data/raw/main/get%20auxiliary%20data/party_colors_hex.rda") {
-  
+
   # Load necessary packages
   library(ggplot2)
   library(dplyr)
   library(mapSpain)
-  
+
   # Load the province or CCAA map depending on the level
   if (level == "prov") {
     title <- "Spanish Congress Election Results by Province"
@@ -199,33 +199,33 @@ plot_election_results <- function(election_data, level = "prov", colors_url = "h
     merge_by <- "codauto"
     election_by <- "cod_MIR_ccaa"
   }
-  
+
   # Load the party colors from the provided URL or a local file
   temp <- tempfile()
   download.file(colors_url, temp, quiet = TRUE)
   load(temp)
-  
+
   # Ensure the province or CCAA codes in both dataframes are characters
   election_data[[election_by]] <- as.character(election_data[[election_by]])
-  
+
   # Aggregate ballots to find the winning party by region
   election_data <- election_data %>%
     group_by(!!sym(election_by), abbrev_candidacies) %>%
     summarize(total_ballots = sum(ballots), .groups = 'drop') %>%
     group_by(!!sym(election_by)) %>%
     slice_max(total_ballots, with_ties = FALSE)
-  
+
   # Merge the map with the election results
   merged_data <- merge(map_data, election_data, by.x = merge_by, by.y = election_by, all.x = TRUE)
-  
+
   # Handle duplicates in case of many-to-many relationships
   party_colors_hex_unique <- party_colors_hex %>%
     distinct(abbrev_candidacies, .keep_all = TRUE)
-  
+
   # Join color data with merged_data
   merged_data <- merged_data %>%
     left_join(party_colors_hex_unique, by = "abbrev_candidacies")
-  
+
   # Plotting the results using the colors from the joined data
   ggplot(merged_data) +
     geom_sf(aes(fill = abbrev_candidacies), color = "white") +
@@ -234,8 +234,6 @@ plot_election_results <- function(election_data, level = "prov", colors_url = "h
     theme_void() +
     theme(legend.position = "bottom")
 }
-plot_election_results(election_data = a2023, level = "ccaa")
-
 
 #' @title Plot Parliamentary Seat Distribution
 #'
@@ -282,17 +280,17 @@ plot_election_results(election_data = a2023, level = "ccaa")
 #'
 #'@export
 plot_parliament_distribution <- function(election_data, colors_url = "https://github.com/mikadsr/Pollspain-data/raw/main/get%20auxiliary%20data/party_colors_hex.rda") {
-  
+
   # Step 1: Group the data by abbrev_candidacies and sum the seats
   seat_data <- election_data %>%
     group_by(abbrev_candidacies) %>%
     summarise(seats = sum(seats))
-  
+
   # Step 2: Load party colors from the provided URL or a local file
   temp <- tempfile()
   download.file(colors_url, temp, quiet = TRUE)
   load(temp)
-  
+
   # Step 3: Prepare data for ggparliament
   parliament_data <- parliament_data(
     election_data = seat_data,
@@ -300,15 +298,15 @@ plot_parliament_distribution <- function(election_data, colors_url = "https://gi
     party_seats = seat_data$seats,
     type = "semicircle"
   )
-  
+
   # Step 4: Join color data with parliament_data
   parliament_data <- parliament_data %>%
     left_join(party_colors_hex, by = "abbrev_candidacies")
-  
+
   # Step 5: Create the ggparliament plot
-  plot <- ggplot(parliament_data, aes(x = x, 
-                                      y = y, 
-                                      color = abbrev_candidacies, 
+  plot <- ggplot(parliament_data, aes(x = x,
+                                      y = y,
+                                      color = abbrev_candidacies,
                                       fill = abbrev_candidacies)) +
     geom_parliament_seats() +
     scale_fill_manual(values = setNames(parliament_data$party_color, parliament_data$abbrev_candidacies)) +
@@ -320,8 +318,8 @@ plot_parliament_distribution <- function(election_data, colors_url = "https://gi
     ) +
     theme_void()+
     theme(legend.position = "bottom",  legend.title = element_blank())  # This line positions the legend at the bottom
-  
-  
+
+
   # Return the plot
   return(plot)
 }

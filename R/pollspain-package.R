@@ -1,53 +1,39 @@
-#' @title \pkg{pollspain} -- blabla
+#' @title pollspain
 #'
-#' @description bla bla
+#' @description R package to access, clean, and analyze electoral and survey data
+#' for the Spanish elections from 1982 until present.
 #'
-#' @author Javier Álvarez-Liébana.
-#' @references
-#' García-Portugués, E., Álvarez-Liébana, J., Álvarez-Pérez, G. and
-#' González-Manteiga, W. (2019). A goodness-of-fit test for the functional
-#' linear model with functional response. \emph{arXiv:1909.07686}.
-#' \url{https://arxiv.org/abs/1909.07686}
-#'
-#' García-Portugués, E., González-Manteiga, W. and Febrero-Bande, M. (2014). A
-#' goodness-of-fit test for the functional linear model with scalar response.
-#' \emph{Journal of Computational and Graphical Statistics}, 23(3):761--778.
-#' \url{http://doi.org/10.1080/10618600.2013.812519}
-#' @docType package
-#' @name pollspain-package
+#' @author MSc Mikaela De Smedt, PhD Javier Alvarez-Liebana
+#' @maintainer Mikaela De Smedt (mkldesmedt@gmail.com), Javier Alvarez-Liebana (javalv09@ucm.es)
+#' @license MIT
+#' @version 1.0
+#' @imports
+#' dplyr, stringr, glue, readr, httr, lubridate, tidyverse, stringdist, stringi, ggparliament, ggplot2, mapSpain
 #' @import dplyr
-#' @import purrr
 #' @import stringr
-#' @import tibble
-## usethis namespace: start
+#' @import glue
+#' @import readr
+#' @import httr
+#' @import lubridate
+#' @import tidyverse
+#' @import stringdist
+#' @import stringi
+#' @import ggparliament
+#' @import ggplot2
+#' @import mapSpain
 #' @importFrom dplyr arrange
 #' @importFrom glue glue
-#' @importFrom lubridate as_date
-#' @importFrom lubridate day
-#' @importFrom lubridate dmy
-#' @importFrom lubridate month
-#' @importFrom lubridate today
-#' @importFrom lubridate year
-#' @importFrom readr locale
-#' @importFrom readr parse_number
-#' @importFrom readr read_csv
-#' @importFrom readr read_lines
-#' @importFrom rvest html_nodes
-#' @importFrom rvest html_table
-#' @importFrom rvest read_html
-#' @importFrom stringi stri_escape_unicode
-#' @importFrom stringi stri_trans_general
-#' @importFrom tidyr drop_na
-#' @importFrom tidyr pivot_longer
-#' @importFrom tidyr pivot_wider
-#' @importFrom tidyr replace_na
-#' @importFrom tidyr separate
-#' @importFrom tidyr unite
-#' @importFrom utils download.file
-#' @importFrom utils globalVariables
-#' @importFrom utils unzip
-## usethis namespace: end
+#' @importFrom lubridate as_date day dmy month today year
+#' @importFrom readr locale parse_number read_csv read_lines
+#' @importFrom rvest html_nodes html_table read_html
+#' @importFrom stringi stri_escape_unicode stri_trans_general
+#' @importFrom tidyr drop_na pivot_longer pivot_wider replace_na separate unite
+#' @importFrom utils download.file globalVariables unzip
+#' @docType package
+#' @name pollspain-package
 #' @aliases pollspain pollspain-package
 NULL
+
 options(pillar.sigfig = 13)
 options(dplyr.summarise.inform = FALSE)
+
