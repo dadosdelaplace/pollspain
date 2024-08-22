@@ -10,13 +10,11 @@ Data extracted from \href{https://github.com/mikadsr/Pollspain-data}{Pollspain D
 get_candidates_data(type_elec, year, month)
 }
 \arguments{
-\item{type_elec}{A vector or single value representing the types of elections.}
+\item{type_elec}{Type of election to retrieve data for. Must be one of the following: "congress".}
 
 \item{year}{Year of the election.}
 
 \item{month}{Month of the election.}
-
-\item{election_type}{Type of election to retrieve data for. Must be one of the following: "congress".}
 }
 \value{
 A tibble containing the candidates data with the following columns:
@@ -37,7 +35,7 @@ Fetch and process candidates data for Spanish elections. This function retrieves
 This function retrieves candidate data specifically for congress elections in Spain by accessing the Pollspain Data Repository. It processes and formats the raw data into a tibble that includes detailed information about each candidate and their candidacy.
 }
 \examples{
-
+\dontrun{
 ## Correct examples
 # Get candidates data for congress elections in March 1996
 candidates_data_1996_03 <- get_candidates_data("congress", 1996, 3)
@@ -53,7 +51,7 @@ try(get_candidates_data("senate", 1996, 3))
 
 # Trying to get candidates data for non-existent elections
 try(get_candidates_data("congress", 1800, 1))
-
+}
 }
 \author{
 Mikaela DeSmedt, Javier Álvarez-Liébana

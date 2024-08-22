@@ -24,38 +24,38 @@
 #'#' @author Mikaela DeSmedt
 #'
 #' @examples
+#' \dontrun{
 #' # Example usage:
 #' final_seat_distribution <- allocate_seats_dhondt(last_election_ballots,
 #'                                                  level = "ccaa")
 #' print(final_seat_distribution)
-#'
+#'}
 #'
 #' @export
-
 allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
 
   # Step 1: Aggregate votes by province, party, and ccaa
-  votes_by_province <- last_election_ballots %>%
-    group_by(cod_INE_prov, cod_MIR_ccaa, cod_candidacies_prov) %>%
+  votes_by_province <- last_election_ballots |>
+    group_by(cod_INE_prov, cod_MIR_ccaa, cod_candidacies_prov) |>
     summarize(total_votes = sum(ballots), .groups = 'drop')
 
   # Step 2: Determine seats per province for the election year
   election_year <- as.character(year(last_election_ballots$date_elec[1]))
 
   # Access static datasets within the package environment
-  seats_per_province <- seat_distribution_congress %>%
-    filter(year == election_year) %>%
-    select(cod_INE_prov, prov, seats)
+  seats_per_province <- seat_distribution_congress |>
+    dplyr::filter()(year == election_year) |>
+    dplyr::select(cod_INE_prov, prov, seats)
 
   # Step 3: Join the aggregated votes with seat distribution data
-  votes_with_seats <- votes_by_province %>%
+  votes_with_seats <- votes_by_province |>
     left_join(seats_per_province, by = "cod_INE_prov")
 
   # Step 4: Filter out candidacies that do not meet the 3% threshold
-  votes_with_seats <- votes_with_seats %>%
-    group_by(cod_INE_prov) %>%
-    mutate(total_votes_prov = sum(total_votes)) %>%
-    filter(total_votes / total_votes_prov >= 0.03) %>%
+  votes_with_seats <- votes_with_seats |>
+    group_by(cod_INE_prov) |>
+    mutate(total_votes_prov = sum(total_votes)) |>
+    dplyr::filter()(total_votes / total_votes_prov >= 0.03) |>
     ungroup()
 
   # Define the D'Hondt allocation function
@@ -79,9 +79,9 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
   }
 
   # Step 5: Apply the D'Hondt function to each province while preserving columns
-  seat_distribution_results <- votes_with_seats %>%
-    filter(cod_INE_prov != "99") %>%
-    group_by(cod_INE_prov, cod_MIR_ccaa, prov) %>%
+  seat_distribution_results <- votes_with_seats |>
+    dplyr::filter()(cod_INE_prov != "99") |>
+    group_by(cod_INE_prov, cod_MIR_ccaa, prov) |>
     summarize(
       seats_allocated = list(distribute_seats_dhondt(total_votes, unique(seats))),
       party_codes = list(cod_candidacies_prov),
@@ -89,38 +89,38 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
     )
 
   # Step 6: Expand the list columns to show seats per party
-  seat_distribution_expanded <- seat_distribution_results %>%
+  seat_distribution_expanded <- seat_distribution_results |>
     unnest(cols = c(seats_allocated, party_codes))
 
   # Step 7: Join back with party names and get the ccaa column from cod_INE_mun
-  final_seat_distribution <- seat_distribution_expanded %>%
-    left_join(last_election_ballots %>%
-                select(cod_candidacies_prov, abbrev_candidacies, name_candidacies) %>%
+  final_seat_distribution <- seat_distribution_expanded |>
+    left_join(last_election_ballots |>
+                dplyr::select(cod_candidacies_prov, abbrev_candidacies, name_candidacies) |>
                 distinct(),
-              by = c("party_codes" = "cod_candidacies_prov")) %>%
-    left_join(cod_INE_mun %>%
-                select(cod_INE_prov, ccaa) %>%
+              by = c("party_codes" = "cod_candidacies_prov")) |>
+    left_join(cod_INE_mun |>
+                dplyr::select(cod_INE_prov, ccaa) |>
                 distinct(),
               by = "cod_INE_prov")
 
-  # Step 8: Aggregate results based on the selected level
+  # Step 8: Aggregate results based on the dplyr::selected level
   if (level == "ccaa") {
-    final_seat_distribution <- final_seat_distribution %>%
-      group_by(cod_MIR_ccaa, abbrev_candidacies, name_candidacies, ccaa) %>%
+    final_seat_distribution <- final_seat_distribution |>
+      group_by(cod_MIR_ccaa, abbrev_candidacies, name_candidacies, ccaa) |>
       summarize(seats = sum(seats_allocated), .groups = 'drop')
   } else if (level == "national") {
-    final_seat_distribution <- final_seat_distribution %>%
-      group_by(abbrev_candidacies, name_candidacies) %>%
+    final_seat_distribution <- final_seat_distribution |>
+      group_by(abbrev_candidacies, name_candidacies) |>
       summarize(seats = sum(seats_allocated), .groups = 'drop')
   } else {
-    final_seat_distribution <- final_seat_distribution %>%
-      group_by(cod_INE_prov, prov, cod_MIR_ccaa, abbrev_candidacies, name_candidacies, ccaa) %>%
+    final_seat_distribution <- final_seat_distribution |>
+      group_by(cod_INE_prov, prov, cod_MIR_ccaa, abbrev_candidacies, name_candidacies, ccaa) |>
       summarize(seats = sum(seats_allocated), .groups = 'drop')
   }
 
   # Step 9: Filter out candidacies with 0 seats
-  final_seat_distribution <- final_seat_distribution %>%
-    filter(seats > 0)
+  final_seat_distribution <- final_seat_distribution |>
+    dplyr::filter()(seats > 0)
 
   # Return the final seat distribution
   return(final_seat_distribution)
@@ -208,25 +208,25 @@ plot_election_results <- function(election_data, level = "prov", colors_url = "h
   election_data[[election_by]] <- as.character(election_data[[election_by]])
 
   # Aggregate ballots to find the winning party by region
-  election_data <- election_data %>%
-    group_by(!!sym(election_by), abbrev_candidacies) %>%
-    summarize(total_ballots = sum(ballots), .groups = 'drop') %>%
-    group_by(!!sym(election_by)) %>%
+  election_data <- election_data |>
+    group_by(!!sym(election_by), abbrev_candidacies) |>
+    summarize(total_ballots = sum(ballots), .groups = 'drop') |>
+    group_by(!!sym(election_by)) |>
     slice_max(total_ballots, with_ties = FALSE)
 
   # Merge the map with the election results
   merged_data <- merge(map_data, election_data, by.x = merge_by, by.y = election_by, all.x = TRUE)
 
   # Handle duplicates in case of many-to-many relationships
-  party_colors_hex_unique <- party_colors_hex %>%
+  party_colors_hex_unique <- party_colors_hex |>
     distinct(abbrev_candidacies, .keep_all = TRUE)
 
   # Join color data with merged_data
-  merged_data <- merged_data %>%
+  merged_data <- merged_data |>
     left_join(party_colors_hex_unique, by = "abbrev_candidacies")
 
   # Plotting the results using the colors from the joined data
-  ggplot(merged_data) +
+  ggplot2::ggplot()(merged_data) +
     geom_sf(aes(fill = abbrev_candidacies), color = "white") +
     scale_fill_manual(values = setNames(party_colors_hex_unique$party_color, party_colors_hex_unique$abbrev_candidacies)) +
     labs(title = title, fill = "Winning Party") +
@@ -281,8 +281,8 @@ plot_election_results <- function(election_data, level = "prov", colors_url = "h
 plot_parliament_distribution <- function(election_data, colors_url = "https://github.com/mikadsr/Pollspain-data/raw/main/get%20auxiliary%20data/party_colors_hex.rda") {
 
   # Step 1: Group the data by abbrev_candidacies and sum the seats
-  seat_data <- election_data %>%
-    group_by(abbrev_candidacies) %>%
+  seat_data <- election_data |>
+    group_by(abbrev_candidacies) |>
     summarise(seats = sum(seats))
 
   # Step 2: Load party colors from the provided URL or a local file
@@ -299,11 +299,11 @@ plot_parliament_distribution <- function(election_data, colors_url = "https://gi
   )
 
   # Step 4: Join color data with parliament_data
-  parliament_data <- parliament_data %>%
+  parliament_data <- parliament_data |>
     left_join(party_colors_hex, by = "abbrev_candidacies")
 
   # Step 5: Create the ggparliament plot
-  plot <- ggplot(parliament_data, aes(x = x,
+  plot <- ggplot2::ggplot()(parliament_data, aes(x = x,
                                       y = y,
                                       color = abbrev_candidacies,
                                       fill = abbrev_candidacies)) +

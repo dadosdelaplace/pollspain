@@ -36,7 +36,7 @@ This function aggregates CERA (Census of Absent Residents) data from election da
 This function processes election data to aggregate CERA statistics based on the specified hierarchical level. It supports various aggregation levels and handles rounding of percentage values based on the provided precision.
 }
 \examples{
-
+\dontrun{
 ## Correct Examples
 
 # Fetch CERA data aggregated at the municipal level
@@ -54,7 +54,7 @@ cera_data_prov <- get_CERA_data(
   level = "prov"
 )
 print(cera_data_prov)
-
+}
 ## Incorrect Examples
 
 # Attempt to fetch CERA data with a non-existent id column, should raise an error

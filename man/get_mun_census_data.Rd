@@ -58,7 +58,7 @@ election periods as specified by the user.
 \examples{
 
 ## Correct examples ----
-
+\dontrun{
 # Congress elections in April 2019
 # Fetch municipal census data for the congress elections in April 2019
 mun_census_data1 <- get_mun_census_data("congress", 2019, 4)
@@ -74,9 +74,9 @@ combined_mun_census_data <- get_mun_census_data(
   c(2019, 2019, 2016),
   c(11, 4, 6)
 )
-
+}
 ## Incorrect examples ----
-
+\dontrun{
 # Invalid election type
 # This will fail because "national" is not a valid election type
 mun_census_data5 <- get_mun_census_data("national", 2019, 4)
@@ -92,7 +92,7 @@ mun_census_data7 <- get_mun_census_data("congress", "2016-06-26")
 # Non-existent election data
 # This will fail because 1990 congress elections are not available
 mun_census_data8 <- get_mun_census_data("congress", 1990, 4)
-
+}
 }
 \author{
 Mikaela DeSmedt, Javier Álvarez-Liébana.

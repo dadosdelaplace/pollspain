@@ -1,6 +1,5 @@
 library(httr)  # Ensure httr is loaded
 library(readxl)
-library(usethis)
 
 # Define URLs for the files
 urls <- list(

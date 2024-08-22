@@ -7,7 +7,7 @@
 #' This package includes functionality to work with electoral data, survey data, and various auxiliary datasets related to Spanish elections.
 #'
 #' @name pollspain-package
-#' @docType "_PACKAGE"
+#' @docType Package
 #' @aliases pollspain pollspain-package
 #'
 #' @import dplyr
@@ -22,6 +22,10 @@
 #' @import ggparliament
 #' @import ggplot2
 #' @import mapSpain
+#' @import purrr
+#' @import crayon
+#' @import rvest
+#' @import tidyr
 #' @importFrom dplyr arrange
 #' @importFrom glue glue
 #' @importFrom lubridate as_date day dmy month today year

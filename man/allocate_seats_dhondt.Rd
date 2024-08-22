@@ -34,10 +34,11 @@ This function performs the following steps:
 #' @author Mikaela DeSmedt
 }
 \examples{
+\dontrun{
 # Example usage:
 final_seat_distribution <- allocate_seats_dhondt(last_election_ballots,
                                                  level = "ccaa")
 print(final_seat_distribution)
-
+}
 
 }

@@ -37,7 +37,7 @@ The function summarizes election data based on the specified geographic scope an
 ballots_data <- data.frame(
   cod_elec = "02",
   type_elec = "congress",
-  date_elec = as_date("2023-07-23"),
+  date_elec = lubridate::as_date("2023-07-23"),
   id_MIR_mun = "01-04-001",
   cod_MIR_ccaa = "01",
   cod_INE_prov = "04",
@@ -66,7 +66,7 @@ aggregated_data_invalid <- aggregate_election_data(ballots_data, scope = "region
 incomplete_ballots_data <- data.frame(
   cod_elec = "02",
   type_elec = "congress",
-  date_elec = as_date("2023-07-23"),
+  date_elec = lubridate::as_date("2023-07-23"),
   ballots = 500
 )
 \dontrun{

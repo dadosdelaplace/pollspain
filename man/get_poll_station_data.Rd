@@ -44,6 +44,7 @@ election periods as specified by the user.
 \examples{
 
 ## Correct examples
+\dontrun{
 # Fetching data for single elections
 poll_station_data1 <- get_poll_station_data("congress", 2019, 4)
 poll_station_data2 <- get_poll_station_data("senate", 2019, 4)
@@ -67,7 +68,7 @@ poll_station_data7 <- get_poll_station_data("congress", "2016-06-26")
 
 # Non-existent election data
 poll_station_data8 <- get_poll_station_data("congress", 1990, 4)
-
+}
 
 }
 \author{

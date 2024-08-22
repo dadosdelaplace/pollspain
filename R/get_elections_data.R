@@ -50,7 +50,7 @@
 #' @examples
 #'
 #' ## Correct examples ----
-#'
+#'\dontrun{
 #' # Congress elections in April 2019
 #' # Fetch municipal census data for the congress elections in April 2019
 #' mun_census_data1 <- get_mun_census_data("congress", 2019, 4)
@@ -66,9 +66,9 @@
 #'   c(2019, 2019, 2016),
 #'   c(11, 4, 6)
 #' )
-#'
+#'}
 #' ## Incorrect examples ----
-#'
+#'\dontrun{
 #' # Invalid election type
 #' # This will fail because "national" is not a valid election type
 #' mun_census_data5 <- get_mun_census_data("national", 2019, 4)
@@ -84,7 +84,7 @@
 #' # Non-existent election data
 #' # This will fail because 1990 congress elections are not available
 #' mun_census_data8 <- get_mun_census_data("congress", 1990, 4)
-#'
+#'}
 #' @export
 get_mun_census_data <- function(type_elec, year, month) {
   # Ensure input parameters are vectors
@@ -133,13 +133,13 @@ get_mun_census_data <- function(type_elec, year, month) {
 
 
       # Join MIR and INE information
-      mun_data <- mun_data %>%
-        left_join(cod_INE_mun, by = c("id_MIR_mun", "cod_MIR_ccaa", "cod_INE_prov", "cod_INE_mun"), suffix = c(".x", "")) %>%
-        select(-mun.x) %>%
-        relocate(cod_INE_ccaa, .before = cod_MIR_ccaa) %>%
-        relocate(id_INE_mun, .before = id_MIR_mun) %>%
-        relocate(mun, .after = cod_INE_mun) %>%
-        relocate(ccaa, .after = cod_MIR_ccaa) %>%
+      mun_data <- mun_data |>
+        left_join(cod_INE_mun, by = c("id_MIR_mun", "cod_MIR_ccaa", "cod_INE_prov", "cod_INE_mun"), suffix = c(".x", "")) |>
+        dplyr::select(-mun.x) |>
+        relocate(cod_INE_ccaa, .before = cod_MIR_ccaa) |>
+        relocate(id_INE_mun, .before = id_MIR_mun) |>
+        relocate(mun, .after = cod_INE_mun) |>
+        relocate(ccaa, .after = cod_MIR_ccaa) |>
         relocate(prov, .after = cod_INE_prov)
 
       # Add the data to the list
@@ -191,6 +191,7 @@ get_mun_census_data <- function(type_elec, year, month) {
 #' @examples
 #'
 #' ## Correct examples
+#' \dontrun{
 #' # Fetching data for single elections
 #' poll_station_data1 <- get_poll_station_data("congress", 2019, 4)
 #' poll_station_data2 <- get_poll_station_data("senate", 2019, 4)
@@ -214,7 +215,7 @@ get_mun_census_data <- function(type_elec, year, month) {
 #'
 #' # Non-existent election data
 #' poll_station_data8 <- get_poll_station_data("congress", 1990, 4)
-#'
+#'}
 #'
 #' @export
 
@@ -266,34 +267,34 @@ get_poll_station_data <- function(type_elec, year, month, prec_round = 3) {
       poll_station_data <- read_rda_from_github(data_url)
 
       # Process the data
-      poll_station_data <- poll_station_data %>%
+      poll_station_data <- poll_station_data |>
         mutate(valid_ballots = blank_ballots + party_ballots,
-               total_ballots = valid_ballots + invalid_ballots) %>%
-        filter(cod_INE_mun != "999") %>%
+               total_ballots = valid_ballots + invalid_ballots) |>
+        dplyr::filter(cod_INE_mun != "999") |>
         left_join(get_mun_census_data(type_elec[i], year[i], month[i]),
                   by = c("cod_elec", "type_elec", "date_elec", "id_MIR_mun"),
-                  suffix = c("", ".y")) %>%
-        select(-contains(".y")) %>%
-        relocate(id_INE_mun, .before = id_MIR_mun) %>%
-        relocate(cod_INE_ccaa, .before = cod_MIR_ccaa) %>%
-        relocate(ccaa, .after = cod_MIR_ccaa) %>%
-        relocate(prov, .after = cod_INE_prov) %>%
-        relocate(mun, .after = cod_INE_mun) %>%
-        select(-c(census_counting_mun, census_CERE_mun, census_INE_mun)) %>%
-        bind_rows(poll_station_data %>% filter(cod_INE_mun == "999")) %>%
-        left_join(cod_INE_mun %>%
-                    distinct(cod_MIR_ccaa, cod_INE_prov, .keep_all = TRUE) %>%
-                    select(contains("ccaa") | contains("prov")),
+                  suffix = c("", ".y")) |>
+        dplyr::select(-contains(".y")) |>
+        relocate(id_INE_mun, .before = id_MIR_mun) |>
+        relocate(cod_INE_ccaa, .before = cod_MIR_ccaa) |>
+        relocate(ccaa, .after = cod_MIR_ccaa) |>
+        relocate(prov, .after = cod_INE_prov) |>
+        relocate(mun, .after = cod_INE_mun) |>
+        dplyr::select(-c(census_counting_mun, census_CERE_mun, census_INE_mun)) |>
+        bind_rows(poll_station_data |>  dplyr::filter(cod_INE_mun == "999")) |>
+        left_join(cod_INE_mun |>
+                    distinct(cod_MIR_ccaa, cod_INE_prov, .keep_all = TRUE) |>
+                    dplyr::select(contains("ccaa") | contains("prov")),
                   by = c("cod_MIR_ccaa", "cod_INE_prov"),
-                  suffix = c("", ".y")) %>%
+                  suffix = c("", ".y")) |>
         mutate(cod_INE_ccaa = ifelse(is.na(cod_INE_ccaa), cod_INE_ccaa.y, cod_INE_ccaa),
                ccaa = ifelse(is.na(ccaa), ccaa.y, ccaa),
                prov = ifelse(is.na(prov), prov.y, prov),
                mun = ifelse(cod_INE_mun == "999", "CERA", mun),
                id_INE_mun = glue("{cod_INE_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
-               pop_res_mun = ifelse(cod_INE_mun == "999", census_INE, pop_res_mun)) %>%
-        select(-contains(".y"), -cod_MIR_ccaa) %>%
-        filter(!is.na(id_INE_mun)) %>%
+               pop_res_mun = ifelse(cod_INE_mun == "999", census_INE, pop_res_mun)) |>
+        dplyr::select(-contains(".y"), -cod_MIR_ccaa) |>
+        dplyr::filter(!is.na(id_INE_mun)) |>
         mutate(id_INE_poll_station = glue("{id_INE_mun}-{cod_mun_district}-{cod_sec}-{cod_poll_station}"),
                turnout_1 = round(100 * ballots_1 / census_counting, prec_round),
                turnout_2 = round(100 * ballots_2 / census_counting, prec_round),
@@ -302,13 +303,13 @@ get_poll_station_data <- function(type_elec, year, month, prec_round = 3) {
                porc_valid = round(100 * valid_ballots / total_ballots, prec_round),
                porc_invalid = round(100 * invalid_ballots / total_ballots, prec_round),
                porc_parties = round(100 * party_ballots / valid_ballots, prec_round),
-               porc_blank = round(100 * blank_ballots / valid_ballots, prec_round)) %>%
-        relocate(turnout:porc_blank, .after = total_ballots) %>%
-        relocate(id_INE_poll_station, .after = date_elec) %>%
-        relocate(turnout_1, .after = ballots_1) %>%
-        relocate(turnout_2, .after = ballots_2) %>%
-        mutate(id_elec = glue("{election_info$cod_elec}-{date_elec}")) %>%
-        select(id_elec, type_elec, date_elec, id_INE_poll_station, ccaa, prov, mun,
+               porc_blank = round(100 * blank_ballots / valid_ballots, prec_round)) |>
+        relocate(turnout:porc_blank, .after = total_ballots) |>
+        relocate(id_INE_poll_station, .after = date_elec) |>
+        relocate(turnout_1, .after = ballots_1) |>
+        relocate(turnout_2, .after = ballots_2) |>
+        mutate(id_elec = glue("{election_info$cod_elec}-{date_elec}")) |>
+        dplyr::select(id_elec, type_elec, date_elec, id_INE_poll_station, ccaa, prov, mun,
                census_counting, ballots_1, turnout_1, ballots_2, turnout_2,
                blank_ballots, invalid_ballots, party_ballots, valid_ballots,
                total_ballots, turnout, porc_valid, porc_invalid,
@@ -334,7 +335,7 @@ get_poll_station_data <- function(type_elec, year, month, prec_round = 3) {
 #'
 #' @inheritParams get_mun_census_data
 #'
-#' @param election_type Type of election to retrieve data for. Must be one of the following: "congress".
+#' @param type_elec Type of election to retrieve data for. Must be one of the following: "congress".
 #' @param year Year of the election.
 #' @param month Month of the election.
 #'
@@ -357,7 +358,7 @@ get_poll_station_data <- function(type_elec, year, month, prec_round = 3) {
 #' Mikaela DeSmedt, Javier Álvarez-Liébana
 #'
 #' @examples
-#'
+#'\dontrun{
 #' ## Correct examples
 #' # Get candidates data for congress elections in March 1996
 #' candidates_data_1996_03 <- get_candidates_data("congress", 1996, 3)
@@ -373,7 +374,7 @@ get_poll_station_data <- function(type_elec, year, month, prec_round = 3) {
 #'
 #' # Trying to get candidates data for non-existent elections
 #' try(get_candidates_data("congress", 1800, 1))
-#'
+#'}
 #' @source Data extracted from \href{https://github.com/mikadsr/Pollspain-data}{Pollspain Data Repository}
 #' @keywords get_elections_data
 #' @name get_candidates_data
@@ -385,12 +386,12 @@ get_candidates_data <- function(type_elec, year, month) {
   }
 
   # Check if elections required are allowed
-  elections_allowed <- dates_elections_spain %>%
-    filter(year >= 1986) %>%
+  elections_allowed <- dates_elections_spain |>
+    dplyr::filter(year >= 1986) |>
     inner_join(tibble(cod_elec = type_to_code_election(type_elec)$cod_elec,
                       type_elec, year, month),
                by = c("cod_elec", "type_elec", "year", "month"))
-  join_result <- elections_allowed %>% nrow()
+  join_result <- elections_allowed |>  nrow()
   if (join_result == 0) {
     stop("No elections on provided dates are available")
   }
@@ -418,7 +419,7 @@ get_candidates_data <- function(type_elec, year, month) {
 
 
   # Convert date_elec to Date format (YYYY-MM-DD)
-  candidates_data <- candidates_data %>%
+  candidates_data <- candidates_data |>
     mutate(date_elec = ymd(date_elec))   # Ensure date_elec is in Date format
 
 
@@ -446,7 +447,7 @@ get_candidates_data <- function(type_elec, year, month) {
 #' Mikaela DeSmedt, Javier Álvarez-Liébana
 #'
 #' @examples
-#'
+#'\dontrun{
 #' ## Correct examples
 #' # Single election
 #' candidates_data <- get_candidacies_data("congress", 1986, 6)
@@ -478,7 +479,7 @@ get_candidates_data <- function(type_elec, year, month) {
 #'
 #' # Non-existent election data
 #' candidates_data_non_existent <- get_candidacies_data("congress", 1990, 4)
-#'
+#'}
 #' @source Data extracted from \href{https://github.com/mikadsr/Pollspain-data}{Pollspain Data Repository}
 #' @keywords get_elections_data
 #' @export
@@ -550,9 +551,9 @@ get_candidacies_data <- function(type_elec, year, month, include_candidates = FA
       if (is.null(candidates_files)) next
 
       # Join candidacies and candidates data, keeping only the x variables in case of duplication
-      candidacies_data <- candidacies_files %>%
-        left_join(candidates_files, by = "id_candidacies", suffix = c("", ".y")) %>%
-        select(-ends_with(".y")) %>%
+      candidacies_data <- candidacies_files |>
+        left_join(candidates_files, by = "id_candidacies", suffix = c("", ".y")) |>
+        dplyr::select(-ends_with(".y")) |>
         rename(candidate_full_name = candidate_full_name,
                candidate_order = order_number,
                candidate_type = candidate_type,
@@ -593,7 +594,7 @@ get_candidacies_data <- function(type_elec, year, month, include_candidates = FA
 #' Mikaela DeSmedt (documentation), Javier Álvarez-Liébana
 #'
 #' @examples
-#'
+#'\dontrun{
 #' ## Correct Examples
 #'
 #' # Fetch CERA data aggregated at the municipal level
@@ -611,7 +612,7 @@ get_candidacies_data <- function(type_elec, year, month, include_candidates = FA
 #'   level = "prov"
 #' )
 #' print(cera_data_prov)
-#'
+#'}
 #' ## Incorrect Examples
 #'
 #' # Attempt to fetch CERA data with a non-existent id column, should raise an error
@@ -643,8 +644,8 @@ get_CERA_data <- function(election_data, id_col = "id_INE_poll_station",
   hierarchy_levels <- c("ccaa", "prov", "mun", "mun_district", "sec", "poll_station")
 
   # Extract CERA data
-  cera_data <- election_data %>%
-    filter(grepl(cod_CERA, .data[[id_col]])) %>%
+  cera_data <- election_data |>
+    # dplyr::filter(grepl(cod_CERA, .data[[id_col]])) |>
     mutate(cod_INE_ccaa = substr(id_INE_poll_station, 1, 2),
            cod_INE_prov = substr(id_INE_poll_station, 4, 5),
            cod_INE_mun = substr(id_INE_poll_station, 7, 9),
@@ -661,8 +662,8 @@ get_CERA_data <- function(election_data, id_col = "id_INE_poll_station",
   }
 
   # Summarize CERA data
-  data_cera <- cera_data %>%
-    group_by(across(all_of(group_vars))) %>%
+  data_cera <- cera_data |>
+    group_by(across(all_of(group_vars))) |>
     summarize(type_elec = unique(type_elec),
               date_elec = unique(date_elec),
               census_cera = sum(census_counting, na.rm = TRUE),
@@ -804,9 +805,9 @@ get_candidacy_ballot_data <- function(type_elec, year, month, include_candidacy_
 
       if (!is.null(candidacies_data)) {
         # Merge ballots data with candidacy names data, avoiding duplicate columns
-        ballots_data <- ballots_data %>%
-          left_join(candidacies_data, by = "id_candidacies") %>%
-          select(-matches("\\.y$")) %>%  # Remove columns with suffix ".y" after the join
+        ballots_data <- ballots_data |>
+          left_join(candidacies_data, by = "id_candidacies") |>
+          dplyr::select(-matches("\\.y$")) |>   # Remove columns with suffix ".y" after the join
           rename_with(~ sub("\\.x$", "", .x))  # Remove ".x" suffix from columns
       }
     }
@@ -851,7 +852,7 @@ get_candidacy_ballot_data <- function(type_elec, year, month, include_candidacy_
 #' ballots_data <- data.frame(
 #'   cod_elec = "02",
 #'   type_elec = "congress",
-#'   date_elec = as_date("2023-07-23"),
+#'   date_elec = lubridate::as_date("2023-07-23"),
 #'   id_MIR_mun = "01-04-001",
 #'   cod_MIR_ccaa = "01",
 #'   cod_INE_prov = "04",
@@ -880,7 +881,7 @@ get_candidacy_ballot_data <- function(type_elec, year, month, include_candidacy_
 #' incomplete_ballots_data <- data.frame(
 #'   cod_elec = "02",
 #'   type_elec = "congress",
-#'   date_elec = as_date("2023-07-23"),
+#'   date_elec = lubridate::as_date("2023-07-23"),
 #'   ballots = 500
 #' )
 #' \dontrun{
@@ -896,7 +897,7 @@ aggregate_election_data <- function(ballots_data,
   scope <- match.arg(scope)
 
   # Extract year from date_elec if it's not already in the data
-  ballots_data <- ballots_data %>%
+  ballots_data <- ballots_data |>
     mutate(year = year(date_elec))
 
   # Determine grouping variables based on the scope
@@ -916,8 +917,8 @@ aggregate_election_data <- function(ballots_data,
   }
 
   # Aggregate data by the determined grouping variables
-  aggregated_data <- ballots_data %>%
-    group_by(across(all_of(group_vars))) %>%
+  aggregated_data <- ballots_data |>
+    group_by(across(all_of(group_vars))) |>
     summarize(total_ballots = sum(ballots, na.rm = TRUE), .groups = "drop")
 
   return(aggregated_data)

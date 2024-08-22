@@ -28,7 +28,7 @@ Fetch and process candidacies data for Spanish elections. This function supports
 This function retrieves and processes candidacies data for Spanish elections by downloading and merging data for the specified election types, years, and months. If \code{include_candidates} is set to TRUE, the function will also include detailed information about each candidate.
 }
 \examples{
-
+\dontrun{
 ## Correct examples
 # Single election
 candidates_data <- get_candidacies_data("congress", 1986, 6)
@@ -60,7 +60,7 @@ candidates_data_invalid_date <- get_candidacies_data("congress", "2016-06-26")
 
 # Non-existent election data
 candidates_data_non_existent <- get_candidacies_data("congress", 1990, 4)
-
+}
 }
 \author{
 Mikaela DeSmedt, Javier Álvarez-Liébana

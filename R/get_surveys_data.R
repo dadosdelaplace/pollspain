@@ -130,16 +130,16 @@ get_survey_data <- function(from = 1982, to = 2023,
   months <- sprintf("%02d", 1:12)
 
   # Generate all possible file names
-  file_names <- expand.grid(year = years, month = months) %>%
+  file_names <- expand.grid(year = years, month = months) |>
     mutate(file_name = glue("POLL_02{year}{month}.rda"))
 
   # Generate URLs
-  urls <- file_names %>%
+  urls <- file_names |>
     mutate(url = glue("{base_url}{file_name}?raw=true"))
 
   # Filter out the future dates that don't have files yet
-  urls <- urls %>%
-    filter(as.numeric(year) < to | (as.numeric(year) == to & as.numeric(month) <= month(Sys.Date())))
+  urls <- urls |>
+    dplyr::filter()(as.numeric(year) < to | (as.numeric(year) == to & as.numeric(month) <= month(Sys.Date())))
 
   # Download and read RDA files
   raw_surveys <- suppressWarnings({
@@ -149,7 +149,7 @@ get_survey_data <- function(from = 1982, to = 2023,
       }, error = function(e) {
         NULL
       })
-    }) %>%
+    }) |>
       compact()  # Remove NULLs
   })
 
@@ -165,72 +165,72 @@ get_survey_data <- function(from = 1982, to = 2023,
   }
 
   # Convert date_elec and fieldwork_end to Date objects
-  raw_surveys <- raw_surveys %>%
+  raw_surveys <- raw_surveys |>
     mutate(
-      date_elec = as_date(date_elec),
-      fieldwork_end = as_date(fieldwork_end),
-      fieldwork_start = as_date(fieldwork_start),
+      date_elec = lubridate::as_date(date_elec),
+      fieldwork_end = lubridate::as_date(fieldwork_end),
+      fieldwork_start = lubridate::as_date(fieldwork_start),
       fieldwork_days = as.numeric(difftime(fieldwork_end, fieldwork_start, units = "days"))
     )
 
   # Apply filtering based on polling_firm
   if (select_polling_firm != "all") {
-    raw_surveys <- raw_surveys %>%
-      filter(str_detect(polling_firm, select_polling_firm, ignore.case = TRUE))
+    raw_surveys <- raw_surveys |>
+      dplyr::filter(str_detect(polling_firm, select_polling_firm, ignore.case = TRUE))
   }
 
   # Apply filtering based on media
   if (select_media != "all" && include_media) {
-    raw_surveys <- raw_surveys %>%
-      filter(str_detect(media, select_media, ignore.case = TRUE))
+    raw_surveys <- raw_surveys |>
+      dplyr::filter(str_detect(media, select_media, ignore.case = TRUE))
   }
 
   # Apply filtering based on min_field_days and max_field_days
   if (!is.null(min_field_days)) {
-    raw_surveys <- raw_surveys %>%
-      filter(fieldwork_days >= min_field_days)
+    raw_surveys <- raw_surveys |>
+      dplyr::filter(fieldwork_days >= min_field_days)
   }
 
   if (!is.null(max_field_days)) {
-    raw_surveys <- raw_surveys %>%
-      filter(fieldwork_days <= max_field_days)
+    raw_surveys <- raw_surveys |>
+      dplyr::filter(fieldwork_days <= max_field_days)
   }
 
   # Apply filtering based on min_size
   if (!is.null(min_size)) {
-    raw_surveys <- raw_surveys %>%
-      filter(sample_size >= min_size)
+    raw_surveys <- raw_surveys |>
+      dplyr::filter(sample_size >= min_size)
   }
 
   # Calculate days to election and filter based on min_days_to and max_days_to
-  raw_surveys <- raw_surveys %>%
+  raw_surveys <- raw_surveys |>
     mutate(days_to_elec = as.numeric(difftime(date_elec, fieldwork_end, units = "days")))
 
   if (!is.null(min_days_to)) {
-    raw_surveys <- raw_surveys %>%
-      filter(days_to_elec >= min_days_to)
+    raw_surveys <- raw_surveys |>
+      dplyr::filter(days_to_elec >= min_days_to)
   }
 
   if (!is.null(max_days_to)) {
-    raw_surveys <- raw_surveys %>%
-      filter(days_to_elec <= max_days_to)
+    raw_surveys <- raw_surveys |>
+      dplyr::filter(days_to_elec <= max_days_to)
   }
 
   # Apply filtering to exclude exit polls if include_exit_polls is FALSE
   if (!include_exit_polls) {
-    raw_surveys <- raw_surveys %>%
-      filter(!is_exit_poll)
+    raw_surveys <- raw_surveys |>
+      dplyr::filter(!is_exit_poll)
   }
 
-  # Select specific parties if select_parties is not "all"
+  # select specific parties if select_parties is not "all"
   if (select_parties != "all") {
-    raw_surveys <- raw_surveys %>%
-      filter(party %in% select_parties)
+    raw_surveys <- raw_surveys |>
+      dplyr::filter(party %in% select_parties)
   }
 
   # Reorder columns to maintain the original dataset order
-  raw_surveys <- raw_surveys %>%
-    select(polling_firm, media, sample_size, turnout, fieldwork_start, fieldwork_end,
+  raw_surveys <- raw_surveys |>
+    dplyr::select(polling_firm, media, sample_size, turnout, fieldwork_start, fieldwork_end,
            date_elec, fieldwork_duration, is_exit_poll, party, vote_share)
 
   return(raw_surveys)
