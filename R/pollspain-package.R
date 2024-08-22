@@ -7,7 +7,7 @@
 #' This package includes functionality to work with electoral data, survey data, and various auxiliary datasets related to Spanish elections.
 #'
 #' @name pollspain-package
-#' @docType Package
+#' @docType "_PACKAGE"
 #' @aliases pollspain pollspain-package
 #'
 #' @import dplyr

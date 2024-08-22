@@ -333,7 +333,6 @@ get_poll_station_data <- function(type_elec, year, month, prec_round = 3) {
 #' @description
 #' Fetch and process candidates data for Spanish elections. This function retrieves and processes candidate data specifically for congress elections in Spain. It fetches raw data from the Pollspain Data Repository, processes it, and returns a detailed data frame containing information about candidates in the specified election(s).
 #'
-#' @inheritParams get_mun_census_data
 #'
 #' @param type_elec Type of election to retrieve data for. Must be one of the following: "congress".
 #' @param year Year of the election.
