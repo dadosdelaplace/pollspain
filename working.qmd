@@ -1,0 +1,29 @@
+---
+title: "..."
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+raw_candidacies <- read_csv(file = "../Pollspain-data/02-congress/02198210/raw_candidacies_congress_1982_10.csv")
+
+raw_poll_candidacies <- read_csv(file = "../Pollspain-data/02-congress/02198210/raw_candidacies_poll_congress_1982_10.csv")
+
+raw_mun_data <- read_csv(file = "../Pollspain-data/02-congress/02198210/raw_mun_data_congress_1982_10.csv")
+
+raw_poll_station_data <- read_csv(file = "../Pollspain-data/02-congress/02198210/raw_poll_station_data_congress_1982_10.csv")
+
+funcion(tipos, fechas, nivel)
+
+by = ...
+
+path = "../Pollspain-data/02-congress/"
+cod_elec <- ...
+meses <- c("10", "6")
+years <- c(1982, 1986)
+list_path <- glue("{path}{cod_elec}/raw_poll_station_data_congress_{years}_{meses}.csv")
+list_path |> map_dfr(function(x) { read_csv(file = x)})
+```
+
