@@ -1,3 +1,9 @@
+# Load required libraries
+#check, install if necessary, and load the required packages
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, readr, stringr, stringi, glue, tibble, tidyr, purr, lubridate)
+###########################################################
+
 
 #' @title Conversion type election to code
 #'
@@ -20,7 +26,7 @@
 #'   \item \code{"07"}: European Parlament elections.
 #' }
 #'
-#' @author Javier Álvarez-Liébana.
+#' @author Mikaela DeSmedt;Javier Alvarez-Liebana
 #' @source Data extracted from
 #' \url{https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/}{Spanish Ministry of Interior}
 #' @keywords utils
@@ -42,30 +48,27 @@
 #' }
 #'
 #' @export
+# Function to map election type to code
 type_to_code_election <- function(type_elec) {
-
   # Check: if value in type_elec is allowed
-  if (!all(type_elec %in%
-        c("referendum", "congress", "senate", "local", "regional",
-          "cabildo", "EU"))) {
-
-    stop("Input argument type_elec is not valid: it must be taken one of the following values: 'referendum', 'congress',  'senate', 'local', 'cabildo' or 'EU'")
-
+  if (!all(type_elec %in% c("referendum", "congress", "senate", "local", "regional", "cabildo", "EU"))) {
+    stop("Input argument type_elec is not valid: it must be taken one of the following values: 'referendum', 'congress', 'senate', 'local', 'regional', 'cabildo' or 'EU'")
   }
 
-  # Convert type to code
-  cod_elec <-
-    ifelse(type_elec == "referendum", "01",
-           ifelse(type_elec == "congress", "02",
-                  ifelse(type_elec == "senate", "03",
-                         ifelse(type_elec == "local", "04",
-                                ifelse(type_elec == "regional", "05",
-                                       ifelse(type_elec == "cabildo",
-                                              "06", "07"))))))
+  # Convert type to code and directory
+  info <- switch(type_elec,
+                 "referendum" = list(dir = "01-referendum", cod_elec = "01"),
+                 "congress" = list(dir = "02-congress", cod_elec = "02"),
+                 "senate" = list(dir = "03-senate", cod_elec = "03"),
+                 "local" = list(dir = "04-local", cod_elec = "04"),
+                 "regional" = list(dir = "05-regional", cod_elec = "05"),
+                 "cabildo" = list(dir = "06-cabildo", cod_elec = "06"),
+                 "EU" = list(dir = "07-EU", cod_elec = "07"))
 
-  # output
-  return(cod_elec)
+  # Output the information
+  return(info)
 }
+
 
 
 #' @title Extract region codes from the poll stations codes
@@ -88,7 +91,7 @@ type_to_code_election <- function(type_elec) {
 #' @return A string code subtract from the whole code the properly id for the
 #' aggregation level required.
 #'
-#' @author Javier Álvarez-Liébana.
+#' @author Javier Alvarez-Liebana
 #' @keywords utils
 #' @name extract_code
 #'
@@ -151,10 +154,10 @@ extract_code <-
 
     # Compute the number of elements
     i <- ifelse(level == "ccaa", 1,
-             ifelse(level == "prov", 2,
-                    ifelse(level == "mun", 3,
-                           ifelse(level == "mun_district", 4,
-                                  ifelse(level == "sec", 5, 6)))))
+                ifelse(level == "prov", 2,
+                       ifelse(level == "mun", 3,
+                              ifelse(level == "mun_district", 4,
+                                     ifelse(level == "sec", 5, 6)))))
 
     # Access to elements of the list
     if (full_cod) {
@@ -162,7 +165,7 @@ extract_code <-
       cod <- id_split |>
         map_chr(function(x) {
           str_c(x[1:i], collapse = "-")
-          })
+        })
 
     } else {
 
@@ -170,210 +173,133 @@ extract_code <-
         id_split |>
         map_chr(function(x) {
           x[i]
-          })
+        })
 
     }
 
     # Output
     return(cod)
-}
+  }
 
 
-#' @title Recode of party's names
+#' @title Recode Political Party Names and Abbreviations
 #'
-#' @description ...
+#' @description This function standardizes and recodes the names and abbreviations of political parties in a given dataset. It handles various text transformations, such as removing special characters, trimming whitespace, and converting characters to ASCII. The function also recodes certain party names and abbreviations to standardized formats based on predefined patterns.
 #'
-#' @param parties_data ...
-#' @param col_name_abbrev ...
-#' @param col_name_candidacies ...
+#' @param parties_data A dataframe containing political party data with columns for party abbreviations and full names.
+#' @param col_name_abbrev A character string specifying the column name for party abbreviations in the input dataframe. Defaults to "abbrev_candidacies".
+#' @param col_name_candidacies A character string specifying the column name for party full names in the input dataframe. Defaults to "name_candidacies".
 #'
-#' @return ...
+#' @return A dataframe with standardized and recoded political party names and abbreviations. The output dataframe includes cleaned versions of the original columns and recoded values based on predefined patterns.
 #'
-#' @author Javier Álvarez-Liébana.
-#' @keywords utils
-#' @name recod_parties
+#' @details The function first renames the specified columns in the input dataframe to a standard format ("abbrev_candidacies" and "name_candidacies"). It then performs a series of text cleaning operations, such as removing special characters, replacing certain symbols with hyphens, and converting accented characters to their ASCII equivalents. After cleaning the text, the function applies a series of pattern-matching rules to recode specific party names and abbreviations to standardized versions.
+#'
+#' @author Mikaela DeSmedt;Javier Alvarez-Liebana
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming `party_data` is a dataframe with columns "abbrev" and "full_name"
+#' standardized_data <- recod_parties(party_data, col_name_abbrev = "abbrev", col_name_candidacies = "full_name")
+#' }
+#'
+#' @import dplyr stringr stringi
 #' @export
-recod_parties <-
-  function(parties_data, col_name_abbrev = "abbrev_candidacies",
-           col_name_candidacies = "name_candidacies") {
 
-    # Check: if col_name_abbrev and col_name_candidacies are characters
-    if (!is.character(col_name_abbrev) ||
-        !is.character(col_name_candidacies)) {
 
-      stop("Parameters 'col_name_abbrev' and 'col_name_candidacies' must be character")
-    }
-    # Check: if parties_data contains at least two required columns
-    if (!(col_name_abbrev %in% names(parties_data))) {
+recod_parties <- function(parties_data, col_name_abbrev = "abbrev_candidacies", col_name_candidacies = "name_candidacies") {
 
-      stop("Data must contain (at least) a column with abbrev of candidacies")
+  # Rename abbreviation and name columns
+  parties_data <- parties_data %>%
+    rename(abbrev_candidacies = {{col_name_abbrev}},
+           name_candidacies = {{col_name_candidacies}})
 
-    }
-
-    # Rename
-    parties_data <-
-      parties_data |>
-      rename(abbrev_candidacies = col_name_abbrev)
-
-    # Recode
-    parties_data <-
-      parties_data |>
-      mutate(
-      # Remove ' and . and ,. Trimming. Reformat -
+  # General Cleanup
+  parties_data <- parties_data %>%
+    mutate(
       abbrev_candidacies = str_remove_all(abbrev_candidacies, "'|\\.|\\,|´"),
       abbrev_candidacies = str_remove_all(abbrev_candidacies, '\\"'),
       abbrev_candidacies = str_trim(abbrev_candidacies),
       abbrev_candidacies = str_replace_all(abbrev_candidacies, "–| - |/", "-"),
       abbrev_candidacies = str_replace_all(abbrev_candidacies, "\\+", ""),
-      # Remove tildes just from abbrev
-      abbrev_candidacies =
-        stri_trans_general(abbrev_candidacies, "Latin-ASCII"))
+      abbrev_candidacies = stri_trans_general(abbrev_candidacies, "Latin-ASCII"),
 
-    # Preproc abbrev
-    parties_data <-
-      parties_data |>
-      mutate(
-      abbrev_candidacies =
-        str_replace_all(abbrev_candidacies, "EHBILDU|EH BILDU", "EH-BILDU"),
-      abbrev_candidacies =
-        str_replace_all(abbrev_candidacies, "!TERUEL EXI", "TE"),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "AHORA CANARIAS"), "AHORA CANARIAS",
-               abbrev_candidacies),
-      abbrev_candidacies =
-        str_replace_all(abbrev_candidacies,
-                        "AP-PDP-PL-C|AP-PL-C|AP-PDP-PDL-|AP-PDP-PAR|AP-PDP-PDL|AP-PDP-PL|AP-PDP-UV|AP-PL-UPN|AP-PDP|AP-PAR|AP-PDL|AP-UV|AP-PL",
-                        "AP"),
-      abbrev_candidacies =
-        str_replace_all(abbrev_candidacies, "ARA, PV", "ARA-PV"),
-      abbrev_candidacies =
-        str_replace_all(abbrev_candidacies, "BNG-NÓS|BNG-NOS|NÓS|NOS", "BNG"),
-      abbrev_candidacies =
-        str_replace_all(abbrev_candidacies, "CC-PNC|CCA-PNC", "CC"),
-      abbrev_candidacies =
-        str_replace_all(abbrev_candidacies, "NC-CCA-PNC|NC-CC-PNC|NC-CCA|NC-CC|CC-NC-PNC", "CC-NC"),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "COMPROMIS"),
-               "COMPROMIS", abbrev_candidacies),
-      abbrev_candidacies =
-        str_replace_all(abbrev_candidacies, "AVANT ADELANTE LOS VERDES|AVANT LOS VERDES|GREENS|LOS VERDES|LV-LV|AVANT-LOS V|VERDES",
-                        "LV"),
-      abbrev_candidacies =
-        str_replace_all(abbrev_candidacies, "CUP-PR", "CUP"),
-      abbrev_candidacies = ifelse(str_detect(abbrev_candidacies, "GREENS"),
-                                  "LV", abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(abbrev_candidacies == "DL", "DIL-CDC", abbrev_candidacies),
-      abbrev_candidacies =
-        str_replace_all(abbrev_candidacies, "M PAIS|MAS PAIS", "MP"),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies,
-                          "PARTIT DELS SOCIALISTES DE CATALUNYA|PARTIDO DOS SOCIALISTAS DE GALICIA"),
-               "PSOE", abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies,
-                          "PARTIDO SOCIALISTA OBRERO ESPAÑOL DE ANDALUCIA|PART. SOCIALISTA OBRERO ESPAÑOL DE ANDALUCIA"),
-               "PSOE", abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "PSE-EE|PARTIDO SOCIALISTA DE ARAGON|PARTIDO DOS SOCIALISTAS DE GALICIA"),
-               "PSOE", abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "PSOE-PROGR.|PSOE-PROGR|PSOE|PSC|PSE"),
-               "PSOE", abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "IULV-CA|ICV-EUIA"),
-               "IU", abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "PSA-PA"), "PA", abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "ERC-CATSI|ERC"),
-               "ERC", abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "RUIZ-MATEOS"),
-               "ARM", abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "EA-EUE"), "EA",
-               abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "NA\\+"), "NA-SUMA",
-               abbrev_candidacies),
-      abbrev_candidacies =
-        ifelse(str_detect(abbrev_candidacies, "LIT-CI|LITCI"),
-               "LIT-CI", abbrev_candidacies))
+      name_candidacies = str_remove_all(name_candidacies, "'|\\.|\\,|´"),
+      name_candidacies = str_remove_all(name_candidacies, '\\"'),
+      name_candidacies = str_trim(name_candidacies),
+      name_candidacies = str_replace_all(name_candidacies, "–| - |/", "-"),
+      name_candidacies = str_replace_all(name_candidacies, "\\+", ""),
+      name_candidacies = stri_trans_general(name_candidacies, "Latin-ASCII")
+    )
 
-    # Preproc names
-    if (col_name_candidacies %in% names(parties_data)) {
+  # Apply recoding using case_when
+  parties_data <- parties_data %>%
+    mutate(
+      name_candidacies = case_when(
+        str_detect(name_candidacies, "IZQU UNIDA-ESQUERRA UNIDA DEL PAIS VALENCIA|IZQUIERDA UNIDA-CONVOCATORIA POR ANDALUCIA|^IZQUIERDA UNIDA") ~ "IZQUIERDA UNIDA",
+        str_detect(name_candidacies, "^CENTRE DEMOCRATIC I SOCIAL|^CENTRO DEMOCRATICO Y SOCIAL") ~ "CENTRO DEMOCRATICO Y SOCIAL",
+        str_detect(name_candidacies, "^PARTIDO COMUNISTA") ~ "PARTIDO COMUNISTA DE ESPANA",
+        str_detect(name_candidacies, "SUMAR") ~ "SUMAR",
+        str_detect(name_candidacies, "UNION DEL PUEBLO NAVARRO-PARTIDO POPULAR|UNION DEL PUEBLO NAVARRO EN COALICION CON EL PARTIDO|PARTIDO POPULAR CENTRISTAS DE GALICIA|UNION DEL PUEBLO NAVARRO CON PARTIDO POPULAR|UNIÓN DEL PUEBLO NAVARRO EN COALICIÓN CON EL PARTI|PARTIDO POPULAR|PARTIT POP|PP EN COALICION CON UPM|UNION DEL PUEBLO NAVARRO EN COALICION CON EL PARTI") ~ "PARTIDO POPULAR",
+        str_detect(name_candidacies, "COALICION CANARIA-PARTIDO NACIONALISTA CANARIO|COALICION CANARIA-NUEVA CANARIAS|NUEVA CANARIAS-COALICION CANARIA") ~ "COALICION CANARIA-NUEVA CANARIAS",
+        str_detect(name_candidacies, "CIUTADANS PARTIDO DE LA CIUDADANIA|CIUTADANS-PARTIDO DE LA CIUDADANIA|CIUDADANOS-PARTIDO DE LA CIUDADANIA|CIUDADANOS PARTIDO DE LA CIUDADANIA") ~ "CIUDADANOS",
+        str_detect(name_candidacies, "MES COMPROMIS") ~ "MES COMPROMIS",
+        str_detect(name_candidacies, "EN COMU PODEM-GUANYEM EL CANVI|EN COMUN-UNIDAS PODEMOS|UNIDAS PODEMOS|UNIDES PODEM|ELKARREKIN PODEMOS-UNIDAS PODEMOS|UNITS PODEM MES|COMPROMIS-PODEMOS-EUPV: A LA VALENCIANA|EN MAREA|PODEMOS") ~ "UNIDAS PODEMOS",
+        str_detect(name_candidacies, "PART SOCIALISTA OBRERO ESPANOL DE ANDALUCIA|PART SOCIALISTA OBRERO ESPANOL DE ANDALUCIA|SOCIALISTES|PARTIT DELS SOCIALISTES|PARTIT SOCIALISTA OBRER ESPANYOL|^PARTIDO DOS SOCIALISTAS|^PARTIDO SOCIALISTA") ~ "PARTIDO SOCIALISTA OBRERO ESPANOL",
+        str_detect(name_candidacies, "CANDIDATURA DUNITAT POPULAR-PER LA RUPTURA|CUP-PR") ~ "CANDIDATURA DUNITAT POPULAR-PER LA RUPTURA",
+        str_detect(name_candidacies, "EHBILDU|EH BILDU") ~ "EH-BILDU",
+        str_detect(name_candidacies, "!TERUEL EXI") ~ "TERUEL EXISTE",
+        str_detect(name_candidacies, "ALIANZA POP-PDEMOCPOPULAR-UNION VALENCIANA|ALIANZA POP-PDEMOCPOPULAR-PDEMOCLIBERAL-UCD|ALIANZA POPULAR|UPN-AP") ~ "ALIANZA POPULAR",
+        str_detect(name_candidacies, "ARA|PV") ~ "ARA REPUBLIQUES",
+        str_detect(name_candidacies, "BLOQUE NACIONALISTA GALEGO|BNG-NOS|BNG-NOS") ~ "BLOQUE NACIONALISTA GALEGO",
+        str_detect(name_candidacies, "NC-CCA-PNC|NC-CC-PNC|NC-CCA|NC-CC|CC-NC-PNC|CC-PNC|CCA-PNC|COALICION CANARIA-NUEVA CANARIAS|NUEVA CANARIAS-COALICION CANARIA") ~ "COALICION CANARIA-NUEVA CANARIAS",
+        str_detect(name_candidacies, "COMPROMIS") ~ "COMPROMIS",
+        str_detect(name_candidacies, "AVANT ADELANTE LOS VERDES|AVANT LOS VERDES|GREENS|LOS VERDES|LV-LV|AVANT-LOS V|VERDES") ~ "LOS VERDES",
+        str_detect(name_candidacies, "DL") ~ "CONVERGENCIA I UNIO",
+        str_detect(name_candidacies, "M PAIS|MAS PAIS") ~ "MAS PAIS",
+        str_detect(name_candidacies, "IULV-CA|ICV-EUIA") ~ "IZQUIERDA UNIDA",
+        str_detect(name_candidacies, "PSA-PA") ~ "PARTIDO ANDALUCISTA",
+        str_detect(name_candidacies, "ESQUERRA REPUBLICANA|ESQUERRA REPUBLICANA DE CATALUNYA-CATALUNYA SI|ERC-CATSI|ERC") ~ "ESQUERRA REPUBLICANA",
+        str_detect(name_candidacies, "RUIZ-MATEOS") ~ "RUIZ-MATEOS",
+        str_detect(name_candidacies, "EA-EUE") ~ "EUSKO ALKARTASUNA",
+        str_detect(name_candidacies, "NA\\+") ~ "NAVARRA SUMA",
+        str_detect(name_candidacies, "LIT-CI|LITCI") ~ "LIGA INTERNACIONAL DE TRABAJADORES",
+        TRUE ~ name_candidacies
+      ),
+      abbrev_candidacies = case_when(
+        str_detect(name_candidacies, "IZQUIERDA UNIDA") ~ "IU",
+        str_detect(name_candidacies, "CENTRO DEMOCRATICO Y SOCIAL") ~ "CDS",
+        str_detect(name_candidacies, "^PARTIDO COMUNISTA") ~ "PCE",
+        str_detect(name_candidacies, "SUMAR") ~ "SUMAR",
+        str_detect(name_candidacies, "COALICION CANARIA-NUEVA CANARIAS|NUEVA CANARIAS-COALICION CANARIA") ~ "CC-NC",
+        str_detect(name_candidacies, "CIUTADANS-PARTIDO DE LA CIUDADANIA|CIUDADANOS-PARTIDO DE LA CIUDADANIA|CIUDADANOS") ~ "CS",
+        str_detect(name_candidacies, "MES COMPROMIS") ~ "MES",
+        str_detect(name_candidacies, "EN COMUN-UNIDAS PODEMOS|UNIDAS PODEMOS|UNIDES PODEM|ELKARREKIN PODEMOS-UNIDAS PODEMOS|UNITS PODEM MES|COMPROMIS-PODEMOS-EUPV: A LA VALENCIANA|EN MAREA|^PODEMOS") ~ "UP",
+        str_detect(name_candidacies, "PARTIDO DE LOS SOCIALISTAS DE GALICIA-PSOE|^PARTIDO SOCIALISTA|SOCIALISTES|PARTIT DELS SOCIALISTES|PARTIT SOCIALISTA OBRER ESPANYOL|PARTIDO DOS SOCIALISTAS DE GALICIA-PARTIDO SOCIALI|PARTIDO SOCIALISTA DE EUSKADI-EUSKADIKO EZKERRA \\(P\\)") ~ "PSOE",
+        str_detect(name_candidacies, "CANDIDATURA DUNITAT POPULAR-PER LA RUPTURA|CUP-PR") ~ "CUP",
+        str_detect(name_candidacies, "PARTIDO POPULAR") ~ "PP",
+        str_detect(name_candidacies, "EHBILDU|EH BILDU") ~ "EH-BILDU",
+        str_detect(name_candidacies, "!TERUEL EXI") ~ "TE",
+        str_detect(name_candidacies, "ALIANZA POPULAR|AP") ~ "AP",
+        str_detect(name_candidacies, "ARA|PV") ~ "ARA-PV",
+        str_detect(name_candidacies, "BLOQUE NACIONALISTA GALEGO|BNG-NOS|BNG-NOS|NOS") ~ "BNG",
+        str_detect(name_candidacies, "NC-CCA-PNC|NC-CC-PNC|NC-CCA|NC-CC|CC-NC-PNC|CC-PNC|CCA-PNC|COALICION CANARIA-NUEVA CANARIAS|NUEVA CANARIAS-COALICION CANARIA") ~ "CC-NC",
+        str_detect(name_candidacies, "COMPROMIS") ~ "COMPROMIS",
+        str_detect(name_candidacies, "AVANT ADELANTE LOS VERDES|AVANT LOS VERDES|GREENS|LOS VERDES|LV-LV|AVANT-LOS V|VERDES") ~ "LV",
+        str_detect(name_candidacies, "DL") ~ "DIL-CDC",
+        str_detect(name_candidacies, "M PAIS|MAS PAIS") ~ "MP",
+        str_detect(name_candidacies, "IULV-CA|ICV-EUIA") ~ "IU",
+        str_detect(name_candidacies, "PSA-PA") ~ "PA",
+        str_detect(name_candidacies, "ESQUERRA REPUBLICANA DE CATALUNYA-SOBIRANISTES|ESQUERRA REPUBLICANA") ~ "ERC",
+        str_detect(name_candidacies, "RUIZ-MATEOS") ~ "ARM",
+        str_detect(name_candidacies, "EA-EUE") ~ "EA",
+        str_detect(name_candidacies, "NA\\+") ~ "NA-SUMA",
+        str_detect(name_candidacies, "PARTIDO POPULAR") ~ "PP",
+        str_detect(name_candidacies, "LIT-CI|LITCI") ~ "LIT-CI",
+        TRUE ~ abbrev_candidacies
+      )
+    )
 
-      # Rename
-      parties_data <-
-        parties_data |>
-        rename(name_candidacies = col_name_candidacies)
-
-      parties_data <-
-        parties_data |>
-        mutate(
-          name_candidacies = str_replace_all(name_candidacies, "–| - |/", "-"),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies, "AHORA CANARIAS"), "AHORA CANARIAS",
-                   abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(abbrev_candidacies, "DL") &
-                     str_detect(name_candidacies, "LLIBERTAT"),
-                   "DIL-CDC", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies, "LLUITA INTERNACIONALISTA"),
-                   "LIT-CI", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies, "RECORTES CERO-GRUPO VERDE"),
-                   "RECORTES CERO-LV", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies, "BERDEAK-LOS VERDES"),
-                   "BERDEAK-LV", abbrev_candidacies),
-          abbrev_candidacies = ifelse(str_detect(name_candidacies, "GREENS"),
-                                      "LV", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies, "UNIDAS PODEMOS|UNIDOS PODEMOS"),
-                   "UP", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies,
-                              "PARTIT DELS SOCIALISTES DE CATALUNYA|PARTIDO DOS SOCIALISTAS DE GALICIA"),
-                   "PSOE", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies,
-                              "PARTIDO SOCIALISTA OBRERO ESPAÑOL DE ANDALUCIA|PART. SOCIALISTA OBRERO ESPAÑOL DE ANDALUCIA"),
-                   "PSOE", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies, "PSE-EE|PARTIDO SOCIALISTA DE ARAGON|PARTIDO DOS SOCIALISTAS DE GALICIA"),
-                   "PSOE", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(abbrev_candidacies, "PSOE-PROGR.|PSOE-PROGR"),
-                   "PSOE", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies, "PARTIDO SOCIALISTA DE ANDALUCIA-PARTIDO ANDALUZ"),
-                   "PA", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies,
-                              "ESQUERRA REPUBLICANA DE CATALUNYA"),
-                   "ERC", abbrev_candidacies),
-          name_candidacies =
-            ifelse(str_detect(name_candidacies, "UNIDAS PODEMOS|UNIDOS PODEMOS"),
-                   "UNIDOS PODEMOS", name_candidacies),
-          name_candidacies =
-            ifelse(abbrev_candidacies == "AP",
-                   "ALIANZA POPULAR-COALICION POPULAR", name_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies, "NAVARRA SUMA"), "NA-SUMA",
-                   abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies, "RUIZ-MATEOS"),
-                   "ARM", abbrev_candidacies),
-          abbrev_candidacies =
-            ifelse(str_detect(name_candidacies,
-                              "INICIATIVA PER CATALUNYA-ELS VERDS"),
-                   "ICV", abbrev_candidacies))
-
-    }
-
-    return(parties_data)
-
+  return(parties_data)
 }
+
+
