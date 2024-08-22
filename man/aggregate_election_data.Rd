@@ -2,40 +2,84 @@
 % Please edit documentation in R/get_elections_data.R
 \name{aggregate_election_data}
 \alias{aggregate_election_data}
-\title{Get candidacies data (at poll station level)}
+\title{Aggregate Election Data}
 \source{
-...
+Data extracted and processed from various election sources.
 }
 \usage{
 aggregate_election_data(
-  election_data,
-  level = "all",
-  id_col = "id_INE_poll_station",
-  cod_CERA = "999",
-  prec_round = 3
+  ballots_data,
+  scope = c("ccaa", "prov", "mun"),
+  group_by_candidacy = TRUE
 )
 }
 \arguments{
-\item{include_candidates}{flag to indicate wheter it should be included data
-about candidates or not. Defaults to \code{FALSE}.}
+\item{ballots_data}{A data frame containing the election data, including ballots and candidacy information.}
+
+\item{scope}{The geographic level for data aggregation. Can be one of \code{"ccaa"}, \code{"prov"}, or \code{"mun"}. Defaults to \code{"ccaa"}.}
+
+\item{group_by_candidacy}{A logical value indicating whether to group data by candidacy name (\code{name_candidacies}). Defaults to \code{TRUE}.}
 }
 \value{
-...
+A data frame with the aggregated election data, including the total ballots and relevant election identifiers (e.g., \code{cod_elec}, \code{type_elec}, \code{date_elec}, \code{id_candidacies}, \code{abbrev_candidacies}, and \code{name_candidacies} if applicable).
 }
 \description{
-...
+This function aggregates election data at various hierarchical levels based on geographic scope and candidacy. It allows summarizing ballots by different levels such as Autonomous Communities (CCAA), Provinces, and Municipalities, while retaining key election information.
+}
+\details{
+The function summarizes election data based on the specified geographic scope and optionally groups the data by candidacy name. It supports aggregation at different hierarchical levels and ensures that the aggregated data retains key election identifiers.
 }
 \examples{
 
-## Get candidacies data
+## Correct examples ----
 
-# Right examples
+# Aggregate election data by province and candidacy
+ballots_data <- data.frame(
+  cod_elec = "02",
+  type_elec = "congress",
+  date_elec = as_date("2023-07-23"),
+  id_MIR_mun = "01-04-001",
+  cod_MIR_ccaa = "01",
+  cod_INE_prov = "04",
+  cod_INE_mun = "001",
+  id_candidacies = "000053",
+  abbrev_candidacies = "PSOE",
+  name_candidacies = "Partido Socialista Obrero Español",
+  ballots = 500
+)
+aggregated_data <- aggregate_election_data(ballots_data, scope = "prov")
+print(aggregated_data)
+
+# Aggregate election data by Autonomous Community without candidacy names
+aggregated_data_ccaa <- aggregate_election_data(ballots_data, scope = "ccaa", group_by_candidacy = FALSE)
+print(aggregated_data_ccaa)
+
+## Incorrect examples ----
+
+# Attempt to aggregate data with an invalid scope argument
 \dontrun{
-# Wrong examples
+aggregated_data_invalid <- aggregate_election_data(ballots_data, scope = "region")
 }
+# This will raise an error because "region" is not a valid scope.
+
+# Attempt to aggregate data with missing required columns
+incomplete_ballots_data <- data.frame(
+  cod_elec = "02",
+  type_elec = "congress",
+  date_elec = as_date("2023-07-23"),
+  ballots = 500
+)
+\dontrun{
+aggregated_data_missing <- aggregate_election_data(incomplete_ballots_data, scope = "mun")
+}
+# This will fail or produce incorrect results due to missing required columns.
 
 }
 \author{
-Javier Álvarez-Liébana.
+Mikaela DeSmedt, Javier Álvarez-Liébana
 }
-\keyword{get_elections_data}
+\keyword{aggregate_election_data,}
+\keyword{ballots,}
+\keyword{candidacy}
+\keyword{election_data,}
+\keyword{geographic_scope,}

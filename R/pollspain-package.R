@@ -1,14 +1,15 @@
 #' @title pollspain
 #'
-#' @description R package to access, clean, and analyze electoral and survey data
-#' for the Spanish elections from 1982 until present.
+#' @description
+#' An R package to access, clean, and analyze electoral and survey data for the Spanish elections from 1982 until present.
 #'
-#' @author MSc Mikaela De Smedt, PhD Javier Alvarez-Liebana
-#' @maintainer Mikaela De Smedt (mkldesmedt@gmail.com), Javier Alvarez-Liebana (javalv09@ucm.es)
-#' @license MIT
-#' @version 1.0
-#' @imports
-#' dplyr, stringr, glue, readr, httr, lubridate, tidyverse, stringdist, stringi, ggparliament, ggplot2, mapSpain
+#' @details
+#' This package includes functionality to work with electoral data, survey data, and various auxiliary datasets related to Spanish elections.
+#'
+#' @name pollspain-package
+#' @docType "_PACKAGE"
+#' @aliases pollspain pollspain-package
+#'
 #' @import dplyr
 #' @import stringr
 #' @import glue
@@ -29,11 +30,9 @@
 #' @importFrom stringi stri_escape_unicode stri_trans_general
 #' @importFrom tidyr drop_na pivot_longer pivot_wider replace_na separate unite
 #' @importFrom utils download.file globalVariables unzip
-#' @docType package
-#' @name pollspain-package
-#' @aliases pollspain pollspain-package
 NULL
 
+# Ensure to set these options if they are required for your package functionality
 options(pillar.sigfig = 13)
 options(dplyr.summarise.inform = FALSE)
 

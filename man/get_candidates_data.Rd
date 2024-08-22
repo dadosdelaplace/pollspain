@@ -2,40 +2,60 @@
 % Please edit documentation in R/get_elections_data.R
 \name{get_candidates_data}
 \alias{get_candidates_data}
-\title{Get candidates data}
+\title{Get Candidates Data}
 \source{
-...
+Data extracted from \href{https://github.com/mikadsr/Pollspain-data}{Pollspain Data Repository}
 }
 \usage{
 get_candidates_data(type_elec, year, month)
 }
 \arguments{
-\item{type_elec}{type elections for which data is available.
-It should be one of the following values: "referendum",
-"congress", "senate", "local", "cabildo" (Canarian council)
-or "EU".}
+\item{type_elec}{A vector or single value representing the types of elections.}
 
-\item{year, month}{vector of years and months of elections to be considered.
-Please be sure (see \code{dates_elections_spain}) that elections of the
-provided type are available for the given year and month.}
+\item{year}{Year of the election.}
+
+\item{month}{Month of the election.}
+
+\item{election_type}{Type of election to retrieve data for. Must be one of the following: "congress".}
 }
 \value{
-...
+A tibble containing the candidates data with the following columns:
+\item{cod_elec}{Code representing the type of election: \code{"01"} (referendum), \code{"02"} (congress), \code{"03"} (senate), \code{"04"} (local elections), \code{"06"} (cabildo - Canarian council - elections), \code{"07"} (European Parliament elections).}
+\item{type_elec}{Type of election.}
+\item{date_elec}{Date of the election.}
+\item{id_INE_mun}{Municipality ID constructed from the ccaa-prov-mun codes provided by INE.}
+\item{id_MIR_mun}{Municipality ID constructed from the ccaa-prov-mun codes provided by the Spanish Ministry of Interior (MIR).}
+\item{cod_INE_ccaa, cod_MIR_ccaa, ccaa}{Codes and names for regions (ccaa) to which the municipalities belong.}
+\item{cod_INE_prov, prov}{Codes and names for the provinces to which the municipalities belong.}
+\item{cod_INE_mun, mun}{Code, and name for municipalities.}
+\item{candidacies}{Data related to the individual candidacies, including party affiliation and candidate information.}
 }
 \description{
-...
+Fetch and process candidates data for Spanish elections. This function retrieves and processes candidate data specifically for congress elections in Spain. It fetches raw data from the Pollspain Data Repository, processes it, and returns a detailed data frame containing information about candidates in the specified election(s).
+}
+\details{
+This function retrieves candidate data specifically for congress elections in Spain by accessing the Pollspain Data Repository. It processes and formats the raw data into a tibble that includes detailed information about each candidate and their candidacy.
 }
 \examples{
 
-## Get candidates data
+## Correct examples
+# Get candidates data for congress elections in March 1996
+candidates_data_1996_03 <- get_candidates_data("congress", 1996, 3)
+print(candidates_data_1996_03)
 
-# Right examples
-\dontrun{
-# Wrong examples
-}
+# Get candidates data for congress elections in April 2019
+candidates_data_2019_04 <- get_candidates_data("congress", 2019, 4)
+print(candidates_data_2019_04)
+
+## Incorrect examples
+# Trying to get candidates data for non-congress elections
+try(get_candidates_data("senate", 1996, 3))
+
+# Trying to get candidates data for non-existent elections
+try(get_candidates_data("congress", 1800, 1))
 
 }
 \author{
-Javier Álvarez-Liébana.
+Mikaela DeSmedt, Javier Álvarez-Liébana
 }
 \keyword{get_elections_data}

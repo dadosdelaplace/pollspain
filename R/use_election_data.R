@@ -168,7 +168,6 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
 #' @import dplyr
 #' @import mapSpain
 #' @importFrom utils download.file
-#' @importFrom utils load
 #' @importFrom grDevices colors
 #'
 #' @examples

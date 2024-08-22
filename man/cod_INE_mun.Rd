@@ -3,35 +3,29 @@
 \docType{data}
 \name{cod_INE_mun}
 \alias{cod_INE_mun}
-\title{INE's code for municipalities}
+\title{Municipal Codes INE}
 \format{
-A data frame with 8131 rows and 7 variables:
-\itemize{
-\item \code{cod_INE_ccaa}: code of regions
-\item \code{ccaa}: name of regions
-\item \code{cod_INE_prov}: code of provinces
-\item \code{prov}: name of provinces
-\item \code{cod_INE_mun}: code of municipalities
-\item \code{cd_INE_mun}: check digit (see \href{https://www.ine.es/daco/daco42/codmun/codmun00i.htm}{documentation})
-\item \code{mun}: name of municipalities
+A tibble with 8,132 rows and 9 columns:
+\describe{
+\item{cod_INE_mun}{INE code of the municipality}
+\item{mun}{Name of the municipality}
+\item{id_INE_mun}{ID in the INE format (e.g., "01-04-001")}
+\item{id_MIR_mun}{ID in the MIR format (e.g., "01-04-001")}
+\item{cod_INE_prov}{INE code of the province}
+\item{prov}{Name of the province}
+\item{cod_INE_ccaa}{INE code of the autonomous community (CCAA)}
+\item{cod_MIR_ccaa}{MIR code of the autonomous community (CCAA)}
+\item{ccaa}{Name of the autonomous community (CCAA)}
 }
 }
 \source{
-Data extracted from \href{https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx}{INE}
+CCAA $ PROV codes from "https://ine.es/daco/daco42/codmun/cod_provincia.htm", MUN codes from "https://ine.es/daco/daco42/codmun/diccionario24.xlsx"
 }
 \usage{
 data(cod_INE_mun)
 }
 \description{
-A dataset containing the codes provided by INE
-of Spanish municipalities. Last update: 2023/02/25 (data
-updated by INE on 2020/01/01)
+Dataset hosting municipality codes for all 8,132 municipalities of spain with their respective CCAA and PROV codes
 }
-\examples{
-# Load data
-data(cod_INE_mun)
-}
-\author{
-Data gathered and processed by Javier Álvarez-Liébana.
-}
+\keyword{INE_codes}
 \keyword{datasets}

@@ -22,13 +22,13 @@
 #' @details
 #' The function retrieves and processes survey data files from a specified GitHub directory, applying user-defined filters to the data. The result is a cleaned and combined data frame with relevant survey information, including optional media and exit poll data.
 #'
-#' @authors
+#' @author
 #' Mikaela DeSmedt
 #'
 #' @importFrom dplyr mutate filter select
 #' @importFrom httr GET content stop_for_status
 #' @importFrom glue glue
-#' @importFrom lubridate dmy as.Date
+#' @importFrom lubridate dmy as_date
 #' @importFrom purrr map compact
 #'
 #' @examples
@@ -167,9 +167,9 @@ get_survey_data <- function(from = 1982, to = 2023,
   # Convert date_elec and fieldwork_end to Date objects
   raw_surveys <- raw_surveys %>%
     mutate(
-      date_elec = as.Date(date_elec),
-      fieldwork_end = as.Date(fieldwork_end),
-      fieldwork_start = as.Date(fieldwork_start),
+      date_elec = as_date(date_elec),
+      fieldwork_end = as_date(fieldwork_end),
+      fieldwork_start = as_date(fieldwork_start),
       fieldwork_days = as.numeric(difftime(fieldwork_end, fieldwork_start, units = "days"))
     )
 

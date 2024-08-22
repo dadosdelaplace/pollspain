@@ -3,7 +3,6 @@
 #' @description Fetch municipal census data for one or more elections at the municipal
 #' level. This function downloads and processes raw municipal data files for the specified elections.
 #'
-#' @inheritParams type_to_code_election
 #' @param type_elec A vector or single value representing the types of elections.
 #' @param year A vector or single value representing the years of the elections to be considered.
 #' @param month A vector or single value representing the months of the elections to be considered.
@@ -41,7 +40,7 @@
 #' It automatically handles the download, loading, and merging of data across multiple
 #' election periods as specified by the user.
 #'
-#' @authors
+#' @author
 #' Mikaela DeSmedt, Javier Álvarez-Liébana.
 #' @source Some definitions of variables were extracted from
 #' \url{https://www.ige.gal}.
@@ -87,8 +86,6 @@
 #' mun_census_data8 <- get_mun_census_data("congress", 1990, 4)
 #'
 #' @export
-
-
 get_mun_census_data <- function(type_elec, year, month) {
   # Ensure input parameters are vectors
   type_elec_vec <- as.vector(type_elec)
@@ -188,7 +185,7 @@ get_mun_census_data <- function(type_elec, year, month) {
 #' It automatically handles the download, loading, and merging of data across multiple
 #' election periods as specified by the user.
 #'
-#' @authors
+#' @author
 #' Mikaela DeSmedt, Javier Álvarez-Liébana
 #'
 #' @examples
@@ -356,7 +353,7 @@ get_poll_station_data <- function(type_elec, year, month, prec_round = 3) {
 #' @details
 #' This function retrieves candidate data specifically for congress elections in Spain by accessing the Pollspain Data Repository. It processes and formats the raw data into a tibble that includes detailed information about each candidate and their candidacy.
 #'
-#' @authors
+#' @author
 #' Mikaela DeSmedt, Javier Álvarez-Liébana
 #'
 #' @examples
@@ -445,7 +442,7 @@ get_candidates_data <- function(type_elec, year, month) {
 #' @details
 #' This function retrieves and processes candidacies data for Spanish elections by downloading and merging data for the specified election types, years, and months. If `include_candidates` is set to TRUE, the function will also include detailed information about each candidate.
 #'
-#' @authors
+#' @author
 #' Mikaela DeSmedt, Javier Álvarez-Liébana
 #'
 #' @examples
@@ -580,7 +577,6 @@ get_candidacies_data <- function(type_elec, year, month, include_candidates = FA
 #' @description
 #' This function aggregates CERA (Census of Absent Residents) data from election data based on a specified hierarchical level. The function processes election data to provide aggregated statistics such as census counts, total ballots, and turnout percentages.
 #'
-#' @inheritParams get_mun_census_data
 #' @param election_data A data frame containing the election data to be processed.
 #' @param id_col The name of the column containing the poll station ID. Defaults to \code{"id_INE_poll_station"}.
 #' @param level The hierarchical level for data aggregation. Can be one of \code{"all"}, \code{"ccaa"}, \code{"prov"}, \code{"mun"}, \code{"mun_district"}, \code{"sec"}, or \code{"poll_station"}. Defaults to \code{"all"}.
@@ -593,7 +589,7 @@ get_candidacies_data <- function(type_elec, year, month, include_candidates = FA
 #' @details
 #' This function processes election data to aggregate CERA statistics based on the specified hierarchical level. It supports various aggregation levels and handles rounding of percentage values based on the provided precision.
 #'
-#' @authors
+#' @author
 #' Mikaela DeSmedt (documentation), Javier Álvarez-Liébana
 #'
 #' @examples
@@ -708,7 +704,7 @@ get_CERA_data <- function(election_data, id_col = "id_INE_poll_station",
 #' @details
 #' The function retrieves data from a specified GitHub repository containing raw data files for Spanish congressional and senatorial elections. The function merges the ballots data with the candidacy names data if the \code{include_candidacy_names} parameter is set to TRUE. It ensures that no duplicate columns are retained in the final output.
 #'
-#' @authors
+#' @author
 #' Mikaela DeSmedt, Javier Álvarez-Liébana
 #'
 #' @examples
@@ -840,7 +836,7 @@ get_candidacy_ballot_data <- function(type_elec, year, month, include_candidacy_
 #' @details
 #' The function summarizes election data based on the specified geographic scope and optionally groups the data by candidacy name. It supports aggregation at different hierarchical levels and ensures that the aggregated data retains key election identifiers.
 #'
-#' @authors
+#' @author
 #' Mikaela DeSmedt, Javier Álvarez-Liébana
 #'
 #' @source Data extracted and processed from various election sources.
@@ -855,7 +851,7 @@ get_candidacy_ballot_data <- function(type_elec, year, month, include_candidacy_
 #' ballots_data <- data.frame(
 #'   cod_elec = "02",
 #'   type_elec = "congress",
-#'   date_elec = as.Date("2023-07-23"),
+#'   date_elec = as_date("2023-07-23"),
 #'   id_MIR_mun = "01-04-001",
 #'   cod_MIR_ccaa = "01",
 #'   cod_INE_prov = "04",
@@ -884,7 +880,7 @@ get_candidacy_ballot_data <- function(type_elec, year, month, include_candidacy_
 #' incomplete_ballots_data <- data.frame(
 #'   cod_elec = "02",
 #'   type_elec = "congress",
-#'   date_elec = as.Date("2023-07-23"),
+#'   date_elec = as_date("2023-07-23"),
 #'   ballots = 500
 #' )
 #' \dontrun{

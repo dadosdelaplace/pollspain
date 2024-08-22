@@ -49,6 +49,6 @@ type_to_code_election(type_elec = "national")
 
 }
 \author{
-Javier Álvarez-Liébana.
+Mikaela DeSmedt;Javier Alvarez-Liebana
 }
 \keyword{utils}

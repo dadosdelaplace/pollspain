@@ -2,9 +2,9 @@
 % Please edit documentation in R/get_elections_data.R
 \name{get_CERA_data}
 \alias{get_CERA_data}
-\title{Get candidacies data (at poll station level)}
+\title{Get CERA Data (at Poll Station Level)}
 \source{
-...
+Data extracted and processed from various election sources.
 }
 \usage{
 get_CERA_data(
@@ -16,26 +16,67 @@ get_CERA_data(
 )
 }
 \arguments{
-\item{include_candidates}{flag to indicate wheter it should be included data
-about candidates or not. Defaults to \code{FALSE}.}
+\item{election_data}{A data frame containing the election data to be processed.}
+
+\item{id_col}{The name of the column containing the poll station ID. Defaults to \code{"id_INE_poll_station"}.}
+
+\item{level}{The hierarchical level for data aggregation. Can be one of \code{"all"}, \code{"ccaa"}, \code{"prov"}, \code{"mun"}, \code{"mun_district"}, \code{"sec"}, or \code{"poll_station"}. Defaults to \code{"all"}.}
+
+\item{cod_CERA}{The code representing CERA. Defaults to \code{"999"}.}
+
+\item{prec_round}{The precision for rounding percentages. Defaults to \code{3}.}
 }
 \value{
-...
+A data frame with the aggregated CERA data, including columns for type of election, election date, census data, total ballots, and turnout percentages.
 }
 \description{
-...
+This function aggregates CERA (Census of Absent Residents) data from election data based on a specified hierarchical level. The function processes election data to provide aggregated statistics such as census counts, total ballots, and turnout percentages.
+}
+\details{
+This function processes election data to aggregate CERA statistics based on the specified hierarchical level. It supports various aggregation levels and handles rounding of percentage values based on the provided precision.
 }
 \examples{
 
-## Get candidacies data
+## Correct Examples
 
-# Right examples
+# Fetch CERA data aggregated at the municipal level
+cera_data_mun <- get_CERA_data(
+  poll_station_data1,
+  id_col = "id_INE_poll_station",
+  level = "mun"
+)
+print(cera_data_mun)
+
+# Fetch CERA data aggregated at the provincial level
+cera_data_prov <- get_CERA_data(
+  poll_station_data1,
+  id_col = "id_INE_poll_station",
+  level = "prov"
+)
+print(cera_data_prov)
+
+## Incorrect Examples
+
+# Attempt to fetch CERA data with a non-existent id column, should raise an error
 \dontrun{
-# Wrong examples
+cera_data_invalid_col <- get_CERA_data(
+  poll_station_data1,
+  id_col = "non_existent_column",
+  level = "mun"
+)
+}
+
+# Attempt to fetch CERA data with an invalid aggregation level, should raise an error
+\dontrun{
+cera_data_invalid_level <- get_CERA_data(
+  poll_station_data1,
+  id_col = "id_INE_poll_station",
+  level = "barrio"
+)
 }
 
 }
 \author{
-Javier Álvarez-Liébana.
+Mikaela DeSmedt (documentation), Javier Álvarez-Liébana
 }
 \keyword{get_elections_data}

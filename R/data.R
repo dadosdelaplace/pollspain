@@ -1,147 +1,82 @@
-#' @title Dates of Spanish elections
+#' Municipal Codes INE
 #'
-#' @description A dataset containing the dates of Spanish
-#' elections in referendum, congress, senate, municipal, cabildo
-#' (Canarian council) and European Parlament elections.
-#' Last update: 2023/02/25
+#' Dataset hosting municipality codes for all 8,132 municipalities of spain with their respective CCAA and PROV codes
 #'
-#' @format A data frame with 64 rows and 6 variables:
-#' \itemize{
-#'   \item \code{cod_elec}: code of type of elections. Allowed values:
-#'   \itemize{
-#'     \item \code{"01"}: referendum elections.
-#'     \item \code{"02"}: congress elections.
-#'     \item \code{"03"}: senate elections.
-#'     \item \code{"04"}: local (municipalities) elections.
-#'     \item \code{"05"}: regional  elections.
-#'     \item \code{"06"}: cabildo - Canarian council - elections).
-#'     \item \code{"07"}: European Parlament elections.
-#'   }
-#'   \item \code{type_elec}: type of elections ("referendum", "congress",
-#'   "senate", "local", "regional", "cabildo" or "EU").
-#'   \item \code{date}: date of election in "YYYY-MM-DD" format
-#'   \item \code{year}, \code{month}, \code{day}: year, month and day of election
-#'   \item \code{topic}: topic of referendums (\code{cod_elec = "01"})
-#' }
-#'
-#' @author Data gathered and processed by Javier Álvarez-Liébana.
-#'
-#' @source Data extracted from \href{https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/}{Spanish Ministry of Interior}
 #' @docType data
-#' @keywords datasets
-#' @name dates_elections_spain
-#' @usage data(dates_elections_spain)
-#'
-#' @examples
-#' # Load data
-#' data(dates_elections_spain)
-"dates_elections_spain"
-
-#' @title INE's code for ccaa and provinces
-#'
-#' @description A dataset containing the codes provided by INE
-#' of Spanish provinces and regions. Last update: 2023/02/25
-#'
-#' @format A data frame with 52 rows and 4 variables:
-#' \itemize{
-#'   \item \code{cod_INE_ccaa}: code of region
-#'   \item \code{ccaa}: name of region
-#'   \item \code{cod_INE_prov}: code of province
-#'   \item \code{prov}: name of province
-#' }
-#'
-#' @author Data gathered and processed by Javier Álvarez-Liébana.
-#'
-#' @source Data extracted from \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
-#' @docType data
-#' @keywords datasets
-#' @name cod_INE_prov_ccaa
-#' @usage data(cod_INE_prov_ccaa)
-#'
-#' @examples
-#' # Load data
-#' data(cod_INE_prov_ccaa)
-"cod_INE_prov_ccaa"
-
-#' @title INE's code for ccaa and provinces
-#'
-#' @description A dataset containing the codes provided by INE
-#' of Spanish provinces and regions. Last update: 2023/02/25
-#'
-#' @format A data frame with 52 rows and 2 variables:
-#' \itemize{
-#'   \item \code{cod_INE_prov}: code of province
-#'   \item \code{prov}: name of province
-#' }
-#'
-#' @author Data gathered and processed by Javier Álvarez-Liébana.
-#'
-#' @source Data extracted from \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
-#' @docType data
-#' @keywords datasets
-#' @name cod_INE_prov
-#' @usage data(cod_INE_prov)
-#'
-#' @examples
-#' # Load data
-#' data(cod_INE_prov)
-"cod_INE_prov"
-
-#' @title INE's code for ccaa and provinces
-#'
-#' @description A dataset containing the codes provided by INE
-#' of Spanish provinces and regions. Last update: 2023/02/25
-#'
-#' @format A data frame with 19 rows and 2 variables:
-#' \itemize{
-#'   \item \code{cod_INE_ccaa}: code of regions
-#'   \item \code{ccaa}: name of regions
-#' }
-#'
-#' @author Data gathered and processed by Javier Álvarez-Liébana.
-#'
-#' @source Data extracted from \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
-#' @docType data
-#' @keywords datasets
-#' @name cod_INE_ccaa
-#' @usage data(cod_INE_ccaa)
-#'
-#' @examples
-#' # Load data
-#' data(cod_INE_ccaa)
-"cod_INE_ccaa"
-
-#' @title INE's code for municipalities
-#'
-#' @description A dataset containing the codes provided by INE
-#' of Spanish municipalities. Last update: 2023/02/25 (data
-#' updated by INE on 2020/01/01)
-#'
-#' @format A data frame with 8131 rows and 7 variables:
-#' \itemize{
-#'   \item \code{cod_INE_ccaa}: code of regions
-#'   \item \code{ccaa}: name of regions
-#'   \item \code{cod_INE_prov}: code of provinces
-#'   \item \code{prov}: name of provinces
-#'   \item \code{cod_INE_mun}: code of municipalities
-#'   \item \code{cd_INE_mun}: check digit (see \href{https://www.ine.es/daco/daco42/codmun/codmun00i.htm}{documentation})
-#'   \item \code{mun}: name of municipalities
-#' }
-#'
-#' @author Data gathered and processed by Javier Álvarez-Liébana.
-#'
-#' @source Data extracted from \href{https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx}{INE}
-#' @docType data
-#' @keywords datasets
 #' @name cod_INE_mun
 #' @usage data(cod_INE_mun)
+#' @format A tibble with 8,132 rows and 9 columns:
+#' \describe{
+#'   \item{cod_INE_mun}{INE code of the municipality}
+#'   \item{mun}{Name of the municipality}
+#'   \item{id_INE_mun}{ID in the INE format (e.g., "01-04-001")}
+#'   \item{id_MIR_mun}{ID in the MIR format (e.g., "01-04-001")}
+#'   \item{cod_INE_prov}{INE code of the province}
+#'   \item{prov}{Name of the province}
+#'   \item{cod_INE_ccaa}{INE code of the autonomous community (CCAA)}
+#'   \item{cod_MIR_ccaa}{MIR code of the autonomous community (CCAA)}
+#'   \item{ccaa}{Name of the autonomous community (CCAA)}
+#' }
+#' @source CCAA $ PROV codes from "https://ine.es/daco/daco42/codmun/cod_provincia.htm", MUN codes from "https://ine.es/daco/daco42/codmun/diccionario24.xlsx"
+#' @keywords datasets INE_codes
+NULL
+
+
+#' Dates of Elections in Spain
 #'
-#' @examples
-#' # Load data
-#' data(cod_INE_mun)
-"cod_INE_mun"
+#' Dataset with dates of Spanish election dates from 1982. Scrapped from source and wrangled to fit the needs of the pollspain package
+#'
+#' @docType data
+#' @name dates_elections_spain
+#' @usage data(dates_elections_spain)
+#' @format A tibble with 119 rows and 7 columns:
+#' \describe{
+#'   \item{cod_elec}{Code of the election}
+#'   \item{type_elec}{Type of election (e.g., referendum, general election)}
+#'   \item{date_elec}{Date of the election}
+#'   \item{year}{Year of the election}
+#'   \item{month}{Month of the election}
+#'   \item{day}{Day of the election}
+#'   \item{topic}{Topic or description of the election}
+#' }
+#' @source scrapped from "https://es.wikipedia.org/wiki/Anexo:Elecciones_en_Espa%C3%B1a"
+#' @keywords datasets
+NULL
+
+
+#' Party Colors Hex Data
+#'
+#' Dataset holding hexadecimal codes for spanish political parties
+#'
+#' @docType data
+#' @name party_colors_hex
+#' @usage data(party_colors_hex)
+#' @format A tibble with 21 rows and 3 columns:
+#' \describe{
+#'   \item{abbrev_candidacies}{Abbreviation of the candidacy}
+#'   \item{name_candidacies}{Full name of the candidacy}
+#'   \item{party_color}{Hex color code associated with the party}
+#' }
+#' @source Manually sourced by Mikaela DeSmedt
+#' @keywords datasets party colors
+NULL
 
 
 
-
-
+#' Seat Distribution Congress Data
+#'
+#' Dataset holding the number of seats distributed by each constituency from 1982 until 2023.
+#'
+#' @docType data
+#' @name seat_distribution_congress
+#' @usage data(seat_distribution_congress)
+#' @format A data frame with 676 rows and 4 columns:
+#' \describe{
+#'   \item{prov}{Province name}
+#'   \item{cod_INE_prov}{INE code of the province}
+#'   \item{year}{Year of the election}
+#'   \item{seats}{Number of seats allocated}
+#' }
+#' @source Mannualy sourced by Mikaela DeSmedt from "https://es.wikipedia.org/wiki/Circunscripciones_electorales_del_Congreso_de_los_Diputados"
+#' @keywords datasets seat-distribution congress
+NULL

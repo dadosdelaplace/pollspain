@@ -1,11 +1,10 @@
 Package: pollspain
 Type: Package
-Title: A grammar for the analysis of electoral data
-Version: 0.1.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Title: R package to access, clean, and analyze electoral and survey data for the Spanish elections from 1982 until present
+Version: 1.0.0
+Authors@R: c(person("Mikaela", "De Smedt", email = "mkldesmedt@gmail.com", role = c("aut", "cre")),
+              person("Javier", "Álvarez-Liébana", email = "javalv09@ucm.es", role = "aut"))
+Description: An R package to access, clean, and analyze electoral and survey data for the Spanish elections from 1982 until present.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -14,23 +13,18 @@ LazyData: TRUE
 Depends:
     R (>= 3.5.0)
 Imports: 
-    dplyr (>= 1.1.0),
-    tibble (>= 2.1.3),
-    glue (>= 1.3.2),
-    lubridate,
-    purrr,
-    readr,
+    dplyr,
     stringr,
-    tidyr (>= 1.3.0),
-    utils,
-    rvest,
+    glue,
+    readr,
+    httr,
+    lubridate,
+    tidyverse,
+    stringdist,
     stringi,
-    crayon
-Suggests:
-    microbenchmark,
-    knitr,
-    rmarkdown,
-    testthat (>= 3.1.5)
+    ggparliament,
+    ggplot2,
+    mapSpain
 VignetteBuilder: 
     knitr
 Config/Needs/website: tidyverse, shiny, pkgdown, tidyverse/tidytemplate

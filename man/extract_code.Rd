@@ -58,6 +58,6 @@ extract_code(id_INE_poll_station, level = "district", full_cod = TRUE)
 
 }
 \author{
-Javier Álvarez-Liébana.
+Javier Alvarez-Liebana
 }
 \keyword{utils}

@@ -2,43 +2,67 @@
 % Please edit documentation in R/get_elections_data.R
 \name{get_candidacies_data}
 \alias{get_candidacies_data}
-\title{Get candidacies data (at poll station level)}
+\title{Get Candidacies Data}
 \source{
-...
+Data extracted from \href{https://github.com/mikadsr/Pollspain-data}{Pollspain Data Repository}
 }
 \usage{
 get_candidacies_data(type_elec, year, month, include_candidates = FALSE)
 }
 \arguments{
-\item{type_elec}{type elections for which data is available.
-It should be one of the following values: "referendum",
-"congress", "senate", "local", "cabildo" (Canarian council)
-or "EU".}
+\item{type_elec}{Character vector of election types. Valid types are: 'referendum', 'congress', 'senate', 'local', 'regional', 'cabildo', 'EU'.}
 
-\item{year, month}{vector of years and months of elections to be considered.
-Please be sure (see \code{dates_elections_spain}) that elections of the
-provided type are available for the given year and month.}
+\item{year}{Integer vector of election years.}
 
-\item{include_candidates}{flag to indicate wheter it should be included data
-about candidates or not. Defaults to \code{FALSE}.}
+\item{month}{Integer vector of election months.}
+
+\item{include_candidates}{Logical flag indicating whether to include detailed candidates data. Default is FALSE.}
 }
 \value{
-...
+A tibble containing the candidacies data.
 }
 \description{
-...
+Fetch and process candidacies data for Spanish elections. This function supports fetching data for multiple elections simultaneously by accepting vector inputs for the election parameters.
+}
+\details{
+This function retrieves and processes candidacies data for Spanish elections by downloading and merging data for the specified election types, years, and months. If \code{include_candidates} is set to TRUE, the function will also include detailed information about each candidate.
 }
 \examples{
 
-## Get candidacies data
+## Correct examples
+# Single election
+candidates_data <- get_candidacies_data("congress", 1986, 6)
 
-# Right examples
-\dontrun{
-# Wrong examples
-}
+# Multiple elections
+combined_candidates_data <- get_candidacies_data(
+  c("congress", "congress", "senate"),
+  c(2019, 2016, 2016),
+  c(11, 6, 6)
+)
+
+# With candidates details
+candidates_data_with_details <- get_candidacies_data(
+  "congress",
+  2019,
+  4,
+  include_candidates = TRUE
+)
+
+## Incorrect examples
+# Invalid election type
+candidates_data_invalid <- get_candidacies_data("national", 2019, 4)
+
+# Length mismatch between year and month
+candidates_data_mismatch <- get_candidacies_data("congress", 2016, c(4, 11))
+
+# Invalid date format
+candidates_data_invalid_date <- get_candidacies_data("congress", "2016-06-26")
+
+# Non-existent election data
+candidates_data_non_existent <- get_candidacies_data("congress", 1990, 4)
 
 }
 \author{
-Javier Álvarez-Liébana.
+Mikaela DeSmedt, Javier Álvarez-Liébana
 }
 \keyword{get_elections_data}
