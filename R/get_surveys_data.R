@@ -27,7 +27,7 @@ pacman::p_load(dplyr, glue, purr, httr)
 #' The function retrieves and processes survey data files from a specified GitHub directory, applying user-defined filters to the data. The result is a cleaned and combined data frame with relevant survey information, including optional media and exit poll data.
 #'
 #' @authors
-#' Mikaela DeSmedt, Javier Álvarez-Liébana
+#' Mikaela DeSmedt
 #'
 #' @importFrom dplyr mutate filter select
 #' @importFrom httr GET content stop_for_status
