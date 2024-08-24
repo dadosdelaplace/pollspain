@@ -11,3 +11,12 @@ An R package to access, clean, and analyze electoral and survey data for the Spa
 \details{
 This package includes functionality to work with electoral data, survey data, and various auxiliary datasets related to Spanish elections.
 }
+\seealso{
+Auxiliary repository processing & holding election data "https://github.com/mikadsr/Pollspain-data"
+}
+\author{
+\itemize{
+\item Mikaela De Smedt
+\item Javier Alvarez-Liebana
+}
+}

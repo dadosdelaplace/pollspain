@@ -2,10 +2,12 @@
 #'
 #' @description
 #' An R package to access, clean, and analyze electoral and survey data for the Spanish elections from 1982 until present.
-#'
+#' @author
+#'  - Mikaela De Smedt
+#'  - Javier Alvarez-Liebana
 #' @details
 #' This package includes functionality to work with electoral data, survey data, and various auxiliary datasets related to Spanish elections.
-#'
+#' @seealso Auxiliary repository processing & holding election data "https://github.com/mikadsr/Pollspain-data"
 #' @name pollspain-package
 #' @docType "_PACKAGE"
 #' @aliases pollspain pollspain-package

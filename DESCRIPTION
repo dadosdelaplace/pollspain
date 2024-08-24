@@ -1,5 +1,5 @@
 Package: pollspain
-Type: Package
+Type: package
 Title: R package to access, clean, and analyze electoral and survey data for the Spanish elections from 1982 until present
 Version: 1.0.0
 Authors@R: c(person("Mikaela", "De Smedt", email = "mkldesmedt@gmail.com", role = c("aut", "cre")),

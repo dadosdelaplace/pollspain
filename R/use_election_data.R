@@ -1,3 +1,106 @@
+#' @title Aggregate Election Data
+#'
+#' @description
+#' This function aggregates election data at various hierarchical levels based on geographic scope and candidacy. It allows summarizing ballots by different levels such as Autonomous Communities (CCAA), Provinces, and Municipalities, while retaining key election information.
+#'
+#' @param ballots_data A data frame containing the election data, including ballots and candidacy information.
+#' @param scope The geographic level for data aggregation. Can be one of \code{"ccaa"}, \code{"prov"}, or \code{"mun"}. Defaults to \code{"ccaa"}.
+#' @param group_by_candidacy A logical value indicating whether to group data by candidacy name (\code{name_candidacies}). Defaults to \code{TRUE}.
+#'
+#' @return
+#' A data frame with the aggregated election data, including the total ballots and relevant election identifiers (e.g., \code{cod_elec}, \code{type_elec}, \code{date_elec}, \code{id_candidacies}, \code{abbrev_candidacies}, and \code{name_candidacies} if applicable).
+#'
+#' @details
+#' The function summarizes election data based on the specified geographic scope and optionally groups the data by candidacy name. It supports aggregation at different hierarchical levels and ensures that the aggregated data retains key election identifiers.
+#'
+#' @author
+#' Mikaela DeSmedt, Javier Álvarez-Liébana
+#'
+#' @source Data extracted and processed from various election sources.
+#'
+#' @keywords aggregate_election_data, election_data, ballots, geographic_scope, candidacy
+#'
+#' @examples
+#'
+#' ## Correct examples ----
+#'
+#' # Aggregate election data by province and candidacy
+#' ballots_data <- data.frame(
+#'   cod_elec = "02",
+#'   type_elec = "congress",
+#'   date_elec = lubridate::as_date("2023-07-23"),
+#'   id_MIR_mun = "01-04-001",
+#'   cod_MIR_ccaa = "01",
+#'   cod_INE_prov = "04",
+#'   cod_INE_mun = "001",
+#'   id_candidacies = "000053",
+#'   abbrev_candidacies = "PSOE",
+#'   name_candidacies = "Partido Socialista Obrero Español",
+#'   ballots = 500
+#' )
+#' aggregated_data <- aggregate_election_data(ballots_data, scope = "prov")
+#' print(aggregated_data)
+#'
+#' # Aggregate election data by Autonomous Community without candidacy names
+#' aggregated_data_ccaa <- aggregate_election_data(ballots_data, scope = "ccaa", group_by_candidacy = FALSE)
+#' print(aggregated_data_ccaa)
+#'
+#' ## Incorrect examples ----
+#'
+#' # Attempt to aggregate data with an invalid scope argument
+#' \dontrun{
+#' aggregated_data_invalid <- aggregate_election_data(ballots_data, scope = "region")
+#' }
+#' # This will raise an error because "region" is not a valid scope.
+#'
+#' # Attempt to aggregate data with missing required columns
+#' incomplete_ballots_data <- data.frame(
+#'   cod_elec = "02",
+#'   type_elec = "congress",
+#'   date_elec = lubridate::as_date("2023-07-23"),
+#'   ballots = 500
+#' )
+#' \dontrun{
+#' aggregated_data_missing <- aggregate_election_data(incomplete_ballots_data, scope = "mun")
+#' }
+#' # This will fail or produce incorrect results due to missing required columns.
+#'
+#' @export
+aggregate_election_data <- function(ballots_data,
+                                    scope = c("ccaa", "prov", "mun"),
+                                    group_by_candidacy = TRUE) {
+  # Ensure valid scope input
+  scope <- match.arg(scope)
+
+  # Extract year from date_elec if it's not already in the data
+  ballots_data <- ballots_data |>
+    mutate(year = year(date_elec))
+
+  # Determine grouping variables based on the scope
+  group_vars <- c("year", "cod_elec", "type_elec", "date_elec",
+                  "id_candidacies", "abbrev_candidacies")
+
+  if (group_by_candidacy) {
+    group_vars <- c(group_vars, "name_candidacies")
+  }
+
+  if (scope == "ccaa") {
+    group_vars <- c(group_vars, "cod_MIR_ccaa")
+  } else if (scope == "prov") {
+    group_vars <- c(group_vars, "cod_MIR_ccaa", "cod_INE_prov")
+  } else if (scope == "mun") {
+    group_vars <- c(group_vars, "cod_MIR_ccaa", "cod_INE_prov", "cod_INE_mun")
+  }
+
+  # Aggregate data by the determined grouping variables
+  aggregated_data <- ballots_data |>
+    group_by(across(all_of(group_vars))) |>
+    summarize(total_ballots = sum(ballots, na.rm = TRUE), .groups = "drop")
+
+  return(aggregated_data)
+}
+
+
 #' @title Allocate Seats Using the D'Hondt Method for the Spanish Congress
 #'
 #' @description
