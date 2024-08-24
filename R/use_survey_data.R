@@ -67,7 +67,7 @@
 #' )
 #' print(polling_errors_filtered)
 #'}
-#' @authors
+#' @author
 #' Mikaela De Smedt
 #'
 #' @export

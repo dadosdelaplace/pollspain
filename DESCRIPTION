@@ -1,5 +1,5 @@
 Package: pollspain
-Type: package
+Type: Package
 Title: R package to access, clean, and analyze electoral and survey data for the Spanish elections from 1982 until present
 Version: 1.0.0
 Authors@R: c(person("Mikaela", "De Smedt", email = "mkldesmedt@gmail.com", role = c("aut", "cre")),
@@ -28,8 +28,10 @@ Imports:
     purrr,
     crayon,
     rvest,
-    tidyr
+    tidyr,
 Suggests:
     knitr
+Remotes:
+    robwhickman/ggparliament  # GitHub repository
 VignetteBuilder: knitr
 Config/Needs/website: tidyverse, shiny, pkgdown, tidyverse/tidytemplate

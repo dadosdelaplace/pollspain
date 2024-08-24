@@ -5,48 +5,42 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="What the package does (one paragraph).">
-<title>What the Package Does (One Line, Title Case) • pollspain</title>
+<title>R package to access, clean, and analyze electoral and survey data for the Spanish elections from 1982 until present • pollspain</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="What the Package Does (One Line, Title Case)">
-<meta property="og:description" content="What the package does (one paragraph).">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="R package to access, clean, and analyze electoral and survey data for the Spanish elections from 1982 until present">
+<meta name="description" content="An R package to access, clean, and analyze electoral and survey data for the Spanish elections from 1982 until present.">
+<meta property="og:description" content="An R package to access, clean, and analyze electoral and survey data for the Spanish elections from 1982 until present.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav"></ul>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
+</form></li>
+      </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-home">
 <div class="row">
@@ -55,11 +49,429 @@
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
 <p>The goal of pollspain is to …</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of pollspain from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install the development version of R package <code>{pollspain}</code> from <a href="https://github.com/" class="external-link">GitHub</a> through the following code:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span> <span class="co"># only if not already installed</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"dadosdelaplace/pollspain"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co">#&gt; rlang (1.1.0 -&gt; 1.1.1) [CRAN]</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; xml2  (1.3.3 -&gt; 1.3.4) [CRAN]</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; httr  (1.4.5 -&gt; 1.4.6) [CRAN]</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; vroom (1.6.1 -&gt; 1.6.3) [CRAN]</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;   There is a binary version available but the source version is later:</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt;      binary source needs_compilation</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; httr  1.4.5  1.4.6             FALSE</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; The downloaded binary packages are in</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt;  /var/folders/v8/rwlp504x0_s2b89pn8yrb6km0000gn/T//RtmpPgF5Rp/downloaded_packages</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; ── R CMD build ─────────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; * checking for file ‘/private/var/folders/v8/rwlp504x0_s2b89pn8yrb6km0000gn/T/RtmpPgF5Rp/remotes6b3e4a4bfd32/dadosdelaplace-pollspain-ec39fb7/DESCRIPTION’ ... OK</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; * preparing ‘pollspain’:</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; * checking DESCRIPTION meta-information ... OK</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; * checking for LF line-endings in source and make files and shell scripts</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; * checking for empty or unneeded directories</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; Removed empty directory ‘pollspain/data/csv/candidacies’</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; Removed empty directory ‘pollspain/data/csv/candidacies_pollstation’</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; Removed empty directory ‘pollspain/data/csv/candidates’</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; Removed empty directory ‘pollspain/data/csv/cod_INE’</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; Removed empty directory ‘pollspain/data/csv/mun_data’</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; Removed empty directory ‘pollspain/data/csv/pollstation’</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; Removed empty directory ‘pollspain/data/csv/summary_data’</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; Removed empty directory ‘pollspain/data/csv’</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; * building ‘pollspain_0.1.0.9000.tar.gz’</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">pollspain</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──</span></span>
+<span><span class="co">#&gt; ✔ dplyr     1.1.2     ✔ readr     2.1.4</span></span>
+<span><span class="co">#&gt; ✔ forcats   1.0.0     ✔ stringr   1.5.0</span></span>
+<span><span class="co">#&gt; ✔ ggplot2   3.4.2     ✔ tibble    3.2.1</span></span>
+<span><span class="co">#&gt; ✔ lubridate 1.9.2     ✔ tidyr     1.3.0</span></span>
+<span><span class="co">#&gt; ✔ purrr     1.0.1     </span></span>
+<span><span class="co">#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span><span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span></span>
+<span><span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span></span>
+<span><span class="co">#&gt; ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<div class="section level3">
+<h3 id="get-functions">get functions<a class="anchor" aria-label="anchor" href="#get-functions"></a>
+</h3>
+<div class="section level4">
+<h4 id="censo-nivel-municipal">Censo (nivel: municipal)<a class="anchor" aria-label="anchor" href="#censo-nivel-municipal"></a>
+</h4>
+<p>Variables relativas a población (<code>pop_res_mun</code>, <code>census_INE_mun</code>, <code>census_counting_mun</code>, <code>census_CERE_mun</code>)</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mun_census_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_mun_census_data.html">get_mun_census_data</a></span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="va">mun_census_data</span></span>
+<span><span class="co">#&gt; # A tibble: 16,262 × 20</span></span>
+<span><span class="co">#&gt;    cod_elec type_elec date_elec  id_INE_mun id_MIR_mun cod_INE_ccaa cod_MIR_ccaa</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;     &lt;date&gt;     &lt;glue&gt;     &lt;glue&gt;     &lt;chr&gt;        &lt;chr&gt;       </span></span>
+<span><span class="co">#&gt;  1 02       congress  2019-04-28 01-04-001  01-04-001  01           01          </span></span>
+<span><span class="co">#&gt;  2 02       congress  2019-04-28 01-04-002  01-04-002  01           01          </span></span>
+<span><span class="co">#&gt;  3 02       congress  2019-04-28 01-04-003  01-04-003  01           01          </span></span>
+<span><span class="co">#&gt;  4 02       congress  2019-04-28 01-04-004  01-04-004  01           01          </span></span>
+<span><span class="co">#&gt;  5 02       congress  2019-04-28 01-04-005  01-04-005  01           01          </span></span>
+<span><span class="co">#&gt;  6 02       congress  2019-04-28 01-04-006  01-04-006  01           01          </span></span>
+<span><span class="co">#&gt;  7 02       congress  2019-04-28 01-04-007  01-04-007  01           01          </span></span>
+<span><span class="co">#&gt;  8 02       congress  2019-04-28 01-04-008  01-04-008  01           01          </span></span>
+<span><span class="co">#&gt;  9 02       congress  2019-04-28 01-04-009  01-04-009  01           01          </span></span>
+<span><span class="co">#&gt; 10 02       congress  2019-04-28 01-04-010  01-04-010  01           01          </span></span>
+<span><span class="co">#&gt; # ℹ 16,252 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 13 more variables: ccaa &lt;chr&gt;, cod_INE_prov &lt;chr&gt;, prov &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   cod_INE_mun &lt;chr&gt;, cd_INE_mun &lt;chr&gt;, mun &lt;chr&gt;, cod_mun_jud_district &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   cod_mun_prov_council &lt;chr&gt;, n_poll_stations &lt;dbl&gt;, pop_res_mun &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   census_INE_mun &lt;dbl&gt;, census_counting_mun &lt;dbl&gt;, census_CERE_mun &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="datos-de-mesas-electorales-nivel-mesa-electoral">Datos de mesas electorales (nivel: mesa electoral)<a class="anchor" aria-label="anchor" href="#datos-de-mesas-electorales-nivel-mesa-electoral"></a>
+</h4>
+<p>Datos generales de participación, votos en blanco, votos a candidaturas, etc.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">poll_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_poll_station_data.html">get_poll_station_data</a></span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">11</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">poll_data</span></span>
+<span><span class="co">#&gt; # A tibble: 119,697 × 23</span></span>
+<span><span class="co">#&gt;    id_elec       type_elec date_elec  id_INE_poll_station ccaa      prov   mun  </span></span>
+<span><span class="co">#&gt;    &lt;glue&gt;        &lt;chr&gt;     &lt;date&gt;     &lt;glue&gt;              &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;</span></span>
+<span><span class="co">#&gt;  1 02-2019-04-28 congress  2019-04-28 01-04-003-01-004-B  Andalucía Almer… Adra </span></span>
+<span><span class="co">#&gt;  2 02-2019-04-28 congress  2019-04-28 01-04-003-01-007-U  Andalucía Almer… Adra </span></span>
+<span><span class="co">#&gt;  3 02-2019-04-28 congress  2019-04-28 01-04-003-02-001-A  Andalucía Almer… Adra </span></span>
+<span><span class="co">#&gt;  4 02-2019-04-28 congress  2019-04-28 01-04-006-01-002-A  Andalucía Almer… Albox</span></span>
+<span><span class="co">#&gt;  5 02-2019-04-28 congress  2019-04-28 01-04-008-01-001-A  Andalucía Almer… Alcó…</span></span>
+<span><span class="co">#&gt;  6 02-2019-04-28 congress  2019-04-28 01-04-010-01-001-U  Andalucía Almer… Alha…</span></span>
+<span><span class="co">#&gt;  7 02-2019-04-28 congress  2019-04-28 01-04-013-02-005-A  Andalucía Almer… Alme…</span></span>
+<span><span class="co">#&gt;  8 02-2019-04-28 congress  2019-04-28 01-04-013-03-011-A  Andalucía Almer… Alme…</span></span>
+<span><span class="co">#&gt;  9 02-2019-04-28 congress  2019-04-28 01-04-013-06-013-A  Andalucía Almer… Alme…</span></span>
+<span><span class="co">#&gt; 10 02-2019-04-28 congress  2019-04-28 01-04-013-06-016-B  Andalucía Almer… Alme…</span></span>
+<span><span class="co">#&gt; # ℹ 119,687 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 16 more variables: census_counting &lt;dbl&gt;, ballots_1 &lt;dbl&gt;, turnout_1 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   ballots_2 &lt;dbl&gt;, turnout_2 &lt;dbl&gt;, blank_ballots &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   invalid_ballots &lt;dbl&gt;, party_ballots &lt;dbl&gt;, valid_ballots &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   total_ballots &lt;dbl&gt;, turnout &lt;dbl&gt;, porc_valid &lt;dbl&gt;, porc_invalid &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_parties &lt;dbl&gt;, porc_blank &lt;dbl&gt;, pop_res_mun &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="datos-de-candidatosas-nivel-circunscripción-electoral">Datos de candidatos/as (nivel: circunscripción electoral)<a class="anchor" aria-label="anchor" href="#datos-de-candidatosas-nivel-circunscripci%C3%B3n-electoral"></a>
+</h4>
+<p>Datos de los/as candidatos que forman las listas (por circunscripción provincial en las generales)</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">candidates_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_candidates_data.html">get_candidates_data</a></span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">11</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">candidates_data</span> </span>
+<span><span class="co">#&gt; # A tibble: 11,182 × 15</span></span>
+<span><span class="co">#&gt;    cod_elec type_elec date_elec   turn cod_INE_prov cod_mun_district cod_INE_mun</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;      </span></span>
+<span><span class="co">#&gt;  1 02       congress  2019-04-28     1 11           &lt;NA&gt;             &lt;NA&gt;       </span></span>
+<span><span class="co">#&gt;  2 02       congress  2019-04-28     1 11           &lt;NA&gt;             &lt;NA&gt;       </span></span>
+<span><span class="co">#&gt;  3 02       congress  2019-04-28     1 11           &lt;NA&gt;             &lt;NA&gt;       </span></span>
+<span><span class="co">#&gt;  4 02       congress  2019-04-28     1 11           &lt;NA&gt;             &lt;NA&gt;       </span></span>
+<span><span class="co">#&gt;  5 02       congress  2019-04-28     1 11           &lt;NA&gt;             &lt;NA&gt;       </span></span>
+<span><span class="co">#&gt;  6 02       congress  2019-04-28     1 11           &lt;NA&gt;             &lt;NA&gt;       </span></span>
+<span><span class="co">#&gt;  7 02       congress  2019-04-28     1 11           &lt;NA&gt;             &lt;NA&gt;       </span></span>
+<span><span class="co">#&gt;  8 02       congress  2019-04-28     1 11           &lt;NA&gt;             &lt;NA&gt;       </span></span>
+<span><span class="co">#&gt;  9 02       congress  2019-04-28     1 11           &lt;NA&gt;             &lt;NA&gt;       </span></span>
+<span><span class="co">#&gt; 10 02       congress  2019-04-28     1 11           &lt;NA&gt;             &lt;NA&gt;       </span></span>
+<span><span class="co">#&gt; # ℹ 11,172 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 8 more variables: id_candidacies &lt;chr&gt;, order &lt;dbl&gt;, holder &lt;lgl&gt;,</span></span>
+<span><span class="co">#&gt; #   name &lt;chr&gt;, surname &lt;chr&gt;, sex &lt;chr&gt;, id_card &lt;chr&gt;, elected &lt;lgl&gt;</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="datos-de-candidaturas-nivel-mesa-electoral">Datos de candidaturas (nivel: mesa electoral)<a class="anchor" aria-label="anchor" href="#datos-de-candidaturas-nivel-mesa-electoral"></a>
+</h4>
+<p>Datos de las candidaturas por mesa electoral, con los votos obtenidos en cada mesa para cada candidatura, así como los electos por provincia obtenidos</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">candidacies_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_candidacies_data.html">get_candidacies_data</a></span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">11</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">candidacies_data</span></span>
+<span><span class="co">#&gt; # A tibble: 1,482,129 × 13</span></span>
+<span><span class="co">#&gt;    id_elec       type_elec date_elec  id_INE_poll_station ccaa      prov   mun  </span></span>
+<span><span class="co">#&gt;    &lt;glue&gt;        &lt;chr&gt;     &lt;date&gt;     &lt;glue&gt;              &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;</span></span>
+<span><span class="co">#&gt;  1 02-2019-04-28 congress  2019-04-28 01-04-001-01-001-B  Andalucía Almer… Abla </span></span>
+<span><span class="co">#&gt;  2 02-2019-04-28 congress  2019-04-28 01-04-001-01-001-B  Andalucía Almer… Abla </span></span>
+<span><span class="co">#&gt;  3 02-2019-04-28 congress  2019-04-28 01-04-002-01-001-A  Andalucía Almer… Abru…</span></span>
+<span><span class="co">#&gt;  4 02-2019-04-28 congress  2019-04-28 01-04-002-01-001-A  Andalucía Almer… Abru…</span></span>
+<span><span class="co">#&gt;  5 02-2019-04-28 congress  2019-04-28 01-04-003-01-003-A  Andalucía Almer… Adra </span></span>
+<span><span class="co">#&gt;  6 02-2019-04-28 congress  2019-04-28 01-04-003-01-003-B  Andalucía Almer… Adra </span></span>
+<span><span class="co">#&gt;  7 02-2019-04-28 congress  2019-04-28 01-04-003-01-003-B  Andalucía Almer… Adra </span></span>
+<span><span class="co">#&gt;  8 02-2019-04-28 congress  2019-04-28 01-04-003-01-006-A  Andalucía Almer… Adra </span></span>
+<span><span class="co">#&gt;  9 02-2019-04-28 congress  2019-04-28 01-04-003-01-007-U  Andalucía Almer… Adra </span></span>
+<span><span class="co">#&gt; 10 02-2019-04-28 congress  2019-04-28 01-04-003-02-002-A  Andalucía Almer… Adra </span></span>
+<span><span class="co">#&gt; # ℹ 1,482,119 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 6 more variables: id_candidacies &lt;chr&gt;, id_candidacies_prov &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   abbrev_candidacies &lt;chr&gt;, name_candidacies &lt;chr&gt;, ballots &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   elected_by_prov &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="datos-del-cera">Datos del CERA<a class="anchor" aria-label="anchor" href="#datos-del-cera"></a>
+</h4>
+<p>Según el INE:</p>
+<p>«El censo electoral contiene la inscripción de quienes reúnen los requisitos para ser elector y no se hallen privados, definitiva o temporalmente, del derecho de sufragio. El censo electoral está compuesto por:</p>
+<ul>
+<li>El censo electoral de españoles residentes en España (CER).</li>
+<li>El censo electoral de españoles residentes-ausentes que viven en el extranjero (CERA).</li>
+</ul>
+<p>El censo electoral de residentes en España que sean nacionales de países con Acuerdos para las elecciones municipales (CERE Acuerdos), y el censo electoral de ciudadanos de la Unión Europea residentes en España para las elecciones municipales y al Parlamento Europeo (CERE UE).»</p>
+<p>La función <code><a href="reference/get_CERA_data.html">get_CERA_data()</a></code> nos devuelve los datos relativos al CERA</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ccaa_CERA_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_CERA_data.html">get_CERA_data</a></span><span class="op">(</span><span class="va">election_data</span>, level <span class="op">=</span> <span class="st">"ccaa"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="datos-electorales-agregados">Datos electorales agregados<a class="anchor" aria-label="anchor" href="#datos-electorales-agregados"></a>
+</h4>
+<p>La función <code>get_elections_data()</code> nos permite obtener los datos electorales de las elecciones pedidas y con el nivel (<code>level</code>) de agregación que queramos, pudiendo ser <code>all</code>, <code>ccaa</code>, <code>prov</code>, <code>mun</code>, <code>mun_district</code>, <code>sec</code> (sección censal) y <code>poll_station</code> (a nivel de mesa electoral)</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">prov_data</span> <span class="op">&lt;-</span> <span class="fu">get_elections_data</span><span class="op">(</span><span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2019</span>, month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">11</span><span class="op">)</span>, level <span class="op">=</span> <span class="st">"prov"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 🔎 Check if parameters are allowed...</span></span>
+<span><span class="co">#&gt;    🔔 Since include_candidacies = FALSE, aggregating by parties has not been implemented</span></span>
+<span><span class="co">#&gt; 📦 Get poll station data...</span></span>
+<span><span class="co">#&gt;    - Download poll station data...</span></span>
+<span><span class="co">#&gt;    - Aggregating election data at prov level...</span></span>
+<span><span class="co">#&gt; ✅ Last summaries and tasks...</span></span>
+<span><span class="va">prov_data</span></span>
+<span><span class="co">#&gt; # A tibble: 104 × 27</span></span>
+<span><span class="co">#&gt;    id_elec    type_elec date_elec  pop_res cod_INE_ccaa cod_INE_prov ccaa  prov </span></span>
+<span><span class="co">#&gt;    &lt;glue&gt;     &lt;chr&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;</span></span>
+<span><span class="co">#&gt;  1 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt;  2 02-2019-0… congress  2019-04-28 1238714 01           11           Anda… Cádiz</span></span>
+<span><span class="co">#&gt;  3 02-2019-0… congress  2019-04-28  785240 01           14           Anda… Córd…</span></span>
+<span><span class="co">#&gt;  4 02-2019-0… congress  2019-04-28  912075 01           18           Anda… Gran…</span></span>
+<span><span class="co">#&gt;  5 02-2019-0… congress  2019-04-28  519932 01           21           Anda… Huel…</span></span>
+<span><span class="co">#&gt;  6 02-2019-0… congress  2019-04-28  638099 01           23           Anda… Jaén </span></span>
+<span><span class="co">#&gt;  7 02-2019-0… congress  2019-04-28 1641121 01           29           Anda… Mála…</span></span>
+<span><span class="co">#&gt;  8 02-2019-0… congress  2019-04-28 1939887 01           41           Anda… Sevi…</span></span>
+<span><span class="co">#&gt;  9 02-2019-0… congress  2019-04-28  219345 02           22           Arag… Hues…</span></span>
+<span><span class="co">#&gt; 10 02-2019-0… congress  2019-04-28  134572 02           44           Arag… Teru…</span></span>
+<span><span class="co">#&gt; # ℹ 94 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 19 more variables: n_poll_stations &lt;int&gt;, census_counting &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   ballots_1 &lt;dbl&gt;, ballots_2 &lt;dbl&gt;, blank_ballots &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   invalid_ballots &lt;dbl&gt;, party_ballots &lt;dbl&gt;, valid_ballots &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   total_ballots &lt;dbl&gt;, turnout_1 &lt;dbl&gt;, turnout_2 &lt;dbl&gt;, turnout &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_valid &lt;dbl&gt;, porc_invalid &lt;dbl&gt;, porc_parties &lt;dbl&gt;, porc_blank &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   census_cera &lt;dbl&gt;, total_ballots_cera &lt;dbl&gt;, turnout_cera &lt;dbl&gt;</span></span></code></pre></div>
+<p>Esta función combina <code><a href="reference/get_poll_station_data.html">get_poll_station_data()</a></code> (el dato en bruto por mesa electoral) con <code><a href="reference/get_CERA_data.html">get_CERA_data()</a></code> y <code><a href="reference/aggregate_election_data.html">aggregate_election_data()</a></code>, que nos proporciona la agregación pedida. El código anterior es equivalente a:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Raw data at poll station level</span></span>
+<span><span class="va">election_data</span> <span class="op">&lt;-</span></span>
+<span>      <span class="fu"><a href="reference/get_poll_station_data.html">get_poll_station_data</a></span><span class="op">(</span><span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2019</span>, month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">11</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># and then aggregate at provided level</span></span>
+<span><span class="va">prov_data</span> <span class="op">&lt;-</span></span>
+<span>  <span class="va">election_data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/aggregate_election_data.html">aggregate_election_data</a></span><span class="op">(</span>level <span class="op">=</span> <span class="st">"prov"</span><span class="op">)</span></span>
+<span><span class="va">prov_data</span></span>
+<span><span class="co">#&gt; # A tibble: 104 × 27</span></span>
+<span><span class="co">#&gt;    id_elec    type_elec date_elec  pop_res cod_INE_ccaa cod_INE_prov ccaa  prov </span></span>
+<span><span class="co">#&gt;    &lt;glue&gt;     &lt;chr&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;</span></span>
+<span><span class="co">#&gt;  1 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt;  2 02-2019-0… congress  2019-04-28 1238714 01           11           Anda… Cádiz</span></span>
+<span><span class="co">#&gt;  3 02-2019-0… congress  2019-04-28  785240 01           14           Anda… Córd…</span></span>
+<span><span class="co">#&gt;  4 02-2019-0… congress  2019-04-28  912075 01           18           Anda… Gran…</span></span>
+<span><span class="co">#&gt;  5 02-2019-0… congress  2019-04-28  519932 01           21           Anda… Huel…</span></span>
+<span><span class="co">#&gt;  6 02-2019-0… congress  2019-04-28  638099 01           23           Anda… Jaén </span></span>
+<span><span class="co">#&gt;  7 02-2019-0… congress  2019-04-28 1641121 01           29           Anda… Mála…</span></span>
+<span><span class="co">#&gt;  8 02-2019-0… congress  2019-04-28 1939887 01           41           Anda… Sevi…</span></span>
+<span><span class="co">#&gt;  9 02-2019-0… congress  2019-04-28  219345 02           22           Arag… Hues…</span></span>
+<span><span class="co">#&gt; 10 02-2019-0… congress  2019-04-28  134572 02           44           Arag… Teru…</span></span>
+<span><span class="co">#&gt; # ℹ 94 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 19 more variables: n_poll_stations &lt;int&gt;, census_counting &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   ballots_1 &lt;dbl&gt;, ballots_2 &lt;dbl&gt;, blank_ballots &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   invalid_ballots &lt;dbl&gt;, party_ballots &lt;dbl&gt;, valid_ballots &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   total_ballots &lt;dbl&gt;, turnout_1 &lt;dbl&gt;, turnout_2 &lt;dbl&gt;, turnout &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_valid &lt;dbl&gt;, porc_invalid &lt;dbl&gt;, porc_parties &lt;dbl&gt;, porc_blank &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   census_cera &lt;dbl&gt;, total_ballots_cera &lt;dbl&gt;, turnout_cera &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="datos-de-elecciones">Datos de elecciones<a class="anchor" aria-label="anchor" href="#datos-de-elecciones"></a>
+</h4>
+<p>Función principal, combinando la extracción y la agregación</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">national_data</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu">get_elections_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">11</span><span class="op">)</span>, </span>
+<span>                     include_candidacies <span class="op">=</span> <span class="cn">TRUE</span>, level <span class="op">=</span>  <span class="st">"all"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 🔎 Check if parameters are allowed...</span></span>
+<span><span class="co">#&gt; 📦 Get poll station data...</span></span>
+<span><span class="co">#&gt;    - Download poll station data...</span></span>
+<span><span class="co">#&gt;    - Aggregating election data at national level...</span></span>
+<span><span class="co">#&gt; 📦 Get candidacies (parties) data...</span></span>
+<span><span class="co">#&gt;    - Download candidacies (parties) data... (please wait, intensive task)</span></span>
+<span><span class="co">#&gt;    - Aggregating candidacies data at national level...</span></span>
+<span><span class="co">#&gt; 🖇 Join information...</span></span>
+<span><span class="co">#&gt; ✅ Last summaries and tasks...</span></span>
+<span><span class="va">national_data</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">ballots</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 134 × 34</span></span>
+<span><span class="co">#&gt;    id_elec       type_elec date_elec   pop_res id_candidacies abbrev_candidacies</span></span>
+<span><span class="co">#&gt;    &lt;glue&gt;        &lt;chr&gt;     &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt;  1 02-2019-04-28 congress  2019-04-28 46722980 000096         PSOE              </span></span>
+<span><span class="co">#&gt;  2 02-2019-11-10 congress  2019-11-10 46722980 000094         PSOE              </span></span>
+<span><span class="co">#&gt;  3 02-2019-11-10 congress  2019-11-10 46722980 000083         PP                </span></span>
+<span><span class="co">#&gt;  4 02-2019-04-28 congress  2019-04-28 46722980 000083         PP                </span></span>
+<span><span class="co">#&gt;  5 02-2019-04-28 congress  2019-04-28 46722980 000022         CS                </span></span>
+<span><span class="co">#&gt;  6 02-2019-11-10 congress  2019-11-10 46722980 000116         VOX               </span></span>
+<span><span class="co">#&gt;  7 02-2019-04-28 congress  2019-04-28 46722980 000077         UP                </span></span>
+<span><span class="co">#&gt;  8 02-2019-04-28 congress  2019-04-28 46722980 000117         VOX               </span></span>
+<span><span class="co">#&gt;  9 02-2019-11-10 congress  2019-11-10 46722980 000078         UP                </span></span>
+<span><span class="co">#&gt; 10 02-2019-11-10 congress  2019-11-10 46722980 000018         CS                </span></span>
+<span><span class="co">#&gt; # ℹ 124 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 28 more variables: name_candidacies &lt;chr&gt;, ballots &lt;dbl&gt;, elected &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   ballots_by_elec &lt;dbl&gt;, porc_candidacies_parties &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_candidacies_valid &lt;dbl&gt;, porc_candidacies_census &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_elected &lt;dbl&gt;, anomaly_ballots_elected &lt;dbl&gt;, n_poll_stations &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   census_counting &lt;dbl&gt;, ballots_1 &lt;dbl&gt;, ballots_2 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   blank_ballots &lt;dbl&gt;, invalid_ballots &lt;dbl&gt;, party_ballots &lt;dbl&gt;, …</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ccaa_data</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu">get_elections_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">11</span><span class="op">)</span>, </span>
+<span>                     include_candidacies <span class="op">=</span> <span class="cn">TRUE</span>, level <span class="op">=</span> <span class="st">"ccaa"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 🔎 Check if parameters are allowed...</span></span>
+<span><span class="co">#&gt; 📦 Get poll station data...</span></span>
+<span><span class="co">#&gt;    - Download poll station data...</span></span>
+<span><span class="co">#&gt;    - Aggregating election data at ccaa level...</span></span>
+<span><span class="co">#&gt; 📦 Get candidacies (parties) data...</span></span>
+<span><span class="co">#&gt;    - Download candidacies (parties) data... (please wait, intensive task)</span></span>
+<span><span class="co">#&gt;    - Aggregating candidacies data at ccaa level...</span></span>
+<span><span class="co">#&gt; 🖇 Join information...</span></span>
+<span><span class="co">#&gt; ✅ Last summaries and tasks...</span></span>
+<span><span class="va">ccaa_data</span></span>
+<span><span class="co">#&gt; # A tibble: 503 × 36</span></span>
+<span><span class="co">#&gt;    id_elec       type_elec date_elec  pop_res cod_INE_ccaa ccaa   id_candidacies</span></span>
+<span><span class="co">#&gt;    &lt;glue&gt;        &lt;chr&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt;  1 02-2019-04-28 congress  2019-04-28 8384408 01           Andal… 000077        </span></span>
+<span><span class="co">#&gt;  2 02-2019-04-28 congress  2019-04-28 8384408 01           Andal… 000117        </span></span>
+<span><span class="co">#&gt;  3 02-2019-04-28 congress  2019-04-28 8384408 01           Andal… 000028        </span></span>
+<span><span class="co">#&gt;  4 02-2019-04-28 congress  2019-04-28 8384408 01           Andal… 000054        </span></span>
+<span><span class="co">#&gt;  5 02-2019-04-28 congress  2019-04-28 8384408 01           Andal… 000022        </span></span>
+<span><span class="co">#&gt;  6 02-2019-04-28 congress  2019-04-28 8384408 01           Andal… 000104        </span></span>
+<span><span class="co">#&gt;  7 02-2019-04-28 congress  2019-04-28 8384408 01           Andal… 000058        </span></span>
+<span><span class="co">#&gt;  8 02-2019-04-28 congress  2019-04-28 8384408 01           Andal… 000096        </span></span>
+<span><span class="co">#&gt;  9 02-2019-04-28 congress  2019-04-28 8384408 01           Andal… 000100        </span></span>
+<span><span class="co">#&gt; 10 02-2019-04-28 congress  2019-04-28 8384408 01           Andal… 000083        </span></span>
+<span><span class="co">#&gt; # ℹ 493 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 29 more variables: abbrev_candidacies &lt;chr&gt;, name_candidacies &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   ballots &lt;dbl&gt;, elected &lt;dbl&gt;, ballots_by_elec &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_candidacies_parties &lt;dbl&gt;, porc_candidacies_valid &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_candidacies_census &lt;dbl&gt;, porc_elected &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   anomaly_ballots_elected &lt;dbl&gt;, n_poll_stations &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   census_counting &lt;dbl&gt;, ballots_1 &lt;dbl&gt;, ballots_2 &lt;dbl&gt;, …</span></span>
+<span></span>
+<span><span class="va">prov_data</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu">get_elections_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">11</span><span class="op">)</span>, </span>
+<span>                     include_candidacies <span class="op">=</span> <span class="cn">TRUE</span>, level <span class="op">=</span> <span class="st">"prov"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 🔎 Check if parameters are allowed...</span></span>
+<span><span class="co">#&gt; 📦 Get poll station data...</span></span>
+<span><span class="co">#&gt;    - Download poll station data...</span></span>
+<span><span class="co">#&gt;    - Aggregating election data at prov level...</span></span>
+<span><span class="co">#&gt; 📦 Get candidacies (parties) data...</span></span>
+<span><span class="co">#&gt;    - Download candidacies (parties) data... (please wait, intensive task)</span></span>
+<span><span class="co">#&gt;    - Aggregating candidacies data at prov level...</span></span>
+<span><span class="co">#&gt; 🖇 Join information...</span></span>
+<span><span class="co">#&gt; ✅ Last summaries and tasks...</span></span>
+<span><span class="va">prov_data</span></span>
+<span><span class="co">#&gt; # A tibble: 1,210 × 38</span></span>
+<span><span class="co">#&gt;    id_elec    type_elec date_elec  pop_res cod_INE_ccaa cod_INE_prov ccaa  prov </span></span>
+<span><span class="co">#&gt;    &lt;glue&gt;     &lt;chr&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;</span></span>
+<span><span class="co">#&gt;  1 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt;  2 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt;  3 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt;  4 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt;  5 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt;  6 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt;  7 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt;  8 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt;  9 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt; 10 02-2019-0… congress  2019-04-28  709340 01           04           Anda… Alme…</span></span>
+<span><span class="co">#&gt; # ℹ 1,200 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 30 more variables: id_candidacies &lt;chr&gt;, abbrev_candidacies &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   name_candidacies &lt;chr&gt;, ballots &lt;dbl&gt;, elected &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   ballots_by_elec &lt;dbl&gt;, porc_candidacies_parties &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_candidacies_valid &lt;dbl&gt;, porc_candidacies_census &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_elected &lt;dbl&gt;, anomaly_ballots_elected &lt;dbl&gt;, n_poll_stations &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   census_counting &lt;dbl&gt;, ballots_1 &lt;dbl&gt;, ballots_2 &lt;dbl&gt;, …</span></span></code></pre></div>
+<p>Es lo mismo extraer a nivel municipio que a un nivel más bajo y luego agrupar y sumarizar.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mun_data</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu">get_elections_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">11</span><span class="op">)</span>, </span>
+<span>                     include_candidacies <span class="op">=</span> <span class="cn">TRUE</span>, level <span class="op">=</span> <span class="st">"mun"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 🔎 Check if parameters are allowed...</span></span>
+<span><span class="co">#&gt; 📦 Get poll station data...</span></span>
+<span><span class="co">#&gt;    - Download poll station data...</span></span>
+<span><span class="co">#&gt;    - Aggregating election data at mun level...</span></span>
+<span><span class="co">#&gt; 📦 Get candidacies (parties) data...</span></span>
+<span><span class="co">#&gt;    - Download candidacies (parties) data... (please wait, intensive task)</span></span>
+<span><span class="co">#&gt;    - Aggregating candidacies data at mun level...</span></span>
+<span><span class="co">#&gt; 🖇 Join information...</span></span>
+<span><span class="co">#&gt; ✅ Last summaries and tasks...</span></span>
+<span><span class="va">mun_data</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date_elec</span> <span class="op">==</span> <span class="st">"2019-04-28"</span> <span class="op">&amp;</span> <span class="va">mun</span> <span class="op">==</span> <span class="st">"Dos Hermanas"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 13 × 40</span></span>
+<span><span class="co">#&gt;    id_elec    type_elec date_elec  pop_res cod_INE_ccaa cod_INE_prov cod_INE_mun</span></span>
+<span><span class="co">#&gt;    &lt;glue&gt;     &lt;chr&gt;     &lt;date&gt;       &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt;      </span></span>
+<span><span class="co">#&gt;  1 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt;  2 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt;  3 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt;  4 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt;  5 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt;  6 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt;  7 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt;  8 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt;  9 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt; 10 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt; 11 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt; 12 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt; 13 02-2019-0… congress  2019-04-28  133168 01           41           038        </span></span>
+<span><span class="co">#&gt; # ℹ 33 more variables: ccaa &lt;chr&gt;, prov &lt;chr&gt;, mun &lt;chr&gt;, id_candidacies &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   abbrev_candidacies &lt;chr&gt;, name_candidacies &lt;chr&gt;, ballots &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   elected &lt;dbl&gt;, ballots_by_elec &lt;dbl&gt;, porc_candidacies_parties &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_candidacies_valid &lt;dbl&gt;, porc_candidacies_census &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   porc_elected &lt;dbl&gt;, anomaly_ballots_elected &lt;dbl&gt;, n_poll_stations &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   census_counting &lt;dbl&gt;, ballots_1 &lt;dbl&gt;, ballots_2 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   blank_ballots &lt;dbl&gt;, invalid_ballots &lt;dbl&gt;, party_ballots &lt;dbl&gt;, …</span></span>
+<span></span>
+<span></span>
+<span><span class="va">mun_district_data</span> <span class="op">&lt;-</span> <span class="fu">get_elections_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">11</span><span class="op">)</span>,</span>
+<span>                                        include_candidacies <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                        level <span class="op">=</span> <span class="st">"mun_district"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 🔎 Check if parameters are allowed...</span></span>
+<span><span class="co">#&gt; 📦 Get poll station data...</span></span>
+<span><span class="co">#&gt;    - Download poll station data...</span></span>
+<span><span class="co">#&gt;    - Aggregating election data at mun_district level...</span></span>
+<span><span class="co">#&gt; 📦 Get candidacies (parties) data...</span></span>
+<span><span class="co">#&gt;    - Download candidacies (parties) data... (please wait, intensive task)</span></span>
+<span><span class="co">#&gt;    - Aggregating candidacies data at mun_district level...</span></span>
+<span><span class="co">#&gt; 🖇 Join information...</span></span>
+<span><span class="co">#&gt; ✅ Last summaries and tasks...</span></span>
+<span><span class="va">mun_district_data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id_elec</span>, <span class="va">type_elec</span>, <span class="va">date_elec</span>, <span class="va">cod_INE_mun</span>, <span class="va">mun</span>, <span class="va">id_candidacies</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">ballots</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date_elec</span> <span class="op">==</span> <span class="st">"2019-04-28"</span> <span class="op">&amp;</span> <span class="va">mun</span> <span class="op">==</span> <span class="st">"Dos Hermanas"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; `summarise()` has grouped output by 'id_elec', 'type_elec', 'date_elec',</span></span>
+<span><span class="co">#&gt; 'cod_INE_mun', 'mun'. You can override using the `.groups` argument.</span></span>
+<span><span class="co">#&gt; # A tibble: 13 × 7</span></span>
+<span><span class="co">#&gt;    id_elec  type_elec date_elec  cod_INE_mun mun   id_candidacies `sum(ballots)`</span></span>
+<span><span class="co">#&gt;    &lt;glue&gt;   &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 02-2019… congress  2019-04-28 038         Dos … 000011                    195</span></span>
+<span><span class="co">#&gt;  2 02-2019… congress  2019-04-28 038         Dos … 000022                  13944</span></span>
+<span><span class="co">#&gt;  3 02-2019… congress  2019-04-28 038         Dos … 000054                   1436</span></span>
+<span><span class="co">#&gt;  4 02-2019… congress  2019-04-28 038         Dos … 000056                    279</span></span>
+<span><span class="co">#&gt;  5 02-2019… congress  2019-04-28 038         Dos … 000057                    118</span></span>
+<span><span class="co">#&gt;  6 02-2019… congress  2019-04-28 038         Dos … 000058                     73</span></span>
+<span><span class="co">#&gt;  7 02-2019… congress  2019-04-28 038         Dos … 000066                     69</span></span>
+<span><span class="co">#&gt;  8 02-2019… congress  2019-04-28 038         Dos … 000077                  13183</span></span>
+<span><span class="co">#&gt;  9 02-2019… congress  2019-04-28 038         Dos … 000083                   7915</span></span>
+<span><span class="co">#&gt; 10 02-2019… congress  2019-04-28 038         Dos … 000096                  26918</span></span>
+<span><span class="co">#&gt; 11 02-2019… congress  2019-04-28 038         Dos … 000100                     95</span></span>
+<span><span class="co">#&gt; 12 02-2019… congress  2019-04-28 038         Dos … 000104                    149</span></span>
+<span><span class="co">#&gt; 13 02-2019… congress  2019-04-28 038         Dos … 000117                  10232</span></span></code></pre></div>
+</div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
@@ -81,7 +493,8 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>First Last <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/YOUR-ORCID-ID" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Mikaela De Smedt <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Javier Álvarez-Liébana <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
@@ -92,21 +505,19 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by First Last.</p>
+  <p>Developed by Mikaela De Smedt, Javier Álvarez-Liébana.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
