@@ -32,6 +32,6 @@ Imports:
 Suggests:
     knitr
 Remotes:
-    robwhickman/ggparliament  # GitHub repository
+    robwhickman/ggparliament
 VignetteBuilder: knitr
 Config/Needs/website: tidyverse, shiny, pkgdown, tidyverse/tidytemplate
