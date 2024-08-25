@@ -138,7 +138,7 @@ aggregate_election_data <- function(ballots_data,
 allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
 
   # Step 1: Aggregate votes by province, party, and ccaa
-  votes_by_province <- last_election_ballots |>
+  votes_by_province <- last_election_ballots |> recod_parties() |>
     group_by(cod_INE_prov, cod_MIR_ccaa, cod_candidacies_prov) |>
     dplyr::summarize(total_votes = sum(ballots), .groups = 'drop')
 
@@ -312,7 +312,7 @@ plot_election_results <- function(election_data, level = "prov", colors_url = "h
   election_data[[election_by]] <- as.character(election_data[[election_by]])
 
   # Aggregate ballots to find the winning party by region
-  election_data <- election_data |>
+  election_data <- election_data |> recod_parties() |>
     group_by(!!sym(election_by), abbrev_candidacies) |>
     summarize(total_ballots = sum(ballots), .groups = 'drop') |>
     group_by(!!sym(election_by)) |>
@@ -385,7 +385,7 @@ plot_election_results <- function(election_data, level = "prov", colors_url = "h
 plot_parliament_distribution <- function(election_data, colors_url = "https://github.com/mikadsr/Pollspain-data/raw/main/get%20auxiliary%20data/party_colors_hex.rda") {
 
   # Step 1: Group the data by abbrev_candidacies and sum the seats
-  seat_data <- election_data |>
+  seat_data <- election_data |> recod_parties() |>
     group_by(abbrev_candidacies) |>
     summarise(seats = sum(seats))
 
