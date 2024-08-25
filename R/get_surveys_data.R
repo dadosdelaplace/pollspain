@@ -1,15 +1,14 @@
-#' @title Get Survey Data from GitHub
+#' @title Get Survey Data from Pollspain-data
 #'
 #' @description
-#' This function fetches and processes survey data from the specified GitHub directory. It downloads and combines RDA files containing survey data from a specified range of years and months, applies various filters based on the user’s parameters, and returns a cleaned and processed data frame.
+#' This function fetches and processes survey data from the Pollspain-data repository It downloads and combines RDA files containing survey data from a specified year or range of years, applies various filters based on the user’s parameters, and returns a cleaned and processed data frame.
 #'
-#' @param from The start year for fetching surveys (default is 1982). The beginning of the period for which survey data should be retrieved.
-#' @param to The end year for fetching surveys (default is 2023). The end of the period for which survey data should be retrieved.
+#' @param year A single year or a vector of years for which survey data should be retrieved.
 #' @param min_days_to Minimum number of days to the election for filtering (default is NULL). If specified, only surveys conducted at least this many days before the election are included.
 #' @param max_days_to Maximum number of days to the election for filtering (default is NULL). If specified, only surveys conducted no more than this many days before the election are included.
 #' @param select_polling_firm String matching in polling_firm column (default is "all"). If specified, only surveys from polling firms matching this string are included.
 #' @param select_media String matching in media column (default is "all"). If specified, only surveys from media outlets matching this string are included.
-#' @param select_parties Character vector specifying which columns (parties) to keep (default is "all"). If specified, only columns corresponding to the specified parties are retained.
+#' @param select_parties Character vector specifying which parties to keep (default is "all"). If specified, only columns corresponding to the specified parties are retained.
 #' @param min_field_days Minimum number of fieldwork days (default is NULL). If specified, only surveys with at least this many days of fieldwork are included.
 #' @param max_field_days Maximum number of fieldwork days (default is NULL). If specified, only surveys with no more than this many days of fieldwork are included.
 #' @param min_size Minimum sample size (default is NULL). If specified, only surveys with at least this sample size are included.
@@ -17,10 +16,10 @@
 #' @param include_exit_polls Whether to include exit polls in the data (default is TRUE). If set to FALSE, exit polls will be excluded from the results.
 #'
 #' @return
-#' Data frame of processed survey data. The resulting data frame includes columns such as \code{polling_firm}, \code{media}, \code{sample_size}, \code{turnout}, \code{fieldwork_start}, \code{fieldwork_end}, \code{date_elec}, \code{fieldwork_duration}, \code{is_exit_poll}, \code{party}, and \code{vote_share}.
+#' A data frame of processed survey data. The resulting data frame includes columns such as \code{polling_firm}, \code{media}, \code{sample_size}, \code{turnout}, \code{fieldwork_start}, \code{fieldwork_end}, \code{date_elec}, \code{fieldwork_duration}, \code{is_exit_poll}, \code{party}, and \code{vote_share}.
 #'
 #' @details
-#' The function retrieves and processes survey data files from a specified GitHub directory, applying user-defined filters to the data. The result is a cleaned and combined data frame with relevant survey information, including optional media and exit poll data.
+#' The function retrieves and processes survey data files from a specified GitHub directory, applying user-defined filters to the data. The result is a cleaned and combined data frame with relevant survey information, including optional media and exit poll data. The function now accepts a `year` argument that can be a single year or a vector of years, replacing the previous `from` and `to` parameters. It verifies the availability of `congress` elections in the specified years using the \code{dates_elections_spain} dataset.
 #'
 #' @author
 #' Mikaela DeSmedt
@@ -29,76 +28,54 @@
 #' @importFrom httr GET content stop_for_status
 #' @importFrom glue glue
 #' @importFrom lubridate dmy as_date
-#' @importFrom purrr map compact
+#' @importFrom purrr map compact discard
 #'
 #' @examples
-#' # Correct usage
-#' survey_data <- get_survey_data(from = 1982, to = 1986, min_days_to = 3)
+#' # Fetch survey data for a specific year
+#' survey_data <- get_survey_data(year = 1982, min_days_to = 3)
 #' print(head(survey_data))
 #'
-#' # Exclude exit polls
-#' survey_data <- get_survey_data(from = 1982, to = 1986, include_exit_polls = FALSE)
+#' # Exclude exit polls for multiple years
+#' survey_data <- get_survey_data(year = c(1982, 1986), include_exit_polls = FALSE)
 #' print(head(survey_data))
 #'
-#' # Fetching Data from 2000 to 2005 with Maximum Days to Election
-#' survey_data_2 <- get_survey_data(from = 2000, to = 2005, max_days_to = 100)
+#' # Fetching Data for a range of years with Maximum Days to Election
+#' survey_data_2 <- get_survey_data(year = 2000:2005, max_days_to = 100)
 #' print(head(survey_data_2))
 #'
-#' # Fetching Data from 1990 to 1995 without media
-#' survey_data_3 <- get_survey_data(from = 1990, to = 1995, include_media = FALSE)
+#' # Fetching Data for a range of years without media
+#' survey_data_3 <- get_survey_data(year = 1990:1995, include_media = FALSE)
 #' print(head(survey_data_3))
 #'
-#' # Fetching Data from 1982 to 2020 with Both Minimum and Maximum Days to Election
-#' survey_data_4 <- get_survey_data(from = 1982, to = 2020, min_days_to = 10, max_days_to = 200)
+#' # Fetching Data for specific years with Specific Polling Firm
+#' survey_data_4 <- get_survey_data(year = c(1982, 1983), select_polling_firm = "CIS")
 #' print(head(survey_data_4))
 #'
-#' # Fetching Data from 1982 to 2020 with Specific Polling Firm
-#' survey_data_5 <- get_survey_data(from = 1982, to = 2020, select_polling_firm = "CIS")
+#' # Fetching Data with Minimum Sample Size
+#' survey_data_5 <- get_survey_data(year = 1982:2020, min_size = 1000)
 #' print(head(survey_data_5))
 #'
-#' # Fetching Data from 1982 to 2020 with Specific Media
-#' survey_data_6 <- get_survey_data(from = 1982, to = 2020, select_media = "El País")
+#' # Fetching Data with Specific Parties
+#' survey_data_6 <- get_survey_data(year = 1982:2020, select_parties = c("psoe", "pp"))
 #' print(head(survey_data_6))
 #'
-#' # Fetching Data from 1982 to 2020 with Minimum Sample Size
-#' survey_data_7 <- get_survey_data(from = 1982, to = 2020, min_size = 1000)
-#' print(head(survey_data_7))
-#'
-#' # Fetching Data from 1982 to 2020 with Specific Parties
-#' survey_data_8 <- get_survey_data(from = 1982, to = 2020, select_parties = c("psoe", "pp"))
-#' print(head(survey_data_8))
-#'
 #' # Incorrect usage
-#' # End Year Before Start Year
-#' # This should raise an error or warning
-#' # Reason: The 'to' year is earlier than the 'from' year, which is logically incorrect.
-#' \dontrun{
-#' survey_data_9 <- get_survey_data(from = 1986, to = 1982)
-#' }
-#'
-#' # Non-Numeric min_days_to Value
-#' # This should raise an error
-#' # Reason: The min_days_to parameter expects a numeric value, but a string is provided.
-#' \dontrun{
-#' survey_data_10 <- get_survey_data(from = 1982, to = 2023, min_days_to = "three")
-#' }
-#'
-#' # Fetching Data Beyond Available Date Range
+#' # Fetching Data for a year where no congress election exists
 #' # This should raise an error or return an empty data frame
-#' # Reason: There are no survey data files available for the specified date range.
 #' \dontrun{
-#' survey_data_11 <- get_survey_data(from = 1900, to = 1910)
+#' survey_data_7 <- get_survey_data(year = 1900)
 #' }
 #'
-#' # Invalid Date Range with Future Dates
+#' # Invalid year range
 #' # This should raise an error or warning
-#' # Reason: The specified date range includes future years for which no survey data files exist.
+#' # Reason: The specified years include future dates for which no survey data files exist.
 #' \dontrun{
-#' survey_data_12 <- get_survey_data(from = 2025, to = 2030)
+#' survey_data_8 <- get_survey_data(year = 2025:2030)
 #' }
 #'
 #' @export
-get_survey_data <- function(from = 1982, to = 2023,
+
+get_survey_data <- function(year,
                             min_days_to = NULL,
                             max_days_to = NULL,
                             select_polling_firm = "all",
@@ -109,6 +86,7 @@ get_survey_data <- function(from = 1982, to = 2023,
                             min_size = NULL,
                             include_media = TRUE,
                             include_exit_polls = TRUE) {
+
   message("Please wait, depending on your internet connection and period requested this may take a while.")
 
   # Local helper function to read RDA file from GitHub
@@ -124,32 +102,37 @@ get_survey_data <- function(from = 1982, to = 2023,
 
   base_url <- "https://github.com/mikadsr/Pollspain-data/blob/main/survey%20data/"
 
-  # Create a sequence of years and months
-  years <- seq(from, to)
-  months <- sprintf("%02d", 1:12)
+  # Ensure year is a vector and filter for available elections
+  year <- as.numeric(year)
+  valid_elections <- dates_elections_spain %>%
+    filter(cod_elec == "02", year %in% !!year) %>%
+    select(year, month)
 
-  # Generate all possible file names
-  file_names <- expand.grid(year = years, month = months) %>%
-    mutate(file_name = glue("POLL_02{year}{month}.rda"))
+  if (nrow(valid_elections) == 0) {
+    stop("No 'congress' elections available for the specified year(s).")
+  }
 
-  # Generate URLs
-  urls <- file_names %>%
+  # Generate URLs for available elections
+  urls <- valid_elections %>%
+    mutate(file_name = glue("POLL_02{year}{sprintf('%02d', month)}.rda")) %>%
     mutate(url = glue("{base_url}{file_name}?raw=true"))
-
-  # Filter out the future dates that don't have files yet
-  urls <- urls %>%
-    filter(as.numeric(year) < to | (as.numeric(year) == to & as.numeric(month) <= month(Sys.Date())))
 
   # Download and read RDA files
   raw_surveys <- suppressWarnings({
     map(urls$url, ~ {
       tryCatch({
-        read_rda_from_github(.x)
+        data <- read_rda_from_github(.x)
+        if (!"date_elec" %in% names(data)) {
+          message(glue("Warning: 'date_elec' is missing in {basename(.x)}"))
+          data$date_elec <- NA
+        }
+        data
       }, error = function(e) {
+        message(glue("Failed to load data from {basename(.x)}: {e$message}"))
         NULL
       })
     }) %>%
-      compact()  # Remove NULLs
+      discard(is.null)  # Remove NULLs from the list
   })
 
   # Combine all data frames, automatically filling missing columns with NA
