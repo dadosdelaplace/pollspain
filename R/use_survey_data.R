@@ -80,7 +80,7 @@ calculate_polling_errors <- function(survey_data, election_data, poll_data,
   # Summarize total_ballots by abbrev_candidacies and date_elec
   election_data_summary <- election_data %>%
     group_by(type_elec, date_elec, abbrev_candidacies) %>%
-    summarize(total_party_ballots = sum(total_ballots, na.rm = TRUE), .groups = 'drop')
+    summarize(total_party_ballots = sum(ballots, na.rm = TRUE), .groups = 'drop')
 
   # Join the summarized total ballots from election_data with survey data
   survey_data_with_ballots <- survey_data %>%
