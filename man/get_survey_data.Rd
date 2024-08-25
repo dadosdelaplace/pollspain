@@ -2,11 +2,10 @@
 % Please edit documentation in R/get_surveys_data.R
 \name{get_survey_data}
 \alias{get_survey_data}
-\title{Get Survey Data from GitHub}
+\title{Get Survey Data from Pollspain-data}
 \usage{
 get_survey_data(
-  from = 1982,
-  to = 2023,
+  year,
   min_days_to = NULL,
   max_days_to = NULL,
   select_polling_firm = "all",
@@ -20,9 +19,7 @@ get_survey_data(
 )
 }
 \arguments{
-\item{from}{The start year for fetching surveys (default is 1982). The beginning of the period for which survey data should be retrieved.}
-
-\item{to}{The end year for fetching surveys (default is 2023). The end of the period for which survey data should be retrieved.}
+\item{year}{A single year or a vector of years for which survey data should be retrieved.}
 
 \item{min_days_to}{Minimum number of days to the election for filtering (default is NULL). If specified, only surveys conducted at least this many days before the election are included.}
 
@@ -32,7 +29,7 @@ get_survey_data(
 
 \item{select_media}{String matching in media column (default is "all"). If specified, only surveys from media outlets matching this string are included.}
 
-\item{select_parties}{Character vector specifying which columns (parties) to keep (default is "all"). If specified, only columns corresponding to the specified parties are retained.}
+\item{select_parties}{Character vector specifying which parties to keep (default is "all"). If specified, only columns corresponding to the specified parties are retained.}
 
 \item{min_field_days}{Minimum number of fieldwork days (default is NULL). If specified, only surveys with at least this many days of fieldwork are included.}
 
@@ -45,78 +42,55 @@ get_survey_data(
 \item{include_exit_polls}{Whether to include exit polls in the data (default is TRUE). If set to FALSE, exit polls will be excluded from the results.}
 }
 \value{
-Data frame of processed survey data. The resulting data frame includes columns such as \code{polling_firm}, \code{media}, \code{sample_size}, \code{turnout}, \code{fieldwork_start}, \code{fieldwork_end}, \code{date_elec}, \code{fieldwork_duration}, \code{is_exit_poll}, \code{party}, and \code{vote_share}.
+A data frame of processed survey data. The resulting data frame includes columns such as \code{polling_firm}, \code{media}, \code{sample_size}, \code{turnout}, \code{fieldwork_start}, \code{fieldwork_end}, \code{date_elec}, \code{fieldwork_duration}, \code{is_exit_poll}, \code{party}, and \code{vote_share}.
 }
 \description{
-This function fetches and processes survey data from the specified GitHub directory. It downloads and combines RDA files containing survey data from a specified range of years and months, applies various filters based on the user’s parameters, and returns a cleaned and processed data frame.
+This function fetches and processes survey data from the Pollspain-data repository It downloads and combines RDA files containing survey data from a specified year or range of years, applies various filters based on the user’s parameters, and returns a cleaned and processed data frame.
 }
 \details{
-The function retrieves and processes survey data files from a specified GitHub directory, applying user-defined filters to the data. The result is a cleaned and combined data frame with relevant survey information, including optional media and exit poll data.
+The function retrieves and processes survey data files from a specified GitHub directory, applying user-defined filters to the data. The result is a cleaned and combined data frame with relevant survey information, including optional media and exit poll data. The function now accepts a \code{year} argument that can be a single year or a vector of years, replacing the previous \code{from} and \code{to} parameters. It verifies the availability of \code{congress} elections in the specified years using the \code{dates_elections_spain} dataset.
 }
 \examples{
-# Correct usage
-survey_data <- get_survey_data(from = 1982, to = 1986, min_days_to = 3)
+# Fetch survey data for a specific year
+survey_data <- get_survey_data(year = 1982, min_days_to = 3)
 print(head(survey_data))
 
-# Exclude exit polls
-survey_data <- get_survey_data(from = 1982, to = 1986, include_exit_polls = FALSE)
+# Exclude exit polls for multiple years
+survey_data <- get_survey_data(year = c(1982, 1986), include_exit_polls = FALSE)
 print(head(survey_data))
 
-# Fetching Data from 2000 to 2005 with Maximum Days to Election
-survey_data_2 <- get_survey_data(from = 2000, to = 2005, max_days_to = 100)
+# Fetching Data for a range of years with Maximum Days to Election
+survey_data_2 <- get_survey_data(year = 2000:2005, max_days_to = 100)
 print(head(survey_data_2))
 
-# Fetching Data from 1990 to 1995 without media
-survey_data_3 <- get_survey_data(from = 1990, to = 1995, include_media = FALSE)
+# Fetching Data for a range of years without media
+survey_data_3 <- get_survey_data(year = 1990:1995, include_media = FALSE)
 print(head(survey_data_3))
 
-# Fetching Data from 1982 to 2020 with Both Minimum and Maximum Days to Election
-survey_data_4 <- get_survey_data(from = 1982, to = 2020, min_days_to = 10, max_days_to = 200)
+# Fetching Data for specific years with Specific Polling Firm
+survey_data_4 <- get_survey_data(year = c(1982, 1983), select_polling_firm = "CIS")
 print(head(survey_data_4))
 
-# Fetching Data from 1982 to 2020 with Specific Polling Firm
-survey_data_5 <- get_survey_data(from = 1982, to = 2020, select_polling_firm = "CIS")
+# Fetching Data with Minimum Sample Size
+survey_data_5 <- get_survey_data(year = 1982:2020, min_size = 1000)
 print(head(survey_data_5))
 
-# Fetching Data from 1982 to 2020 with Specific Media
-survey_data_6 <- get_survey_data(from = 1982, to = 2020, select_media = "El País")
+# Fetching Data with Specific Parties
+survey_data_6 <- get_survey_data(year = 1982:2020, select_parties = c("psoe", "pp"))
 print(head(survey_data_6))
 
-# Fetching Data from 1982 to 2020 with Minimum Sample Size
-survey_data_7 <- get_survey_data(from = 1982, to = 2020, min_size = 1000)
-print(head(survey_data_7))
-
-# Fetching Data from 1982 to 2020 with Specific Parties
-survey_data_8 <- get_survey_data(from = 1982, to = 2020, select_parties = c("psoe", "pp"))
-print(head(survey_data_8))
-
 # Incorrect usage
-# End Year Before Start Year
-# This should raise an error or warning
-# Reason: The 'to' year is earlier than the 'from' year, which is logically incorrect.
-\dontrun{
-survey_data_9 <- get_survey_data(from = 1986, to = 1982)
-}
-
-# Non-Numeric min_days_to Value
-# This should raise an error
-# Reason: The min_days_to parameter expects a numeric value, but a string is provided.
-\dontrun{
-survey_data_10 <- get_survey_data(from = 1982, to = 2023, min_days_to = "three")
-}
-
-# Fetching Data Beyond Available Date Range
+# Fetching Data for a year where no congress election exists
 # This should raise an error or return an empty data frame
-# Reason: There are no survey data files available for the specified date range.
 \dontrun{
-survey_data_11 <- get_survey_data(from = 1900, to = 1910)
+survey_data_7 <- get_survey_data(year = 1900)
 }
 
-# Invalid Date Range with Future Dates
+# Invalid year range
 # This should raise an error or warning
-# Reason: The specified date range includes future years for which no survey data files exist.
+# Reason: The specified years include future dates for which no survey data files exist.
 \dontrun{
-survey_data_12 <- get_survey_data(from = 2025, to = 2030)
+survey_data_8 <- get_survey_data(year = 2025:2030)
 }
 
 }

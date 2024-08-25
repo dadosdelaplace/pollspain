@@ -74,7 +74,6 @@
 #' }
 #'
 #' @export
-
 get_survey_data <- function(year,
                             min_days_to = NULL,
                             max_days_to = NULL,
