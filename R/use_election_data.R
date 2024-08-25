@@ -140,14 +140,14 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
   # Step 1: Aggregate votes by province, party, and ccaa
   votes_by_province <- last_election_ballots |>
     group_by(cod_INE_prov, cod_MIR_ccaa, cod_candidacies_prov) |>
-    summarize(total_votes = sum(ballots), .groups = 'drop')
+    dplyr::summarize(total_votes = sum(ballots), .groups = 'drop')
 
   # Step 2: Determine seats per province for the election year
   election_year <- as.character(year(last_election_ballots$date_elec[1]))
 
   # Access static datasets within the package environment
   seats_per_province <- seat_distribution_congress |>
-    dplyr::filter()(year == election_year) |>
+    dplyr::filter(year == election_year) |>
     dplyr::select(cod_INE_prov, prov, seats)
 
   # Step 3: Join the aggregated votes with seat distribution data
@@ -158,7 +158,7 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
   votes_with_seats <- votes_with_seats |>
     group_by(cod_INE_prov) |>
     mutate(total_votes_prov = sum(total_votes)) |>
-    dplyr::filter()(total_votes / total_votes_prov >= 0.03) |>
+    dplyr::filter(total_votes / total_votes_prov >= 0.03) |>
     ungroup()
 
   # Define the D'Hondt allocation function
@@ -183,7 +183,7 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
 
   # Step 5: Apply the D'Hondt function to each province while preserving columns
   seat_distribution_results <- votes_with_seats |>
-    dplyr::filter()(cod_INE_prov != "99") |>
+    dplyr::filter(cod_INE_prov != "99") |>
     group_by(cod_INE_prov, cod_MIR_ccaa, prov) |>
     summarize(
       seats_allocated = list(distribute_seats_dhondt(total_votes, unique(seats))),
@@ -193,7 +193,7 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
 
   # Step 6: Expand the list columns to show seats per party
   seat_distribution_expanded <- seat_distribution_results |>
-    unnest(cols = c(seats_allocated, party_codes))
+    tidyr::unnest(cols = c(seats_allocated, party_codes))
 
   # Step 7: Join back with party names and get the ccaa column from cod_INE_mun
   final_seat_distribution <- seat_distribution_expanded |>
@@ -223,11 +223,12 @@ allocate_seats_dhondt <- function(last_election_ballots, level = "prov") {
 
   # Step 9: Filter out candidacies with 0 seats
   final_seat_distribution <- final_seat_distribution |>
-    dplyr::filter()(seats > 0)
+    dplyr::filter(seats > 0)
 
   # Return the final seat distribution
   return(final_seat_distribution)
 }
+
 
 #' @title Plot Spanish Congress Election Results
 #'
@@ -329,7 +330,7 @@ plot_election_results <- function(election_data, level = "prov", colors_url = "h
     left_join(party_colors_hex_unique, by = "abbrev_candidacies")
 
   # Plotting the results using the colors from the joined data
-  ggplot2::ggplot()(merged_data) +
+  ggplot2::ggplot(merged_data) +
     geom_sf(aes(fill = abbrev_candidacies), color = "white") +
     scale_fill_manual(values = setNames(party_colors_hex_unique$party_color, party_colors_hex_unique$abbrev_candidacies)) +
     labs(title = title, fill = "Winning Party") +
@@ -406,7 +407,7 @@ plot_parliament_distribution <- function(election_data, colors_url = "https://gi
     left_join(party_colors_hex, by = "abbrev_candidacies")
 
   # Step 5: Create the ggparliament plot
-  plot <- ggplot2::ggplot()(parliament_data, aes(x = x,
+  plot <- ggplot2::ggplot(parliament_data, aes(x = x,
                                       y = y,
                                       color = abbrev_candidacies,
                                       fill = abbrev_candidacies)) +
