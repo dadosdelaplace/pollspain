@@ -157,13 +157,13 @@ get_survey_data <- function(year,
   # Apply filtering based on polling_firm
   if (select_polling_firm != "all") {
     raw_surveys <- raw_surveys %>%
-      filter(str_detect(polling_firm, select_polling_firm, ignore.case = TRUE))
+      filter(str_detect(polling_firm, regex(select_polling_firm, ignore_case = TRUE)))
   }
 
   # Apply filtering based on media
   if (select_media != "all" && include_media) {
     raw_surveys <- raw_surveys %>%
-      filter(str_detect(media, select_media, ignore.case = TRUE))
+      filter(str_detect(media, regex(select_media, ignore_case = TRUE)))
   }
 
   # Apply filtering based on min_field_days and max_field_days
@@ -212,7 +212,7 @@ get_survey_data <- function(year,
   # Reorder columns to maintain the original dataset order
   raw_surveys <- raw_surveys %>%
     select(polling_firm, media, sample_size, turnout, fieldwork_start, fieldwork_end,
-           date_elec, fieldwork_duration, is_exit_poll, party, vote_share) |>
+           date_elec, fieldwork_duration, is_exit_poll, party, vote_share) %>%
     mutate(party = case_when(
       party == "psoe" ~ "PSOE",
       party == "pp" ~ "PP",
