@@ -94,7 +94,7 @@ cod_INE_ccaa <-
 # ----- muni's codes
 
 cod_INE_mun <-
-  read_xlsx(path = "./data/cod_INE_mun.xlsx", skip = 1) %>%
+  read_csv(file = "./data/cod_INE_mun.csv") %>%
   # Renamee INE cols
   rename(cod_INE_ccaa = CODAUTO, cod_INE_prov = CPRO,
          cod_INE_mun = CMUN, cd_INE_mun = DC,
@@ -111,20 +111,20 @@ cod_INE_mun <-
 # ----- use data: rda -----
 
 usethis::use_data(cod_INE_prov_ccaa, overwrite = TRUE,
-                  compress = "xz")
+                  compress = "gzip")
 usethis::use_data(cod_INE_prov, overwrite = TRUE,
-                  compress = "xz")
+                  compress = "gzip")
 usethis::use_data(cod_INE_ccaa, overwrite = TRUE,
-                  compress = "xz")
+                  compress = "gzip")
 usethis::use_data(cod_INE_mun, overwrite = TRUE,
-                  compress = "xz")
+                  compress = "gzip")
 
 # ----- write_csv -----
 
-write_csv(cod_INE_prov_ccaa, "./data/csv/cod_INE/cod_INE_prov_ccaa.csv")
-write_csv(cod_INE_prov, "./data/csv/cod_INE/cod_INE_prov.csv")
-write_csv(cod_INE_ccaa, "./data/csv/cod_INE/cod_INE_ccaa.csv")
-write_csv(cod_INE_mun, "./data/csv/cod_INE/cod_INE_mun.csv")
+# write_csv(cod_INE_prov_ccaa, "./data/csv/cod_INE/cod_INE_prov_ccaa.csv")
+# write_csv(cod_INE_prov, "./data/csv/cod_INE/cod_INE_prov.csv")
+# write_csv(cod_INE_ccaa, "./data/csv/cod_INE/cod_INE_ccaa.csv")
+# write_csv(cod_INE_mun, "./data/csv/cod_INE/cod_INE_mun.csv")
 
 
 
