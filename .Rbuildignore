@@ -1,9 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
-^.*\.xlsx$
-^.*\.xls$
-^.*\.csv$
 ^README\.Rmd$
 ^_pkgdown\.yml$
 ^docs$
