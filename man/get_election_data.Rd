@@ -152,19 +152,12 @@ the user.
 # Fetch elections data for the congress elections in April 2019
 elections_data1 <- get_election_data("congress", 2019, 4)
 
-# Fetch elections data for the congress elections in April 2019
-# with percentages rounded to 7 decimals
-elections_data2 <-
-  get_election_data("congress", 2019, 4, prec_round = 7)
-
 # Fetch elections data for the congress and senate elections
 # in April 2019 in a short version
-elections_data3 <-
+elections_data2 <-
   get_election_data(c("congress", "senate"), 2019, 4,
                     short_version = TRUE)
 
-# Example usage to combine data from different elections into
-# one table
 # Fetch elections data for congress elections in Nov 2019,
 # April 2019, and June 2016
 combined_elections_data <-

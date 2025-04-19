@@ -117,26 +117,20 @@ the user.
 
 # Congress elections in April 2019
 # Fetch poll station data for the congress elections in April 2019
+# in a long version
 poll_station_data1 <- import_poll_station_data("congress", 2019, 4)
-
-# Fetch poll station data for the congress elections in April 2019
-# with percentages rounded to 7 decimals
-poll_station_data2 <-
-  import_poll_station_data("congress", 2019, 4, prec_round = 7)
 
 #' # Fetch poll station data for the congress and senate elections
 # in April 2019 in a long version
-poll_station_data3 <-
+poll_station_data2 <-
   import_poll_station_data(c("congress", "senate"), 2019, 4)
 
 # Fetch poll station data for the congress and senate elections in
 # April 2019 in a short version
-poll_station_data4 <-
+poll_station_data3 <-
   import_poll_station_data(c("congress", "senate"), 2019, 4,
                            short_version = TRUE)
 
-# Example usage to combine data from different elections into one
-# table
 # Fetch poll station data for congress elections in Nov 2019
 # and June 2016
 combined_poll_station_data <-
