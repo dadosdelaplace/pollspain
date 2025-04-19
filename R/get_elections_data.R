@@ -1,924 +1,574 @@
 
-#' @title Get municipal census data
+#' @title Function to get jointly information on polling
+#' stations and votes for candidacies.
 #'
-#' @description Get municipal census data for a particular election at municipal
-#' level. This function is a wrapper of \code{import_raw_mun_MIR_files()}
-#' function for a set of elections
+#' @description Import and preprocess poll stations info but jointly
+#' with the preprocessed candidacies data, for given election types
+#' and dates. This function supports both single values and vector
+#' inputs for fetching and combining data for multiple elections
+#' at once.
 #'
-#' @inheritParams type_to_code_election
-#' @param year,month vector of years and months of elections to be considered.
-#' Please be sure (see \code{dates_elections_spain}) that elections of the
-#' provided type are available for the given year and month.
+#' @inheritParams import_poll_station_data
+#' @inheritParams import_candidacies_data
+#' @param election_data A database containing general election data
+#' already provided (by other functions or by the user). Database
+#' should contain a \code{col_id_elec} column.
+#' Defaults to \code{NULL}.
+#' @param ballots_data A database containing ballots data for
+#' the different candidacies, already provided (by other functions or
+#' by the user). Database should contain a
+#' \code{col_id_poll_station} column. Defaults to \code{NULL}.
+#' @param col_id_elec Column name in \code{election_data} to uniquely
+#' identify the elections. Defaults to \code{"id_elec"}.
+#' @param col_id_poll_station Column name in \code{ballots_data} to
+#' uniquely identify poll stations. Defaults to
+#' \code{"id_INE_poll_station"}.
 #'
-#' @return A tibble (as many rows as municipalities for each election) with the
-#' following elements
-#' \item{cod_elec}{code of type of elections: \code{"01"} (referendum),
-#' \code{"02"} (congress), \code{"03"} (senate), \code{"04"} (local elections),
+#' @return A tibble with rows corresponding to municipalities for
+#' each election, including the following variables:
+#' \item{id_elec}{election's id constructed from the election code
+#' \code{cod_elec} and date \code{date_elec}.}
+#' \item{cod_elec}{code representing the type of election:
+#' \code{"01"} (referendum), \code{"02"} (congress),
+#' \code{"03"} (senate), \code{"04"} (local elections),
 #' \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
-#' (European Parlament elections)}
+#' (European Parliament elections). Variable available only for
+#' long version.}
 #' \item{type_elec}{type of election.}
-#' \item{date_elec}{date of election.}
-#' \item{id_INE_mun}{municipality's id build from ccaa-prov-mun codes provided
-#' by INE.}
-#' \item{id_MIR_mun}{municipality's id build from ccaa-prov-mun codes provided
-#' by Spanish Ministry of Interior (MIR).}
-#' \item{cod_INE_ccaa, cod_MIR_ccaa, ccaa}{codes and name for regions (ccaa)
-#' to which it belongs municipalities.}
-#' \item{cod_INE_prov, prov}{codes and name for provinces to which it belongs
-#' municipalities.}
-#' \item{cod_INE_mun, cd_INE_mun, mun}{code, digit control and name for
-#' municipalities.}
-#' \item{cod_mun_jud_district, cod_mun_prov_council}{codes of judicial
-#' district and province council.}
-#' \item{n_poll_stations}{number of poll stations at each mun}
-#' \item{pop_res_mun}{census of people who are living (CER + CERA).}
-#' \item{census_INE_mun}{people from \code{pop_res_mun} who are
-#' allowed to vote.}
-#' \item{census_counting_mun}{people from \code{census_INE_mun} after claims.}
-#' \item{census_CERE_mun}{ensus of foreigners, just for EU elections.}
+#' \item{date_elec}{date of the election.}
+#' \item{id_INE_mun}{municipality ID constructed from the
+#' ccaa-prov-mun codes provided by INE.}
+#' \item{id_INE_poll_station}{poll station's id constructed from the
+#' ccaa-prov-municipality and poll station codes.}
+#' \item{cod_INE_ccaa, ccaa}{codes and names for regions (ccaa)
+#' to which the municipalities belong. Codes available only for
+#' long version.}
+#' \item{cod_INE_prov, prov}{codes and names for the provinces to which
+#' the municipalities belong. Codes available only for long version.}
+#' \item{cod_INE_mun, mun}{code, and name for
+#' municipalities. Codes available only for long version.}
+#' \item{cod_mun_district, cod_sec, cod_poll_station}{codes for the
+#' municipal district, census tract and poll station. Codes available
+#' only for long version.}
+#' \item{census_counting_mun}{population eligible to vote after claims
+#' at municipality level.}
+#' \item{ballots_1, turnout_1}{number of total ballots and turnout
+#' percentage in the first round. Variables available only for
+#' long version.}
+#' \item{ballots_2, turnout_2}{number of total ballots and turnout
+#' percentage in the second round (if applicable). Variables available
+#' only for long version}
+#' \item{blank_ballots, invalid_ballots}{blank and invalid ballots.}
+#' \item{party_ballots, valid_ballots, total_ballots}{ballots to
+#' candidacies/parties, valid ballots (sum of \code{blank_ballots} and
+#' \code{party_ballots}) and total ballots (sum of
+#' \code{valid_ballots} and \code{invalid_ballots}).}
+#' \item{turnout}{final turnout percentage.}
+#' \item{porc_valid, porc_invalid, porc_parties, porc_blank}{perc (%)
+#' values of \code{valid_ballots}, \code{invalid_ballots},
+#' \code{party_ballots} and \code{blank_ballots}.}
+#' \item{n_poll_stations}{number of polling stations.}
+#' \item{pop_res_mun}{population census of residents (CER + CERA) at
+#' municipality level.}
+#' \item{census_counting_mun}{population eligible to vote after
+#' claims at municipality level.}
+#' \item{id_candidacies}{id for candidacies (at province level).}
+#' \item{id_candidacies_ccaa, id_candidacies_nat}{id for
+#' candidacies (at region - ccaa - and national level).}
+#' \item{abbrev_candidacies, name_candidacies}{acronym and full name
+#' of the candidacies.}
+#' \item{ballots}{number of ballots obtained for each candidacy at
+#' each poll station.}
 #'
-#' @author Javier Álvarez-Liébana.
-#' @source Some definitions of variables were extracted from
-#' \url{https://www.ige.gal}
+#' @details This function fetches municipal-level data for the
+#' specified elections by downloading the corresponding `.rda` files
+#' from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
+#' (directly downloaded from MIR website) and processing them into a
+#' tidy format. It automatically handles the download, loading, and
+#' merging of data across multiple election periods as specified by
+#' the user.
+#'
+#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
 #' @keywords get_elections_data
-#' @name get_mun_census_data
+#' @name get_election_data
 #' @import crayon
 #' @examples
 #'
-#' ## Get mun census data
-#' data("dates_elections_spain")
+#' ## Correct examples
+#'
+#' # Congress elections in April 2019
+#' # Fetch elections data for the congress elections in April 2019
+#' elections_data1 <- get_election_data("congress", 2019, 4)
+#'
+#' # Fetch elections data for the congress elections in April 2019
+#' # with percentages rounded to 7 decimals
+#' elections_data2 <-
+#'   get_election_data("congress", 2019, 4, prec_round = 7)
+#'
+#' # Fetch elections data for the congress and senate elections
+#' # in April 2019 in a short version
+#' elections_data3 <-
+#'   get_election_data(c("congress", "senate"), 2019, 4,
+#'                     short_version = TRUE)
+#'
+#' # Example usage to combine data from different elections into
+#' # one table
+#' # Fetch elections data for congress elections in Nov 2019,
+#' # April 2019, and June 2016
+#' combined_elections_data <-
+#'   get_election_data(c("congress", "congress"),
+#'                     c(2019, 2016), c(11, 6))
+#'
+#' # Example usage providing date instead of month and year
+#' date_example <- get_election_data("congress", date = "2016-06-26")
+#'
+#' # Example usage providing external tables
+#' election_data <- import_poll_station_data("congress", 2019, 4)
+#' ballots_data <- import_candidacies_data("congress", 2019, 4)
+#' join_data <-
+#'   get_election_data("congress", 2019, 4,
+#'                      election_data = election_data,
+#'                      ballots_data = ballots_data)
+#'
+#' # Example usage providing external tables with different
+#' # column names
+#' election_data <-
+#'   import_poll_station_data("congress", 2019, 4) |>
+#'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
+#' ballots_data <-
+#'   import_candidacies_data("congress", 2019, 4) |>
+#'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
+#' join_data <-
+#'   get_election_data("congress", 2019, 4,
+#'                     election_data = election_data,
+#'                     ballots_data = ballots_data,
+#'                     col_id_elec = "invent_1",
+#'                     col_id_poll_station = "invent_2")
+#'
+#' # ----
+#' # Incorrect examples
+#' # ----
+#'
 #' \dontrun{
-#' # Right examples
-#' mun_census_data <- get_mun_census_data("congress", 2019, 4)
-#' mun_census_data <- get_mun_census_data("senate", 2019, 11)
-#' mun_census_data <- get_mun_census_data(rep("congress", 3),
-#'                                        c(2019, 2019, 2016),
-#'                                        c(11, 4, 6))
-#' mun_census_data <- get_mun_census_data(c("congress", "senate"),
-#'                                        c(2019, 2019), c(11, 4))
 #' # Wrong examples
-#' mun_census_data <- get_mun_census_data("national", 2019, 4)
-#' mun_census_data <- get_mun_census_data("congress", 2016, c(4, 11))
-#' mun_census_data <- get_mun_census_data("congress", "2016-06-26")
+#'
+#' # Invalid election type: "national" is not a valid election type
+#' get_election_data("national", 2019, 4)
+#'
+#' # Invalid election: no congress elections are available in 5-2019.
+#' # Please check dataset dates_elections_spain
+#' get_election_data("congress", 2019, 5)
+#'
+#' # Invalid date format: date should be in %Y-%m-%d format
+#' get_election_data("congress", date = "26-06-2016")
+#'
+#' # Invalid short version flag: short_version should be a
+#' # logical variable
+#' get_election_data("congress", 2019, 4, short_version = "yes")
+#'
+#' # Invalid include_candidates flag: include_candidates should be
+#' # a logical variable
+#' get_election_data("congress", 2019, 4, include_candidates = "no")
+#'
+#' # Invalid key columns: col_id_elec and col_id_poll should be
+#' # columns included in datasets election_data and ballots_data
+#' election_data <- import_poll_station_data("congress", 2019, 4)
+#' ballots_data <- import_candidacies_data("congress", 2019, 4)
+#' get_election_data("congress", 2019, 4,
+#'                    election_data = election_data,
+#'                    ballots_data = ballots_data,
+#'                    col_id_elec = "invent_1",
+#'                    col_id_poll_station = "invent_2")
 #' }
 #'
 #' @export
-get_mun_census_data <-
-  function(type_elec, year, month) {
+get_election_data <-
+  function(type_elec, year = 2019, month = 4, date = NULL,
+           election_data = NULL, ballots_data = NULL,
+           col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
+           prec_round = 3, short_version = FALSE,
+           repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
+           file_ext = ".rda") {
 
-    # At this time, just congress election
-    if (type_elec != "congress") {
+    if (is.null(election_data)) {
 
-      stop("Development in process: at this time, just congress elections are allowed")
-
-    }
-
-    # Check: if elections required are allowed
-    elections_allowed <-
-      dates_elections_spain |>
-      filter(year >= 1986) |>
-      inner_join(tibble(cod_elec = type_to_code_election(type_elec),
-                        type_elec, year, month),
-                 by = c("cod_elec", "type_elec", "year", "month"))
-    join_result <- elections_allowed |> nrow()
-    if (join_result == 0) {
-
-      stop(glue("No {type_elec} elections are available in {char_month}-{year}"))
+      election_data <-
+        import_poll_station_data(type_elec = type_elec, year = year,
+                                 month = month, date = date, prec_round = prec_round,
+                                 short_version = short_version,
+                                 repo_url = repo_url, file_ext = file_ext)
 
     }
 
-    # Collect raw data
-    mun_data <-
-      historical_raw_mun_data |>
-      filter(type_elec %in% type_elec &
-               year(date_elec) %in% year &
-               month(date_elec) %in% month)
+    if (is.null(ballots_data)) {
 
-    # Join MIR and INE information
-    mun_data <-
-      mun_data |>
-      left_join(cod_INE_mun,
-                by = c("id_MIR_mun", "cod_MIR_ccaa",
-                       "cod_INE_prov", "cod_INE_mun"),
-                suffix = c(".x", "")) |>
-      # Keep names from cod INE files instead of MIR files
-      select(-mun.x) |>
-      # Relocate
-      relocate(cod_INE_ccaa, .before = cod_MIR_ccaa) |>
-      relocate(id_INE_mun, .before = id_MIR_mun) |>
-      relocate(cd_INE_mun, mun, .after = cod_INE_mun) |>
-      relocate(ccaa, .after = cod_MIR_ccaa) |>
-      relocate(prov, .after = cod_INE_prov)
-
-    # output
-    return(mun_data)
-}
-
-
-#' @title Get poll station data
-#'
-#' @description ...
-#'
-#' @inheritParams get_mun_census_data
-#' @param prec_round rounding accuracy. Defaults to \code{prec_round = 3}.
-#'
-#' @return ...
-#'
-#' @author Javier Álvarez-Liébana.
-#' @source ...
-#' @keywords get_elections_data
-#' @name get_poll_station_data
-#'
-#' @examples
-#'
-#' ## Get poll station data
-#'
-#' # Right examples
-#' \dontrun{
-#' # Wrong examples
-#' }
-#'
-#' @export
-get_poll_station_data <-
-  function(type_elec, year, month, prec_round = 3) {
-
-    # At this time, just congress election
-    if (type_elec != "congress") {
-
-      stop("Development in process: at this time, just congress elections are allowed")
+      ballots_data <-
+        import_candidacies_data(type_elec = type_elec, year = year,
+                                month = month, date = date,
+                                repo_url = repo_url, file_ext = file_ext)
 
     }
 
-    # Check: if elections required are allowed
-    elections_allowed <-
-      dates_elections_spain |>
-      filter(year >= 1986) |>
-      inner_join(tibble(cod_elec = type_to_code_election(type_elec),
-                        type_elec, year, month),
-                 by = c("cod_elec", "type_elec", "year", "month"))
-    join_result <- elections_allowed |> nrow()
+    # Check if col_id_elec and col_id_elec_level exist within the data
+    if (!all(c(col_id_elec, col_id_poll_station) %in% names(election_data)) |
+        !all(c(col_id_elec, col_id_poll_station) %in% names(ballots_data))) {
 
-    if (join_result == 0) {
-
-      stop("No elections on provided dates are available")
+      stop(red("😵 Columns provided in `col_id_elec`and `col_id_poll_station_station` should be available in both tables."))
 
     }
 
-    # Check: if prec_round is a positive number
-    if (prec_round != as.integer(prec_round) | prec_round < 1) {
+    # id variables
+    group_vars <- c(col_id_elec, col_id_poll_station)
 
-      stop("Parameter 'prec_round' must be a positive integer greater than 0")
-
-    }
-
-    # Set of urls
-    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/main/data/csv/pollstation"
-    urls <- glue("{url_raw_data}/raw_poll_station_data_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
-
-    # Collect raw data
-    poll_stations_file <-
-      urls |>
-      map_dfr(function(x) { read_csv(file = x, show_col_types = FALSE) }) |>
-      # Some basic statistics
-      mutate(valid_ballots = blank_ballots + party_ballots,
-             total_ballots = valid_ballots + invalid_ballots)
-
-    poll_station_data <-
-      # First without CERA voters
-      poll_stations_file |>
-      filter(cod_INE_mun != "999") |>
-      # Include census data of municipalities
-      left_join(get_mun_census_data(type_elec, year, month),
-                by = c("cod_elec", "type_elec", "date_elec", "id_MIR_mun"),
-                suffix = c("", ".y")) |>
-      select(-contains(".y")) |>
-      # Relocate
-      relocate(id_INE_mun, .before = id_MIR_mun) |>
-      relocate(cod_INE_ccaa, .before = cod_MIR_ccaa) |>
-      relocate(ccaa, .after = cod_MIR_ccaa) |>
-      relocate(prov, .after = cod_INE_prov) |>
-      relocate(cd_INE_mun, mun, .after = cod_INE_mun) |>
-      # Remove census variables at mun level from mun files
-      select(-c(census_counting_mun, census_CERE_mun, census_INE_mun)) |>
-      # Include CERA "municipalities" and their ccaa and prov
-      bind_rows(poll_stations_file |> filter(cod_INE_mun == "999")) |>
-      left_join(cod_INE_mun |>
-                  distinct(cod_MIR_ccaa, cod_INE_prov, .keep_all = TRUE) |>
-                  select(contains("ccaa") | contains("prov")),
-                by = c("cod_MIR_ccaa", "cod_INE_prov"),
-                suffix = c("", ".y")) |>
-      mutate(cod_INE_ccaa =
-               ifelse(is.na(cod_INE_ccaa), cod_INE_ccaa.y, cod_INE_ccaa),
-             ccaa = ifelse(is.na(ccaa), ccaa.y, ccaa),
-             prov = ifelse(is.na(prov), prov.y, prov),
-             mun = ifelse(cod_INE_mun == "999", "CERA", mun),
-             id_INE_mun = glue("{cod_INE_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
-             pop_res_mun =
-               ifelse(cod_INE_mun == "999", census_INE, pop_res_mun)) |>
-      # Remove variables
-      select(-contains(".y"), -cod_MIR_ccaa)
-
-    # Include turnout data (use census_counting from poll stations files)
-    poll_station_data <-
-      poll_station_data |>
-      drop_na(id_INE_mun) |>
-      mutate(id_INE_poll_station =
-               glue("{id_INE_mun}-{cod_mun_district}-{cod_sec}-{cod_poll_station}"),
-             turnout_1 = round(100 * ballots_1 / census_counting, prec_round),
-             turnout_2 = round(100 * ballots_2 / census_counting, prec_round),
-             turnout = round(100 * total_ballots / census_counting, prec_round),
-             turnout_abs = 100 - turnout,
-             # % valid and invalid ballots over total ballots
-             porc_valid =
-               round(100 * valid_ballots / total_ballots, prec_round),
-             porc_invalid =
-               round(100 * invalid_ballots / total_ballots, prec_round),
-             # % party and blank ballots over valid ballots
-             porc_parties =
-               round(100 * party_ballots / valid_ballots, prec_round),
-             porc_blank =
-               round(100 * blank_ballots / valid_ballots, prec_round)) |>
-      relocate(turnout:porc_blank, .after = total_ballots) |>
-      relocate(id_INE_poll_station, .after = date_elec) |>
-      relocate(turnout_1, .after = ballots_1) |>
-      relocate(turnout_2, .after = ballots_2)
-
-    # Select just few variables
-    poll_station_data <-
-      poll_station_data |>
-      mutate(id_INE_poll_station =
-               glue("{id_INE_mun}-{cod_mun_district}-{cod_sec}-{cod_poll_station}"),
-             id_elec = glue("{type_to_code_election(type_elec)}-{date_elec}")) |>
-      select(id_elec, type_elec, date_elec, id_INE_poll_station, ccaa, prov, mun,
-             census_counting, ballots_1, turnout_1, ballots_2, turnout_2,
-             blank_ballots, invalid_ballots, party_ballots, valid_ballots,
-             total_ballots, turnout, porc_valid, porc_invalid,
-             porc_parties, porc_blank, pop_res_mun)
-
-    # output
-    return(poll_station_data)
-}
-
-
-#' @title Get candidates data
-#'
-#' @description ...
-#'
-#' @inheritParams get_mun_census_data
-#'
-#' @return ...
-#'
-#' @author Javier Álvarez-Liébana.
-#' @source ...
-#' @keywords get_elections_data
-#' @name get_candidates_data
-#'
-#' @examples
-#'
-#' ## Get candidates data
-#'
-#' # Right examples
-#' \dontrun{
-#' # Wrong examples
-#' }
-#'
-#' @export
-get_candidates_data <-
-  function(type_elec, year, month) {
-
-    # At this time, just congress election
-    if (type_elec != "congress") {
-
-      stop("Development in process: at this time, just congress elections are allowed")
-
-    }
-
-    # Check: if elections required are allowed
-    elections_allowed <-
-      dates_elections_spain |>
-      filter(year >= 1986) |>
-      inner_join(tibble(cod_elec = type_to_code_election(type_elec),
-                        type_elec, year, month),
-                 by = c("cod_elec", "type_elec", "year", "month"))
-    join_result <- elections_allowed |> nrow()
-    if (join_result == 0) {
-
-      stop("No elections on provided dates are available")
-
-    }
-
-    # Collect candidates data
-    candidates_data <-
-      historical_raw_candidates |>
-      filter(type_elec %in% type_elec &
-               year(date_elec) %in% year &
-               month(date_elec) %in% month) |>
-      # cod_mun_district = "9" when elections have not that circumscription
-      # cod_INE_mun just for municipalities' elections or
-      #  Senate's elections (senator's code). Otherwise, cod_INE_mun = "999"
-      mutate(cod_mun_district =
-               ifelse(cod_mun_district == "9", NA, cod_mun_district),
-             cod_INE_mun =
-               ifelse(cod_INE_mun == "999", NA, cod_INE_mun))
-
-    # Output
-    return(candidates_data)
-}
-
-
-#' @title Get candidacies data (at poll station level)
-#'
-#' @description ...
-#'
-#' @inheritParams get_mun_census_data
-#' @param include_candidates flag to indicate wheter it should be included data
-#' about candidates or not. Defaults to \code{FALSE}.
-#'
-#' @return ...
-#'
-#' @author Javier Álvarez-Liébana.
-#' @source ...
-#' @keywords get_elections_data
-#' @name get_candidacies_data
-#'
-#' @examples
-#'
-#' ## Get candidacies data
-#'
-#' # Right examples
-#' \dontrun{
-#' # Wrong examples
-#' }
-#'
-#' @export
-get_candidacies_data <-
-  function(type_elec, year, month, include_candidates = FALSE) {
-
-    # At this time, just congress election
-    if (type_elec != "congress") {
-
-      stop("Development in process: at this time, just congress elections are allowed")
-
-    }
-
-    # Check: if elections required are allowed
-    elections_allowed <-
-      dates_elections_spain |>
-      filter(year >= 1986) |>
-      inner_join(tibble(cod_elec = type_to_code_election(type_elec),
-                        type_elec, year, month),
-                 by = c("cod_elec", "type_elec", "year", "month"))
-    join_result <- elections_allowed |> nrow()
-    if (join_result == 0) {
-
-      stop("No elections on provided dates are available")
-
-    }
-
-    # Check: if include_candidates should be logical
-    if (!is.logical(include_candidates)) {
-
-      stop("Parameter 'include_candidates' must be a logical variable")
-
-    }
-
-    # Set of urls
-    url_raw_data <- "https://raw.githubusercontent.com/dadosdelaplace/pollspain/main/data/csv/candidacies_pollstation"
-    urls <- glue("{url_raw_data}/raw_candidacies_poll_{elections_allowed$type_elec}_{elections_allowed$year}_{elections_allowed$month}.csv")
-
-    # Collect raw data
-    candidacies_files <-
-      urls |>
-      map_dfr(function(x) { read_csv(file = x, show_col_types = FALSE) })
-
-    # Join MIR and INE information
-    candidacies_ballots <-
-      candidacies_files |>
-      left_join(cod_INE_mun |> # First include CERA codes
-                  bind_rows(cod_INE_mun |>
-                              distinct(cod_INE_ccaa, cod_INE_prov,
-                                       .keep_all  = TRUE) |>
-                              select(cod_INE_ccaa, cod_MIR_ccaa,
-                                     cod_INE_prov, ccaa, prov) |>
-                              mutate(mun = "CERA", cod_INE_mun = "999",
-                                     id_INE_mun =
-                                       glue("{cod_INE_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
-                                     id_MIR_mun =
-                                       glue("{cod_MIR_ccaa}-{cod_INE_prov}-{cod_INE_mun}"))),
-                by = "id_MIR_mun",
-                suffix = c(".x", "")) |>
-      # Keep names from cod INE files instead of MIR files
-      select(-contains(".x")) |>
-      # Include id_INE_poll_station
-      mutate(id_INE_poll_station =
-               glue("{id_INE_mun}-{cod_mun_district}-{cod_sec}-{cod_poll_station}")) |>
-      # Relocate
-      relocate(id_INE_poll_station, .after = date_elec) |>
-      relocate(id_INE_mun, .before = id_MIR_mun) |>
-      relocate(cod_INE_ccaa, cod_MIR_ccaa, ccaa,
-               cod_INE_prov, prov, cod_INE_mun,
-               cd_INE_mun, mun, .after = id_MIR_mun)
-
-    # Join candidacies data
-    candidacies_data <-
-      candidacies_ballots |>
-      left_join(historical_raw_candidacies |>
-                  filter(type_elec %in% type_elec &
-                           year(date_elec) %in% year &
-                           month(date_elec) %in% month),
-                by = c("cod_elec", "type_elec",
-                       "date_elec", "id_candidacies"))
-
-
-    # include candidates
-    if (include_candidates) {
-
-      # Collect candidates files
-      candidates_files <- get_candidates_data(type_elec, year, month)
-
-      # Include candidates data
-      candidacies_data <-
-        candidacies_data |>
-        left_join(candidates_files |>
-                    select(-cod_mun_district, -cod_INE_mun),
-                  by = c("cod_elec", "type_elec", "cod_INE_prov",
-                         "date_elec", "id_candidacies", "turn"))
-
-      # Rename
-      candidacies_data <-
-        candidacies_data |>
-        select(-id_candidacies) |>
-        rename(candidate_name = name, candidate_surname = surname,
-               candidate_order = order, candidate_holder = holder,
-               candidate_sex = sex, candidate_elected = elected,
-               id_candidacies = cod_candidacies_nat,
-               id_candidacies_prov = cod_candidacies_prov) |>
-        select(type_elec, date_elec, id_INE_poll_station, ccaa, prov,
-               mun, id_candidacies, id_candidacies_prov, abbrev_candidacies,
-               name_candidacies,  ballots, candidate_name, candidate_surname,
-               candidate_order, candidate_holder, candidate_sex,
-               candidate_elected)
-
-    } else {
-
-      # Without candidates files but number of elected
-
-      # Collect candidates files
-      candidates_files <- get_candidates_data(type_elec, year, month)
-
-      # Compute number of elected
-      candidates_files <-
-        candidates_files |>
-        filter(elected) |>
-        select(cod_elec:cod_INE_prov, id_candidacies, elected) |>
-        reframe(elected_by_prov = sum(elected),
-                .by = c(cod_elec, type_elec, date_elec,
-                       cod_INE_prov, id_candidacies))
-
-      # join information
-      candidacies_data <-
-        candidacies_data |>
-        left_join(candidates_files,
-                  by = c("cod_elec", "type_elec", "date_elec",
-                         "cod_INE_prov", "id_candidacies")) |>
-        mutate(elected_by_prov =
-                 ifelse(is.na(elected_by_prov), 0, elected_by_prov))
-
-      # Select a few variables
-      candidacies_data <-
-        candidacies_data |>
-        # just id candidacies as cod_candidacies_nat
-        select(-id_candidacies) |>
-        rename(id_candidacies = cod_candidacies_nat,
-               id_candidacies_prov = cod_candidacies_prov) |>
-        select(type_elec, date_elec, id_INE_poll_station, ccaa, prov,
-               mun, id_candidacies, id_candidacies_prov, abbrev_candidacies,
-               name_candidacies,  ballots, elected_by_prov)
-
-    }
-
-    # Recoding parties and incluid id_elec
-    candidacies_data <-
-      candidacies_data |>
-      recod_parties() |>
-      mutate(id_elec = glue("{type_to_code_election(type_elec)}-{date_elec}"),
-             .before = everything())
-
-    # Remove NA ccaa-prov (CERA summary by ccaa-prov)
-    candidacies_data <-
-      candidacies_data |>
-      drop_na(ccaa, prov)
-
-    # output
-    return(candidacies_data)
-  }
-
-
-#' @title Get candidacies data (at poll station level)
-#'
-#' @description ...
-#'
-#' @inheritParams get_mun_census_data
-#' @param include_candidates flag to indicate wheter it should be included data
-#' about candidates or not. Defaults to \code{FALSE}.
-#'
-#' @return ...
-#'
-#' @author Javier Álvarez-Liébana.
-#' @source ...
-#' @keywords get_elections_data
-#' @name get_CERA_data
-#'
-#' @examples
-#'
-#' ## Get candidacies data
-#'
-#' # Right examples
-#' \dontrun{
-#' # Wrong examples
-#' }
-#'
-#' @export
-get_CERA_data <-
-  function(election_data, id_col = "id_INE_poll_station",
-           level = "all", cod_CERA = "999", prec_round = 3) {
-
-    # Aggregation of data
-    hierarchy_levels <- c("ccaa", "prov", "mun", "mun_district",
-                          "sec", "poll_station")
-    if (level == "all") {
-
-      levels <- "all"
-      group_vars <- "id_elec"
-
-    } else {
-
-      levels <- hierarchy_levels[1:which(hierarchy_levels == level)]
-      if (length(levels) <= 3) { # at mun level
-
-        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels)
-
-      } else {
-
-        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels[1:3])
-      }
-
-    }
-
-    # CERA summaries
-    data_cera <-
+    # join data (without aggregate, just at poll station level)
+    join_data <-
       election_data |>
-      # Just CERA rows
-      filter(extract_code(.data[[id_col]], level = "mun") == cod_CERA) |>
-      group_by(across(group_vars)) |>
-      distinct(.data[[id_col]], .keep_all = TRUE) |>
-      reframe(type_elec = unique(type_elec),
-              date_elec = unique(date_elec),
-              census_cera = sum(census_counting),
-              total_ballots_cera = sum(total_ballots),
-              turnout_cera =
-                round(100 * total_ballots_cera / census_cera, prec_round)) |>
-      ungroup()
+      left_join(ballots_data, by = group_vars,
+                suffix = c("", ".rm")) |>
+      select(-contains("rm"))
 
-    # Output
-    return(data_cera)
+    # output
+    return(join_data)
+
 
   }
 
-#' @title Get candidacies data (at poll station level)
+# agg_nat <- election_data |> aggregate_election_data(level = "all")
+# agg_ccaa <- election_data |> aggregate_election_data(level = "ccaa")
+# agg_prov <- election_data |> aggregate_election_data(level = "prov")
+# agg_mun <- election_data |> aggregate_election_data(level = "mun")
+
+#' @title Aggregate elections data at provided level (ccaa, prov, etc)
 #'
-#' @description ...
+#' @description Import and preprocess poll stations info but jointly
+#' with the preprocessed candidacies data, for given election types
+#' and dates. This function supports both single values and vector
+#' inputs for fetching and combining data for multiple elections
+#' at once.
 #'
-#' @inheritParams get_mun_census_data
-#' @param include_candidates flag to indicate wheter it should be included data
-#' about candidates or not. Defaults to \code{FALSE}.
+#' @inheritParams import_poll_station_data
+#' @inheritParams import_candidacies_data
+#' @inheritParams get_election_data
+#' @param level A string providing the level of aggregation at which
+#' the data is to be provided. The allowe values are the following:
+#' 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec' or
+#'  'poll_station'. Defaults to \code{"all"}.
+#' @param cols_mun_var A vector of variable names that, in their raw
+#' version, are only available at the municipal level (or higher).
+#' Defaults to \code{c("pop_res_mun", "census_counting_mun")}.
+#' @param col_id_candidacies A string indicating the name of the
+#' column that uniquely identifies the candidacies. Defaults to
+#' \code{"id_candidacies"}.
 #'
-#' @return ...
+#' @return A tibble with rows corresponding to municipalities for
+#' each election, including the following variables:
+#' \item{id_elec}{election's id constructed from the election code
+#' \code{cod_elec} and date \code{date_elec}.}
+#' \item{cod_elec}{code representing the type of election:
+#' \code{"01"} (referendum), \code{"02"} (congress),
+#' \code{"03"} (senate), \code{"04"} (local elections),
+#' \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
+#' (European Parliament elections).}
+#' \item{type_elec}{type of election.}
+#' \item{date_elec}{date of the election.}
+#' \item{id_INE_poll_station}{poll station's id constructed from the
+#' ccaa-prov-municipality and poll station codes.}
+#' \item{id_INE_mun}{municipality ID constructed from the
+#' ccaa-prov-mun codes provided by INE.}
+#' \item{cod_INE_ccaa, ccaa}{codes and names for regions (ccaa)
+#' to which the municipalities belong.}
+#' \item{cod_INE_prov, prov}{codes and names for the provinces to
+#' which the municipalities belong.}
+#' \item{cod_INE_mun, mun}{code, and name for
+#' municipalities.}
+#' \item{cod_mun_district, cod_sec, cod_poll_station}{codes for the
+#' municipal district, census tract and poll station.}
+#' \item{ballots_1, turnout_1}{number of total ballots and turnout
+#' percentage in the first round.}
+#' \item{ballots_2, turnout_2}{number of total ballots and turnout
+#' percentage in the second round (if applicable).}
+#' \item{blank_ballots, invalid_ballots}{blank and invalid ballots.}
+#' \item{party_ballots, valid_ballots, total_ballots}{ballots to
+#' candidacies/parties, valid ballots (sum of \code{blank_ballots} and
+#' \code{party_ballots}) and total ballots (sum of
+#' \code{valid_ballots} and \code{invalid_ballots}).}
+#' \item{turnout}{final turnout percentage.}
+#' \item{porc_valid, porc_invalid, porc_parties, porc_blank}{perc (%)
+#' values of \code{valid_ballots}, \code{invalid_ballots},
+#' \code{party_ballots} and \code{blank_ballots}.}
+#' \item{n_poll_stations}{number of polling stations.}
+#' \item{pop_res_mun}{population census of residents (CER + CERA) at
+#' municipality level.}
+#' \item{census_counting_mun}{population eligible to vote after
+#' claims at municipality level.}
+#' \item{id_candidacies}{id for candidacies (at province level).}
+#' \item{id_candidacies_ccaa, id_candidacies_nat}{id for
+#' candidacies (at region - ccaa - and national level).}
+#' \item{abbrev_candidacies, name_candidacies}{acronym and full name
+#' of the candidacies.}
+#' \item{ballots}{number of ballots obtained for each candidacy at
+#' each poll station.}
 #'
-#' @author Javier Álvarez-Liébana.
-#' @source ...
+#' @details This function fetches municipal-level data for the
+#' specified elections by downloading the corresponding `.rda` files
+#' from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
+#' (directly downloaded from MIR website) and processing them into a
+#' tidy format. It automatically handles the download, loading, and
+#' merging of data across multiple election periods as specified by
+#' the user.
+#'
+#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
 #' @keywords get_elections_data
 #' @name aggregate_election_data
-#'
+#' @import crayon
 #' @examples
 #'
-#' ## Get candidacies data
-#'
-#' # Right examples
 #' \dontrun{
+#' ## Correct examples
+#'
+#' # Congress elections in April 2019
+#' # Fetch elections data for the congress elections in April 2019
+#' elections_data1 <- join_election_data("congress", 2019, 4)
+#'
+#' # Fetch join_election_data("congress", 2019, 4, prec_round = 7)
+#' # data for the congress elections in April 2019
+#' # with percentages rounded to 7 decimals
+#' elections_data2 <-
+#'   join_election_data("congress", 2019, 4, prec_round = 7)
+#'
+#' # Fetch elections data for the congress and senate elections in
+#' # April 2019 in a short version
+#' elections_data3 <-
+#'   join_election_data(c("congress", "senate"), 2019, 4, short_version = TRUE)
+#'
+#' # Example usage to combine data from different elections into one table
+#' # Fetch elections data for congress elections in Nov 2019 and June 2016
+#' combined_elections_data <-
+#'   join_election_data(c("congress", "congress"),
+#'                      c(2019, 2016), c(11, 6))
+#'
+#' # Example usage providing date instead of month and year
+#' date_example <- join_election_data("congress", date = "2016-06-26")
+#'
+#' # Example usage providing external tables
+#' election_data <- import_poll_station_data("congress", 2019, 4)
+#' ballots_data <- import_candidacies_data("congress", 2019, 4)
+#' join_election_data("congress", 2019, 4,
+#'                    election_data = election_data,
+#'                    ballots_data = ballots_data)
+#'
+#' # Example usage providing external tables with different
+#' # column names
+#' election_data <-
+#'   import_poll_station_data("congress", 2019, 4) |>
+#'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
+#' ballots_data <-
+#'   import_candidacies_data("congress", 2019, 4) |>
+#'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
+#' join_data <-
+#'   join_election_data("congress", 2019, 4,
+#'                      election_data = election_data,
+#'                      ballots_data = ballots_data,
+#'                      col_id_elec = "invent_1",
+#'                      col_id_poll = "invent_2")
+#'
+#' # ----
+#' # Incorrect examples
+#' # ----
+#'
 #' # Wrong examples
+#'
+#' # Invalid election type: "national" is not a valid election type
+#' join_election_data("national", 2019, 4)
+#'
+#' # Invalid election: no congress elections are available in 5-2019.
+#' # Please check dataset dates_elections_spain
+#' join_election_data("congress", 2019, 5)
+#'
+#' # Invalid date format: date should be in %Y-%m-%d format
+#' join_election_data("congress", date = "26-06-2016")
+#'
+#' # Invalid short version flag: short_version should be a
+#' # logical variable
+#' join_election_data("congress", 2019, 4, short_version = "yes")
+#'
+#' # Invalid include_candidates flag: include_candidates should be a
+#' # logical variable
+#' join_election_data("congress", 2019, 4, include_candidates = "no")
+#'
+#' # Invalid key columns: col_id_elec and col_id_poll should be
+#' # columns included in datasets election_data and ballots_data
+#' election_data <- import_poll_station_data("congress", 2019, 4)
+#' ballots_data <- import_candidacies_data("congress", 2019, 4)
+#' join_election_data("congress", 2019, 4,
+#'                    election_data = election_data,
+#'                    ballots_data = ballots_data,
+#'                    col_id_elec = "invent_1",
+#'                    col_id_poll = "invent_2")
 #' }
 #'
 #' @export
 aggregate_election_data <-
-  function(election_data, level = "all", id_col = "id_INE_poll_station",
-           cod_CERA = "999", prec_round = 3) {
+  function(election_data, level = "all", col_id_elec = "id_elec",
+           col_id_poll_station = "id_INE_poll_station",
+           cols_mun_var = c("pop_res_mun", "census_counting_mun"),
+           col_id_candidacies = "id_candidacies", prec_round = 3) {
 
-    # Remove duplicates
-    election_data <-
+    message(yellow("🔎 Check if parameters are allowed..."))
+    Sys.sleep(1/10)
+
+    # Check if election_data is a data.frame or tibble
+    if ((!is.data.frame(election_data) & !is_tibble(election_data)) |
+        nrow(election_data) == 0 | ncol(election_data) == 0) {
+
+      stop(red("😵 `election_data` must be a tibble or data.frame whose number of rows and columns should be greater than 0."))
+
+    }
+
+    # Check if level takes allowed values
+    if (!(level %in% c("all", "ccaa", "prov", "mun",
+                       "mun_district", "sec", "poll_station"))) {
+
+      stop(red("😵 Aggregation level provided by 'level' parameter should be taken from the following values: 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec', 'poll_station'"))
+
+    }
+
+    # Check if col_id_elec and col_id_elec_level exist within the data
+    if (!all(c(col_id_elec, col_id_poll_station) %in% names(election_data))) {
+
+      stop(red("😵 Columns provided in `col_id_elec` and `col_id_poll_station` should be available in the table."))
+
+    }
+
+    # Check if cols_mun_var exist within the data
+    if (!all(cols_mun_var %in% names(election_data))) {
+
+      stop(red("😵 Columns provided in `cols_mun_var` should be available in the table."))
+
+    }
+
+
+    # Check if prec_round is a positive number
+    if (prec_round != as.integer(prec_round) | prec_round < 1) {
+
+      stop(red("😵 Parameter 'prec_round' must be a positive integer greater than 0"))
+
+    }
+
+    # Check duplicates (without candidacies data)
+    election_nodup_data <-
       election_data |>
-      distinct(id_elec, .data[[id_col]], .keep_all = TRUE)
+      distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
+               .data[[col_id_candidacies]], .keep_all = TRUE)
 
-    # extract cod by level
+    if (nrow(election_nodup_data) != nrow(election_data)) {
+
+      message(yellow(glue("⚠️ {nrow(election_data) - nrow(election_nodup_data)} duplicates were found and removed.")))
+
+    }
+    election_data <- election_nodup_data
+
+    # define factor levels
+    hierarchy_levels <-
+      factor(c("ccaa", "prov", "mun", "mun_district",
+               "sec", "poll_station"),
+             levels = c("poll_station", "sec", "mun_district",
+                        "mun", "prov", "ccaa"),
+             ordered = TRUE)
+
+    # variables to be grouped (for general and mun variables)
+    group_var <- group_var_mun <- col_id_elec
     if (level != "all") {
 
-      hierarchy_levels <- c("ccaa", "prov", "mun", "mun_district",
-                            "sec", "poll_station")
-
-      levels <- hierarchy_levels[1:which(hierarchy_levels == level)]
-
-      for (i in 1:length(levels)) {
-
-        election_data <-
-          election_data |>
-          mutate("cod_INE_{levels[i]}" :=
-                   extract_code(.data[[id_col]], level = levels[i]),
-                 .after = .data[[id_col]])
-
-      }
+      group_var <-
+        c(group_var, glue("cod{if_else(hierarchy_levels[hierarchy_levels >= level] >= 'mun', '_INE', '')}_{hierarchy_levels[hierarchy_levels >= level]}"))
+      group_var_mun <-
+        c(group_var_mun, glue("cod_INE_{hierarchy_levels[hierarchy_levels >= level & hierarchy_levels >= 'mun']}"))
     }
 
-    # Aggregation of data
-    if (level == "all") {
+    if (any(names(election_data) == "id_INE_mun")) {
 
-      levels <- "all"
-      group_vars <- "id_elec"
+      col_id_mun <- "id_INE_mun"
 
     } else {
 
-      if (length(levels) <= 3) { # at mun level
-
-        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels)
-
-      } else {
-
-        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels[1:3])
-      }
-
-    }
-
-    # n_poll_stations CERA data
-    if (length(levels) <= 2) { # at province level or greater
-
-      n_poll_stations_CERA <-
+      election_data <-
         election_data |>
-        filter(mun == "CERA") |>
-        reframe(n_poll_stations = n(), .by = group_vars)
-
-      agg_data <-
-        election_data |>
-        left_join(n_poll_stations_CERA, by = group_vars) |>
-        # Replace NA
-        mutate(n_poll_stations = replace_na(n_poll_stations, 0)) |>
-        # Summary
-        reframe(type_elec = unique(type_elec),
-                date_elec = unique(date_elec),
-                n_poll_stations =
-                  n_distinct(.data[[id_col]]) - unique(n_poll_stations),
-                across(c("census_counting", "ballots_1",
-                         "ballots_2", "blank_ballots":"total_ballots"), sum),
-                turnout =
-                  round(100 * total_ballots / census_counting, prec_round),
-                porc_valid =
-                  round(100 * valid_ballots / total_ballots, prec_round),
-                porc_invalid =
-                  round(100 * invalid_ballots / total_ballots, prec_round),
-                porc_parties =
-                  round(100 * party_ballots / valid_ballots, prec_round),
-                porc_blank =
-                  round(100 * blank_ballots / valid_ballots, prec_round),
-                .by = group_vars)
-
-    } else {
-
-      agg_data <-
-        election_data |>
-        # Summary
-        reframe(type_elec = unique(type_elec),
-                date_elec = unique(date_elec),
-                n_poll_stations = n_distinct(.data[[id_col]]),
-                across(c("census_counting", "ballots_1",
-                         "ballots_2", "blank_ballots":"total_ballots"), sum),
-                turnout =
-                  round(100 * total_ballots / census_counting, prec_round),
-                porc_valid =
-                  round(100 * valid_ballots / total_ballots, prec_round),
-                porc_invalid =
-                  round(100 * invalid_ballots / total_ballots, prec_round),
-                porc_parties =
-                  round(100 * party_ballots / valid_ballots, prec_round),
-                porc_blank =
-                  round(100 * blank_ballots / valid_ballots, prec_round),
-                .by = group_vars) |>
-        mutate(n_poll_stations = if_else(mun == "CERA", 0, n_poll_stations))
-
+        mutate("id_INE_mun" =
+                 extract_code(.data[[col_id_poll_station]],
+                              level = "mun", full_cod = TRUE))
+      col_id_mun <- "id_INE_mun"
     }
 
     agg_data <-
-      agg_data |>
-      left_join(get_CERA_data(election_data, id_col = id_col,
-                              level = level, cod_CERA = cod_CERA,
-                              prec_round = prec_round),
-                by = group_vars, suffix = c("", ".y")) |>
-      select(-contains(".y")) |>
-      # turnout_1 and turnout_2 over counting census without cera.
-      mutate(turnout_1 =
-               round(100 * ballots_1 / (census_counting - census_cera),
-                     prec_round),
-             turnout_2 =
-               round(100 * ballots_2 / (census_counting - census_cera),
-                     prec_round), .before = turnout) |>
-      # Relocate columns
-      relocate(type_elec, date_elec, .after = id_elec)
-
-    # Resident population (without CERA)
-    pop_res <-
       election_data |>
-      mutate(id_INE_mun =
-               extract_code(.data[[id_col]], level = "mun",
-                            full_cod = TRUE)) |>
-      filter(!str_detect(id_INE_mun, "-999")) |>
-      distinct(id_elec, id_INE_mun, .keep_all = TRUE) |>
-      summarise(pop_res = sum(pop_res_mun),
-                .by = group_vars)
+      distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
+               .keep_all = TRUE) |>
+      summarise(across(c(contains("ballots"), -ballots),
+                       function(x) { sum(x, na.rm = TRUE) }),
+                n_poll_stations = n_distinct(.data[[col_id_poll_station]]),
+                .by = group_var) |>
+      left_join(election_data |>
+                  distinct(.data[[col_id_elec]], .data[[col_id_mun]],
+                           .keep_all = TRUE) |>
+                  summarise(across(cols_mun_var,
+                                   function(x) { sum(x, na.rm = TRUE) }),
+                            .by = group_var_mun),
+                by = group_var_mun)
 
-    # Join with pop data
-    agg_data <-
-      agg_data |>
-      # Join pop res data
-      left_join(pop_res, by = group_vars) |>
-      # Relocate
-      relocate(pop_res, .after = date_elec)
+    # if level is greater than mun, mun_variables have been aggregated
+    # at level provided
+    if (min(hierarchy_levels[hierarchy_levels >= level]) >= "mun" |
+        level == "all") {
 
-    # output
-    return(agg_data)
-
-  }
-
-#' @title Get candidacies data (at poll station level)
-#'
-#' @description ...
-#'
-#' @inheritParams get_mun_census_data
-#' @param include_candidates flag to indicate wheter it should be included data
-#' about candidates or not. Defaults to \code{FALSE}.
-#'
-#' @return ...
-#'
-#' @author Javier Álvarez-Liébana.
-#' @source ...
-#' @keywords get_elections_data
-#' @name aggregate_candidacies_data
-#'
-#' @examples
-#'
-#' ## Get candidacies data
-#'
-#' # Right examples
-#' \dontrun{
-#' # Wrong examples
-#' }
-#'
-#' @export
-aggregate_candidacies_data <-
-  function(candidacies_data, level = "all",
-           id_col_poll = "id_INE_poll_station",
-           id_col_candidacies = "id_candidacies",
-           id_col_candidacies_prov = "id_candidacies_prov",
-           col_abrev_candidacies = "abbrev_candidacies",
-           prec_round = 3) {
-
-    # Remove duplicates
-    candidacies_data <-
-      candidacies_data |>
-      distinct(id_elec, .data[[id_col_poll]], .data[[id_col_candidacies]],
-               .keep_all = TRUE)
-
-    # Remove total by ccaa and prov of CERA
-    candidacies_data <-
-      candidacies_data |>
-      drop_na(ccaa, prov)
-
-
-    # extract cod by level
-    if (level != "all") {
-
-      hierarchy_levels <- c("ccaa", "prov", "mun", "mun_district",
-                            "sec", "poll_station")
-
-      levels <- hierarchy_levels[1:which(hierarchy_levels == level)]
-
-      for (i in 1:length(levels)) {
-
-        candidacies_data <-
-          candidacies_data |>
-          mutate("cod_INE_{levels[i]}" :=
-                   extract_code(.data[[id_col_poll]], level = levels[i]),
-                 .after = .data[[id_col_poll]])
-
-      }
+      names(agg_data) <-
+        str_replace_all(names(agg_data), "_mun", glue("_{level}"))
     }
 
-    # Aggregation of data
-    if (level == "all") {
-
-      levels <- "all"
-      group_vars <- "id_elec"
-
-    } else {
-
-      if (length(levels) <= 3) { # at mun level
-
-        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels)
-
-      } else {
-
-        group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels[1:3])
-      }
-
-    }
-
-    # Use as name the "variant" of party most voted
-    group_vars <- c(group_vars, id_col_candidacies)
-    most_cand_voted <-
-      candidacies_data |>
-      reframe(abbrev_candidacies = unique(abbrev_candidacies),
-              ballots = sum(ballots),
-              .by = c(group_vars, abbrev_candidacies, name_candidacies)) |>
-      slice_max(ballots, n = 1, by = group_vars, with_ties = FALSE) |>
-      select(-ballots)
-
-    # Candidates elected
-    elected <-
-      candidacies_data |>
-      distinct(across(c(group_vars, prov)), .keep_all = TRUE) |>
-      summarise(elected = sum(elected_by_prov),
-                .by = group_vars)
-
-    # Aggregate data
-    agg_data <-
-      candidacies_data |>
-      reframe(type_elec = unique(type_elec),
-              date_elec = unique(date_elec),
-              ballots = sum(ballots),
-              .by = group_vars) |>
-      # Join with most voted parties: with multiple = "all"
-      # we allow, with the same abbrev, different regional names.
-      left_join(most_cand_voted, by = group_vars,
-                suffix = c(".x", ""), multiple = "all") |>
-      select(-contains(".x")) |>
-      group_by(across(group_vars)) |>
-      distinct(.keep_all = TRUE) |>
-      ungroup() |>
-      # Join with number of elected
-      left_join(elected, by = group_vars) |>
-      # Include votes required by elected
-      mutate(ballots_by_elec = round(ballots / elected, prec_round),
-             ballots_by_elec =
-               if_else(is.infinite(ballots_by_elec),
-                       NA, ballots_by_elec)) |>
-      relocate(type_elec, date_elec, .after = id_elec) |>
-      relocate(abbrev_candidacies, name_candidacies,
-               .after = id_candidacies)
-
-    # output
     return(agg_data)
+}
 
-  }
+# ¿arreglar CERA?
 
-#' @title Get candidacies data (at poll station level)
-#'
-#' @description ...
-#'
-#' @inheritParams get_mun_census_data
-#' @param include_candidates flag to indicate wheter it should be included data
-#' about candidates or not. Defaults to \code{FALSE}.
-#'
-#' @return ...
-#'
-#' @author Javier Álvarez-Liébana.
-#' @source ...
-#' @keywords get_elections_data
-#' @name get_elections_data
-#'
-#' @examples
-#'
-#' ## Get candidacies data
-#'
-#' # Right examples
-#' \dontrun{
-#' # Wrong examples
-#' }
-#'
-#' @export
-get_elections_data <-
+# election_data <- join_election_data("congress", 2019, 4)
+# check_results <-
+#   election_data |>
+#   aggregate_election_data() |>
+#   bind_rows(election_data |>
+#               aggregate_election_data(level = "ccaa") |>
+#               summarise(across(where(is.numeric), sum),
+#                         .by = "id_elec")) |>
+#   bind_rows(election_data |>
+#               aggregate_election_data(level = "prov") |>
+#               summarise(across(where(is.numeric), sum),
+#                         .by = "id_elec")) |>
+#   bind_rows(election_data |>
+#               aggregate_election_data(level = "mun") |>
+#               summarise(across(where(is.numeric), sum),
+#                         .by = "id_elec")) |>
+#   bind_rows(election_data |>
+#               aggregate_election_data(level = "mun_district") |>
+#               summarise(across(where(is.numeric), sum),
+#                         .by = "id_elec")) |>
+#   bind_rows(election_data |>
+#               aggregate_election_data(level = "sec") |>
+#               summarise(across(where(is.numeric), sum),
+#                         .by = "id_elec")) |>
+#   bind_rows(election_data |>
+#               aggregate_election_data(level = "poll_station") |>
+#               summarise(across(where(is.numeric), sum),
+#                         .by = "id_elec"))
+
+
+summary_election_data <-
   function(type_elec, year, month, level = "all",
            by_parties = TRUE, include_candidacies = FALSE,
            include_candidates = FALSE,
            filter_porc_ballots = NA, filter_elected = NA,
-           id_col_poll = "id_INE_poll_station",
-           id_col_candidacies = "id_candidacies",
-           id_col_candidacies_prov = "id_candidacies_prov",
+           col_id_elec = "id_elec",
+           col_id_poll_station = "id_INE_poll_station",
+           col_id_candidacies = "id_candidacies",
+           col_id_candidacies_prov = "id_candidacies_prov",
            col_abrev_candidacies = "abbrev_candidacies",
            prec_round = 3) {
 
@@ -993,8 +643,8 @@ get_elections_data <-
 
     # Getting data at poll station level (without candidacies)
     election_data <-
-      get_poll_station_data(type_elec, year, month,
-                            prec_round = prec_round)
+      import_poll_station_data(type_elec, year, month,
+                               prec_round = prec_round)
 
     # Message: green details
     message(green(glue("   - Aggregating election data at {ifelse(level == 'all', 'national', level)} level...")))
@@ -1003,7 +653,9 @@ get_elections_data <-
     # and then aggregate at provided level
     agg_data <-
       election_data |>
-      aggregate_election_data(level = level, id_col = id_col_poll,
+      aggregate_election_data(level = level,
+                              col_id_elec = col_id_elec,
+                              col_id_poll_station = col_id_poll_station,
                               prec_round = prec_round)
 
     if (include_candidacies) {
@@ -1018,8 +670,7 @@ get_elections_data <-
 
       # Getting candidacies data
       candidacies_data <-
-        get_candidacies_data(type_elec, year, month,
-                             include_candidates = include_candidates)
+        import_candidacies_data(type_elec, year, month)
 
       # Message: green for details
       message(green(glue("   - Aggregating candidacies data at {ifelse(level == 'all', 'national', level)} level...")))
@@ -1029,10 +680,10 @@ get_elections_data <-
       agg_data_candidacies <-
         candidacies_data |>
         aggregate_candidacies_data(level = level,
-                                   id_col_poll = id_col_poll,
-                                   id_col_candidacies = id_col_candidacies,
-                                   id_col_candidacies_prov = id_col_candidacies_prov,
-                                   col_abrev_candidacies = id_col_candidacies_prov,
+                                   col_id_poll_station = col_id_poll_station,
+                                   col_id_candidacies = col_id_candidacies,
+                                   col_id_candidacies_prov = col_id_candidacies_prov,
+                                   col_abrev_candidacies = col_id_candidacies_prov,
                                    prec_round = prec_round)
 
       # Message: magenta for more
@@ -1084,14 +735,14 @@ get_elections_data <-
       # Including some summaries
       agg_data <-
         agg_data |>
-        mutate(porc_candidacies_parties =
+        mutate("porc_candidacies_parties" =
                  round(100*ballots/party_ballots, prec_round),
-               porc_candidacies_valid =
+               "porc_candidacies_valid" =
                  round(100*ballots/valid_ballots, prec_round),
-               porc_candidacies_census =
+               "porc_candidacies_census" =
                  round(100*ballots/census_counting, prec_round),
-               porc_elected = round(100*elected/360, prec_round),
-               anomaly_ballots_elected =
+               "porc_elected" = round(100*elected/360, prec_round),
+               "anomaly_ballots_elected" =
                  round(100*((porc_elected / porc_candidacies_parties) - 1),
                        prec_round))
 
@@ -1114,7 +765,7 @@ get_elections_data <-
       # Relocate
       agg_data <-
         agg_data |>
-        select(c(id_elec:pop_res, group_vars[group_vars != "id_elec"],
+        select(all_of(id_elec:pop_res, group_vars[group_vars != "id_elec"],
                  id_candidacies, abbrev_candidacies,
                  name_candidacies, ballots:anomaly_ballots_elected,
                  everything()))
@@ -1130,5 +781,7 @@ get_elections_data <-
     return(agg_data)
 
   }
+
+
 
 

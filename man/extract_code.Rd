@@ -7,48 +7,51 @@
 extract_code(id_INE_poll_station, level = "mun", full_cod = FALSE)
 }
 \arguments{
-\item{id_INE_poll_station}{poll station code. It should be a string vector
-with tokens between 18 and 19 characters with 5 '-' according to the INE/MIR
-format").}
+\item{id_INE_poll_station}{poll station code. It should be a
+string vector with tokens between 18 and 19 characters with 5 '-'
+according to the INE/MIR format").}
 
 \item{level}{aggregation level, for which we want to extract codes. It
 should be taken from the following values: 'ccaa', 'prov', 'mun',
 'mun-district', 'sec' or 'poll-station'}
 
-\item{full_cod}{flag to indicate if codes should be provided in a full format
-(including codes of more aggregated levels) or not. Defaults to
-\code{FALSE}.}
+\item{full_cod}{flag to indicate if codes should be provided in a
+full format (including codes of more aggregated levels) or not.
+Defaults to \code{FALSE}.}
 }
 \value{
-A string code subtract from the whole code the properly id for the
-aggregation level required.
+A string code subtract from the whole code the properly id
+for the aggregation level required.
 }
 \description{
-Extract region codes (for aggregation levels ccaa, prov, mun,
-municipal districts and census sections) for a given poll station code
-provided by Spanish Ministry of Interior (MIR) and Spanish Statistical
-Office (INE)
+Extract region codes (for aggregation levels ccaa,
+prov, mun, municipal districts and census sections) for a given
+poll station code provided by Spanish Ministry of Interior (MIR)
+and Spanish Statistical Office (INE)
 }
 \examples{
 
-## Extracting codes
+## Correct examples
 
 # Code for Adra ("003"), from province of Almeria ("04") and ccaa of
-# Andalucia ("01"), first municipal district ("01"), census sections district
-# ("004") and poll station "B"
+# Andalucia ("01"), first municipal district ("01"), census
+# sections district ("004") and poll station "B"
 id_INE_poll_station <- "01-04-003-01-004-B"
 
-# Right examples
 extract_code(id_INE_poll_station, level = "mun", full_cod = FALSE)
 extract_code(id_INE_poll_station, level = "mun", full_cod = TRUE)
 extract_code(id_INE_poll_station, level = "prov", full_cod = FALSE)
 extract_code(id_INE_poll_station, level = "prov", full_cod = TRUE)
 extract_code(id_INE_poll_station, level = "ccaa", full_cod = FALSE)
 extract_code(id_INE_poll_station, level = "ccaa", full_cod = TRUE)
-extract_code(id_INE_poll_station, level = "mun_district", full_cod = TRUE)
+extract_code(id_INE_poll_station, level = "mun_district",
+             full_cod = TRUE)
+
+# ----
+# Incorrect examples
+# ----
 
 \dontrun{
-# Wrong examples
 extract_code(id_INE_poll_station, level = "prov", full_cod = false)
 extract_code(id_INE_poll_station, level = "province", full_cod = TRUE)
 extract_code(id_INE_poll_station, level = "muni", full_cod = "all")
@@ -58,6 +61,7 @@ extract_code(id_INE_poll_station, level = "district", full_cod = TRUE)
 
 }
 \author{
-Javier Álvarez-Liébana.
+Javier Álvarez-Liébana, David Pereiro-Pol, Mafalda
+González-González and Irene Bosque-Gala.
 }
 \keyword{utils}

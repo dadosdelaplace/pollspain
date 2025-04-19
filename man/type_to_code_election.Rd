@@ -11,7 +11,7 @@ Data extracted from
 type_to_code_election(type_elec)
 }
 \arguments{
-\item{type_elec}{type elections for which data is available.
+\item{type_elec}{Type elections for which data is available.
 It should be one of the following values: "referendum",
 "congress", "senate", "local", "cabildo" (Canarian council)
 or "EU".}
@@ -33,15 +33,17 @@ congress, etc) to a properly code (according to documentation)
 available in Spanish Ministry of Interior
 }
 \examples{
-## Convert type to code
+## Correct examples
 
-# Right examples
 type_to_code_election(type_elec = "congress")
 type_to_code_election(type_elec = "senate")
 type_to_code_election(type_elec = "local")
 
+# ----
+# Incorrect examples
+# ----
+
 \dontrun{
-# Wrong examples
 type_to_code_election(type_elec = "hi!")
 type_to_code_election(type_elec = "nop")
 type_to_code_election(type_elec = "national")
@@ -49,6 +51,7 @@ type_to_code_election(type_elec = "national")
 
 }
 \author{
-Javier Álvarez-Liébana.
+Javier Álvarez-Liébana, David Pereiro-Pol, Mafalda
+González-González and Irene Bosque-Gala.
 }
 \keyword{utils}

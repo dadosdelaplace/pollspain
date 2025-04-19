@@ -31,85 +31,27 @@ install.packages("devtools") # only if not already installed
 devtools::install_github("dadosdelaplace/pollspain")
 ```
 
-```{r echo = FALSE, message = FALSE}
-devtools::install_github("dadosdelaplace/pollspain")
-```
 
-```{r}
-library(pollspain)
+```{r message = FALSE, warning = FALSE}
 library(tidyverse)
+library(pollspain)
 ```
 
 ## Usage
 
 ### get functions
 
-#### Censo (nivel: municipal)
+La funciòn `aggregate_election_data()` está destinada a agregar al nivel geográfico pedido la información electoral. La función principal es `get_elections_data()` que combina `get_poll_station_data()` con `aggregate_election_data()` El código de esta familia de funciones se puede encontrar en el archivo `get_elections_data.R`.
 
-
-Variables relativas a población (`pop_res_mun`, `census_INE_mun`, `census_counting_mun`, `census_CERE_mun`)
-
-```{r}
-mun_census_data <- get_mun_census_data("congress", 2019, 4)
-mun_census_data
-```
-
-#### Datos de mesas electorales (nivel: mesa electoral)
-
-Datos generales de participación, votos en blanco, votos a candidaturas, etc.
-
-```{r}
-poll_data <- get_poll_station_data("congress", 2019, c(4, 11))
-poll_data
-```
-
-#### Datos de candidatos/as (nivel: circunscripción electoral)
-
-Datos de los/as candidatos que forman las listas (por circunscripción provincial en las generales)
-
-```{r}
-candidates_data <- get_candidates_data("congress", 2019, c(4, 11))
-candidates_data 
-```
-
-#### Datos de candidaturas (nivel: mesa electoral)
-
-Datos de las candidaturas por mesa electoral, con los votos obtenidos en cada mesa para cada candidatura, así como los electos por provincia obtenidos
-
-```{r}
-candidacies_data <- get_candidacies_data("congress", 2019, c(4, 11))
-candidacies_data
-```
-
-#### Datos del CERA
-
-Según el INE:
-
-«El censo electoral contiene la inscripción de quienes reúnen los requisitos para ser elector y no se hallen privados, definitiva o temporalmente, del derecho de sufragio. El censo electoral está compuesto por:
-
-* El censo electoral de españoles residentes en España (CER).
-* El censo electoral de españoles residentes-ausentes que viven en el extranjero (CERA).
-
-El censo electoral de residentes en España que sean nacionales de países con Acuerdos para las elecciones municipales (CERE Acuerdos), y el censo electoral de ciudadanos de la Unión Europea residentes en España para las elecciones municipales y al Parlamento Europeo (CERE UE).»
-
-La función `get_CERA_data()` nos devuelve los datos relativos al CERA
+Dicha función nos permite obtener los datos electorales de las elecciones pedidas y al nivel (`level`) de agregación que queramos, pudiendo ser  `all`, `ccaa`, `prov`, `mun`, `mun_district` (distrito electoral), `sec` (sección censal) y `poll_station` (mesa electoral)
 
 ```{r eval = FALSE}
-ccaa_CERA_data <- get_CERA_data(election_data, level = "ccaa")
-```
-
-#### Datos electorales agregados
-
-La función `get_elections_data()` nos permite obtener los datos electorales de las elecciones pedidas y con el nivel (`level`) de agregación que queramos, pudiendo ser  `all`, `ccaa`, `prov`, `mun`, `mun_district`, `sec` (sección censal) y `poll_station` (a nivel de mesa electoral)
-
-```{r}
 prov_data <- get_elections_data("congress", year = 2019, month = c(4, 11), level = "prov")
 prov_data
 ```
 
-Esta función combina `get_poll_station_data()` (el dato en bruto por mesa electoral) con `get_CERA_data()` y `aggregate_election_data()`, que nos proporciona la agregación pedida. El código anterior es equivalente a:
 
-```{r}
+```{r eval = FALSE}
 # Raw data at poll station level
 election_data <-
       get_poll_station_data("congress", year = 2019, month = c(4, 11))
@@ -122,11 +64,7 @@ prov_data
 ```
 
 
-#### Datos de elecciones
-
-Función principal, combinando la extracción y la agregación
-
-```{r}
+```{r eval = FALSE}
 national_data <-
   get_elections_data("congress", 2019, c(4, 11), 
                      include_candidacies = TRUE, level =  "all")
@@ -134,7 +72,7 @@ national_data |> arrange(desc(ballots))
 ```
 
 
-```{r}
+```{r eval = FALSE}
 ccaa_data <-
   get_elections_data("congress", 2019, c(4, 11), 
                      include_candidacies = TRUE, level = "ccaa")
@@ -148,7 +86,7 @@ prov_data
 
 Es lo mismo extraer a nivel municipio que a un nivel más bajo y luego agrupar y sumarizar.
 
-```{r}
+```{r eval = FALSE}
 mun_data <-
   get_elections_data("congress", 2019, c(4, 11), 
                      include_candidacies = TRUE, level = "mun")
@@ -166,8 +104,76 @@ mun_district_data |>
 ```
 
 
+### import functions
+
+Functions starting with `import_..._data()` (whose code can be found in the `import_elections_data.R` file) aimed at importing and preprocessing as raw as possible the `.DAT` election files from the Spanish Ministry of Interior. All functions download the `.rda` files available in the Github repository \url{https://github.com/dadosdelaplace/pollspain-data} (directly downloaded from MIR website).
+
+#### Census data (level: mun)
+
+`import_mun_census_data()` import municipal census data for one or more elections at the municipal level. This function downloads and processes «raw» municipal data files for specified elections, providing variables related to population, census and administrative codes.
+
+```{r}
+mun_census_data <- get_mun_census_data("congress", 2019, 4)
+mun_census_data
+```
+
+
+#### Poll station data (level: poll station)
+
+`import_poll_station_data()` import and preprocess elections data at poll stations level for given election types and dates, providing variables related to turnout, blank/valid votes, etc
+
+
+```{r}
+poll_data <- import_poll_station_data("congress", 2019, c(4, 11))
+poll_data
+```
+
+#### Candidacies data (level: poll station)
+
+`import_candidacies_data()` import and preprocess candidacies data, providing variables related to id of candidacies, abbreviature and names of them and ballots obtained for each one at each poll station.
+
+```{r}
+candidacies_data <- import_candidacies_data("congress", 2019, c(4, 11))
+candidacies_data
+```
+
+#### Datos del CERA
+
+According to the National Statistics Institute (INE):
+
+«The electoral roll contains the registration of those who meet the requirements to be voters and are not definitively or temporarily deprived of the right to vote. The electoral roll is composed of:
+
+* The electoral roll of Spanish citizens residing in Spain (CER).
+
+* The electoral roll of Spanish citizens residing abroad (CERA).
+
+The electoral roll of residents in Spain who are nationals of countries with Agreements for municipal elections (CERE Agreements), and the electoral roll of citizens of the European Union residing in Spain for municipal and European Parliament elections (CERE EU).»
+
+The `get_CERA_data()` function returns the data related to the CERA.
+
+```{r eval = FALSE}
+ccaa_CERA_data <- get_CERA_data(election_data, level = "ccaa")
+```
 
 
 
 
-   
+### util functions
+
+The functions contained in the `utils.R` script are intended to serve as helper functions for data preprocessing.
+
+* `type_to_code_election()`: converts from election type (referendum, congress, senate, etc.) to the official ministry code.
+
+```{r}
+type_to_code_election(type_elec = "congress")
+```
+
+* `extract_code()`: given a polling station code, it returns the code corresponding to the requested level of disaggregation.
+
+```{r}
+extract_code("01-04-003-01-004-B", level = "mun")
+extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
+```
+
+
+* `recod_parties()`: recodes party names and their acronyms (pending)
