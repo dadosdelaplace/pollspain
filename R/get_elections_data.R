@@ -4,9 +4,9 @@
 #'
 #' @description Import and preprocess poll stations info but jointly
 #' with the preprocessed candidacies data, for given election types
-#' and dates. This function supports both single values and vector
-#' inputs for fetching and combining data for multiple elections
-#' at once.
+#' and dates, at poll station level. This function supports both
+#' single values and vector inputs for fetching and combining data
+#' for multiple elections at once.
 #'
 #' @inheritParams import_poll_station_data
 #' @inheritParams import_candidacies_data
@@ -101,10 +101,10 @@
 #' elections_data1 <- get_election_data("congress", 2019, 4)
 #'
 #' # Fetch elections data for the congress and senate elections
-#' # in April 2019 in a short version
+#' # in April 2019 in a long version
 #' elections_data2 <-
 #'   get_election_data(c("congress", "senate"), 2019, 4,
-#'                     short_version = TRUE)
+#'                     short_version = FALSE)
 #'
 #' # Fetch elections data for congress elections in Nov 2019,
 #' # April 2019, and June 2016
@@ -179,26 +179,47 @@ get_election_data <-
   function(type_elec, year = 2019, month = 4, date = NULL,
            election_data = NULL, ballots_data = NULL,
            col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
-           prec_round = 3, short_version = FALSE,
+           prec_round = 3, short_version = TRUE,
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-           file_ext = ".rda") {
+           file_ext = ".rda", verbose = TRUE) {
 
     if (is.null(election_data)) {
+
+      if (verbose) {
+
+        # Print the file URL for debugging purposes
+        message(blue("📦 Import poll station data ..."))
+        Sys.sleep(1/20)
+
+      }
 
       election_data <-
         import_poll_station_data(type_elec = type_elec, year = year,
                                  month = month, date = date, prec_round = prec_round,
                                  short_version = short_version,
-                                 repo_url = repo_url, file_ext = file_ext)
+                                 repo_url = repo_url, file_ext = file_ext,
+                                 verbose = FALSE)
 
     }
 
     if (is.null(ballots_data)) {
 
+      if (verbose) {
+
+        # Print the file URL for debugging purposes
+        message(blue("📦 Import candidacies and ballots data (at poll station level) ..."))
+        Sys.sleep(1/20)
+
+        message(magenta("⏳ Please wait, the volume of data downloaded and the internet connection may take a few seconds"))
+
+      }
+
       ballots_data <-
         import_candidacies_data(type_elec = type_elec, year = year,
                                 month = month, date = date,
-                                repo_url = repo_url, file_ext = file_ext)
+                                repo_url = repo_url, file_ext = file_ext,
+                                short_version = short_version,
+                                verbose = FALSE)
 
     }
 
@@ -219,6 +240,12 @@ get_election_data <-
       left_join(ballots_data, by = group_vars,
                 suffix = c("", ".rm")) |>
       select(-contains("rm"))
+
+    if (short_version & verbose) {
+
+      message(yellow("⚠️ A short version was asked. If you require all variables, please run with `short_version = FALSE'"))
+
+    }
 
     # output
     return(join_data)

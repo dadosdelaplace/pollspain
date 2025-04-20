@@ -10,9 +10,10 @@ import_poll_station_data(
   month = 4,
   date = NULL,
   prec_round = 3,
-  short_version = FALSE,
+  short_version = TRUE,
   repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-  file_ext = ".rda"
+  file_ext = ".rda",
+  verbose = TRUE
 )
 }
 \arguments{
@@ -35,12 +36,12 @@ in format \%Y-\%m-\%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
 If no date was provided, \code{month} and \code{year} should be
 both numerical variables.}
 
-\item{prec_round}{rounding accuracy. Defaults to
+\item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
 
-\item{short_version}{flag to indicate wheter it should be returned
-a short version of the data (just key  variables)
-or not. Defaults to \code{FALSE}.}
+\item{short_version}{Flag to indicate whether it should be returned
+a short version of the data (just key variables) or not.
+Defaults to \code{TRUE}.}
 
 \item{repo_url}{A string with the url in which the raw data can be
 found. Defaults to
@@ -48,6 +49,9 @@ found. Defaults to
 
 \item{file_ext}{A string with the file's extension. Defaults to
 \code{".rda"}.}
+
+\item{verbose}{Flag to indicate whether detailed messages should
+be printed during execution. Defaults to \code{TRUE}.}
 }
 \value{
 A tibble with rows corresponding to municipalities for
@@ -117,19 +121,19 @@ the user.
 
 # Congress elections in April 2019
 # Fetch poll station data for the congress elections in April 2019
-# in a long version
+# in a short version
 poll_station_data1 <- import_poll_station_data("congress", 2019, 4)
 
 #' # Fetch poll station data for the congress and senate elections
-# in April 2019 in a long version
+# in April 2019 in a short version
 poll_station_data2 <-
   import_poll_station_data(c("congress", "senate"), 2019, 4)
 
 # Fetch poll station data for the congress and senate elections in
-# April 2019 in a short version
+# April 2019 in a long version
 poll_station_data3 <-
   import_poll_station_data(c("congress", "senate"), 2019, 4,
-                           short_version = TRUE)
+                           short_version = FALSE)
 
 # Fetch poll station data for congress elections in Nov 2019
 # and June 2016

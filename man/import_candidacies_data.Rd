@@ -10,7 +10,9 @@ import_candidacies_data(
   month = 4,
   date = NULL,
   repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-  file_ext = ".rda"
+  file_ext = ".rda",
+  short_version = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -39,12 +41,25 @@ found. Defaults to
 
 \item{file_ext}{A string with the file's extension. Defaults to
 \code{".rda"}.}
+
+\item{short_version}{flag to indicate whether it should be returned
+a short version of the data (just key  variables)
+or not. Defaults to \code{TRUE}.}
+
+\item{verbose}{Flag to indicate whether detailed messages should
+be printed during execution. Defaults to \code{TRUE}.}
 }
 \value{
 A tibble with candidacies data at poll station level
 including the following variables:
 \item{id_elec}{election's id constructed from the election code
 \code{cod_elec} and date \code{date_elec}.}
+\item{cod_elec}{code representing the type of election:
+\code{"01"} (referendum), \code{"02"} (congress),
+\code{"03"} (senate), \code{"04"} (local elections),
+\code{"06"} (cabildo - Canarian council - elections), \code{"07"}
+(European Parliament elections). Variable available only for
+long version.}
 \item{type_elec}{type of election.}
 \item{date_elec}{date of the election.}
 \item{id_INE_poll_station}{poll station's id constructed from the
@@ -52,16 +67,21 @@ ccaa-prov-municipality and poll station codes.}
 \item{id_INE_mun}{municipality ID constructed from the
 ccaa-prov-mun codes provided by INE.}
 \item{cod_INE_ccaa, ccaa}{codes and names for regions (ccaa)
-to which the municipalities belong.}
+to which the municipalities belong. Codes available only for
+long version.}
 \item{cod_INE_prov, prov}{codes and names for the provinces to
-which the municipalities belong.}
+which the municipalities belong. Codes available only for
+long version.}
 \item{cod_INE_mun, mun}{code, and name for
-municipalities.}
+municipalities. Codes available only for
+long version.}
 \item{cod_mun_district, cod_sec, cod_poll_station}{codes for the
-municipal district, census tract and poll station.}
+municipal district, census tract and poll station. Codes available
+only for long version.}
 \item{id_candidacies}{id for candidacies (at province level).}
 \item{id_candidacies_ccaa, id_candidacies_nat}{id for
-candidacies (at region - ccaa - and national level).}
+candidacies (at region - ccaa - and national level). Id's available
+only for long version.}
 \item{abbrev_candidacies, name_candidacies}{acronym and full name
 of the candidacies.}
 \item{ballots}{number of ballots obtained for each candidacy at

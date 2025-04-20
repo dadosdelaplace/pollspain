@@ -15,9 +15,10 @@ get_election_data(
   col_id_elec = "id_elec",
   col_id_poll_station = "id_INE_poll_station",
   prec_round = 3,
-  short_version = FALSE,
+  short_version = TRUE,
   repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-  file_ext = ".rda"
+  file_ext = ".rda",
+  verbose = TRUE
 )
 }
 \arguments{
@@ -57,12 +58,12 @@ identify the elections. Defaults to \code{"id_elec"}.}
 uniquely identify poll stations. Defaults to
 \code{"id_INE_poll_station"}.}
 
-\item{prec_round}{rounding accuracy. Defaults to
+\item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
 
-\item{short_version}{flag to indicate wheter it should be returned
-a short version of the data (just key  variables)
-or not. Defaults to \code{FALSE}.}
+\item{short_version}{Flag to indicate whether it should be returned
+a short version of the data (just key variables) or not.
+Defaults to \code{TRUE}.}
 
 \item{repo_url}{A string with the url in which the raw data can be
 found. Defaults to
@@ -70,6 +71,9 @@ found. Defaults to
 
 \item{file_ext}{A string with the file's extension. Defaults to
 \code{".rda"}.}
+
+\item{verbose}{Flag to indicate whether detailed messages should
+be printed during execution. Defaults to \code{TRUE}.}
 }
 \value{
 A tibble with rows corresponding to municipalities for
@@ -131,9 +135,9 @@ each poll station.}
 \description{
 Import and preprocess poll stations info but jointly
 with the preprocessed candidacies data, for given election types
-and dates. This function supports both single values and vector
-inputs for fetching and combining data for multiple elections
-at once.
+and dates, at poll station level. This function supports both
+single values and vector inputs for fetching and combining data
+for multiple elections at once.
 }
 \details{
 This function fetches municipal-level data for the
@@ -153,10 +157,10 @@ the user.
 elections_data1 <- get_election_data("congress", 2019, 4)
 
 # Fetch elections data for the congress and senate elections
-# in April 2019 in a short version
+# in April 2019 in a long version
 elections_data2 <-
   get_election_data(c("congress", "senate"), 2019, 4,
-                    short_version = TRUE)
+                    short_version = FALSE)
 
 # Fetch elections data for congress elections in Nov 2019,
 # April 2019, and June 2016

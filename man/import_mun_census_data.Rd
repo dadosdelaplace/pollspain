@@ -14,7 +14,8 @@ import_mun_census_data(
   month = 4,
   date = NULL,
   repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-  file_ext = ".rda"
+  file_ext = ".rda",
+  verbose = TRUE
 )
 }
 \arguments{
@@ -43,6 +44,9 @@ found. Defaults to
 
 \item{file_ext}{A string with the file's extension. Defaults to
 \code{".rda"}.}
+
+\item{verbose}{Flag to indicate whether detailed messages should
+be printed during execution. Defaults to \code{TRUE}.}
 }
 \value{
 A tibble with rows corresponding to municipalities for

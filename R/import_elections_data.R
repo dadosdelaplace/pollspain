@@ -21,6 +21,8 @@
 #' \url{https://github.com/dadosdelaplace/pollspain-data/blob/main}.
 #' @param file_ext A string with the file's extension. Defaults to
 #' \code{".rda"}.
+#' @param verbose Flag to indicate whether detailed messages should
+#' be printed during execution. Defaults to \code{TRUE}.
 #'
 #' @return A tibble with rows corresponding to municipalities for
 #' each election, including the following variables:
@@ -113,12 +115,20 @@
 import_mun_census_data <-
   function(type_elec, year = 2019, month = 4, date = NULL,
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-           file_ext = ".rda") {
+           file_ext = ".rda", verbose = TRUE) {
 
     # for the moment, just congress election
     if (!all(type_elec %in% c("congress", "senate"))) {
 
       stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
+
+    }
+
+    # Check if verbose is correct
+    if (!is.logical(verbose) | is.na(verbose)) {
+
+      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
+
 
     }
 
@@ -187,21 +197,27 @@ import_mun_census_data <-
     elections_dir <- glue("{repo_url}/{dirs}")
     files_url <- glue("{elections_dir}/raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
 
-    # Print the file URL for debugging purposes
-    message(blue("📦 Import census mun data from ..."))
-    Sys.sleep(1/10)
-    message(green(glue("   - {paste0(files_url, '\n')}")))
+    if (verbose) {
+
+      # Print the file URL for debugging purposes
+      message(blue("📦 Import census mun data from ..."))
+      Sys.sleep(1/20)
+      message(green(glue("   - {paste0(files_url, '\n')}")))
+
+    }
 
     wrong_elections <-
       asked_elections |>
       anti_join(dates_elections_spain,
                 by = c("cod_elec", "type_elec", "year", "month"))
 
-    if ((wrong_elections |> nrow() > 0) &
-        (allowed_elections |> nrow() == 0)) {
+    if (verbose) {
+      if ((wrong_elections |> nrow() > 0) &
+          (allowed_elections |> nrow() == 0)) {
 
-      message(yellow(glue("⚠️ No data is available for {wrong_elections$type_elec} elections in {paste0(wrong_elections$month, '-', wrong_elections$year, '\n')}")))
+        message(yellow(glue("⚠️ No data is available for {wrong_elections$type_elec} elections in {paste0(wrong_elections$month, '-', wrong_elections$year, '\n')}")))
 
+      }
     }
 
     # download files in a temp_folder
@@ -259,11 +275,11 @@ import_mun_census_data <-
 #' data for multiple elections at once.
 #'
 #' @inheritParams import_mun_census_data
-#' @param prec_round rounding accuracy. Defaults to
+#' @param prec_round Rounding accuracy. Defaults to
 #' \code{prec_round = 3}.
-#' @param short_version flag to indicate wheter it should be returned
-#' a short version of the data (just key  variables)
-#' or not. Defaults to \code{FALSE}.
+#' @param short_version Flag to indicate whether it should be returned
+#' a short version of the data (just key variables) or not.
+#' Defaults to \code{TRUE}.
 #'
 #' @return A tibble with rows corresponding to municipalities for
 #' each election, including the following variables:
@@ -330,19 +346,19 @@ import_mun_census_data <-
 #'
 #' # Congress elections in April 2019
 #' # Fetch poll station data for the congress elections in April 2019
-#' # in a long version
+#' # in a short version
 #' poll_station_data1 <- import_poll_station_data("congress", 2019, 4)
 #'
 #' #' # Fetch poll station data for the congress and senate elections
-#' # in April 2019 in a long version
+#' # in April 2019 in a short version
 #' poll_station_data2 <-
 #'   import_poll_station_data(c("congress", "senate"), 2019, 4)
 #'
 #' # Fetch poll station data for the congress and senate elections in
-#' # April 2019 in a short version
+#' # April 2019 in a long version
 #' poll_station_data3 <-
 #'   import_poll_station_data(c("congress", "senate"), 2019, 4,
-#'                            short_version = TRUE)
+#'                            short_version = FALSE)
 #'
 #' # Fetch poll station data for congress elections in Nov 2019
 #' # and June 2016
@@ -380,15 +396,23 @@ import_mun_census_data <-
 #' @export
 import_poll_station_data <-
   function(type_elec, year = 2019, month = 4, date = NULL,
-           prec_round = 3, short_version = FALSE,
+           prec_round = 3, short_version = TRUE,
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-           file_ext = ".rda") {
+           file_ext = ".rda", verbose = TRUE) {
 
 
     # for the moment, just congress and senate election
     if (!all(type_elec %in% c("congress", "senate"))) {
 
       stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
+
+    }
+
+    # Check if verbose is correct
+    if (!is.logical(verbose) | is.na(verbose)) {
+
+      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
+
 
     }
 
@@ -470,21 +494,27 @@ import_poll_station_data <-
     elections_dir <- glue("{repo_url}/{dirs}")
     files_url <- glue("{elections_dir}/raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
 
-    # Print the file URL for debugging purposes
-    message(blue("📦 Import poll station data from ..."))
-    Sys.sleep(1/10)
-    message(green(glue("   - {paste0(files_url, '\n')}")))
+    if (verbose) {
+
+      # Print the file URL for debugging purposes
+      message(blue("📦 Import poll station data from ..."))
+      Sys.sleep(1/20)
+      message(green(glue("   - {paste0(files_url, '\n')}")))
+
+    }
 
     wrong_elections <-
       asked_elections |>
       anti_join(dates_elections_spain,
                 by = c("cod_elec", "type_elec", "year", "month"))
 
-    if ((wrong_elections |> nrow() > 0) &
-        (allowed_elections |> nrow() == 0)) {
+    if (verbose) {
+      if ((wrong_elections |> nrow() > 0) &
+          (allowed_elections |> nrow() == 0)) {
 
-      message(yellow(glue("⚠️ No data is available for {wrong_elections$type_elec} elections in {paste0(wrong_elections$month, '-', wrong_elections$year, '\n')}")))
+        message(yellow(glue("⚠️ No data is available for {wrong_elections$type_elec} elections in {paste0(wrong_elections$month, '-', wrong_elections$year, '\n')}")))
 
+      }
     }
 
     # download files in a temp_folder
@@ -533,7 +563,8 @@ import_poll_station_data <-
     poll_station_data <-
       poll_station_data |>
       dplyr::filter(cod_INE_mun != "999") |>
-      left_join(import_mun_census_data(type_elec, year, month, date, repo_url, file_ext),
+      left_join(import_mun_census_data(type_elec, year, month, date, repo_url, file_ext,
+                                       verbose = verbose),
                 by = c("cod_elec", "type_elec", "date_elec", "id_INE_mun"),
                 suffix = c("", ".y")) |>
       select(-contains(".y"))
@@ -600,7 +631,11 @@ import_poll_station_data <-
 
     if (short_version) {
 
-      message(yellow("⚠️ A short version was asked. If you require all variables, please run with `short_version = TRUE'"))
+      if (verbose) {
+
+        message(yellow("⚠️ A short version was asked. If you require all variables, please run with `short_version = FALSE'"))
+
+      }
 
       # Select just few variables
       poll_station_data <-
@@ -623,11 +658,20 @@ import_poll_station_data <-
 #' combining data for multiple elections at once.
 #'
 #' @inheritParams import_mun_census_data
+#' @param short_version flag to indicate whether it should be returned
+#' a short version of the data (just key  variables)
+#' or not. Defaults to \code{TRUE}.
 #'
 #' @return A tibble with candidacies data at poll station level
 #' including the following variables:
 #' \item{id_elec}{election's id constructed from the election code
 #' \code{cod_elec} and date \code{date_elec}.}
+#' \item{cod_elec}{code representing the type of election:
+#' \code{"01"} (referendum), \code{"02"} (congress),
+#' \code{"03"} (senate), \code{"04"} (local elections),
+#' \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
+#' (European Parliament elections). Variable available only for
+#' long version.}
 #' \item{type_elec}{type of election.}
 #' \item{date_elec}{date of the election.}
 #' \item{id_INE_poll_station}{poll station's id constructed from the
@@ -635,16 +679,21 @@ import_poll_station_data <-
 #' \item{id_INE_mun}{municipality ID constructed from the
 #' ccaa-prov-mun codes provided by INE.}
 #' \item{cod_INE_ccaa, ccaa}{codes and names for regions (ccaa)
-#' to which the municipalities belong.}
+#' to which the municipalities belong. Codes available only for
+#' long version.}
 #' \item{cod_INE_prov, prov}{codes and names for the provinces to
-#' which the municipalities belong.}
+#' which the municipalities belong. Codes available only for
+#' long version.}
 #' \item{cod_INE_mun, mun}{code, and name for
-#' municipalities.}
+#' municipalities. Codes available only for
+#' long version.}
 #' \item{cod_mun_district, cod_sec, cod_poll_station}{codes for the
-#' municipal district, census tract and poll station.}
+#' municipal district, census tract and poll station. Codes available
+#' only for long version.}
 #' \item{id_candidacies}{id for candidacies (at province level).}
 #' \item{id_candidacies_ccaa, id_candidacies_nat}{id for
-#' candidacies (at region - ccaa - and national level).}
+#' candidacies (at region - ccaa - and national level). Id's available
+#' only for long version.}
 #' \item{abbrev_candidacies, name_candidacies}{acronym and full name
 #' of the candidacies.}
 #' \item{ballots}{number of ballots obtained for each candidacy at
@@ -711,13 +760,21 @@ import_poll_station_data <-
 import_candidacies_data <-
   function(type_elec, year = 2019, month = 4, date = NULL,
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-           file_ext = ".rda") {
+           file_ext = ".rda", short_version = TRUE, verbose = TRUE) {
 
 
     # for the moment, just congress and senate election
     if (!all(type_elec %in% c("congress", "senate"))) {
 
       stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
+
+    }
+
+    # Check if verbose is correct
+    if (!is.logical(verbose) | is.na(verbose)) {
+
+      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
+
 
     }
 
@@ -786,24 +843,30 @@ import_candidacies_data <-
     elections_dir <- glue("{repo_url}/{dirs}")
     files_url <- glue("{elections_dir}/raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
 
-    # Print the file URL for debugging purposes
-    message(blue("📦 Import candidacies data at poll station level from ..."))
-    Sys.sleep(1/10)
-    message(green(glue("   - {paste0(files_url, '\n')}")))
+    if (verbose) {
+
+      # Print the file URL for debugging purposes
+      message(blue("📦 Import candidacies data at poll station level from ..."))
+      Sys.sleep(1/20)
+      message(green(glue("   - {paste0(files_url, '\n')}")))
+
+    }
 
     wrong_elections <-
       asked_elections |>
       anti_join(dates_elections_spain,
                 by = c("cod_elec", "type_elec", "year", "month"))
 
-    if ((wrong_elections |> nrow() > 0) &
-        (allowed_elections |> nrow() == 0)) {
+    if (verbose) {
+      if ((wrong_elections |> nrow() > 0) &
+          (allowed_elections |> nrow() == 0)) {
 
-      message(yellow(glue("⚠️ No data is available for {wrong_elections$type_elec} elections in {paste0(wrong_elections$month, '-', wrong_elections$year, '\n')}")))
+        message(yellow(glue("⚠️ No data is available for {wrong_elections$type_elec} elections in {paste0(wrong_elections$month, '-', wrong_elections$year, '\n')}")))
 
+      }
+
+      message(magenta("⏳ Please wait, the volume of data downloaded and the internet connection may take a few seconds"))
     }
-
-    message(magenta("⏳ Please wait, the volume of data downloaded and the internet connection may take a few seconds"))
 
     # download files in a temp_folder
     temp_files <- replicate(n = length(files_url),
@@ -881,9 +944,9 @@ import_candidacies_data <-
     files_url <- glue("{elections_dir}/raw_candidacies_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
 
     # Print the file URL for debugging purposes
-    message(blue("ℹ️ Import candidacies info from ..."))
-    Sys.sleep(1/10)
-    message(green(glue("   - {paste0(files_url, '\n')}")))
+    # message(blue("ℹ️ Import candidacies info from ..."))
+    # Sys.sleep(1/20)
+    # message(green(glue("   - {paste0(files_url, '\n')}")))
 
     # download files in a temp_folder
     temp_files <- replicate(n = length(files_url),
@@ -908,7 +971,7 @@ import_candidacies_data <-
       map(function(x) { get(load(x)) }) |>
       list_rbind()
 
-    # include candidacies info to candidacie ballots data
+    # include candidacies info to candidacies ballots data
     candidacies_data <-
       candidacies_data |>
       left_join(candidacies_raw_info,
@@ -922,6 +985,22 @@ import_candidacies_data <-
       rename(id_candidacies_ccaa = cod_candidacies_ccaa,
              id_candidacies_nat = cod_candidacies_nat)
 
+    if (short_version) {
+
+      if (verbose) {
+
+        message(yellow("⚠️ A short version was asked. If you require all variables, please run with `short_version = FALSE'"))
+
+      }
+
+      # Select just few variables
+      candidacies_data <-
+        candidacies_data |>
+        select(id_elec, type_elec, date_elec, id_INE_poll_station,
+               id_INE_mun, ccaa, prov, mun,
+               id_candidacies, abbrev_candidacies, name_candidacies,
+               ballots)
+    }
     return(candidacies_data)
   }
 

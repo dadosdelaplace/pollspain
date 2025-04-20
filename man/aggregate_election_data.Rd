@@ -40,7 +40,7 @@ Defaults to \code{c("pop_res_mun", "census_counting_mun")}.}
 column that uniquely identifies the candidacies. Defaults to
 \code{"id_candidacies"}.}
 
-\item{prec_round}{rounding accuracy. Defaults to
+\item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
 }
 \value{
