@@ -11,7 +11,8 @@ aggregate_election_data(
   col_id_poll_station = "id_INE_poll_station",
   cols_mun_var = c("pop_res_mun", "census_counting_mun"),
   col_id_candidacies = "id_candidacies",
-  prec_round = 3
+  prec_round = 3,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -42,6 +43,9 @@ column that uniquely identifies the candidacies. Defaults to
 
 \item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
+
+\item{verbose}{Flag to indicate whether detailed messages should
+be printed during execution. Defaults to \code{TRUE}.}
 }
 \value{
 A tibble with rows corresponding to municipalities for

@@ -183,6 +183,21 @@ get_election_data <-
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
            file_ext = ".rda", verbose = TRUE) {
 
+    # Check if verbose is correct
+    if (!is.logical(verbose) | is.na(verbose)) {
+
+      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
+
+
+    }
+
+    if (verbose) {
+
+      message(yellow("🔎 Check if parameters are allowed..."))
+      Sys.sleep(1/20)
+
+    }
+
     if (is.null(election_data)) {
 
       if (verbose) {
@@ -257,6 +272,31 @@ get_election_data <-
 # agg_ccaa <- election_data |> aggregate_election_data(level = "ccaa")
 # agg_prov <- election_data |> aggregate_election_data(level = "prov")
 # agg_mun <- election_data |> aggregate_election_data(level = "mun")
+#
+# elections_data |>
+#   aggregate_election_data() |>
+#   select(-pop_res_all, -census_counting_all) |>
+#   bind_rows(
+#     elections_data |>
+#     aggregate_election_data(level = "ccaa") |>
+#     summarise(across(blank_ballots:n_poll_stations, sum), .by = id_elec)) |>
+#   bind_rows(
+#     elections_data |>
+#       aggregate_election_data(level = "prov") |>
+#       summarise(across(blank_ballots:n_poll_stations, sum), .by = id_elec)) |>
+#   bind_rows(
+#     elections_data |>
+#       aggregate_election_data(level = "mun") |>
+#       summarise(across(blank_ballots:n_poll_stations, sum), .by = id_elec)) |>
+#   bind_rows(
+#     elections_data |>
+#       aggregate_election_data(level = "mun_district") |>
+#       summarise(across(blank_ballots:n_poll_stations, sum), .by = id_elec)) |>
+#   bind_rows(
+#     elections_data |>
+#       aggregate_election_data(level = "sec") |>
+#       summarise(across(blank_ballots:n_poll_stations, sum), .by = id_elec)) |>
+#   distinct()
 
 #' @title Aggregate elections data at provided level (ccaa, prov, etc)
 #'
@@ -432,10 +472,23 @@ aggregate_election_data <-
   function(election_data, level = "all", col_id_elec = "id_elec",
            col_id_poll_station = "id_INE_poll_station",
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-           col_id_candidacies = "id_candidacies", prec_round = 3) {
+           col_id_candidacies = "id_candidacies", prec_round = 3,
+           verbose = TRUE) {
 
-    message(yellow("🔎 Check if parameters are allowed..."))
-    Sys.sleep(1/10)
+    # Check if verbose is correct
+    if (!is.logical(verbose) | is.na(verbose)) {
+
+      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
+
+
+    }
+
+    if (verbose) {
+
+      message(yellow("🔎 Check if parameters are allowed..."))
+      Sys.sleep(1/20)
+
+    }
 
     # Check if election_data is a data.frame or tibble
     if ((!is.data.frame(election_data) & !is_tibble(election_data)) |
@@ -504,6 +557,19 @@ aggregate_election_data <-
         c(group_var, glue("cod{if_else(hierarchy_levels[hierarchy_levels >= level] >= 'mun', '_INE', '')}_{hierarchy_levels[hierarchy_levels >= level]}"))
       group_var_mun <-
         c(group_var_mun, glue("cod_INE_{hierarchy_levels[hierarchy_levels >= level & hierarchy_levels >= 'mun']}"))
+
+      for (i in 2:length(group_var)) {
+        if (!any(names(election_data) == group_var[i])) {
+
+          election_data <-
+            election_data |>
+            mutate(!!group_var[i] :=
+                     extract_code(.data[[col_id_poll_station]],
+                                  level = as.character(hierarchy_levels[i - 1]),
+                                  full_cod = FALSE))
+
+        }
+      }
     }
 
     if (any(names(election_data) == "id_INE_mun")) {
@@ -579,7 +645,7 @@ aggregate_election_data <-
 #               summarise(across(where(is.numeric), sum),
 #                         .by = "id_elec"))
 
-
+# pendiente
 summary_election_data <-
   function(type_elec, year, month, level = "all",
            by_parties = TRUE, include_candidacies = FALSE,

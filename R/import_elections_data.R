@@ -117,18 +117,25 @@ import_mun_census_data <-
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
            file_ext = ".rda", verbose = TRUE) {
 
-    # for the moment, just congress election
-    if (!all(type_elec %in% c("congress", "senate"))) {
-
-      stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
-
-    }
-
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
       stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
 
+
+    }
+
+    if (verbose) {
+
+      message(yellow("🔎 Check if parameters are allowed..."))
+      Sys.sleep(1/20)
+
+    }
+
+    # for the moment, just congress election
+    if (!all(type_elec %in% c("congress", "senate"))) {
+
+      stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
 
     }
 
@@ -400,19 +407,25 @@ import_poll_station_data <-
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
            file_ext = ".rda", verbose = TRUE) {
 
-
-    # for the moment, just congress and senate election
-    if (!all(type_elec %in% c("congress", "senate"))) {
-
-      stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
-
-    }
-
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
       stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
 
+
+    }
+
+    if (verbose) {
+
+      message(yellow("🔎 Check if parameters are allowed..."))
+      Sys.sleep(1/20)
+
+    }
+
+    # for the moment, just congress and senate election
+    if (!all(type_elec %in% c("congress", "senate"))) {
+
+      stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
 
     }
 
@@ -762,19 +775,25 @@ import_candidacies_data <-
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
            file_ext = ".rda", short_version = TRUE, verbose = TRUE) {
 
-
-    # for the moment, just congress and senate election
-    if (!all(type_elec %in% c("congress", "senate"))) {
-
-      stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
-
-    }
-
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
       stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
 
+
+    }
+
+    if (verbose) {
+
+      message(yellow("🔎 Check if parameters are allowed..."))
+      Sys.sleep(1/20)
+
+    }
+
+    # for the moment, just congress and senate election
+    if (!all(type_elec %in% c("congress", "senate"))) {
+
+      stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
 
     }
 
