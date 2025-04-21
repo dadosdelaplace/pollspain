@@ -47,7 +47,7 @@ Los niveles de agregación (`level`) pueden ser: `"all"`, `"ccaa"`, `"prov"`, `"
 ```{r summary-election-data-1}
 # Summary election data at national level (general data without candidacies ballots)
 summary_data_all <- summary_election_data("congress", 2019, 4)
-knitr::kable(summary_data_all)
+summary_data_all
 ```
 
 ```{r summary-election-data-2}
@@ -55,7 +55,7 @@ knitr::kable(summary_data_all)
 summary_data_ccaa_parties <-
   summary_election_data("congress", 2019, 4, level = "ccaa",
                         by_parties = TRUE)
-knitr::kable(summary_data_ccaa_parties)
+summary_data_ccaa_parties
 ```
 
 
