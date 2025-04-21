@@ -15,12 +15,11 @@ knitr::opts_chunk$set(
 
 # pollspain
 
-<!-- badges: start -->
-<!-- badges: end -->
+Under development. **Authors**: Javier Álvarez-Liébana, David Pereiro-Pol, Mafalda González-González, Irene Bosque-Gala y Mikaela De Smedt.
 
 ## Overview
 
-The goal of pollspain is to ...
+Pending to detail
 
 ## Installation
 
@@ -39,69 +38,46 @@ library(pollspain)
 
 ## Usage
 
-### get functions
+### election data functions
 
-La funciòn `aggregate_election_data()` está destinada a agregar al nivel geográfico pedido la información electoral. La función principal es `get_elections_data()` que combina `get_poll_station_data()` con `aggregate_election_data()` El código de esta familia de funciones se puede encontrar en el archivo `get_elections_data.R`.
+El código de esta familia de funciones se puede encontrar en el script `get_elections_data.R`. La función principal es `summary_election_data()`: dado un vector de fechas electorales, un vector de tipos de elecciones y un nivel geográfico (`"all"`, `"ccaa"`, `"prov"`, ...), la función devuelve al usuario una tabla de resumen de los resultados electorales. Indicando `by_parties = TRUE` la función devuelve los resultados para cada partido o candidatura electoral, al nivel de agregación pedido.
 
-Dicha función nos permite obtener los datos electorales de las elecciones pedidas y al nivel (`level`) de agregación que queramos, pudiendo ser  `all`, `ccaa`, `prov`, `mun`, `mun_district` (distrito electoral), `sec` (sección censal) y `poll_station` (mesa electoral)
+Los niveles de agregación (`level`) pueden ser: `"all"`, `"ccaa"`, `"prov"`, `"mun"`, `"mun_district"` (distrito electoral), `"sec"` (sección censal) y `"poll_station"` (mesa electoral).
 
-```{r eval = FALSE}
-prov_data <- get_elections_data("congress", year = 2019, month = c(4, 11), level = "prov")
-prov_data
+```{r summary-election-data-1}
+# Summary election data at national level (general data without candidacies ballots)
+summary_data_all <- summary_election_data("congress", 2019, 4)
+knitr::kable(summary_data_all)
+```
+
+```{r summary-election-data-2}
+# Summary election data at ccaa level, aggregating the candidacies ballots
+summary_data_ccaa_parties <-
+  summary_election_data("congress", 2019, 4, level = "ccaa",
+                        by_parties = TRUE)
+knitr::kable(summary_data_ccaa_parties)
 ```
 
 
-```{r eval = FALSE}
-# Raw data at poll station level
-election_data <-
-      get_poll_station_data("congress", year = 2019, month = c(4, 11))
-
-# and then aggregate at provided level
-prov_data <-
-  election_data |>
-  aggregate_election_data(level = "prov")
-prov_data
+```{r summary-election-data-3}
+# Summary election data at prov level, aggregating the candidacies ballots
+summary_data_prov_parties <-
+  summary_election_data("congress", 2019, 4, level = "prov",
+                        by_parties = TRUE)
+knitr::kable(summary_data_prov_parties)
 ```
 
-
-```{r eval = FALSE}
-national_data <-
-  get_elections_data("congress", 2019, c(4, 11), 
-                     include_candidacies = TRUE, level =  "all")
-national_data |> arrange(desc(ballots))
-```
+Dicha función combina, de manera sencilla para el usuario, `get_election_data()` y `aggregate_election_data()` 
 
 
-```{r eval = FALSE}
-ccaa_data <-
-  get_elections_data("congress", 2019, c(4, 11), 
-                     include_candidacies = TRUE, level = "ccaa")
-ccaa_data
 
-prov_data <-
-  get_elections_data("congress", 2019, c(4, 11), 
-                     include_candidacies = TRUE, level = "prov")
-prov_data
-```
-
-Es lo mismo extraer a nivel municipio que a un nivel más bajo y luego agrupar y sumarizar.
-
-```{r eval = FALSE}
-mun_data <-
-  get_elections_data("congress", 2019, c(4, 11), 
-                     include_candidacies = TRUE, level = "mun")
-mun_data |> filter(date_elec == "2019-04-28" & mun == "Dos Hermanas")
+#### get_election_data()
 
 
-mun_district_data <- get_elections_data("congress", 2019, c(4, 11),
-                                        include_candidacies = TRUE,
-                                        level = "mun_district")
-mun_district_data |>
-  group_by(id_elec, type_elec, date_elec, cod_INE_mun, mun, id_candidacies) |>
-  summarise(sum(ballots)) |>
-  ungroup() |> 
-  filter(date_elec == "2019-04-28" & mun == "Dos Hermanas")
-```
+#### aggregate_election_data()
+
+La funciòn `aggregate_election_data()` está destinada a agregar al nivel geográfico pedido la información electoral que ya se le proporcione. 
+
 
 
 ### import functions
@@ -112,8 +88,8 @@ Functions starting with `import_..._data()` (whose code can be found in the `imp
 
 `import_mun_census_data()` import municipal census data for one or more elections at the municipal level. This function downloads and processes «raw» municipal data files for specified elections, providing variables related to population, census and administrative codes.
 
-```{r}
-mun_census_data <- get_mun_census_data("congress", 2019, 4)
+```{r get-mun-census-data}
+mun_census_data <- import_mun_census_data("congress", 2019, 4)
 mun_census_data
 ```
 
@@ -123,7 +99,7 @@ mun_census_data
 `import_poll_station_data()` import and preprocess elections data at poll stations level for given election types and dates, providing variables related to turnout, blank/valid votes, etc
 
 
-```{r}
+```{r import-poll-station-data}
 poll_data <- import_poll_station_data("congress", 2019, c(4, 11))
 poll_data
 ```
@@ -132,12 +108,12 @@ poll_data
 
 `import_candidacies_data()` import and preprocess candidacies data, providing variables related to id of candidacies, abbreviature and names of them and ballots obtained for each one at each poll station.
 
-```{r}
+```{r import-candidacies-data}
 candidacies_data <- import_candidacies_data("congress", 2019, c(4, 11))
 candidacies_data
 ```
 
-#### Datos del CERA
+#### Datos del CERA (pending)
 
 According to the National Statistics Institute (INE):
 
