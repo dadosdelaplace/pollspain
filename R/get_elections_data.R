@@ -300,11 +300,7 @@ get_election_data <-
 
 #' @title Aggregate elections data at provided level (ccaa, prov, etc)
 #'
-#' @description Import and preprocess poll stations info but jointly
-#' with the preprocessed candidacies data, for given election types
-#' and dates. This function supports both single values and vector
-#' inputs for fetching and combining data for multiple elections
-#' at once.
+#' @description pending...
 #'
 #' @inheritParams import_poll_station_data
 #' @inheritParams import_candidacies_data
@@ -312,13 +308,19 @@ get_election_data <-
 #' @param level A string providing the level of aggregation at which
 #' the data is to be provided. The allowe values are the following:
 #' 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec' or
-#'  'poll_station'. Defaults to \code{"all"}.
+#' 'poll_station'. Defaults to \code{"all"}.
+#' @param by_parties A flag indicates whether user wants a summary by
+#' candidacies/parties or just global results at given \code{level}.
+#' Defaults to \code{FALSE}.
 #' @param cols_mun_var A vector of variable names that, in their raw
 #' version, are only available at the municipal level (or higher).
 #' Defaults to \code{c("pop_res_mun", "census_counting_mun")}.
 #' @param col_id_candidacies A string indicating the name of the
 #' column that uniquely identifies the candidacies. Defaults to
 #' \code{"id_candidacies"}.
+#' @param cols_names_candidacies A string indicating the name of the
+#' column containg the names and/or acronyms of candidacies.
+#' Defaults to \code{c("abbrev_candidacies", "name_candidacies")}.
 #'
 #' @return A tibble with rows corresponding to municipalities for
 #' each election, including the following variables:
@@ -469,17 +471,19 @@ get_election_data <-
 #'
 #' @export
 aggregate_election_data <-
-  function(election_data, level = "all", col_id_elec = "id_elec",
+  function(election_data, level = "all", by_parties = FALSE,
+           col_id_elec = "id_elec",
            col_id_poll_station = "id_INE_poll_station",
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-           col_id_candidacies = "id_candidacies", prec_round = 3,
+           col_id_candidacies = "id_candidacies",
+           cols_names_candidacies = c("abbrev_candidacies", "name_candidacies"),
+           prec_round = 3,
            verbose = TRUE) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
       stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
-
 
     }
 
@@ -525,6 +529,13 @@ aggregate_election_data <-
     if (prec_round != as.integer(prec_round) | prec_round < 1) {
 
       stop(red("😵 Parameter 'prec_round' must be a positive integer greater than 0"))
+
+    }
+
+    # Check: if by_parties is a logical variable
+    if (!is.logical(by_parties)) {
+
+      stop(red("😵 Parameter 'by_parties' must be a logical variable, just TRUE/FALSE are avoided"))
 
     }
 
@@ -586,21 +597,53 @@ aggregate_election_data <-
       col_id_mun <- "id_INE_mun"
     }
 
-    agg_data <-
-      election_data |>
-      distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
-               .keep_all = TRUE) |>
-      summarise(across(c(contains("ballots"), -ballots),
-                       function(x) { sum(x, na.rm = TRUE) }),
-                n_poll_stations = n_distinct(.data[[col_id_poll_station]]),
-                .by = group_var) |>
-      left_join(election_data |>
-                  distinct(.data[[col_id_elec]], .data[[col_id_mun]],
-                           .keep_all = TRUE) |>
-                  summarise(across(cols_mun_var,
-                                   function(x) { sum(x, na.rm = TRUE) }),
-                            .by = group_var_mun),
-                by = group_var_mun)
+    if (!by_parties) {
+
+      agg_data <-
+        election_data |>
+        distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
+                 .keep_all = TRUE) |>
+        summarise(across(c(contains("ballots"), -ballots),
+                         function(x) { sum(x, na.rm = TRUE) }),
+                  n_poll_stations = n_distinct(.data[[col_id_poll_station]]),
+                  .by = group_var) |>
+        left_join(election_data |>
+                    distinct(.data[[col_id_elec]], .data[[col_id_mun]],
+                             .keep_all = TRUE) |>
+                    summarise(across(cols_mun_var,
+                                     function(x) { sum(x, na.rm = TRUE) }),
+                              .by = group_var_mun),
+                  by = group_var_mun)
+
+    } else {
+
+      poll_data <-
+        election_data |>
+        distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
+                 .keep_all = TRUE) |>
+        summarise(across(c(contains("ballots"), -ballots),
+                         function(x) { sum(x, na.rm = TRUE) }),
+                  n_poll_stations = n_distinct(.data[[col_id_poll_station]]),
+                  .by = group_var)
+
+      agg_data <-
+        poll_data |>
+        left_join(election_data |>
+                    distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
+                             .data[[col_id_candidacies]],
+                             .keep_all = TRUE) |>
+                    summarise("ballots" = sum(ballots, na.rm = TRUE),
+                              .by = c(group_var, col_id_candidacies, cols_names_candidacies)),
+                  by = group_var) |>
+        left_join(election_data |>
+                    distinct(.data[[col_id_elec]], .data[[col_id_mun]],
+                             .keep_all = TRUE) |>
+                    summarise(across(cols_mun_var,
+                                     function(x) { sum(x, na.rm = TRUE) }),
+                              .by = group_var_mun),
+                  by = group_var_mun)
+
+    }
 
     # if level is greater than mun, mun_variables have been aggregated
     # at level provided
@@ -614,260 +657,176 @@ aggregate_election_data <-
     return(agg_data)
 }
 
-# ¿arreglar CERA?
-
-# election_data <- join_election_data("congress", 2019, 4)
-# check_results <-
-#   election_data |>
-#   aggregate_election_data() |>
-#   bind_rows(election_data |>
-#               aggregate_election_data(level = "ccaa") |>
-#               summarise(across(where(is.numeric), sum),
-#                         .by = "id_elec")) |>
-#   bind_rows(election_data |>
-#               aggregate_election_data(level = "prov") |>
-#               summarise(across(where(is.numeric), sum),
-#                         .by = "id_elec")) |>
-#   bind_rows(election_data |>
-#               aggregate_election_data(level = "mun") |>
-#               summarise(across(where(is.numeric), sum),
-#                         .by = "id_elec")) |>
-#   bind_rows(election_data |>
-#               aggregate_election_data(level = "mun_district") |>
-#               summarise(across(where(is.numeric), sum),
-#                         .by = "id_elec")) |>
-#   bind_rows(election_data |>
-#               aggregate_election_data(level = "sec") |>
-#               summarise(across(where(is.numeric), sum),
-#                         .by = "id_elec")) |>
-#   bind_rows(election_data |>
-#               aggregate_election_data(level = "poll_station") |>
-#               summarise(across(where(is.numeric), sum),
-#                         .by = "id_elec"))
-
-# pendiente
+#' @title Summaries of the electoral and candidacies ballots data for
+#' a given aggregation level (ccaa, prov, etc)
+#'
+#' @description pending...
+#'
+#' @inheritParams import_poll_station_data
+#' @inheritParams import_candidacies_data
+#' @inheritParams get_election_data
+#' @inheritParams aggregate_election_data
+#' @param filter_porc_ballots A numerical argument representing the
+#' vote percentage threshold (out of 100) that the user wants to use
+#' to filter the parties (as long as \code{by_parties = TRUE}).
+#' Defaults to \code{NA}.
+#'
+#' @return A tibble with rows corresponding to ...pending
+#'
+#' @details This function ... pending
+#'
+#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
+#' @keywords get_elections_data
+#' @name summary_election_data
+#' @import crayon
+#' @examples
+#'
+#' ## Correct examples
+#'
+#' # Summary election data at national level (general data
+#' # without candidacies ballots)
+#' summary_data_all <- summary_election_data("congress", 2019, 4)
+#'
+#' # Summary election data at national level, aggregating the
+#' # candidacies ballots
+#' summary_data_all_parties <-
+#'   summary_election_data("congress", 2019, 4, by_parties = TRUE)
+#'
+#' # Summary election data at ccaa level (general data
+#' # without candidacies ballots)
+#' summary_data_ccaa <-
+#'   summary_election_data("congress", 2019, 4, level = "ccaa")
+#'
+#' # Summary election data at ccaa level, aggregating the
+#' # candidacies ballots
+#'summary_data_ccaa_parties <-
+#'   summary_election_data("congress", 2019, 4, level = "ccaa",
+#'                         by_parties = TRUE)
+#'
+#' \dontrun{
+#' # ----
+#' # Incorrect examples
+#' # ----
+#'
+#' # Wrong examples
+#'
+#' }
+#'
+#' @export
 summary_election_data <-
-  function(type_elec, year, month, level = "all",
-           by_parties = TRUE, include_candidacies = FALSE,
-           include_candidates = FALSE,
-           filter_porc_ballots = NA, filter_elected = NA,
-           col_id_elec = "id_elec",
-           col_id_poll_station = "id_INE_poll_station",
+  function(type_elec, year = 2019, month = 4, date = NULL,
+           election_data = NULL, ballots_data = NULL,
+           col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
+           prec_round = 3, short_version = TRUE,
+           repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
+           file_ext = ".rda", level = "all", by_parties = FALSE,
+           filter_porc_ballots = NA,
+           cols_mun_var = c("pop_res_mun", "census_counting_mun"),
            col_id_candidacies = "id_candidacies",
-           col_id_candidacies_prov = "id_candidacies_prov",
-           col_abrev_candidacies = "abbrev_candidacies",
-           prec_round = 3) {
+           cols_names_candidacies = c("abbrev_candidacies", "name_candidacies"),
+           verbose = TRUE) {
 
-    # Message: yellow for checks
-    message(yellow("🔎 Check if parameters are allowed..."))
-    Sys.sleep(1/10)
+    # Check if verbose is correct
+    if (!is.logical(verbose) | is.na(verbose)) {
 
-    # At this time, just congress election
-    if (type_elec != "congress") {
-
-      stop("Development in process: at this time, just congress elections are allowed")
+      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
 
     }
 
-    # Check: if elections required are allowed
-    join_result <-
-      dates_elections_spain |>
-      inner_join(tibble(cod_elec = type_to_code_election(type_elec),
-                        year, month),
-                 by = c("cod_elec", "year", "month")) |>
-      nrow()
-    if (join_result == 0) {
+    # check filter_porc_ballots
+    if (!(is.na(filter_porc_ballots) |
+          (is.numeric(filter_porc_ballots) & filter_porc_ballots > 0 & filter_porc_ballots < 100))) {
 
-      stop("No elections on provided dates are available")
+      stop(red("😵 `filter_porc_ballots` argument should be NA or a numeric value between 0 and 100."))
 
     }
 
-    # Check: if prec_round is a positive number
-    if (prec_round != as.integer(prec_round) | prec_round < 1) {
+    if (verbose) {
 
-      stop("Parameter 'prec_round' must be a positive integer greater than 0")
-
-    }
-
-    # Check: if include_candidates should be logical
-    if (!is.logical(include_candidates) | !is.logical(include_candidacies)) {
-
-      stop("Parameter 'include_candidates' and 'include_candidacies' must be logical variables")
+      message(yellow("🔎 Check if parameters are allowed..."))
+      Sys.sleep(1/20)
 
     }
 
-    # Check: if level takes allowed values
-    if (!(level %in% c("all", "ccaa", "prov", "mun",
-                       "mun_district", "sec", "poll_station"))) {
+    if (verbose) {
 
-      stop("Aggregation level provided by 'level' parameter should be taken from the following values: 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec', 'poll_station'")
+      message(blue("📦 Import data at poll station level ..."))
+      Sys.sleep(1/20)
 
-    }
+      message(magenta("⏳ Please wait, the volume of data downloaded and the internet connection may take a few seconds"))
 
-    # Check: if by_parties is a logical variable
-    if (!is.logical(by_parties)) {
-
-      stop(glue("Parameter 'by_parties' must be a logical variable, just TRUE/FALSE are avoided"))
 
     }
 
-    # Check: if by_parties is a logical variable
-    if (by_parties & !include_candidacies) {
-
-      message(red("   🔔 Since include_candidacies = FALSE, aggregating by parties has not been implemented"))
-      by_parties <- FALSE
-
-    }
-
-    # Message: blue for get data
-    message(blue("📦 Get poll station data..."))
-    Sys.sleep(1/10)
-
-    # Message: green details
-    message(green("   - Download poll station data..."))
-    Sys.sleep(1/10)
-
-    # Getting data at poll station level (without candidacies)
     election_data <-
-      import_poll_station_data(type_elec, year, month,
-                               prec_round = prec_round)
+      get_election_data(type_elec = type_elec, year = year,
+                        month = month, date = date,
+                        election_data = NULL, ballots_data = NULL,
+                        col_id_elec = col_id_elec, col_id_poll_station = col_id_poll_station,
+                        prec_round = prec_round, short_version = short_version,
+                        repo_url = repo_url, file_ext = file_ext, verbose = FALSE)
 
-    # Message: green details
-    message(green(glue("   - Aggregating election data at {ifelse(level == 'all', 'national', level)} level...")))
-    Sys.sleep(1/10)
+    if (verbose) {
 
-    # and then aggregate at provided level
-    agg_data <-
+      message(blue(glue("   🗺 Aggregate data at {ifelse(level == 'all', 'national', level)} level ...")))
+      Sys.sleep(1/20)
+
+    }
+
+    summary_data <-
       election_data |>
-      aggregate_election_data(level = level,
+      aggregate_election_data(level = level, by_parties = by_parties,
                               col_id_elec = col_id_elec,
                               col_id_poll_station = col_id_poll_station,
-                              prec_round = prec_round)
+                              cols_mun_var = cols_mun_var,
+                              col_id_candidacies = col_id_candidacies,
+                              cols_names_candidacies = cols_names_candidacies,
+                              prec_round = prec_round,
+                              verbose = FALSE)
 
-    if (include_candidacies) {
+    if (verbose) {
 
-      # Message: blue for get data
-      message(blue("📦 Get candidacies (parties) data..."))
-      Sys.sleep(1/10)
+      message(bgYellow(black("✅🖇 Join information sources and last summaries ...\n")))
+      Sys.sleep(1/20)
 
-      # Message: green for details
-      message(green("   - Download candidacies (parties) data... (please wait, intensive task)"))
-      Sys.sleep(1/10)
+    }
 
-      # Getting candidacies data
-      candidacies_data <-
-        import_candidacies_data(type_elec, year, month)
-
-      # Message: green for details
-      message(green(glue("   - Aggregating candidacies data at {ifelse(level == 'all', 'national', level)} level...")))
-      Sys.sleep(1/10)
-
-      # and then aggregate at provided level
-      agg_data_candidacies <-
-        candidacies_data |>
-        aggregate_candidacies_data(level = level,
-                                   col_id_poll_station = col_id_poll_station,
-                                   col_id_candidacies = col_id_candidacies,
-                                   col_id_candidacies_prov = col_id_candidacies_prov,
-                                   col_abrev_candidacies = col_id_candidacies_prov,
-                                   prec_round = prec_round)
-
-      # Message: magenta for more
-      message(magenta("🖇 Join information..."))
-      Sys.sleep(1/10)
-
-      # extract cod by level
-      if (level != "all") {
-
-        hierarchy_levels <- c("ccaa", "prov", "mun", "mun_district",
-                              "sec", "poll_station")
-
-        levels <- hierarchy_levels[1:which(hierarchy_levels == level)]
-
-      }
-
-      # group vars
-      if (level == "all") {
-
-        levels <- "all"
-        group_vars <- "id_elec"
-
-      } else {
-
-        if (length(levels) <= 3) { # at mun level
-
-          group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels)
-
-        } else {
-
-          group_vars <- c("id_elec", glue("cod_INE_{levels}"), levels[1:3])
-        }
-
-      }
-
-
-      # Join information
-      agg_data <-
-        agg_data |>
-        left_join(agg_data_candidacies,
-                  by = group_vars,
-                  suffix = c("", ".y"), multiple = "all") |>
-        select(-contains(".y"))
-
-      # Message: yellow-black last message
-      message(bgYellow(black("✅ Last summaries and tasks...\n")))
-      Sys.sleep(1/10)
+    if (by_parties) {
 
       # Including some summaries
-      agg_data <-
-        agg_data |>
+      census_var <-
+        names(summary_data)[str_detect(names(summary_data), "census_counting")]
+      summary_data  <-
+        summary_data  |>
         mutate("porc_candidacies_parties" =
                  round(100*ballots/party_ballots, prec_round),
                "porc_candidacies_valid" =
                  round(100*ballots/valid_ballots, prec_round),
                "porc_candidacies_census" =
-                 round(100*ballots/census_counting, prec_round),
-               "porc_elected" = round(100*elected/360, prec_round),
-               "anomaly_ballots_elected" =
-                 round(100*((porc_elected / porc_candidacies_parties) - 1),
-                       prec_round))
+                 round(100*ballots/.data[[census_var]], prec_round))
 
-      if (!is.na(filter_porc_ballots)) {
+    }
+
+    if (!is.na(filter_porc_ballots)) {
+
+      if (!by_parties) {
+
+        message(yellow("⚠️ If `by_parties` is FALSE, a filtering by percentage of party ballots cannot be achieved"))
+
+      } else {
 
         agg_data <-
           agg_data |>
           filter(porc_candidacies_valid >= filter_porc_ballots)
 
       }
-
-      if (!is.na(filter_elected)) {
-
-        agg_data <-
-          agg_data |>
-          filter(elected >= filter_elected)
-
-      }
-
-      # Relocate
-      agg_data <-
-        agg_data |>
-        select(all_of(id_elec:pop_res, group_vars[group_vars != "id_elec"],
-                 id_candidacies, abbrev_candidacies,
-                 name_candidacies, ballots:anomaly_ballots_elected,
-                 everything()))
-    } else {
-
-      # Message: yellow-black last message
-      message(bgYellow(black("✅ Last summaries and tasks...\n")))
-      Sys.sleep(1/10)
-
     }
 
-    # output
-    return(agg_data)
-
-  }
+    return(summary_data)
+}
 
 
+
+# ¿arreglar CERA?
 
 

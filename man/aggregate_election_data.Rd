@@ -7,10 +7,12 @@
 aggregate_election_data(
   election_data,
   level = "all",
+  by_parties = FALSE,
   col_id_elec = "id_elec",
   col_id_poll_station = "id_INE_poll_station",
   cols_mun_var = c("pop_res_mun", "census_counting_mun"),
   col_id_candidacies = "id_candidacies",
+  cols_names_candidacies = c("abbrev_candidacies", "name_candidacies"),
   prec_round = 3,
   verbose = TRUE
 )
@@ -26,6 +28,10 @@ the data is to be provided. The allowe values are the following:
 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec' or
 'poll_station'. Defaults to \code{"all"}.}
 
+\item{by_parties}{A flag indicates whether user wants a summary by
+candidacies/parties or just global results at given \code{level}.
+Defaults to \code{FALSE}.}
+
 \item{col_id_elec}{Column name in \code{election_data} to uniquely
 identify the elections. Defaults to \code{"id_elec"}.}
 
@@ -40,6 +46,10 @@ Defaults to \code{c("pop_res_mun", "census_counting_mun")}.}
 \item{col_id_candidacies}{A string indicating the name of the
 column that uniquely identifies the candidacies. Defaults to
 \code{"id_candidacies"}.}
+
+\item{cols_names_candidacies}{A string indicating the name of the
+column containg the names and/or acronyms of candidacies.
+Defaults to \code{c("abbrev_candidacies", "name_candidacies")}.}
 
 \item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
@@ -98,11 +108,7 @@ of the candidacies.}
 each poll station.}
 }
 \description{
-Import and preprocess poll stations info but jointly
-with the preprocessed candidacies data, for given election types
-and dates. This function supports both single values and vector
-inputs for fetching and combining data for multiple elections
-at once.
+pending...
 }
 \details{
 This function fetches municipal-level data for the
