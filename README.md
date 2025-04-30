@@ -78,12 +78,13 @@ summary_data_all
 ```
 
 | id_elec | blank_ballots | invalid_ballots | party_ballots | valid_ballots | total_ballots | n_poll_stations | pop_res_all | census_counting_all |
-|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+|:----------|---:|---:|---:|---:|---:|---:|---:|---:|
 | 02-2019-04-28 | 199836 | 276769 | 26001535 | 26084449 | 26359783 | 60090 | 46722980 | 34799420 |
 
 ``` r
 # Summary election data at prov level, aggregating the candidacies ballots
-summary_data_prov_parties <- summary_election_data(type_elec = "congress", year = 2019, month = 4, level = "prov",  by_parties = TRUE)
+summary_data_prov_parties <- summary_election_data(type_elec = "congress", year = 2019,
+                                                   month = 4, level = "prov",  by_parties = TRUE)
 head(summary_data_prov_parties, 5)
 ```
 
@@ -107,17 +108,12 @@ To do:
 <summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
-
 </details>
 
 ### Seat allocation
 
 <details>
-
-<summary>
-
-<strong>Advanced users</strong>
-</summary>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
@@ -126,11 +122,7 @@ Poner una aperitivo y referirle a los articles.
 ### Resúmenes de encuestas
 
 <details>
-
-<summary>
-
-<strong>Advanced users</strong>
-</summary>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
@@ -139,11 +131,7 @@ Poner una aperitivo y referirle a los articles.
 ### Estimación de encuestas
 
 <details>
-
-<summary>
-
-<strong>Advanced users</strong>
-</summary>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
@@ -152,11 +140,7 @@ Poner una aperitivo y referirle a los articles.
 ### Simulación de resultados electorales
 
 <details>
-
-<summary>
-
-<strong>Advanced users</strong>
-</summary>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
@@ -173,11 +157,7 @@ Poner una aperitivo y referirle a los articles.
 - ¿algún lollipop para mostrar housing efects? con flechas y eso.
 
 <details>
-
-<summary>
-
-<strong>Advanced users</strong>
-</summary>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
