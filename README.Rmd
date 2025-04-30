@@ -66,8 +66,7 @@ returns a **summary table of election results aggregated at the administrative l
 
 ```{r summary-election-data-1, eval = FALSE}
 # Summary election data at national level (general data without candidacies ballots)
-summary_data_all <-
-  summary_election_data(type_elec = "congress", year = 2019, month = 4)
+summary_data_all <- summary_election_data(type_elec = "congress", year = 2019, month = 4)
 summary_data_all
 ```
 
@@ -78,31 +77,17 @@ summary_data_all <-
 knitr::kable(summary_data_all)
 ```
 
-```{r summary-election-data-2, eval = FALSE}
-# Summary election data at ccaa level, aggregating the candidacies
-# ballots, for three elections
-summary_data_ccaa_parties <-
-  summary_election_data("congress", 2019, 4, level = "ccaa",
-                        by_parties = TRUE)
-head(summary_data_ccaa_parties, 7)
-```
-
-```{r summary-election-data-2-b, echo = FALSE, warning = FALSE, message = FALSE}
-# Summary election data at ccaa level, aggregating the candidacies
-# ballots, for three elections
-summary_data_ccaa_parties <-
-  summary_election_data("congress", 2019, 4, level = "ccaa",
-                        by_parties = TRUE)
-knitr::kable(head(summary_data_ccaa_parties, 7))
-```
-
 ```{r summary-election-data-3, eval = FALSE}
 # Summary election data at prov level, aggregating the candidacies ballots
-summary_data_prov_parties <-
-  summary_election_data(type_elec = "congress", year = 2019,
-                        month = 4, level = "prov",
-                        by_parties = TRUE)
-head(summary_data_prov_parties, 10)
+summary_data_prov_parties <- summary_election_data(type_elec = "congress", year = 2019, month = 4, level = "prov",  by_parties = TRUE)
+head(summary_data_prov_parties, 5)
+```
+
+```{r summary-election-data-3-b, echo = FALSE, warning = FALSE, message = FALSE}
+# Summary election data at ccaa level, aggregating the candidacies
+# ballots, for three elections
+summary_data_prov_parties <-  summary_election_data("congress", 2019, 4, level = "prov", by_parties = TRUE)
+knitr::kable(head(summary_data_prov_parties, 5))
 ```
 
 To do:
@@ -112,37 +97,48 @@ To do:
 * by_parties y short version por defecto
 * duplicates 1982 y 1986
 
-#### Usuarios avanzados
+<details>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
-### Reparto de escaños
+</details>
 
-#### Usuarios avanzados
+### Seat allocation
+
+<details>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
+</details>
 
 ### Resúmenes de encuestas
 
-#### Usuarios avanzados
+<details>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
+</details>
 
 ### Estimación de encuestas
 
-#### Usuarios avanzados
+<details>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
+</details>
 
 ### Simulación de resultados electorales
 
-#### Usuarios avanzados
+<details>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
+</details>
 
 ### Data viz
 
@@ -154,10 +150,12 @@ Poner una aperitivo y referirle a los articles.
 * mapa
 * ¿algún lollipop para mostrar housing efects? con flechas y eso.
 
-#### Usuarios avanzados
+<details>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
+</details>
 
 ## Other functions
 
@@ -174,16 +172,13 @@ extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
 * **Import raw data**: functions starting with `import_..._data()` (code can be found in the `import_elections_data.R` file) are aimed at importing and preprocessing as raw as possible the `.DAT` election files from the Spanish Ministry of Interior. All functions download the `.rda` files available in the Github repository \url{https://github.com/dadosdelaplace/pollspain-data}. See <...> for more examples about how to use them.
 
 
-```{r import-poll-station-data, eval = FALSE}
+```{r import-poll-station-data}
 # import and preprocess elections data at poll stations level for given election
 # types and dates, providing variables related to turnout, blank/valid votes, etc
 poll_data <- import_poll_station_data("congress", 2019, c(4, 11))
 head(poll_data)
 ```
 
-* ...
-
-* ...
 
 <!--
 

@@ -73,8 +73,7 @@ aggregation).
 
 ``` r
 # Summary election data at national level (general data without candidacies ballots)
-summary_data_all <-
-  summary_election_data(type_elec = "congress", year = 2019, month = 4)
+summary_data_all <- summary_election_data(type_elec = "congress", year = 2019, month = 4)
 summary_data_all
 ```
 
@@ -83,32 +82,18 @@ summary_data_all
 | 02-2019-04-28 | 199836 | 276769 | 26001535 | 26084449 | 26359783 | 60090 | 46722980 | 34799420 |
 
 ``` r
-# Summary election data at ccaa level, aggregating the candidacies
-# ballots, for three elections
-summary_data_ccaa_parties <-
-  summary_election_data("congress", 2019, 4, level = "ccaa",
-                        by_parties = TRUE)
-head(summary_data_ccaa_parties, 7)
-```
-
-| id_elec | cod_INE_ccaa | blank_ballots | invalid_ballots | party_ballots | valid_ballots | total_ballots | n_poll_stations | id_candidacies | abbrev_candidacies | name_candidacies | ballots | pop_res_ccaa | census_counting_ccaa | porc_candidacies_parties | porc_candidacies_valid | porc_candidacies_census |
-|:---|:---|---:|---:|---:|---:|---:|---:|:---|:---|:---|---:|---:|---:|---:|---:|---:|
-| 02-2019-04-28 | 01 | 43084 | 61295 | 4540994 | 4569140 | 4630265 | 10134 | 000117 | VOX | VOX | 612921 | 8384408 | 6316975 | 13.498 | 13.414 | 9.703 |
-| 02-2019-04-28 | 01 | 43084 | 61295 | 4540994 | 4569140 | 4630265 | 10134 | 000028 | EB | ESCAÑOS EN BLANCO | 1324 | 8384408 | 6316975 | 0.029 | 0.029 | 0.021 |
-| 02-2019-04-28 | 01 | 43084 | 61295 | 4540994 | 4569140 | 4630265 | 10134 | 000104 | RECORTES CE | RECORTES CERO-GRUPO VERDE | 7826 | 8384408 | 6316975 | 0.172 | 0.171 | 0.124 |
-| 02-2019-04-28 | 01 | 43084 | 61295 | 4540994 | 4569140 | 4630265 | 10134 | 000083 | PP | PARTIDO POPULAR | 787384 | 8384408 | 6316975 | 17.339 | 17.233 | 12.465 |
-| 02-2019-04-28 | 01 | 43084 | 61295 | 4540994 | 4569140 | 4630265 | 10134 | 000096 | PSOE | PARTIDO SOCIALISTA OBRERO ESPAÑOL | 1568682 | 8384408 | 6316975 | 34.545 | 34.332 | 24.833 |
-| 02-2019-04-28 | 01 | 43084 | 61295 | 4540994 | 4569140 | 4630265 | 10134 | 000081 | PODEMOS-IU | UNIDAS PODEMOS | 654944 | 8384408 | 6316975 | 14.423 | 14.334 | 10.368 |
-| 02-2019-04-28 | 01 | 43084 | 61295 | 4540994 | 4569140 | 4630265 | 10134 | 000022 | CS | CIUDADANOS-PARTIDO DE LA CIUDADANÍA | 811562 | 8384408 | 6316975 | 17.872 | 17.762 | 12.847 |
-
-``` r
 # Summary election data at prov level, aggregating the candidacies ballots
-summary_data_prov_parties <-
-  summary_election_data(type_elec = "congress", year = 2019,
-                        month = 4, level = "prov",
-                        by_parties = TRUE)
-head(summary_data_prov_parties, 10)
+summary_data_prov_parties <- summary_election_data(type_elec = "congress", year = 2019, month = 4, level = "prov",  by_parties = TRUE)
+head(summary_data_prov_parties, 5)
 ```
+
+| id_elec | cod_INE_ccaa | cod_INE_prov | blank_ballots | invalid_ballots | party_ballots | valid_ballots | total_ballots | n_poll_stations | id_candidacies | abbrev_candidacies | name_candidacies | ballots | pop_res_prov | census_counting_prov | porc_candidacies_parties | porc_candidacies_valid | porc_candidacies_census |
+|:---|:---|:---|---:|---:|---:|---:|---:|---:|:---|:---|:---|---:|---:|---:|---:|---:|---:|
+| 02-2019-04-28 | 01 | 04 | 2283 | 2918 | 325814 | 326582 | 329496 | 804 | 000117 | VOX | VOX | 62648 | 709340 | 458996 | 19.228 | 19.183 | 13.649 |
+| 02-2019-04-28 | 01 | 04 | 2283 | 2918 | 325814 | 326582 | 329496 | 804 | 000028 | EB | ESCAÑOS EN BLANCO | 536 | 709340 | 458996 | 0.165 | 0.164 | 0.117 |
+| 02-2019-04-28 | 01 | 04 | 2283 | 2918 | 325814 | 326582 | 329496 | 804 | 000104 | RECORTES CE | RECORTES CERO-GRUPO VERDE | 412 | 709340 | 458996 | 0.126 | 0.126 | 0.090 |
+| 02-2019-04-28 | 01 | 04 | 2283 | 2918 | 325814 | 326582 | 329496 | 804 | 000083 | PP | PARTIDO POPULAR | 73952 | 709340 | 458996 | 22.698 | 22.644 | 16.112 |
+| 02-2019-04-28 | 01 | 04 | 2283 | 2918 | 325814 | 326582 | 329496 | 804 | 000096 | PSOE | PARTIDO SOCIALISTA OBRERO ESPAÑOL | 98924 | 709340 | 458996 | 30.362 | 30.291 | 21.552 |
 
 To do:
 
@@ -118,33 +103,64 @@ To do:
 - by_parties y short version por defecto
 - duplicates 1982 y 1986
 
-#### Usuarios avanzados
+<details>
+<summary><strong>Advanced users</strong></summary>
 
 Poner una aperitivo y referirle a los articles.
 
-### Reparto de escaños
+</details>
 
-#### Usuarios avanzados
+### Seat allocation
+
+<details>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
+
+</details>
 
 ### Resúmenes de encuestas
 
-#### Usuarios avanzados
+<details>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
+
+</details>
 
 ### Estimación de encuestas
 
-#### Usuarios avanzados
+<details>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
+
+</details>
 
 ### Simulación de resultados electorales
 
-#### Usuarios avanzados
+<details>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
+
+</details>
 
 ### Data viz
 
@@ -156,9 +172,16 @@ Poner una aperitivo y referirle a los articles.
 - mapa
 - ¿algún lollipop para mostrar housing efects? con flechas y eso.
 
-#### Usuarios avanzados
+<details>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
+
+</details>
 
 ## Other functions
 
@@ -190,12 +213,30 @@ extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
 # import and preprocess elections data at poll stations level for given election
 # types and dates, providing variables related to turnout, blank/valid votes, etc
 poll_data <- import_poll_station_data("congress", 2019, c(4, 11))
+#> 🔎 Check if parameters are allowed...
+#> 📦 Import poll station data from ...
+#> - https://github.com/dadosdelaplace/pollspain-data/blob/main/02-congress/02201904/raw_poll_stations_congress_2019_04.rda?raw=true
+#> - https://github.com/dadosdelaplace/pollspain-data/blob/main/02-congress/02201911/raw_poll_stations_congress_2019_11.rda?raw=true
+#> 🔎 Check if parameters are allowed...
+#> 📦 Import census mun data from ...
+#> - https://github.com/dadosdelaplace/pollspain-data/blob/main/02-congress/02201904/raw_mun_data_congress_2019_04.rda?raw=true
+#> - https://github.com/dadosdelaplace/pollspain-data/blob/main/02-congress/02201911/raw_mun_data_congress_2019_11.rda?raw=true
+#> ⚠️ A short version was asked. If you require all variables, please run with `short_version = FALSE'
 head(poll_data)
+#> # A tibble: 6 × 20
+#>   id_elec  type_elec date_elec  id_INE_poll_station id_INE_mun ccaa  prov  mun  
+#>   <glue>   <chr>     <date>     <glue>              <glue>     <chr> <chr> <chr>
+#> 1 02-2019… congress  2019-04-28 01-04-003-01-004-B  01-04-003  Anda… Alme… Adra 
+#> 2 02-2019… congress  2019-04-28 01-04-003-01-007-U  01-04-003  Anda… Alme… Adra 
+#> 3 02-2019… congress  2019-04-28 01-04-003-02-001-A  01-04-003  Anda… Alme… Adra 
+#> 4 02-2019… congress  2019-04-28 01-04-006-01-002-A  01-04-006  Anda… Alme… Albox
+#> 5 02-2019… congress  2019-04-28 01-04-008-01-001-A  01-04-008  Anda… Alme… Alcó…
+#> 6 02-2019… congress  2019-04-28 01-04-010-01-001-U  01-04-010  Anda… Alme… Alha…
+#> # ℹ 12 more variables: blank_ballots <dbl>, invalid_ballots <dbl>,
+#> #   party_ballots <dbl>, valid_ballots <dbl>, total_ballots <dbl>,
+#> #   turnout <dbl>, porc_valid <dbl>, porc_invalid <dbl>, porc_parties <dbl>,
+#> #   porc_blank <dbl>, pop_res_mun <dbl>, census_counting_mun <dbl>
 ```
-
-- …
-
-- …
 
 <!--
 &#10;## Datos del CERA (pending)
