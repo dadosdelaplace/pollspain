@@ -16,6 +16,9 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/aggregate_election_data.html</loc>
+  </url>
+  <url>
     <loc>/reference/cod_INE_ccaa.html</loc>
   </url>
   <url>
@@ -34,7 +37,19 @@
     <loc>/reference/extract_code.html</loc>
   </url>
   <url>
+    <loc>/reference/get_election_data.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_mun_census_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/import_candidacies_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/import_mun_census_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/import_poll_station_data.html</loc>
   </url>
   <url>
     <loc>/reference/import_raw_elections_files.html</loc>
@@ -44,6 +59,12 @@
   </url>
   <url>
     <loc>/reference/pollspain-package.html</loc>
+  </url>
+  <url>
+    <loc>/reference/recod_parties.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summary_election_data.html</loc>
   </url>
   <url>
     <loc>/reference/type_to_code_election.html</loc>

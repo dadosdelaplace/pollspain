@@ -4,21 +4,25 @@
 \name{pollspain-package}
 \alias{pollspain-package}
 \alias{pollspain}
-\title{\pkg{pollspain} -- blabla}
+\title{\pkg{pollspain} -- A grammar for the analysis of electoral
+and poll data}
 \description{
-bla bla
+The package is intended to provide a tidyverse-style
+grammar for preprocessing, debugging, filtering, accessing,
+downloading and analyzing election data and polls in Spain.
 }
 \references{
-García-Portugués, E., Álvarez-Liébana, J., Álvarez-Pérez, G. and
-González-Manteiga, W. (2019). A goodness-of-fit test for the functional
-linear model with functional response. \emph{arXiv:1909.07686}.
-\url{https://arxiv.org/abs/1909.07686}
+...
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/dadosdelaplace/pollspain}
+  \item Report bugs at \url{https://github.com/dadosdelaplace/pollspain/issues}
+}
 
-García-Portugués, E., González-Manteiga, W. and Febrero-Bande, M. (2014). A
-goodness-of-fit test for the functional linear model with scalar response.
-\emph{Journal of Computational and Graphical Statistics}, 23(3):761--778.
-\url{http://doi.org/10.1080/10618600.2013.812519}
 }
 \author{
-Javier Álvarez-Liébana.
+Javier Álvarez-Liébana, David Pereiro-Pol,
+Mafalda González-González, Irene Bosque-Gala and Mikaela De Smedt.
 }

@@ -1,18 +1,15 @@
-#' @title \pkg{pollspain} -- blabla
+#' @title \pkg{pollspain} -- A grammar for the analysis of electoral
+#' and poll data
 #'
-#' @description bla bla
+#' @description The package is intended to provide a tidyverse-style
+#' grammar for preprocessing, debugging, filtering, accessing,
+#' downloading and analyzing election data and polls in Spain.
 #'
-#' @author Javier Álvarez-Liébana.
+#' @author Javier Álvarez-Liébana, David Pereiro-Pol,
+#' Mafalda González-González, Irene Bosque-Gala and Mikaela De Smedt.
 #' @references
-#' García-Portugués, E., Álvarez-Liébana, J., Álvarez-Pérez, G. and
-#' González-Manteiga, W. (2019). A goodness-of-fit test for the functional
-#' linear model with functional response. \emph{arXiv:1909.07686}.
-#' \url{https://arxiv.org/abs/1909.07686}
+#' ...
 #'
-#' García-Portugués, E., González-Manteiga, W. and Febrero-Bande, M. (2014). A
-#' goodness-of-fit test for the functional linear model with scalar response.
-#' \emph{Journal of Computational and Graphical Statistics}, 23(3):761--778.
-#' \url{http://doi.org/10.1080/10618600.2013.812519}
 #' @docType package
 #' @name pollspain-package
 #' @import dplyr
@@ -20,9 +17,6 @@
 #' @import stringr
 #' @import tibble
 ## usethis namespace: start
-#' @importFrom dplyr arrange
-#' @importFrom dplyr relocate
-#' @importFrom dplyr rename
 #' @importFrom glue glue
 #' @importFrom lubridate as_date
 #' @importFrom lubridate day
@@ -52,6 +46,6 @@
 #' @importFrom utils unzip
 ## usethis namespace: end
 #' @aliases pollspain pollspain-package
-NULL
-options(pillar.sigfig = 13)
+"_PACKAGE"
+options(pillar.sigfig = 10)
 options(dplyr.summarise.inform = FALSE)
