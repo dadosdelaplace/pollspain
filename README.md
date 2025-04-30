@@ -79,7 +79,7 @@ summary_data_all
 
 | id_elec | blank_ballots | invalid_ballots | party_ballots | valid_ballots | total_ballots | n_poll_stations | pop_res_all | census_counting_all |
 |:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| 02-2019-04-28&nbsp;&nbsp;&nbsp; | 199836 | 276769 | 26001535 | 26084449 | 26359783 | 60090 | 46722980 | 34799420 |
+| 02-2019-04-28&nbsp; | 199836 | 276769 | 26001535 | 26084449 | 26359783 | 60090 | 46722980 | 34799420 |
 
 ``` r
 # Summary election data at prov level, aggregating the candidacies ballots
