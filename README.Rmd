@@ -87,7 +87,8 @@ head(summary_data_prov_parties, 5)
 ```{r summary-election-data-3-b, echo = FALSE, warning = FALSE, message = FALSE}
 # Summary election data at ccaa level, aggregating the candidacies
 # ballots, for three elections
-summary_data_prov_parties <-  summary_election_data("congress", 2019, 4, level = "prov", by_parties = TRUE)
+summary_data_prov_parties <-
+  summary_election_data("congress", 2019, 4, level = "prov", by_parties = TRUE)
 knitr::kable(head(summary_data_prov_parties, 5))
 ```
 

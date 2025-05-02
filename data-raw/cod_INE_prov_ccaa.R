@@ -67,46 +67,48 @@ cod_INE_prov <-
 prov <-
   c("Almería", "Cádiz", "Córdoba", "Granada", "Huelva",
     "Jaén", "Málaga", "Sevilla", "Huesca", "Teruel",
-    "Zaragoza", "Asturias", "Islas Baleares (Illes Balears)",
+    "Zaragoza", "Asturias", "Islas Baleares/Illes Balears",
     "Las Palmas", "Santa Cruz de Tenerife", "Cantabria",
     "Ávila", "Burgos", "León", "Palencia", "Salamanca",
     "Segovia", "Soria", "Valladolid", "Zamora", "Albacete",
     "Ciudad Real", "Cuenca", "Guadalajara", "Toledo",
     "Barcelona", "Girona", "Lleida", "Tarragona",
-    "Alicante (Alacant)", "Castellón (Castelló)",
-    "Valencia (València)", "Badajoz", "Cáceres", "La Coruña (A Coruña)",
-    "Lugo", "Orense (Ourense)", "Pontevedra", "Madrid", "Murcia",
-    "Navarra (Nafarroa)", "Álava (Araba)", "Vizcaya (Bizkaia)",
-    "Guipúzcoa (Gipuzkoa)", "La Rioja", "Ceuta", "Melilla")
+    "Alicante/Alacant", "Castellón/Castelló",
+    "Valencia/València", "Badajoz", "Cáceres", "La Coruña/A Coruña",
+    "Lugo", "Orense/Ourense", "Pontevedra", "Madrid", "Murcia",
+    "Navarra/Nafarroa", "Álava/Araba", "Vizcaya/Bizkaia",
+    "Guipúzcoa/Gipuzkoa", "La Rioja", "Ceuta", "Melilla")
 
 # Build tibbles
 cod_INE_prov_ccaa <-
   tibble(cod_INE_ccaa, cod_MIR_ccaa, ccaa, cod_INE_prov, prov)
 
 cod_INE_prov <-
-  cod_INE_prov_ccaa %>% select(contains("_prov"))
+  cod_INE_prov_ccaa |>
+  select(contains("_prov"))
 
 cod_INE_ccaa <-
-  cod_INE_prov_ccaa %>%
-  distinct(cod_INE_ccaa, .keep_all = TRUE) %>%
+  cod_INE_prov_ccaa |>
+  distinct(cod_INE_ccaa, .keep_all = TRUE) |>
   select(contains("ccaa"))
 
 # ----- muni's codes
 
 cod_INE_mun <-
-  read_csv(file = "./data/cod_INE_mun.csv") %>%
+  read_csv(file = "./data/cod_INE_mun.csv") |>
   # Renamee INE cols
   rename(cod_INE_ccaa = CODAUTO, cod_INE_prov = CPRO,
          cod_INE_mun = CMUN, cd_INE_mun = DC,
-         mun = NOMBRE) %>%
-  left_join(cod_INE_prov_ccaa, by = c("cod_INE_ccaa", "cod_INE_prov")) %>%
+         mun = NOMBRE) |>
+  left_join(cod_INE_prov_ccaa, by = c("cod_INE_ccaa", "cod_INE_prov")) |>
   # Create id codes
   mutate(id_INE_mun =
            glue("{cod_INE_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
          id_MIR_mun =
-           glue("{cod_MIR_ccaa}-{cod_INE_prov}-{cod_INE_mun}")) %>%
-  relocate(id_INE_mun, id_MIR_mun, .before = everything()) %>%
-  relocate(cod_MIR_ccaa, .after = cod_INE_ccaa)
+           glue("{cod_MIR_ccaa}-{cod_INE_prov}-{cod_INE_mun}")) |>
+  relocate(id_INE_mun, id_MIR_mun, .before = everything()) |>
+  relocate(cod_MIR_ccaa, .after = cod_INE_ccaa) |>
+  mutate("mun" = glue("{mun} ({prov})"))
 
 # ----- use data: rda -----
 
@@ -121,10 +123,7 @@ usethis::use_data(cod_INE_mun, overwrite = TRUE,
 
 # ----- write_csv -----
 
-# write_csv(cod_INE_prov_ccaa, "./data/csv/cod_INE/cod_INE_prov_ccaa.csv")
-# write_csv(cod_INE_prov, "./data/csv/cod_INE/cod_INE_prov.csv")
-# write_csv(cod_INE_ccaa, "./data/csv/cod_INE/cod_INE_ccaa.csv")
-# write_csv(cod_INE_mun, "./data/csv/cod_INE/cod_INE_mun.csv")
+write_csv(cod_INE_mun, "./data/cod_INE_mun.csv")
 
 
 

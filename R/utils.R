@@ -185,6 +185,48 @@ extract_code <-
     return(cod)
 }
 
+recod_mun <- function(mun_data) {
+
+  mun_data <-
+    mun_data |>
+    mutate("cod_INE_mun" =
+             case_when(cod_INE_prov == "04" & cod_INE_mun == "025" ~ "029",
+                       cod_INE_prov == "04" & cod_INE_mun == "039" ~ "007",
+                       cod_INE_prov == "05" & cod_INE_mun == "050" ~ "903",
+                       cod_INE_prov == "22" & cod_INE_mun == "005" ~ "907",
+                       cod_INE_prov == "16" & cod_INE_mun == "260" ~ "910",
+                       cod_INE_prov == "19" & cod_INE_mun == "012" ~ "269",
+                       cod_INE_prov == "19" & cod_INE_mun == "276" ~ "256",
+                       cod_INE_prov == "05" &
+                         cod_INE_mun %in% c("004", "028", "146", "250", "255") ~ "019",
+                       cod_INE_prov == "09" & cod_INE_mun == "031" ~ "902",
+                       cod_INE_prov == "09" & cod_INE_mun == "158" ~ "174",
+                       cod_INE_prov == "09" & cod_INE_mun == "263" ~ "905",
+                       cod_INE_prov == "09" & cod_INE_mun == "278" ~ "048",
+                       cod_INE_prov == "09" & cod_INE_mun == "364" ~ "905",
+                       cod_INE_prov == "09" & cod_INE_mun == "475" ~ "463",
+                       cod_INE_prov == "24" & cod_INE_mun == "072" ~ "064",
+                       cod_INE_prov == "37" & cod_INE_mun == "084" ~ "185",
+                       cod_INE_prov == "37" & cod_INE_mun == "093" ~ "185",
+                       cod_INE_prov == "24" & cod_INE_mun == "111" ~ "130",
+                       cod_INE_prov == "49" & cod_INE_mun == "074" ~ "264",
+                       cod_INE_prov == "17" & cod_INE_mun == "122" ~ "096",
+                       cod_INE_prov == "15" & cod_INE_mun == "026" ~ "902",
+                       cod_INE_prov == "15" & cod_INE_mun == "063" ~ "902",
+                       cod_INE_prov == "27" & cod_INE_mun == "036" ~ "901",
+                       cod_INE_prov == "36" & cod_INE_mun == "011" ~ "902",
+                       cod_INE_prov == "36" & cod_INE_mun == "012" ~ "902",
+                       cod_INE_prov == "01" & cod_INE_mun == "026" ~ "901",
+                       cod_INE_prov == "12" & cod_INE_mun == "066" ~ "902",
+                       cod_INE_prov == "13" & cod_INE_mun == "099" ~ "901",
+                       cod_INE_prov == "09" & cod_INE_mun == "080" ~ "048",
+                       TRUE ~ cod_INE_mun),
+           "cod_INE_prov" = if_else(cod_INE_prov == "12" &
+                                      cod_INE_mun == "902", "46", cod_INE_prov))
+
+  return(mun_data)
+
+}
 
 #' @title Recoding Spanish political party or candidacies names and
 #' preprocessing of acronyms

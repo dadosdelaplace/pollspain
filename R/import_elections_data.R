@@ -1,21 +1,24 @@
 #' @title Import municipal census data
 #'
 #' @description Import municipal census data for one or more elections
-#' at the municipal level. This function downloads and processes raw
-#' municipal data files for specified elections.
+#' at the municipal level (from 1982 onwards). This function
+#' downloads and processes raw municipal data files for specified
+#' elections. No CERA data is included as municipalities (note that
+#' CERA ballots will be included in the summaries (see
+#' \code{import_poll_station_data()} and
+#' \code{import_candidacies_data()})
 #'
 #' @inheritParams type_to_code_election
 #' @param year A vector or single value representing the years of the
-#' elections to be considered.
-#' @param month A vector or single value representing the months of
-#' the elections to be considered. Please, check (refer to
-#' \code{dates_elections_spain}) that elections of the specified type
-#' are available for the provided year and month.
+#' elections to be considered. Please, check in
+#' \code{dates_elections_spain} that elections of the specified type
+#' are available for the provided year.
 #' @param date A vector or single value representing the dates of
 #' the elections to be considered. If date was provided, it should be
 #' in format %Y-%m-%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
-#' If no date was provided, \code{month} and \code{year} should be
-#' both numerical variables.
+#' If no date was provided, \code{year} should be provided as
+#' numerical variable. Please, check in \code{dates_elections_spain}
+#' that elections of the specified type are available.
 #' @param repo_url A string with the url in which the raw data can be
 #' found. Defaults to
 #' \url{https://github.com/dadosdelaplace/pollspain-data/blob/main}.
@@ -73,27 +76,24 @@
 #'
 #' ## Correct examples
 #'
-#' # Congress elections in April 2019
+#' # Congress elections in April and November 2019
+#' # Fetch municipal census data for the congress elections in
+#' # April and November 2019
+#' mun_census_2019 <-
+#'   import_mun_census_data(type_elec = "congress", year = 2019)
+#'
 #' # Fetch municipal census data for the congress elections in
 #' # April 2019
-#' mun_census_data1 <- import_mun_census_data("congress", 2019, 4)
-#'
-#' # Senate elections in April 2019
-#' # Fetch municipal census data for the senate elections in
-#' # April 2019
-#' mun_census_data2 <- import_mun_census_data("senate", 2019, 4)
+#' mun_census_04_2019 <-
+#'   import_mun_census_data(type_elec = "congress",
+#'                          date = "2019-04-28")
 #'
 #' # Example usage to combine data from different elections into
-#' # one table
-#' # Fetch municipal census data for congress elections in Nov 2019
-#' # and June 2016
+#' # one table. Fetch municipal census data for congress elections
+#' # in Nov 2019 and June 2016
 #' combined_mun_census_data <-
-#'   import_mun_census_data(c("congress", "congress"),
-#'                          c(2019, 2016), c(11, 6))
-#'
-#' # Example usage providing date instead of month and year
-#' date_example <-
-#'   import_mun_census_data("congress", date = "2016-06-26")
+#'   import_mun_census_data(type_elec = "congress",
+#'                          year = c(2019, 2016, 1982, 1986))
 #'
 #' # ----
 #' # Incorrect examples
@@ -102,18 +102,22 @@
 #' # Wrong examples
 #'
 #' # Invalid election type: "national" is not a valid election type
-#' import_mun_census_data("national", 2019, 4)
+#' import_mun_census_data("national", 2019)
 #'
 #' # Invalid election: no congress elections are available in 5-2019.
 #' # Please check dataset dates_elections_spain
-#' import_mun_census_data("congress", 2019, 5)
+#' import_mun_census_data("congress", date = "2019-05-01")
+#'
+#' #' # Invalid election: no congress elections are available in 2018.
+#' # Please check dataset dates_elections_spain
+#' import_mun_census_data("congress", year = 2018)
 #'
 #' # Invalid date format: date should be in %Y-%m-%d format
 #' import_mun_census_data("congress", date = "26-06-2016")
 #' }
 #' @export
 import_mun_census_data <-
-  function(type_elec, year = 2019, month = 4, date = NULL,
+  function(type_elec, year = 2023, date = NULL,
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
            file_ext = ".rda", verbose = TRUE) {
 
@@ -121,7 +125,6 @@ import_mun_census_data <-
     if (!is.logical(verbose) | is.na(verbose)) {
 
       stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
-
 
     }
 
@@ -139,24 +142,28 @@ import_mun_census_data <-
 
     }
 
-    # Check if the inputs are vectors of the same length
-    if (!is.vector(type_elec) | !is.vector(year) | !is.vector(month)) {
+    # Check date
+    if (!is.null(date)) {
 
-      stop(red("😵 All inputs must be vectors."))
+      year <- year(date)
+      date <- as_date(date)
 
-    }
+      if (is.na(date)) {
 
-    # check if date is correct
-    if (is.null(date)) {
-      if (!is.numeric(month) | !is.numeric(year)) {
-        stop(red("😵 If no date was provided, `month` and `year` should be both numerical variables."))
+        stop(red("😵 If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
+
       }
     } else {
-
-      date <- as_date(date)
-      if (is.na(date)) {
-        stop(red("😵 If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
+      if (!is.numeric(year)) {
+        stop(red("😵 If no date was provided, `year` should be a numerical variable."))
       }
+    }
+
+    # Check if the inputs are vectors
+    if (!is.vector(type_elec) | !is.vector(year)) {
+
+        stop(red("😵 `type_elec` and `year` must be vectors."))
+
     }
 
     # Design a tibble with all elections asked by user
@@ -164,21 +171,21 @@ import_mun_census_data <-
     if (is.null(date)) {
 
       asked_elections <-
-        expand_grid(as.vector(type_elec), as.vector(month), as.vector(year))
-      names(asked_elections) <- c("type_elec", "month", "year")
+        expand_grid(as.vector(type_elec), as.vector(year))
+      names(asked_elections) <- c("type_elec", "year")
       asked_elections <-
         asked_elections |>
-        distinct(type_elec, month, year)
+        distinct(type_elec, year)
 
     } else {
 
       asked_elections <-
         expand_grid(as.vector(type_elec), date) |>
-        mutate("month" = month(date), "year" = year(date))
-      names(asked_elections) <- c("type_elec", "date", "month", "year")
+        mutate("year" = year(date))
+      names(asked_elections) <- c("type_elec", "date", "year")
       asked_elections <-
         asked_elections |>
-        distinct(type_elec, date, month, year)
+        distinct(type_elec, date, year)
     }
 
     asked_elections <-
@@ -187,19 +194,39 @@ import_mun_census_data <-
              .before = everything())
 
     # Check if elections required are allowed
-    allowed_elections <-
-      dates_elections_spain |>
-      inner_join(asked_elections,
-                 by = c("cod_elec", "type_elec", "year", "month")) |>
-      distinct(cod_elec, type_elec, year, month, .keep_all = TRUE)
+    if (is.null(date)) {
+
+      allowed_elections <-
+        dates_elections_spain |>
+        inner_join(asked_elections,
+                   by = c("cod_elec", "type_elec", "year"),
+                   suffix = c("", ".rm")) |>
+        select(-contains("rm")) |>
+        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+
+    } else {
+
+      allowed_elections <-
+        dates_elections_spain |>
+        inner_join(asked_elections,
+                   by = c("cod_elec", "type_elec", "date"),
+                   suffix = c("", ".rm")) |>
+        select(-contains("rm")) |>
+        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+    }
+
     if (allowed_elections |> nrow() == 0) {
 
-      stop(red(glue("😵 No {type_elec} elections are available in {month}-{year}. Please, be sure that the order of arguments is right")))
+      stop(red(glue("😵 No {type_elec} elections are available. Please, be sure that arguments and dates are right")))
+
+    } else if ((allowed_elections |> nrow()) > 1 & is.null(date)) {
+
+      message(yellow(glue("⚠️ Multiple {type_elec} elections are available. If you only want one of them, please provide a specific date in the `date` argument")))
 
     }
 
     # Construct the set of URL for the specific election directory
-    dirs <- glue("{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
+    dirs <- glue("data/{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
     dirs <- glue("{dirs}/{allowed_elections$cod_elec}{allowed_elections$year}{sprintf('%02d', allowed_elections$month)}")
     elections_dir <- glue("{repo_url}/{dirs}")
     files_url <- glue("{elections_dir}/raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
@@ -216,7 +243,7 @@ import_mun_census_data <-
     wrong_elections <-
       asked_elections |>
       anti_join(dates_elections_spain,
-                by = c("cod_elec", "type_elec", "year", "month"))
+                by = c("cod_elec", "type_elec", "year"))
 
     if (verbose) {
       if ((wrong_elections |> nrow() > 0) &
@@ -235,13 +262,13 @@ import_mun_census_data <-
     for (i in 1:length(files_url)){
 
       download.file(files_url[i], destfile = temp_files[i], mode = "wb", quiet = TRUE)
-    }
 
-    # Check the downloaded file before loading
-    if (any(file.info(temp_files)$size == 0)) {
+      # Check the downloaded file before loading
+      if (any(file.info(temp_files[i])$size == 0)) {
 
-      stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
+        stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
 
+      }
     }
 
     # Import the data
@@ -250,14 +277,21 @@ import_mun_census_data <-
       map(function(x) { get(load(x)) }) |>
       list_rbind()
 
+    # Recode mun data
+    mun_data <-
+      mun_data |>
+      recod_mun() |>
+      mutate(across(n_poll_stations:census_CERE_mun, sum),
+                .by = c(cod_elec, date_elec, cod_INE_prov, cod_INE_mun)) |>
+      distinct(cod_elec, date_elec, cod_INE_prov, cod_INE_mun, .keep_all = TRUE)
+
     # Join MIR and INE information
     mun_data <-
       mun_data |>
-      left_join(cod_INE_mun, by = c("id_MIR_mun", "cod_MIR_ccaa",
-                                    "cod_INE_prov", "cod_INE_mun"),
+      left_join(cod_INE_mun, by = c("cod_INE_prov", "cod_INE_mun"),
                 suffix = c(".x", "")) |>
       # Keep names from cod INE files instead of MIR files
-      dplyr::select(-mun.x, -day, -year, -month, -cd_INE_mun, -contains("MIR")) |>
+      dplyr::select(-contains("x"), -month, -cd_INE_mun, -contains("MIR")) |>
       # create id_elec
       mutate("id_elec" = glue("{cod_elec}-{date_elec}"),
              .before = everything()) |>
@@ -351,31 +385,22 @@ import_mun_census_data <-
 #'
 #' ## Correct examples
 #'
-#' # Congress elections in April 2019
-#' # Fetch poll station data for the congress elections in April 2019
-#' # in a short version
-#' poll_station_data1 <- import_poll_station_data("congress", 2019, 4)
+#' # Fetch poll station data for the congress elections in 2019
+#' # (both April and November) in a short version
+#' poll_station_data_2019 <-
+#'   import_poll_station_data(type_elec = "congress", year = 2019)
 #'
-#' #' # Fetch poll station data for the congress and senate elections
-#' # in April 2019 in a short version
-#' poll_station_data2 <-
-#'   import_poll_station_data(c("congress", "senate"), 2019, 4)
+#' # Fetch poll station data for the congress elections
+#' # in April 2019 in a long version
+#' poll_station_data_4_2019 <-
+#'   import_poll_station_data(type_elec = "congress", date = "2019-04-28")
 #'
-#' # Fetch poll station data for the congress and senate elections in
-#' # April 2019 in a long version
-#' poll_station_data3 <-
-#'   import_poll_station_data(c("congress", "senate"), 2019, 4,
-#'                            short_version = FALSE)
-#'
-#' # Fetch poll station data for congress elections in Nov 2019
-#' # and June 2016
-#' combined_poll_station_data <-
-#'   import_poll_station_data(c("congress", "congress"),
-#'                            c(2019, 2016), c(11, 6))
-#'
-#' # Example usage providing date instead of month and year
-#' date_example <-
-#'   import_poll_station_data("congress", date = "2016-06-26")
+#' # Fetch poll station data for the congress elections in
+#' # 2016, 2015 and 1986 in a long version
+#' combined_poll_station_data_long <-
+#'   import_poll_station_data(type_elec = "congress",
+#'                            year = c(2016, 2015, 1986)
+#'                            short_version = TRUE)
 #'
 #' # ----
 #' # Incorrect examples
@@ -385,56 +410,27 @@ import_mun_census_data <-
 #' # Wrong examples
 #'
 #' # Invalid election type: "national" is not a valid election type
-#' import_poll_station_data("national", 2019, 4)
+#' import_poll_station_data(type_elec = "national", year = 2019)
 #'
-#' # Invalid election: no congress elections are available in 5-2019.
+#' # Invalid election: no congress elections are available in 2018
 #' # Please check dataset dates_elections_spain
-#' import_poll_station_data("congress", 2019, 5)
+#' import_poll_station_data(type_elec = "congress", year = 2019)
 #'
 #' # Invalid date format: date should be in %Y-%m-%d format
-#' import_poll_station_data("congress", date = "26-06-2016")
+#' import_poll_station_data(type_elec = "congress", date = "26-06-2016")
 #'
 #' # Invalid short version flag: short_version should be a logical
 #' # variable
-#' import_poll_station_data("congress", 2019, 4,
+#' import_poll_station_data(type_elec = "congress", year = 2019,
 #'                          short_version = "yes")
 #' }
 #'
 #' @export
 import_poll_station_data <-
-  function(type_elec, year = 2019, month = 4, date = NULL,
+  function(type_elec, year = 2019, date = NULL,
            prec_round = 3, short_version = TRUE,
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
            file_ext = ".rda", verbose = TRUE) {
-
-    # Check if verbose is correct
-    if (!is.logical(verbose) | is.na(verbose)) {
-
-      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
-
-
-    }
-
-    if (verbose) {
-
-      message(yellow("🔎 Check if parameters are allowed..."))
-      Sys.sleep(1/20)
-
-    }
-
-    # for the moment, just congress and senate election
-    if (!all(type_elec %in% c("congress", "senate"))) {
-
-      stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
-
-    }
-
-    # Check if the inputs are vectors of the same length
-    if (!is.vector(type_elec) | !is.vector(year) | !is.vector(month)) {
-
-      stop(red("😵 All inputs must be vectors."))
-
-    }
 
     # Check if prec_round is a positive number
     if (prec_round != as.integer(prec_round) | prec_round < 1) {
@@ -449,17 +445,49 @@ import_poll_station_data <-
       stop(red("😵 Parameter 'short_version' must be a non missing logical variable"))
     }
 
-    # check if date is correct
-    if (is.null(date)) {
-      if (!is.numeric(month) | !is.numeric(year)) {
-        stop(red("😵 If no date was provided, `month` and `year` should be both numerical variables."))
+    # Check if verbose is correct
+    if (!is.logical(verbose) | is.na(verbose)) {
+
+      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
+
+    }
+
+    if (verbose) {
+
+      message(yellow("🔎 Check if parameters are allowed..."))
+      Sys.sleep(1/20)
+
+    }
+
+    # for the moment, just congress election
+    if (!all(type_elec %in% c("congress", "senate"))) {
+
+      stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
+
+    }
+
+    # Check date
+    if (!is.null(date)) {
+
+      year <- year(date)
+      date <- as_date(date)
+
+      if (is.na(date)) {
+
+        stop(red("😵 If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
+
       }
     } else {
-
-      date <- as_date(date)
-      if (is.na(date)) {
-        stop(red("😵 If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
+      if (!is.numeric(year)) {
+        stop(red("😵 If no date was provided, `year` should be a numerical variable."))
       }
+    }
+
+    # Check if the inputs are vectors
+    if (!is.vector(type_elec) | !is.vector(year)) {
+
+      stop(red("😵 `type_elec` and `year` must be vectors."))
+
     }
 
     # Design a tibble with all elections asked by user
@@ -467,21 +495,21 @@ import_poll_station_data <-
     if (is.null(date)) {
 
       asked_elections <-
-        expand_grid(as.vector(type_elec), as.vector(month), as.vector(year))
-      names(asked_elections) <- c("type_elec", "month", "year")
+        expand_grid(as.vector(type_elec), as.vector(year))
+      names(asked_elections) <- c("type_elec", "year")
       asked_elections <-
         asked_elections |>
-        distinct(type_elec, month, year)
+        distinct(type_elec, year)
 
     } else {
 
       asked_elections <-
         expand_grid(as.vector(type_elec), date) |>
-        mutate("month" = month(date), "year" = year(date))
-      names(asked_elections) <- c("type_elec", "date", "month", "year")
+        mutate("year" = year(date))
+      names(asked_elections) <- c("type_elec", "date", "year")
       asked_elections <-
         asked_elections |>
-        distinct(type_elec, date, month, year)
+        distinct(type_elec, date, year)
     }
 
     asked_elections <-
@@ -490,19 +518,39 @@ import_poll_station_data <-
              .before = everything())
 
     # Check if elections required are allowed
-    allowed_elections <-
-      dates_elections_spain |>
-      inner_join(asked_elections,
-                 by = c("cod_elec", "type_elec", "year", "month")) |>
-      distinct(cod_elec, type_elec, year, month, .keep_all = TRUE)
+    if (is.null(date)) {
+
+      allowed_elections <-
+        dates_elections_spain |>
+        inner_join(asked_elections,
+                   by = c("cod_elec", "type_elec", "year"),
+                   suffix = c("", ".rm")) |>
+        select(-contains("rm")) |>
+        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+
+    } else {
+
+      allowed_elections <-
+        dates_elections_spain |>
+        inner_join(asked_elections,
+                   by = c("cod_elec", "type_elec", "date"),
+                   suffix = c("", ".rm")) |>
+        select(-contains("rm")) |>
+        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+    }
+
     if (allowed_elections |> nrow() == 0) {
 
-      stop(red(glue("😵 No {type_elec} elections are available in {month}-{year}. Please, be sure that the order of arguments is right")))
+      stop(red(glue("😵 No {type_elec} elections are available. Please, be sure that arguments and dates are right")))
+
+    } else if ((allowed_elections |> nrow()) > 1 & is.null(date)) {
+
+      message(yellow(glue("⚠️ Multiple {type_elec} elections are available. If you only want one of them, please provide a specific date in the `date` argument")))
 
     }
 
     # Construct the set of URL for the specific election directory
-    dirs <- glue("{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
+    dirs <- glue("data/{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
     dirs <- glue("{dirs}/{allowed_elections$cod_elec}{allowed_elections$year}{sprintf('%02d', allowed_elections$month)}")
     elections_dir <- glue("{repo_url}/{dirs}")
     files_url <- glue("{elections_dir}/raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
@@ -519,7 +567,7 @@ import_poll_station_data <-
     wrong_elections <-
       asked_elections |>
       anti_join(dates_elections_spain,
-                by = c("cod_elec", "type_elec", "year", "month"))
+                by = c("cod_elec", "type_elec", "year"))
 
     if (verbose) {
       if ((wrong_elections |> nrow() > 0) &
@@ -538,13 +586,13 @@ import_poll_station_data <-
     for (i in 1:length(files_url)){
 
       download.file(files_url[i], destfile = temp_files[i], mode = "wb", quiet = TRUE)
-    }
 
-    # Check the downloaded file before loading
-    if (any(file.info(temp_files)$size == 0)) {
+      # Check the downloaded file before loading
+      if (any(file.info(temp_files[i])$size == 0)) {
 
-      stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
+        stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
 
+      }
     }
 
     # Import the data
@@ -555,11 +603,21 @@ import_poll_station_data <-
       # census variable will be extracted from the mun census
       select(-contains("census"))
 
+    # Recode mun data
+    poll_station_raw_data <-
+      poll_station_raw_data |>
+      recod_mun() |>
+      mutate(across(voters_cere:party_ballots, sum),
+             .by = c(cod_elec, date_elec, cod_INE_prov, cod_INE_mun,
+                     cod_mun_district, cod_sec,
+                     cod_poll_station)) |>
+      distinct(cod_elec, date_elec, cod_INE_prov, cod_INE_mun, cod_mun_district,
+               cod_sec, cod_poll_station, .keep_all = TRUE)
+
     # Join MIR and INE information
     poll_station_data <-
       poll_station_raw_data |>
-      left_join(cod_INE_mun, by = c("id_MIR_mun", "cod_MIR_ccaa",
-                                    "cod_INE_prov", "cod_INE_mun"),
+      left_join(cod_INE_mun, by = c("cod_INE_prov", "cod_INE_mun"),
                 suffix = c(".x", "")) |>
       dplyr::select(-cd_INE_mun) |>
       # create id_elec
@@ -572,11 +630,11 @@ import_poll_station_data <-
       mutate("valid_ballots" = blank_ballots + party_ballots,
              "total_ballots" = valid_ballots + invalid_ballots)
 
-    # Remove CERA data and include census
+    # Include census
     poll_station_data <-
       poll_station_data |>
       dplyr::filter(cod_INE_mun != "999") |>
-      left_join(import_mun_census_data(type_elec, year, month, date, repo_url, file_ext,
+      left_join(import_mun_census_data(type_elec, year, date, repo_url, file_ext,
                                        verbose = verbose),
                 by = c("cod_elec", "type_elec", "date_elec", "id_INE_mun"),
                 suffix = c("", ".y")) |>
@@ -607,7 +665,7 @@ import_poll_station_data <-
                ifelse(is.na(cod_INE_ccaa), cod_INE_ccaa.y, cod_INE_ccaa),
              "ccaa" = ifelse(is.na(ccaa), ccaa.y, ccaa),
              "prov" = ifelse(is.na(prov), prov.y, prov),
-             "mun" = ifelse(cod_INE_mun == "999", "CERA", mun),
+             "mun" = ifelse(cod_INE_mun == "999", glue("CERA ({prov})"), mun),
              "id_INE_mun" = glue("{cod_INE_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
              "pop_res_mun" = ifelse(cod_INE_mun == "999", census_INE_mun, pop_res_mun),
              "id_elec" = glue("{cod_elec}-{date_elec}")) |>
@@ -729,26 +787,20 @@ import_poll_station_data <-
 #'
 #' ## Correct examples
 #'
-#' # Congress elections in April 2019
-#' # Fetch candidacies data for the congress elections in April 2019
-#' candidacies_data1 <- import_candidacies_data("congress", 2019, 4)
+#' # Fetch candidacies data for the congress elections in 2019
+#' candidacies_data_2019 <-
+#'     import_candidacies_data(type_elec = "congress",
+#'                             year = 2019)
 #'
-#' # Fetch candidacies data for the congress and senate elections
-#' # in April 2019
-#' candidacies_data2 <-
-#'   import_candidacies_data(c("congress", "senate"), 2019, 4)
+#' # Fetch candidacies data for the congress elections in Nov 2019
+#' candidacies_data_11_2019 <-
+#'   import_candidacies_data(type_elec = "congress", date = "2019-11-10")
 #'
 #' # Example usage to combine data from different elections into
 #' # one table
-#' # Fetch candidacies data for congress elections in Nov 2019
-#' # and June 2016
 #' combined_candidacies_data <-
-#'   import_candidacies_data(c("congress", "congress"),
-#'                           c(2019, 2016), c(11, 6))
-#'
-#' # Example usage providing date instead of month and year
-#' date_example <-
-#'   import_candidacies_data("congress", date = "2016-06-26")
+#'   import_candidacies_data(type_elec = "congress",
+#'                           year = c(1982, 1986, 1993))
 #'
 #' # ----
 #' # Incorrect examples
@@ -758,28 +810,32 @@ import_poll_station_data <-
 #' # Wrong examples
 #'
 #' # Invalid election type: "national" is not a valid election type
-#' import_candidacies_data("national", 2019, 4)
+#' import_candidacies_data(type_elec = "national", year = 2019)
 #'
-#' # Invalid election: no congress elections are available in 5-2019.
-#' # Please check dataset dates_elections_spain
-#' import_candidacies_data("congress", 2019, 5)
+#' # Invalid election: no congress elections are available in 2018.
+#' import_candidacies_data(type_elec = "congress", 2018)
 #'
 #' # Invalid date format: date should be in %Y-%m-%d format
-#' import_candidacies_data("congress", date = "26-06-2016")
+#' import_candidacies_data(type_elec = "congress", date = "26-06-2016")
 #'
 #' }
 #'
 #' @export
 import_candidacies_data <-
-  function(type_elec, year = 2019, month = 4, date = NULL,
+  function(type_elec, year = 2019, date = NULL,
            repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
            file_ext = ".rda", short_version = TRUE, verbose = TRUE) {
+
+    # check if short_version is a logical variable
+    if (is.na(short_version) | !is.logical(short_version)) {
+
+      stop(red("😵 Parameter 'short_version' must be a non missing logical variable"))
+    }
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
       stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
-
 
     }
 
@@ -790,31 +846,35 @@ import_candidacies_data <-
 
     }
 
-    # for the moment, just congress and senate election
+    # for the moment, just congress election
     if (!all(type_elec %in% c("congress", "senate"))) {
 
       stop(red("😵 The package is currently under development so, for the moment, it only allows access to congress and senate data."))
 
     }
 
-    # Check if the inputs are vectors of the same length
-    if (!is.vector(type_elec) | !is.vector(year) | !is.vector(month)) {
+    # Check date
+    if (!is.null(date)) {
 
-      stop(red("😵 All inputs must be vectors."))
+      year <- year(date)
+      date <- as_date(date)
 
-    }
+      if (is.na(date)) {
 
-    # check if date is correct
-    if (is.null(date)) {
-      if (!is.numeric(month) | !is.numeric(year)) {
-        stop(red("😵 If no date was provided, `month` and `year` should be both numerical variables."))
+        stop(red("😵 If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
+
       }
     } else {
-
-      date <- as_date(date)
-      if (is.na(date)) {
-        stop(red("😵 If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
+      if (!is.numeric(year)) {
+        stop(red("😵 If no date was provided, `year` should be a numerical variable."))
       }
+    }
+
+    # Check if the inputs are vectors
+    if (!is.vector(type_elec) | !is.vector(year)) {
+
+      stop(red("😵 `type_elec` and `year` must be vectors."))
+
     }
 
     # Design a tibble with all elections asked by user
@@ -822,21 +882,21 @@ import_candidacies_data <-
     if (is.null(date)) {
 
       asked_elections <-
-        expand_grid(as.vector(type_elec), as.vector(month), as.vector(year))
-      names(asked_elections) <- c("type_elec", "month", "year")
+        expand_grid(as.vector(type_elec), as.vector(year))
+      names(asked_elections) <- c("type_elec", "year")
       asked_elections <-
         asked_elections |>
-        distinct(type_elec, month, year)
+        distinct(type_elec, year)
 
     } else {
 
       asked_elections <-
         expand_grid(as.vector(type_elec), date) |>
-        mutate("month" = month(date), "year" = year(date))
-      names(asked_elections) <- c("type_elec", "date", "month", "year")
+        mutate("year" = year(date))
+      names(asked_elections) <- c("type_elec", "date", "year")
       asked_elections <-
         asked_elections |>
-        distinct(type_elec, date, month, year)
+        distinct(type_elec, date, year)
     }
 
     asked_elections <-
@@ -845,19 +905,39 @@ import_candidacies_data <-
              .before = everything())
 
     # Check if elections required are allowed
-    allowed_elections <-
-      dates_elections_spain |>
-      inner_join(asked_elections,
-                 by = c("cod_elec", "type_elec", "year", "month")) |>
-      distinct(cod_elec, type_elec, year, month, .keep_all = TRUE)
+    if (is.null(date)) {
+
+      allowed_elections <-
+        dates_elections_spain |>
+        inner_join(asked_elections,
+                   by = c("cod_elec", "type_elec", "year"),
+                   suffix = c("", ".rm")) |>
+        select(-contains("rm")) |>
+        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+
+    } else {
+
+      allowed_elections <-
+        dates_elections_spain |>
+        inner_join(asked_elections,
+                   by = c("cod_elec", "type_elec", "date"),
+                   suffix = c("", ".rm")) |>
+        select(-contains("rm")) |>
+        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+    }
+
     if (allowed_elections |> nrow() == 0) {
 
-      stop(red(glue("😵 No {type_elec} elections are available in {month}-{year}. Please, be sure that the order of arguments is right")))
+      stop(red(glue("😵 No {type_elec} elections are available. Please, be sure that arguments and dates are right")))
+
+    } else if ((allowed_elections |> nrow()) > 1 & is.null(date)) {
+
+      message(yellow(glue("⚠️ Multiple {type_elec} elections are available. If you only want one of them, please provide a specific date in the `date` argument")))
 
     }
 
     # Construct the set of URL for the specific election directory
-    dirs <- glue("{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
+    dirs <- glue("data/{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
     dirs <- glue("{dirs}/{allowed_elections$cod_elec}{allowed_elections$year}{sprintf('%02d', allowed_elections$month)}")
     elections_dir <- glue("{repo_url}/{dirs}")
     files_url <- glue("{elections_dir}/raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
@@ -874,7 +954,7 @@ import_candidacies_data <-
     wrong_elections <-
       asked_elections |>
       anti_join(dates_elections_spain,
-                by = c("cod_elec", "type_elec", "year", "month"))
+                by = c("cod_elec", "type_elec", "year"))
 
     if (verbose) {
       if ((wrong_elections |> nrow() > 0) &
@@ -895,22 +975,34 @@ import_candidacies_data <-
     for (i in 1:length(files_url)){
 
       download.file(files_url[i], destfile = temp_files[i], mode = "wb", quiet = TRUE)
-    }
 
-    # Check the downloaded file before loading
-    if (any(file.info(temp_files)$size == 0)) {
+      # Check the downloaded file before loading
+      if (any(file.info(temp_files[i])$size == 0)) {
 
-      stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
+        stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
 
+      }
     }
 
     # Import the data
     candidacies_raw_data <-
       temp_files |>
       map(function(x) { get(load(x)) }) |>
-      list_rbind() |>
-      # remove summarys in CERA
-      filter(cod_MIR_ccaa != "99" & cod_INE_prov != "99")
+      list_rbind()
+
+    # Recode mun data
+    candidacies_raw_data <-
+      candidacies_raw_data |>
+      recod_mun() |>
+      mutate("ballots" = sum(ballots),
+             .by = c(cod_elec, date_elec, cod_INE_prov, cod_INE_mun,
+                     cod_mun_district, cod_sec,
+                     cod_poll_station, id_candidacies)) |>
+      distinct(cod_elec, date_elec, cod_INE_prov, cod_INE_mun, cod_mun_district,
+               cod_sec, cod_poll_station, id_candidacies, .keep_all = TRUE) |>
+      mutate("id_MIR_mun" =
+               glue("{cod_MIR_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
+             .before = everything())
 
     # include CERA codes to INE information: just one
     # constituency for each provinces
@@ -918,7 +1010,7 @@ import_candidacies_data <-
       cod_INE_mun |>
       distinct(cod_INE_ccaa, cod_INE_prov, .keep_all  = TRUE) |>
       select(cod_INE_ccaa, cod_MIR_ccaa, cod_INE_prov, ccaa, prov) |>
-      mutate("mun" = "CERA", cod_INE_mun = "999") |>
+      mutate("mun" = glue("CERA ({prov})"), cod_INE_mun = "999") |>
       bind_rows(cod_INE_mun) |> # include "normal" mun
       mutate("id_INE_mun" =
                glue("{cod_INE_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
@@ -949,23 +1041,8 @@ import_candidacies_data <-
       relocate(cod_INE_ccaa, cod_MIR_ccaa, ccaa,
                cod_INE_prov, prov, cod_INE_mun, mun, .after = id_MIR_mun)
 
-    # Join candidacies data
-    # candidacies_data <-
-    #   candidacies_data |>
-    #   left_join(historical_raw_candidacies |>
-    #               filter(type_elec %in% type_elec &
-    #                        year(date_elec) %in% year &
-    #                        month(date_elec) %in% month),
-    #             by = c("cod_elec", "type_elec",
-    #                    "date_elec", "id_candidacies"))
-
     # Include candidacies info
     files_url <- glue("{elections_dir}/raw_candidacies_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
-
-    # Print the file URL for debugging purposes
-    # message(blue("ℹ️ Import candidacies info from ..."))
-    # Sys.sleep(1/20)
-    # message(green(glue("   - {paste0(files_url, '\n')}")))
 
     # download files in a temp_folder
     temp_files <- replicate(n = length(files_url),
@@ -975,13 +1052,13 @@ import_candidacies_data <-
     for (i in 1:length(files_url)){
 
       download.file(files_url[i], destfile = temp_files[i], mode = "wb", quiet = TRUE)
-    }
 
-    # Check the downloaded file before loading
-    if (any(file.info(temp_files)$size == 0)) {
+      # Check the downloaded file before loading
+      if (any(file.info(temp_files[i])$size == 0)) {
 
-      stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
+        stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
 
+      }
     }
 
     # Import the data
@@ -996,13 +1073,10 @@ import_candidacies_data <-
       left_join(candidacies_raw_info,
                 by = c("cod_elec", "type_elec",
                        "date_elec", "id_candidacies")) |>
-      relocate(abbrev_candidacies:cod_candidacies_nat,
+      relocate(abbrev_candidacies:id_candidacies_nat,
                .after = "id_candidacies") |>
-      # same as id_candidacies
       # remove MIR codes
-      select(-cod_candidacies_prov, -contains("MIR")) |>
-      rename(id_candidacies_ccaa = cod_candidacies_ccaa,
-             id_candidacies_nat = cod_candidacies_nat)
+      select(-contains("MIR"))
 
     if (short_version) {
 
@@ -1017,7 +1091,7 @@ import_candidacies_data <-
         candidacies_data |>
         select(id_elec, type_elec, date_elec, id_INE_poll_station,
                id_INE_mun, ccaa, prov, mun,
-               id_candidacies, abbrev_candidacies, name_candidacies,
+               id_candidacies, id_candidacies_nat, abbrev_candidacies, name_candidacies,
                ballots)
     }
     return(candidacies_data)

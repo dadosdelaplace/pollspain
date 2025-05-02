@@ -176,7 +176,7 @@
 #'
 #' @export
 get_election_data <-
-  function(type_elec, year = 2019, month = 4, date = NULL,
+  function(type_elec, year = 2019, date = NULL,
            election_data = NULL, ballots_data = NULL,
            col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
            prec_round = 3, short_version = TRUE,
@@ -210,7 +210,7 @@ get_election_data <-
 
       election_data <-
         import_poll_station_data(type_elec = type_elec, year = year,
-                                 month = month, date = date, prec_round = prec_round,
+                                 date = date, prec_round = prec_round,
                                  short_version = short_version,
                                  repo_url = repo_url, file_ext = file_ext,
                                  verbose = FALSE)
@@ -231,7 +231,7 @@ get_election_data <-
 
       ballots_data <-
         import_candidacies_data(type_elec = type_elec, year = year,
-                                month = month, date = date,
+                                date = date,
                                 repo_url = repo_url, file_ext = file_ext,
                                 short_version = short_version,
                                 verbose = FALSE)
@@ -264,7 +264,6 @@ get_election_data <-
 
     # output
     return(join_data)
-
 
   }
 
@@ -714,7 +713,7 @@ aggregate_election_data <-
 #'
 #' @export
 summary_election_data <-
-  function(type_elec, year = 2019, month = 4, date = NULL,
+  function(type_elec, year = 2019, date = NULL,
            election_data = NULL, ballots_data = NULL,
            col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
            prec_round = 3, short_version = TRUE,
@@ -760,7 +759,7 @@ summary_election_data <-
 
     election_data <-
       get_election_data(type_elec = type_elec, year = year,
-                        month = month, date = date,
+                        date = date,
                         election_data = NULL, ballots_data = NULL,
                         col_id_elec = col_id_elec, col_id_poll_station = col_id_poll_station,
                         prec_round = prec_round, short_version = short_version,

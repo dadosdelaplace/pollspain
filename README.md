@@ -79,7 +79,7 @@ summary_data_all
 
 | id_elec | blank_ballots | invalid_ballots | party_ballots | valid_ballots | total_ballots | n_poll_stations | pop_res_all | census_counting_all |
 |:---|---:|---:|---:|---:|---:|---:|---:|---:|
-| 02-2019-04-28&nbsp; | 199836 | 276769 | 26001535 | 26084449 | 26359783 | 60090 | 46722980 | 34799420 |
+| 02-2019-04-28 | 199836 | 276769 | 26001535 | 26084449 | 26359783 | 60090 | 46722980 | 34799420 |
 
 ``` r
 # Summary election data at prov level, aggregating the candidacies ballots
@@ -105,7 +105,11 @@ To do:
 - duplicates 1982 y 1986
 
 <details>
-<summary><strong>Advanced users</strong></summary>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
 </details>
@@ -113,7 +117,11 @@ Poner una aperitivo y referirle a los articles.
 ### Seat allocation
 
 <details>
-<summary><strong>Advanced users</strong></summary>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
 
@@ -122,7 +130,11 @@ Poner una aperitivo y referirle a los articles.
 ### Resúmenes de encuestas
 
 <details>
-<summary><strong>Advanced users</strong></summary>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
 
@@ -131,7 +143,11 @@ Poner una aperitivo y referirle a los articles.
 ### Estimación de encuestas
 
 <details>
-<summary><strong>Advanced users</strong></summary>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
 
@@ -140,7 +156,11 @@ Poner una aperitivo y referirle a los articles.
 ### Simulación de resultados electorales
 
 <details>
-<summary><strong>Advanced users</strong></summary>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
 
@@ -157,7 +177,11 @@ Poner una aperitivo y referirle a los articles.
 - ¿algún lollipop para mostrar housing efects? con flechas y eso.
 
 <details>
-<summary><strong>Advanced users</strong></summary>
+
+<summary>
+
+<strong>Advanced users</strong>
+</summary>
 
 Poner una aperitivo y referirle a los articles.
 

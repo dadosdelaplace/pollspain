@@ -2,10 +2,11 @@
 #'
 #' @description A dataset containing the dates of Spanish
 #' elections in referendum, congress, senate, municipal, cabildo
-#' (Canarian council) and European Parlament elections.
-#' Last update: 2023/02/25
+#' (Canarian council) and European Parlament elections. Only
+#' elections from 1980 onwards have been provided. Last update:
+#' 2025/05/01.
 #'
-#' @format A data frame with 64 rows and 6 variables:
+#' @format A data frame with 61 rows and 7 variables:
 #' \itemize{
 #'   \item \code{cod_elec}: code of type of elections. Allowed values:
 #'   \itemize{
@@ -17,16 +18,18 @@
 #'     \item \code{"06"}: cabildo - Canarian council - elections).
 #'     \item \code{"07"}: European Parlament elections.
 #'   }
-#'   \item \code{type_elec}: type of elections ("referendum", "congress",
-#'   "senate", "local", "regional", "cabildo" or "EU").
+#'   \item \code{type_elec}: type of elections ("referendum",
+#'   "congress", "senate", "local", "regional", "cabildo" or "EU").
 #'   \item \code{date}: date of election in "YYYY-MM-DD" format
-#'   \item \code{year}, \code{month}, \code{day}: year, month and day of election
+#'   \item \code{year}, \code{month}, \code{day}: year, month and
+#'   day of election
 #'   \item \code{topic}: topic of referendums (\code{cod_elec = "01"})
 #' }
 #'
-#' @author Data gathered and processed by Javier Álvarez-Liébana.
+#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
 #'
-#' @source Data extracted from \href{https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/}{Spanish Ministry of Interior}
+#' @source Data extracted from
+#' \href{https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/}{Spanish Ministry of Interior}
 #' @docType data
 #' @keywords datasets
 #' @name dates_elections_spain
@@ -50,9 +53,10 @@
 #'   \item \code{prov}: name of province
 #' }
 #'
-#' @author Data gathered and processed by Javier Álvarez-Liébana.
+#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
 #'
-#' @source Data extracted from \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
+#' @source Data extracted from
+#' \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
 #' @docType data
 #' @keywords datasets
 #' @name cod_INE_prov_ccaa
@@ -74,9 +78,10 @@
 #'   \item \code{prov}: name of province
 #' }
 #'
-#' @author Data gathered and processed by Javier Álvarez-Liébana.
+#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
 #'
-#' @source Data extracted from \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
+#' @source Data extracted from
+#' \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
 #' @docType data
 #' @keywords datasets
 #' @name cod_INE_prov
@@ -98,9 +103,10 @@
 #'   \item \code{ccaa}: name of regions
 #' }
 #'
-#' @author Data gathered and processed by Javier Álvarez-Liébana.
+#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
 #'
-#' @source Data extracted from \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
+#' @source Data extracted from
+#' \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
 #' @docType data
 #' @keywords datasets
 #' @name cod_INE_ccaa
@@ -128,7 +134,7 @@
 #'   \item \code{mun}: name of municipalities
 #' }
 #'
-#' @author Data gathered and processed by Javier Álvarez-Liébana.
+#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
 #'
 #' @source Data extracted from \href{https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx}{INE}
 #' @docType data
