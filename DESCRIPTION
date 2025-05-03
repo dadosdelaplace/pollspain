@@ -10,7 +10,7 @@ Authors@R: c(
     person("David", "Pereiro-Pol", role = c("aut", "ctb")),
     person("Mafalda", "González-González", role = c("aut", "ctb")),
     person("Irene", "Bosque-Gala", role = c("aut", "ctb")),
-    person("Mikaela", "De Smedt", role = c("ctb")))
+    person("Mikaela", "De Smedt", role = c("aut", "ctb")))
 Maintainer: Javier Álvarez Liébana <javalv09@ucm.es>
 Description: The package is intended to provide a tidyverse-style grammar for preprocessing, debugging, filtering, accessing, downloading and analyzing election data and polls in Spain.
 License: GPL (>= 3)

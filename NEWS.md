@@ -1,3 +1,11 @@
+<!-- 
+# pollspain 0.1.9
+
+- Added `recod_parties()`
+- Allow the user to input only the year of the elections in `import_elections_data.R` and `get_elections_data.R`
+- by_parties
+
+-->
 
 # pollspain 0.1.0
 
@@ -6,9 +14,8 @@
 - Added `recod_mun()`
 - Create pkgdown website.
 - Fix errors in examples and documentation.
-- Allow the user to input only the year of the elections in `import_elections_data.R` and `get_elections_data.R`
-- Allow the user to input both a year and a date (or a vector of both) at the same time in `import_elections_data.R` and `get_elections_data.R`
-- Added `recod_parties()`
+- Allow the user to input both a year and a date (or a vector of both) at the same time in `import_elections_data.R` and `get_elections_data.R` functions.
+- Fix `short_version = TRUE` by default.
 
 # pollspain 0.0.9
 

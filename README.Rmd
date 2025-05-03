@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The main objective of the R package `{pollspain}` is to provide social scientists, political analysts, journalists, and citizens with easy and straightforward [**access to electoral data from Spain**]{.hl}. This includes both **aggregated election results** extracted from polling stations and **electoral survey data** (including housing effects). The package also offers simple tools for seat allocation, vote simulation, and visualization. The package is designed so that users with basic knowledge of `R` can use it, providing [**tidyverse-style functions**]{.hl}.
+The main objective of the R package `{pollspain}` is to provide social scientists, political analysts, journalists, and citizens with easy and straightforward [**access to electoral data from Spain**]{.hl}. This includes both **aggregated election results** extracted from polling stations and **electoral survey data** (including housing effects). The package also offers simple tools for seat allocation, vote simulation, and visualization. The package is designed under [**tidyverse-style functions**]{.hl} specially tailored for beginner users .
 
 ## Installation
 
@@ -37,7 +37,7 @@ library(pollspain) # after installing
 library(pollspain)
 ```
 
-An **internet connection** is required for the installation, as well as for downloading data. Data is stored in the accompanying `pollspain-data` repository. You can find the **data dictionary** and more information about the data structure at <https://github.com/dadosdelaplace/pollspain-data>
+An **internet connection** is required for installing and downloading data. Data is stored in the accompanying `pollspain-data` repository. You can find **more information about the data structure** at <https://github.com/dadosdelaplace/pollspain-data>
 
 ## Usage
 
@@ -82,7 +82,7 @@ summary_data_prov_parties <-
 knitr::kable(head(summary_data_prov_parties, 5))
 ```
 
-`summary_election_data()` is a **user-friendly combination** of the functions `get_election_data()` (which merges different data sources at the polling station level) and `aggregate_election_data()` (which aggregates the data to the requested level). See [**some uses and detailed input arguments**]{.hl} of the function in [...](https://javieralvarezliebana.es/pollspain/articles/...) and [...](https://javieralvarezliebana.es/pollspain/articles/...) for  **advanced users**.
+`summary_election_data()` is a **user-friendly combination** of `get_election_data()` (which merges different data sources at the polling station level) and `aggregate_election_data()` (which aggregates the data to the requested level). See [**some uses and detailed input arguments**]{.hl} in [...](https://javieralvarezliebana.es/pollspain/articles/...), and [...](https://javieralvarezliebana.es/pollspain/articles/...) for  **advanced users**.
 
 <details>
 <summary><strong>⚠️ About municipalities</strong></summary>
@@ -107,12 +107,6 @@ The electoral roll of residents in Spain who are nationals of countries with Agr
 Los datos relativos a CERA se han agregado a nivel nacional, comunidad autónoma y provincial. ...
 
 </details>
-
-
-To do:
-
-* explicar bien argumentos y usos
-* by_parties y short version por defecto
 
 
 

@@ -16,8 +16,8 @@ Spain**</span>. This includes both **aggregated election results**
 extracted from polling stations and **electoral survey data** (including
 housing effects). The package also offers simple tools for seat
 allocation, vote simulation, and visualization. The package is designed
-so that users with basic knowledge of `R` can use it, providing
-<span class="hl">**tidyverse-style functions**</span>.
+under <span class="hl">**tidyverse-style functions**</span> specially
+tailored for beginner users .
 
 ## Installation
 
@@ -30,10 +30,9 @@ devtools::install_github("dadosdelaplace/pollspain")
 library(pollspain) # after installing
 ```
 
-An **internet connection** is required for the installation, as well as
-for downloading data. Data is stored in the accompanying
-`pollspain-data` repository. You can find the **data dictionary** and
-more information about the data structure at
+An **internet connection** is required for installing and downloading
+data. Data is stored in the accompanying `pollspain-data` repository.
+You can find **more information about the data structure** at
 <https://github.com/dadosdelaplace/pollspain-data>
 
 ## Usage
@@ -74,12 +73,12 @@ summary_data_prov_parties <-
 head(summary_data_prov_parties, 5)
 ```
 
-`summary_election_data()` is a **user-friendly combination** of the
-functions `get_election_data()` (which merges different data sources at
-the polling station level) and `aggregate_election_data()` (which
-aggregates the data to the requested level). See <span class="hl">**some
-uses and detailed input arguments**</span> of the function in
-[…](https://javieralvarezliebana.es/pollspain/articles/...) and
+`summary_election_data()` is a **user-friendly combination** of
+`get_election_data()` (which merges different data sources at the
+polling station level) and `aggregate_election_data()` (which aggregates
+the data to the requested level). See <span class="hl">**some uses and
+detailed input arguments**</span> in
+[…](https://javieralvarezliebana.es/pollspain/articles/...), and
 […](https://javieralvarezliebana.es/pollspain/articles/...) for
 **advanced users**.
 
@@ -125,11 +124,6 @@ Los datos relativos a CERA se han agregado a nivel nacional, comunidad
 autónoma y provincial. …
 
 </details>
-
-To do:
-
-- explicar bien argumentos y usos
-- by_parties y short version por defecto
 
 ### Seat allocation
 
