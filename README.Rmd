@@ -1,5 +1,6 @@
 ---
 output: github_document
+always_allow_html: true
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -19,7 +20,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The main objective of the R package `{pollspain}` is to provide social scientists, political analysts, journalists, and citizens with easy and straightforward **access to electoral data from Spain**. This includes both **aggregated election results** extracted from polling stations and **electoral survey data** (including housing effects). The package also offers simple tools for **seat allocation**, **vote simulation**, and **visualization**. The package is designed so that users with basic knowledge of `R` can use it, providing **tidyverse-style functions**.
+The main objective of the R package `{pollspain}` is to provide social scientists, political analysts, journalists, and citizens with easy and straightforward [**access to electoral data from Spain**]{.hl}. This includes both **aggregated election results** extracted from polling stations and **electoral survey data** (including housing effects). The package also offers simple tools for **seat allocation**, **vote simulation**, and **visualization**. The package is designed so that users with basic knowledge of `R` can use it, providing [**tidyverse-style functions**]{.hl}.
 
 ## Installation
 

@@ -4,9 +4,6 @@
     <loc>http://javieralvarezliebana.es/pollspain/404.html</loc>
   </url>
   <url>
-    <loc>http://javieralvarezliebana.es/pollspain/LICENSE-text.html</loc>
-  </url>
-  <url>
     <loc>http://javieralvarezliebana.es/pollspain/LICENSE.html</loc>
   </url>
   <url>
@@ -40,9 +37,6 @@
     <loc>http://javieralvarezliebana.es/pollspain/reference/get_election_data.html</loc>
   </url>
   <url>
-    <loc>http://javieralvarezliebana.es/pollspain/reference/get_mun_census_data.html</loc>
-  </url>
-  <url>
     <loc>http://javieralvarezliebana.es/pollspain/reference/import_candidacies_data.html</loc>
   </url>
   <url>
@@ -50,9 +44,6 @@
   </url>
   <url>
     <loc>http://javieralvarezliebana.es/pollspain/reference/import_poll_station_data.html</loc>
-  </url>
-  <url>
-    <loc>http://javieralvarezliebana.es/pollspain/reference/import_raw_elections_files.html</loc>
   </url>
   <url>
     <loc>http://javieralvarezliebana.es/pollspain/reference/index.html</loc>

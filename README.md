@@ -1,22 +1,23 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# pollspain
+
 <!-- badges: start -->
 
 [![GitHub
 release](https://img.shields.io/github/v/release/dadosdelaplace/pollspain)](https://github.com/dadosdelaplace/pollspain/releases)
 <!-- badges: end -->
 
-# pollspain
-
 The main objective of the R package `{pollspain}` is to provide social
 scientists, political analysts, journalists, and citizens with easy and
-straightforward **access to electoral data from Spain**. This includes
-both **aggregated election results** extracted from polling stations and
-**electoral survey data** (including housing effects). The package also
-offers simple tools for **seat allocation**, **vote simulation**, and
-**visualization**. The package is designed so that users with basic
-knowledge of `R` can use it, providing **tidyverse-style functions**.
+straightforward <span class="hl">**access to electoral data from
+Spain**</span>. This includes both **aggregated election results**
+extracted from polling stations and **electoral survey data** (including
+housing effects). The package also offers simple tools for **seat
+allocation**, **vote simulation**, and **visualization**. The package is
+designed so that users with basic knowledge of `R` can use it, providing
+<span class="hl">**tidyverse-style functions**</span>.
 
 ## Installation
 

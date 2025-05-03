@@ -2,3 +2,5 @@ url: http://javieralvarezliebana.es/pollspain/
 template:
   bootstrap: 5
   bootswatch: minty
+  assets:
+    - pkgdown/extra.css
