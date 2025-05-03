@@ -52,7 +52,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The main objective of the R package <a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> is to provide social scientists, political analysts, journalists, and citizens with easy and straightforward <span class="hl"><strong>access to electoral data from Spain</strong></span>. This includes both <strong>aggregated election results</strong> extracted from polling stations and <strong>electoral survey data</strong> (including housing effects). The package also offers simple tools for seat allocation, vote simulation, and visualization. The package is designed so that users with basic knowledge of <code>R</code> can use it, providing <span class="hl"><strong>tidyverse-style functions</strong></span>.</p>
+<p>The main objective of the R package <a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> is to provide social scientists, political analysts, journalists, and citizens with easy and straightforward <span class="hl"><strong>access to electoral data from Spain</strong></span>. This includes both <strong>aggregated election results</strong> extracted from polling stations and <strong>electoral survey data</strong> (including housing effects). The package also offers simple tools for seat allocation, vote simulation, and visualization. The package is designed under <span class="hl"><strong>tidyverse-style functions</strong></span> specially tailored for beginner users .</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -61,7 +61,7 @@
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools") # only if not already installed</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"dadosdelaplace/pollspain"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a></span><span class="op">)</span> <span class="co"># after installing</span></span></code></pre></div>
-<p>An <strong>internet connection</strong> is required for the installation, as well as for downloading data. Data is stored in the accompanying <code>pollspain-data</code> repository. You can find the <strong>data dictionary</strong> and more information about the data structure at <a href="https://github.com/dadosdelaplace/pollspain-data" class="external-link uri">https://github.com/dadosdelaplace/pollspain-data</a></p>
+<p>An <strong>internet connection</strong> is required for installing and downloading data. Data is stored in the accompanying <code>pollspain-data</code> repository. You can find <strong>more information about the data structure</strong> at <a href="https://github.com/dadosdelaplace/pollspain-data" class="external-link uri">https://github.com/dadosdelaplace/pollspain-data</a></p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -87,7 +87,7 @@
 <span>  <span class="fu"><a href="reference/summary_election_data.html">summary_election_data</a></span><span class="op">(</span><span class="st">"congress"</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2008</span>, <span class="fl">2023</span><span class="op">)</span>,</span>
 <span>                        level <span class="op">=</span> <span class="st">"prov"</span>, by_parties <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">summary_data_prov_parties</span>, <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/summary_election_data.html">summary_election_data()</a></code> is a <strong>user-friendly combination</strong> of the functions <code><a href="reference/get_election_data.html">get_election_data()</a></code> (which merges different data sources at the polling station level) and <code><a href="reference/aggregate_election_data.html">aggregate_election_data()</a></code> (which aggregates the data to the requested level). See <span class="hl"><strong>some uses and detailed input arguments</strong></span> of the function in <a href="https://javieralvarezliebana.es/pollspain/articles/..." class="external-link">…</a> and <a href="https://javieralvarezliebana.es/pollspain/articles/..." class="external-link">…</a> for <strong>advanced users</strong>.</p>
+<p><code><a href="reference/summary_election_data.html">summary_election_data()</a></code> is a <strong>user-friendly combination</strong> of <code><a href="reference/get_election_data.html">get_election_data()</a></code> (which merges different data sources at the polling station level) and <code><a href="reference/aggregate_election_data.html">aggregate_election_data()</a></code> (which aggregates the data to the requested level). See <span class="hl"><strong>some uses and detailed input arguments</strong></span> in <a href="https://javieralvarezliebana.es/pollspain/articles/..." class="external-link">…</a>, and <a href="https://javieralvarezliebana.es/pollspain/articles/..." class="external-link">…</a> for <strong>advanced users</strong>.</p>
 <details><summary><strong>⚠️ About municipalities</strong>
 </summary><p>The municipality data (names and codes) were <strong>extracted from the version published by the National Statistics Institute (INE) on February 6, 2025</strong>. The configuration of municipalities from previous years has been adapted to the most recent setup, recoding cases where municipalities have merged or disappeared.</p>
 <p>Data extracted from <a href="https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx" class="external-link uri">https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx</a></p>
@@ -99,11 +99,7 @@
 </ul>
 <p>The electoral roll of residents in Spain who are nationals of countries with Agreements for municipal elections (CERE Agreements), and the electoral roll of citizens of the European Union residing in Spain for municipal and European Parliament elections (CERE EU)».</p>
 <p>Los datos relativos a CERA se han agregado a nivel nacional, comunidad autónoma y provincial. …</p>
-</details><p>To do:</p>
-<ul>
-<li>explicar bien argumentos y usos</li>
-<li>by_parties y short version por defecto</li>
-</ul>
+</details>
 </div>
 <div class="section level3">
 <h3 id="seat-allocation">Seat allocation<a class="anchor" aria-label="anchor" href="#seat-allocation"></a>
@@ -211,7 +207,7 @@
 <li>David Pereiro-Pol <br><small class="roles"> Author, contributor </small>   </li>
 <li>Mafalda González-González <br><small class="roles"> Author, contributor </small>   </li>
 <li>Irene Bosque-Gala <br><small class="roles"> Author, contributor </small>   </li>
-<li><a href="authors.html">More about authors...</a></li>
+<li>Mikaela De Smedt <br><small class="roles"> Author, contributor </small>   </li>
 </ul>
 </div>
 
@@ -227,7 +223,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Javier Álvarez-Liébana, David Pereiro-Pol, Mafalda González-González, Irene Bosque-Gala.</p>
+  <p>Developed by Javier Álvarez-Liébana, David Pereiro-Pol, Mafalda González-González, Irene Bosque-Gala, Mikaela De Smedt.</p>
 </div>
 
 <div class="pkgdown-footer-right">
