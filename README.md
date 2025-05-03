@@ -14,36 +14,34 @@ scientists, political analysts, journalists, and citizens with easy and
 straightforward <span class="hl">**access to electoral data from
 Spain**</span>. This includes both **aggregated election results**
 extracted from polling stations and **electoral survey data** (including
-housing effects). The package also offers simple tools for **seat
-allocation**, **vote simulation**, and **visualization**. The package is
-designed so that users with basic knowledge of `R` can use it, providing
+housing effects). The package also offers simple tools for seat
+allocation, vote simulation, and visualization. The package is designed
+so that users with basic knowledge of `R` can use it, providing
 <span class="hl">**tidyverse-style functions**</span>.
 
 ## Installation
 
-You can **install the development version** of R package `{pollspain}`
-from [GitHub](https://github.com/) through the following code (please,
-note that you need to install `{devtools}` package before):
+You can <span class="hl">**install the development version**</span> from
+[GitHub](https://github.com/) with:
 
 ``` r
-install.packages("devtools") # only if not already installed
+# install.packages("devtools") # only if not already installed
 devtools::install_github("dadosdelaplace/pollspain")
 library(pollspain) # after installing
 ```
 
 An **internet connection** is required for the installation, as well as
 for downloading data. Data is stored in the accompanying
-`pollspain-data` repository. You can find the **data dictionary and more
-information** about the data structure at
+`pollspain-data` repository. You can find the **data dictionary** and
+more information about the data structure at
 <https://github.com/dadosdelaplace/pollspain-data>
 
-## How to use?
+## Usage
 
 ### Election summaries
 
-The **main function** is
-`summary_election_data(type_elec = ..., year = ..., level = ...)`, which
-given
+Using `summary_election_data(type_elec = ..., year = ..., level = ...)`
+with
 
 - a vector of **election dates** (e.g., `year = 2023` or
   `date = "2023-07-24"`)
@@ -52,33 +50,37 @@ given
 - a geographic **level for aggregation** (e.g., `level = "ccaa"` or
   `level = "prov"`)
 
-returns a **summary table of election results aggregated at the
-administrative level** specified in `level` argument. This includes both
-general data (blank votes, turnout, etc) and the **number of votes
-received by each party or candidacy**. The available **aggregation
-levels** (`level`) are: `"all"` (for a national summary), `"ccaa"`
-(autonomous communities), `"prov"` (province), `"mun"` (municipality),
-`"mun_district"` (electoral district), `"sec"` (census section), and
-`"poll_station"`.
+returns a <span class="hl">**summary table of election results
+aggregated at the administrative level**</span>. This includes both
+general data (blank votes, turnout, etc) and the **ballots received by
+each party or candidacy**. The available <span class="hl">**aggregation
+levels**</span> (`level`) are: `"all"` (for a national summary),
+`"ccaa"` (autonomous communities), `"prov"` (province), `"mun"`
+(municipality), `"mun_district"` (electoral district), `"sec"` (census
+section), and `"poll_station"`.
 
 ``` r
-# Summary election data at national level (general data without candidacies ballots)
+# Summary election data at national level for both elections in 2019
+# (general data without candidacies ballots)
 summary_data_all <- summary_election_data(type_elec = "congress", year = 2019)
 summary_data_all
 ```
 
 ``` r
-# Summary election data at prov level, aggregating the candidacies ballots
-summary_data_prov_parties <- summary_election_data(type_elec = "congress", year = 2019,
-                                                   level = "prov",  by_parties = TRUE)
+# Summary election data, aggregating candidacies ballots at prov level
+summary_data_prov_parties <-
+  summary_election_data("congress", year = c(2000, 2008, 2023),
+                        level = "prov", by_parties = TRUE)
 head(summary_data_prov_parties, 5)
 ```
 
 `summary_election_data()` is a **user-friendly combination** of the
 functions `get_election_data()` (which merges different data sources at
 the polling station level) and `aggregate_election_data()` (which
-aggregates the data to the requested level). See **some uses and
-detailed input arguments** of the function in \<…\> and \<…\> for more
+aggregates the data to the requested level). See <span class="hl">**some
+uses and detailed input arguments**</span> of the function in
+[…](https://javieralvarezliebana.es/pollspain/articles/...) and
+[…](https://javieralvarezliebana.es/pollspain/articles/...) for
 **advanced users**.
 
 <details>
@@ -88,11 +90,13 @@ detailed input arguments** of the function in \<…\> and \<…\> for more
 <strong>⚠️ About municipalities</strong>
 </summary>
 
-The municipality data (names and codes) were extracted from the version
-published by the National Statistics Institute (INE) on February 6,
-2025. The configuration of municipalities from previous years has been
-adapted to the most recent setup, recoding cases where municipalities
-have merged or disappeared. Data extracted from
+The municipality data (names and codes) were **extracted from the
+version published by the National Statistics Institute (INE) on February
+6, 2025**. The configuration of municipalities from previous years has
+been adapted to the most recent setup, recoding cases where
+municipalities have merged or disappeared.
+
+Data extracted from
 <https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx>
 
 </details>
@@ -110,7 +114,7 @@ voters and are not definitively or temporarily deprived of the right to
 vote. The electoral roll is composed of:
 
 - The electoral roll of Spanish citizens residing in Spain (CER).
-- The electoral roll of Spanish citizens residing abroad (CERA).
+- The **electoral roll of Spanish citizens residing abroad (CERA)**.
 
 The electoral roll of residents in Spain who are nationals of countries
 with Agreements for municipal elections (CERE Agreements), and the
@@ -147,13 +151,13 @@ To do:
 
 ## Other functions
 
-The `{pollspain}` package also provides **more advanced users with
-useful functions** to preprocess and analyze electoral data—even their
-own data, as long as it is provided in a proper format.
+The `{pollspain}` package also provides <span class="hl">**more advanced
+users with useful functions**</span> to preprocess and analyze electoral
+data—even their own data, as long as it is provided in a proper format.
 
-- **Utils**: functions contained in the `utils.R` script are intended to
-  serve as **helper functions for data preprocessing**. See \<…\> for
-  more examples about how to use them.
+- <span class="hl">**Utils**</span>: functions contained in the
+  `utils.R` script are intended to serve as **helper functions for data
+  preprocessing**. See \<…\> for more examples about how to use them.
 
 ``` r
 type_to_code_election(type_elec = "congress")
@@ -164,11 +168,12 @@ extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
 #> [1] "01-04-003"
 ```
 
-- **Import raw data**: functions starting with `import_..._data()` (code
-  can be found in the `import_elections_data.R` file) are aimed at
-  importing and preprocessing as raw as possible the `.DAT` election
-  files from the Spanish Ministry of Interior files available in the
-  Github repository . See \<…\> for more examples about how to use them.
+- \[**Import raw data**\]\]{.hl}: functions starting with
+  `import_..._data()` (code can be found in the
+  `import_elections_data.R` file) are aimed at importing and
+  preprocessing as raw as possible the `.DAT` election files from the
+  Spanish Ministry of Interior files available in the Github repository
+  . See \<…\> for more examples about how to use them.
 
 ``` r
 # import and preprocess elections data at poll stations level for given election

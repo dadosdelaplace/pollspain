@@ -1,0 +1,8 @@
+
+.hl {
+  background: linear-gradient(
+    to bottom,
+    transparent 70%,
+    #9cd6c5 30%
+  );
+}

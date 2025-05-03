@@ -1,16 +1,16 @@
 Package: pollspain
 Title: A grammar for the analysis of electoral and poll data
-Date: 2025-04-27
-Version: 0.0.9
+Date: 2025-05-03
+Version: 0.1.0
 Authors@R: c(
     person("Javier", "Álvarez-Liébana",
            email = "javalv09@ucm.es",
-           role = c("aut", "cre", "cph"),
+           role = c("aut", "cre", "ctb", "cph"),
            comment = c(ORCID = "0000-0003-0671-3856")),
-    person("David", "Pereiro-Pol", role = c("aut")),
-    person("Mafalda", "González-González", role = c("aut")),
-    person("Irene", "Bosque-Gala", role = c("aut")),
-    person("Mikaela", "De Smedt", role = c("aut")))
+    person("David", "Pereiro-Pol", role = c("aut", "ctb")),
+    person("Mafalda", "González-González", role = c("aut", "ctb")),
+    person("Irene", "Bosque-Gala", role = c("aut", "ctb")),
+    person("Mikaela", "De Smedt", role = c("ctb")))
 Maintainer: Javier Álvarez Liébana <javalv09@ucm.es>
 Description: The package is intended to provide a tidyverse-style grammar for preprocessing, debugging, filtering, accessing, downloading and analyzing election data and polls in Spain.
 License: GPL (>= 3)
