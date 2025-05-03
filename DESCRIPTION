@@ -14,7 +14,7 @@ Authors@R: c(
 Maintainer: Javier Álvarez Liébana <javalv09@ucm.es>
 Description: The package is intended to provide a tidyverse-style grammar for preprocessing, debugging, filtering, accessing, downloading and analyzing election data and polls in Spain.
 License: GPL (>= 3)
-URL: https://github.com/dadosdelaplace/pollspain
+URL: https://github.com/dadosdelaplace/pollspain, http://javieralvarezliebana.es/pollspain/
 BugReports: https://github.com/dadosdelaplace/pollspain/issues
 Depends:
     R (>= 4.0.0)

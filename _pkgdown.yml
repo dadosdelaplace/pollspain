@@ -1,10 +1,4 @@
-url: ~
+url: http://javieralvarezliebana.es/pollspain/
 template:
-  light-switch: true
   bootstrap: 5
-  includes:
-    in_header: |
-      <link rel="manifest" href="site.webmanifest">
-
-
 

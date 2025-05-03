@@ -120,7 +120,7 @@
 #' @title INE's code for municipalities
 #'
 #' @description A dataset containing the codes provided by INE
-#' of Spanish municipalities. Last update: 2023/02/25 (data
+#' of Spanish municipalities. Last update: 2025/05/03 (data
 #' updated by INE on 2020/01/01)
 #'
 #' @format A data frame with 8131 rows and 7 variables:

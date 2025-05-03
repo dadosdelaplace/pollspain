@@ -19,9 +19,7 @@ knitr::opts_chunk$set(
 
 # pollspain
 
-The main objective of the R package `{pollspain}` is to provide social scientists, political analysts, journalists, and citizens with easy and straightforward **access to electoral data from Spain**. This includes both **election results** extracted from polling stations (**aggregated by party and/or geographic level**) and **electoral survey data** (including the associated margins of error). The package also offers simple tools for **seat allocation**, **vote simulation**, and **results visualization**.
-
-The package is designed so that users with basic knowledge of `R` can use it, providing **tidyverse-style functions**.
+The main objective of the R package `{pollspain}` is to provide social scientists, political analysts, journalists, and citizens with easy and straightforward **access to electoral data from Spain**. This includes both **aggregated election results** extracted from polling stations and **electoral survey data** (including housing effects). The package also offers simple tools for **seat allocation**, **vote simulation**, and **visualization**. The package is designed so that users with basic knowledge of `R` can use it, providing **tidyverse-style functions**.
 
 ## Installation
 
@@ -30,25 +28,15 @@ You can **install the development version** of R package `{pollspain}` from [Git
 ```{r eval = FALSE}
 install.packages("devtools") # only if not already installed
 devtools::install_github("dadosdelaplace/pollspain")
+library(pollspain) # after installing
 ```
 
 
-```{r message = FALSE, warning = FALSE}
-# after installing
+```{r message = FALSE, warning = FALSE, echo = FALSE}
 library(pollspain)
 ```
 
-An **internet connection** is required for the installation, as well as for downloading data.
-
-### Available information sources
-
-
-```{r sources-info, echo = FALSE, eval = FALSE}
-sources_info <-
-  tibble("dataset" = ..., "description" = ...)
-```
-
-All the data is stored in the accompanying `pollspain-data` repository. You can find the data dictionary and more information about the data structure at <https://github.com/dadosdelaplace/pollspain-data>
+An **internet connection** is required for the installation, as well as for downloading data. Data is stored in the accompanying `pollspain-data` repository. You can find the **data dictionary and more information** about the data structure at <https://github.com/dadosdelaplace/pollspain-data>
 
 ## How to use?
 
@@ -56,35 +44,32 @@ All the data is stored in the accompanying `pollspain-data` repository. You can 
 
 The **main function** is `summary_election_data(type_elec = ..., year = ..., level = ...)`, which given
 
-* a vector of **election dates** (e.g., `year = 2023`),
+* a vector of **election dates** (e.g., `year = 2023` or `date = "2023-07-24"`)
+* a vector of **election types** (currently, it only works properly for `type_elec = "congress"`)
+* a geographic **level for aggregation** (e.g., `level = "ccaa"` or `level = "prov"`)
 
-* a vector of **election types** (currently, it only works properly for `type_elec = "congress"`),
-
-* a geographic **level for aggregation** (e.g., `level = "ccaa"`),
-
-returns a **summary table of election results aggregated at the administrative level** specified in `level` argument. This includes both general data (blank votes, turnout, etc) and the **number of votes received by each party or candidacy**. The available **aggregation levels** (`level`) are: `"all"` (for a national summary), `"ccaa"` (autonomous communities), `"prov"` (province), `"mun"` (municipality), `"mun_district"` (electoral district), `"sec"` (census section), and `"poll_station"` (raw results at the polling station level, without aggregation).
+returns a **summary table of election results aggregated at the administrative level** specified in `level` argument. This includes both general data (blank votes, turnout, etc) and the **number of votes received by each party or candidacy**. The available **aggregation levels** (`level`) are: `"all"` (for a national summary), `"ccaa"` (autonomous communities), `"prov"` (province), `"mun"` (municipality), `"mun_district"` (electoral district), `"sec"` (census section), and `"poll_station"`.
 
 ```{r summary-election-data-1, eval = FALSE}
 # Summary election data at national level (general data without candidacies ballots)
-summary_data_all <- summary_election_data(type_elec = "congress", year = 2019, month = 4)
+summary_data_all <- summary_election_data(type_elec = "congress", year = 2019)
 summary_data_all
 ```
 
-```{r summary-election-data-1-b, echo = FALSE, warning = FALSE, message = FALSE}
+```{r summary-election-data-1-b, echo = FALSE, warning = FALSE, message = FALSE, eval = FALSE}
 # Summary election data at national level (general data without candidacies ballots)
-summary_data_all <-
-  summary_election_data(type_elec = "congress", year = 2019, month = 4)
+summary_data_all <- summary_election_data(type_elec = "congress", year = 2019)
 knitr::kable(summary_data_all)
 ```
 
 ```{r summary-election-data-3, eval = FALSE}
 # Summary election data at prov level, aggregating the candidacies ballots
 summary_data_prov_parties <- summary_election_data(type_elec = "congress", year = 2019,
-                                                   month = 4, level = "prov",  by_parties = TRUE)
+                                                   level = "prov",  by_parties = TRUE)
 head(summary_data_prov_parties, 5)
 ```
 
-```{r summary-election-data-3-b, echo = FALSE, warning = FALSE, message = FALSE}
+```{r summary-election-data-3-b, echo = FALSE, warning = FALSE, message = FALSE, eval = FALSE}
 # Summary election data at ccaa level, aggregating the candidacies
 # ballots, for three elections
 summary_data_prov_parties <-
@@ -92,53 +77,49 @@ summary_data_prov_parties <-
 knitr::kable(head(summary_data_prov_parties, 5))
 ```
 
-To do:
-
-* explicar bien argumentos y usos (combina, de manera sencilla para el usuario, `get_election_data()` y `aggregate_election_data()`)
-* solo año (con opción a dar fecha completa)
-* by_parties y short version por defecto
-* duplicates 1982 y 1986
+`summary_election_data()` is a **user-friendly combination** of the functions `get_election_data()` (which merges different data sources at the polling station level) and `aggregate_election_data()` (which aggregates the data to the requested level). See **some uses and detailed input arguments** of the function in <...> and <...> for more **advanced users**.
 
 <details>
-<summary><strong>Advanced users</strong></summary>
-Poner una aperitivo y referirle a los articles.
+<summary><strong>⚠️ About municipalities</strong></summary>
+
+The municipality data (names and codes) were extracted from the version published by the National Statistics Institute (INE) on February 6, 2025. The configuration of municipalities from previous years has been adapted to the most recent setup, recoding cases where municipalities have merged or disappeared. Data extracted from <https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx>
+
 </details>
+
+
+<details>
+<summary><strong>⚠️ About CERA</strong></summary>
+
+According to the National Statistics Institute (INE) «the electoral roll contains the registration of those who meet the requirements to be voters and are not definitively or temporarily deprived of the right to vote. The electoral roll is composed of:
+
+* The electoral roll of Spanish citizens residing in Spain (CER).
+* The electoral roll of Spanish citizens residing abroad (CERA).
+
+The electoral roll of residents in Spain who are nationals of countries with Agreements for municipal elections (CERE Agreements), and the electoral roll of citizens of the European Union residing in Spain for municipal and European Parliament elections (CERE EU)».
+
+Los datos relativos a CERA se han agregado a nivel nacional, comunidad autónoma y provincial. ...
+
+</details>
+
+
+To do:
+
+* explicar bien argumentos y usos
+* by_parties y short version por defecto
+
+
 
 ### Seat allocation
 
-<details>
-<summary><strong>Advanced users</strong></summary>
-
-Poner una aperitivo y referirle a los articles.
-
-</details>
 
 ### Resúmenes de encuestas
 
-<details>
-<summary><strong>Advanced users</strong></summary>
-
-Poner una aperitivo y referirle a los articles.
-
-</details>
 
 ### Estimación de encuestas
 
-<details>
-<summary><strong>Advanced users</strong></summary>
-
-Poner una aperitivo y referirle a los articles.
-
-</details>
 
 ### Simulación de resultados electorales
 
-<details>
-<summary><strong>Advanced users</strong></summary>
-
-Poner una aperitivo y referirle a los articles.
-
-</details>
 
 ### Data viz
 
@@ -150,16 +131,10 @@ Poner una aperitivo y referirle a los articles.
 * mapa
 * ¿algún lollipop para mostrar housing efects? con flechas y eso.
 
-<details>
-<summary><strong>Advanced users</strong></summary>
-
-Poner una aperitivo y referirle a los articles.
-
-</details>
 
 ## Other functions
 
-The ´{pollspain}` package also provides to un usuario más avanzado some useful functions to preprocess and analyze electoral data (even your own electoral data siempre y cuando they are provided in a properly format).
+The `{pollspain}` package also provides **more advanced users with useful functions** to preprocess and analyze electoral data—even their own data, as long as it is provided in a proper format.
 
 * **Utils**: functions contained in the `utils.R` script are intended to serve as **helper functions for data preprocessing**. See <...> for more examples about how to use them.
 
@@ -169,57 +144,34 @@ extract_code("01-04-003-01-004-B", level = "mun")
 extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
 ```
 
-* **Import raw data**: functions starting with `import_..._data()` (code can be found in the `import_elections_data.R` file) are aimed at importing and preprocessing as raw as possible the `.DAT` election files from the Spanish Ministry of Interior. All functions download the `.rda` files available in the Github repository \url{https://github.com/dadosdelaplace/pollspain-data}. See <...> for more examples about how to use them.
+* **Import raw data**: functions starting with `import_..._data()` (code can be found in the `import_elections_data.R` file) are aimed at importing and preprocessing as raw as possible the `.DAT` election files from the Spanish Ministry of Interior files available in the Github repository \url{https://github.com/dadosdelaplace/pollspain-data}. See <...> for more examples about how to use them.
 
 
-```{r import-poll-station-data}
+```{r import-poll-station-data, eval = FALSE}
 # import and preprocess elections data at poll stations level for given election
 # types and dates, providing variables related to turnout, blank/valid votes, etc
-poll_data <- import_poll_station_data("congress", 2019, c(4, 11))
+poll_data <- import_poll_station_data(type_elec = "congress", year = 2019)
 head(poll_data)
 ```
-
-
-<!--
-
-## Datos del CERA (pending)
-
-According to the National Statistics Institute (INE):
-
-«The electoral roll contains the registration of those who meet the requirements to be voters and are not definitively or temporarily deprived of the right to vote. The electoral roll is composed of:
-
-* The electoral roll of Spanish citizens residing in Spain (CER).
-
-* The electoral roll of Spanish citizens residing abroad (CERA).
-
-The electoral roll of residents in Spain who are nationals of countries with Agreements for municipal elections (CERE Agreements), and the electoral roll of citizens of the European Union residing in Spain for municipal and European Parliament elections (CERE EU).»
-
-The `get_CERA_data()` function returns the data related to the CERA.
-
-```{r eval = FALSE}
-ccaa_CERA_data <- get_CERA_data(election_data, level = "ccaa")
-```
-
--->
 
 
 ## Authors
 
 **Javier Álvarez-Liébana (maintainer)**, **David Pereiro-Pol**, **Mafalda González-González**, **Irene Bosque-Gala** and **Mikaela De Smedt**. 
 
-`{pollspain}` package ha sido una parte de varios Trabajos Fin de Máster del Máster de Ciencias de Datos Computacionales de la UC3M (Madrid). The **usability and funcionality** of package has been tested by the following collaborators: 
+`{pollspain}` package has been part of several Master's Theses from the Master in Computational Data Science at UC3M (Madrid). The package’s usability and functionality have been tested by the following collaborators: 
 
 ## References
 
-This package has been designed based on the following resources and references
+This package has been designed based on the **following resources and references**
 
-* García Guzmán P (2025). WikiBarrio: Explore Spanish socio-demographic data at the neighborhood level. <https://www.wikibarrio.es/>
+* Albuja J. (2025). R pacakge `{electoral}`: allocating seats methods and party system scores (v0.1.4). <https://cran.r-project.org/web/packages/electoral/index.html>
+* García Guzmán P. (2025). WikiBarrio: Explore Spanish socio-demographic data at the neighborhood level. <https://www.wikibarrio.es/>
+* García Guzmán P. (2025). ineAtlas: Access to Spanish Household Income Distribution Atlas Data. R package version 0.1.3.9000, <https://github.com/pablogguz/ineAtlas>
+* Meleiro H. (2024). infoelectoral: Download Spanish Election Results. R package version 1.0.2, <https://github.com/rOpenSpain/infoelectoral>
+* Silge J., Nash J.C., and Graves S. (2018). Navigating the R Package Universe. The R Journal 10 (2): 558–63. <https://doi.org/10.32614/RJ-2018-058>
+* Wickham H. and Bryan J. R Packages: Organize, Test, Document, and Share Your Code (2023). <https://r-pkgs.org/>
 
 
-* García Guzmán P (2025). ineAtlas: Access to Spanish Household Income Distribution Atlas Data. R package version 0.1.3.9000, <https://github.com/pablogguz/ineAtlas>
+* Electoral data download from repository of the Spanish Ministry of the Interior. <https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/>
 
-
-* Meleiro H (2024). infoelectoral: Download Spanish Election Results. R package version 1.0.2, <https://github.com/rOpenSpain/infoelectoral>
-
-
-* Data download repository of the Spanish Ministry of the Interior. <https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/>
