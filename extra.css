@@ -7,6 +7,10 @@
   );
 }
 
+.nav-section a.nav-link {
+  color: #3a9078 !important;
+}
+
 .navbar-nav > li > a {
   color: #ffffff !important;
 }
