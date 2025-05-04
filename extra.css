@@ -6,3 +6,7 @@
     #9cd6c5 30%
   );
 }
+
+.navbar-nav > li > a {
+  color: #ffffff !important;
+}
