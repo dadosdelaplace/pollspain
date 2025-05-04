@@ -32,3 +32,23 @@ Let's load the required packages for this tutorial.
 library(pollspain)
 ```
 
+### a
+
+dasdas dsad asdasdasdas dasmdi amsi dasmi masim dasdimqoeqm oqqw qom qm qw mdqomqo mqom dqsom odmqom oqmd oqwmoqm odqwx dasdas dsad asdasdasdas dasmdi amsi dasmi masim dasdimqoeqm oqqw qom qm qw mdqomqo mqom dqsom odmqom oqmd oqwmoqm odqwx dasdas dsad asdasdasdas dasmdi amsi 
+
+```{r}
+x <- 1
+```
+
+
+## b
+
+
+dasdas dsad asdasdasdas dasmdi amsi dasmi masim dasdimqoeqm oqqw qom qm qw mdqomqo mqom dqsom odmqom oqmd oqwmoqm odqwx dasdas dsad asdasdasdas dasmdi amsi dasmi masim dasdimqoeqm oqqw qom qm qw mdqomqo mqom dqsom odmqom oqmd oqwmoqm odqwx dasdas dsad asdasdasdas dasmdi amsi dasmi masim dasdimqoeqm oqqw qom qm qw mdqomqo mqom dqsom odmqom oqmd oqwmoqm odqwx dasdas dsad asdasdasdas dasmdi amsi dasmi masim dasdimqoeqm oqqw qom qm qw mdqomqo mqom dqsom odmqom oqmd oqwmoqm odqwx
+
+
+```{r}
+x <- 1
+```
+
+
