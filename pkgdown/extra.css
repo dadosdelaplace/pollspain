@@ -8,7 +8,13 @@
 }
 
 .navbar-nav a.nav-link {
-  color: #6a4c93 !important;
+  color: #ffffff !important;
+  font-weight: bold !important;
+}
+
+.navbar-nav .nav-link.dropdown-toggle {
+  color: #ffffff !important;
+  font-weight: bold !important;
 }
 
 .navbar-nav a.nav-link.active {
