@@ -7,14 +7,14 @@
   );
 }
 
-.nav-link {
-  color: #ff6600 !important; /* El color que quieras */
+.navbar-nav a.nav-link {
+  color: #6a4c93 !important;
 }
 
-.nav-section a.nav-link {
-  color: #3a9078 !important;
+.navbar-nav a.nav-link.active {
+  color: #ff6600 !important;
+  font-weight: bold;
 }
 
-.navbar-nav > li > a {
-  color: #ffffff !important;
-}
+
+
