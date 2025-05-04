@@ -7,6 +7,8 @@
 
 [![GitHub
 release](https://img.shields.io/github/v/release/dadosdelaplace/pollspain)](https://github.com/dadosdelaplace/pollspain/releases)
+![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)
 <!-- badges: end -->
 
 The main objective of the R package `{pollspain}` is to provide social
