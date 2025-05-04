@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# pollspain
+# pollspain <img src="pollspain_sticker.png" align="right" width="130"/>
 
 <!-- badges: start -->
 
