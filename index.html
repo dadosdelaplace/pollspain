@@ -88,10 +88,12 @@
 <span>                        level <span class="op">=</span> <span class="st">"prov"</span>, by_parties <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">summary_data_prov_parties</span>, <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p><code><a href="reference/summary_election_data.html">summary_election_data()</a></code> is a <strong>user-friendly combination</strong> of <code><a href="reference/get_election_data.html">get_election_data()</a></code> (which merges different data sources at the polling station level) and <code><a href="reference/aggregate_election_data.html">aggregate_election_data()</a></code> (which aggregates the data to the requested level). See <span class="hl"><strong>some uses and detailed input arguments</strong></span> in <a href="https://javieralvarezliebana.es/pollspain/articles/..." class="external-link">…</a>, and <a href="https://javieralvarezliebana.es/pollspain/articles/..." class="external-link">…</a> for <strong>advanced users</strong>.</p>
-<details><summary><strong>⚠️ About municipalities</strong>
+<details><summary>
+⚠️ About municipalities
 </summary><p>The municipality data (names and codes) were <strong>extracted from the version published by the National Statistics Institute (INE) on February 6, 2025</strong>. The configuration of municipalities from previous years has been adapted to the most recent setup, recoding cases where municipalities have merged or disappeared.</p>
 <p>Data extracted from <a href="https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx" class="external-link uri">https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx</a></p>
-</details><details><summary><strong>⚠️ About CERA</strong>
+</details><details><summary>
+⚠️ About CERA
 </summary><p>According to the National Statistics Institute (INE) «the electoral roll contains the registration of those who meet the requirements to be voters and are not definitively or temporarily deprived of the right to vote. The electoral roll is composed of:</p>
 <ul>
 <li>The electoral roll of Spanish citizens residing in Spain (CER).</li>
@@ -106,35 +108,35 @@
 </h3>
 </div>
 <div class="section level3">
-<h3 id="resúmenes-de-encuestas">Resúmenes de encuestas<a class="anchor" aria-label="anchor" href="#res%C3%BAmenes-de-encuestas"></a>
+<h3 id="surveys-summaries">Surveys summaries<a class="anchor" aria-label="anchor" href="#surveys-summaries"></a>
 </h3>
 </div>
 <div class="section level3">
-<h3 id="estimación-de-encuestas">Estimación de encuestas<a class="anchor" aria-label="anchor" href="#estimaci%C3%B3n-de-encuestas"></a>
+<h3 id="estimating-electoral-surveys">Estimating electoral surveys<a class="anchor" aria-label="anchor" href="#estimating-electoral-surveys"></a>
 </h3>
 </div>
 <div class="section level3">
-<h3 id="simulación-de-resultados-electorales">Simulación de resultados electorales<a class="anchor" aria-label="anchor" href="#simulaci%C3%B3n-de-resultados-electorales"></a>
+<h3 id="simulating-electoral-results">Simulating electoral results<a class="anchor" aria-label="anchor" href="#simulating-electoral-results"></a>
 </h3>
 </div>
 <div class="section level3">
 <h3 id="data-viz">Data viz<a class="anchor" aria-label="anchor" href="#data-viz"></a>
 </h3>
-<ul>
-<li>barras ordenadas a más a menos (con colores)</li>
-<li>ggparlament</li>
-<li>encuestas + promedio</li>
-<li>barras con resultados + encuestas encima</li>
-<li>barras con % de voto vs %escaños?</li>
-<li>mapa</li>
-<li>¿algún lollipop para mostrar housing efects? con flechas y eso.</li>
-</ul>
+<!--
+* barras ordenadas a más a menos (con colores)
+* ggparlament
+* encuestas + promedio
+* barras con resultados + encuestas encima
+* barras con % de voto vs %escaños?
+* mapa
+* ¿algún lollipop para mostrar housing efects? con flechas y eso.
+-->
 </div>
 </div>
 <div class="section level2">
 <h2 id="other-functions">Other functions<a class="anchor" aria-label="anchor" href="#other-functions"></a>
 </h2>
-<p>The <a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> package also provides <span class="hl"><strong>more advanced users with useful functions</strong></span> to preprocess and analyze electoral data—even their own data, as long as it is provided in a proper format.</p>
+<p><a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> also provides <span class="hl"><strong>more advanced users with useful functions</strong></span> to preprocess and analyze electoral data—even their own data, as long as it is provided in a proper format.</p>
 <ul>
 <li>
 <span class="hl"><strong>Utils</strong></span>: functions contained in the <code>utils.R</code> script are intended to serve as <strong>helper functions for data preprocessing</strong>. See &lt;…&gt; for more examples about how to use them.</li>
@@ -147,13 +149,9 @@
 <span><span class="fu"><a href="reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="st">"01-04-003-01-004-B"</span>, level <span class="op">=</span> <span class="st">"mun"</span>, full_cod <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "01-04-003"</span></span></code></pre></div>
 <ul>
-<li>[<strong>Import raw data</strong>]]{.hl}: functions starting with <code>import_..._data()</code> (code can be found in the <code>import_elections_data.R</code> file) are aimed at importing and preprocessing as raw as possible the <code>.DAT</code> election files from the Spanish Ministry of Interior files available in the Github repository . See &lt;…&gt; for more examples about how to use them.</li>
+<li>
+<span class="hl"><strong>Import raw data</strong></span>: functions starting with <code>import_..._data()</code> (code can be found in the <code>import_elections_data.R</code> file) are aimed at importing and preprocessing as raw as possible the <code>.DAT</code> election files from the Spanish Ministry of Interior files available in the <a href="https://github.com/dadosdelaplace/pollspain-data" class="external-link">pollspain-data Github repository</a>. See &lt;…&gt; for more examples about how to use them.</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># import and preprocess elections data at poll stations level for given election</span></span>
-<span><span class="co"># types and dates, providing variables related to turnout, blank/valid votes, etc</span></span>
-<span><span class="va">poll_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_poll_station_data.html">import_poll_station_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">poll_data</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="authors">Authors<a class="anchor" aria-label="anchor" href="#authors"></a>
