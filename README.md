@@ -89,7 +89,7 @@ detailed input arguments**</span> in
 
 <summary>
 
-<strong>⚠️ About municipalities</strong>
+⚠️ About municipalities
 </summary>
 
 The municipality data (names and codes) were **extracted from the
@@ -107,7 +107,7 @@ Data extracted from
 
 <summary>
 
-<strong>⚠️ About CERA</strong>
+⚠️ About CERA
 </summary>
 
 According to the National Statistics Institute (INE) «the electoral roll
@@ -130,27 +130,29 @@ autónoma y provincial. …
 
 ### Seat allocation
 
-### Resúmenes de encuestas
+### Surveys summaries
 
-### Estimación de encuestas
+### Estimating electoral surveys
 
-### Simulación de resultados electorales
+### Simulating electoral results
 
 ### Data viz
 
-- barras ordenadas a más a menos (con colores)
-- ggparlament
-- encuestas + promedio
-- barras con resultados + encuestas encima
-- barras con % de voto vs %escaños?
-- mapa
-- ¿algún lollipop para mostrar housing efects? con flechas y eso.
+<!--
+* barras ordenadas a más a menos (con colores)
+* ggparlament
+* encuestas + promedio
+* barras con resultados + encuestas encima
+* barras con % de voto vs %escaños?
+* mapa
+* ¿algún lollipop para mostrar housing efects? con flechas y eso.
+-->
 
 ## Other functions
 
-The `{pollspain}` package also provides <span class="hl">**more advanced
-users with useful functions**</span> to preprocess and analyze electoral
-data—even their own data, as long as it is provided in a proper format.
+`{pollspain}` also provides <span class="hl">**more advanced users with
+useful functions**</span> to preprocess and analyze electoral data—even
+their own data, as long as it is provided in a proper format.
 
 - <span class="hl">**Utils**</span>: functions contained in the
   `utils.R` script are intended to serve as **helper functions for data
@@ -165,19 +167,13 @@ extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
 #> [1] "01-04-003"
 ```
 
-- \[**Import raw data**\]\]{.hl}: functions starting with
+- <span class="hl">**Import raw data**</span>: functions starting with
   `import_..._data()` (code can be found in the
   `import_elections_data.R` file) are aimed at importing and
   preprocessing as raw as possible the `.DAT` election files from the
-  Spanish Ministry of Interior files available in the Github repository
-  . See \<…\> for more examples about how to use them.
-
-``` r
-# import and preprocess elections data at poll stations level for given election
-# types and dates, providing variables related to turnout, blank/valid votes, etc
-poll_data <- import_poll_station_data(type_elec = "congress", year = 2019)
-head(poll_data)
-```
+  Spanish Ministry of Interior files available in the [pollspain-data
+  Github repository](https://github.com/dadosdelaplace/pollspain-data).
+  See \<…\> for more examples about how to use them.
 
 ## Authors
 

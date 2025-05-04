@@ -87,7 +87,7 @@ knitr::kable(head(summary_data_prov_parties, 5))
 `summary_election_data()` is a **user-friendly combination** of `get_election_data()` (which merges different data sources at the polling station level) and `aggregate_election_data()` (which aggregates the data to the requested level). See [**some uses and detailed input arguments**]{.hl} in [...](https://javieralvarezliebana.es/pollspain/articles/...), and [...](https://javieralvarezliebana.es/pollspain/articles/...) for  **advanced users**.
 
 <details>
-<summary><strong>⚠️ About municipalities</strong></summary>
+<summary>⚠️ About municipalities</summary>
 
 The municipality data (names and codes) were **extracted from the version published by the National Statistics Institute (INE) on February 6, 2025**. The configuration of municipalities from previous years has been adapted to the most recent setup, recoding cases where municipalities have merged or disappeared.
 
@@ -97,7 +97,7 @@ Data extracted from <https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xls
 
 
 <details>
-<summary><strong>⚠️ About CERA</strong></summary>
+<summary>⚠️ About CERA</summary>
 
 According to the National Statistics Institute (INE) «the electoral roll contains the registration of those who meet the requirements to be voters and are not definitively or temporarily deprived of the right to vote. The electoral roll is composed of:
 
@@ -115,17 +115,18 @@ Los datos relativos a CERA se han agregado a nivel nacional, comunidad autónoma
 ### Seat allocation
 
 
-### Resúmenes de encuestas
+### Surveys summaries
 
 
-### Estimación de encuestas
+### Estimating electoral surveys
 
 
-### Simulación de resultados electorales
+### Simulating electoral results
 
 
 ### Data viz
 
+<!--
 * barras ordenadas a más a menos (con colores)
 * ggparlament
 * encuestas + promedio
@@ -133,11 +134,11 @@ Los datos relativos a CERA se han agregado a nivel nacional, comunidad autónoma
 * barras con % de voto vs %escaños?
 * mapa
 * ¿algún lollipop para mostrar housing efects? con flechas y eso.
-
+-->
 
 ## Other functions
 
-The `{pollspain}` package also provides [**more advanced users with useful functions**]{.hl} to preprocess and analyze electoral data—even their own data, as long as it is provided in a proper format.
+`{pollspain}` also provides [**more advanced users with useful functions**]{.hl} to preprocess and analyze electoral data—even their own data, as long as it is provided in a proper format.
 
 * [**Utils**]{.hl}: functions contained in the `utils.R` script are intended to serve as **helper functions for data preprocessing**. See <...> for more examples about how to use them.
 
@@ -147,15 +148,7 @@ extract_code("01-04-003-01-004-B", level = "mun")
 extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
 ```
 
-* [**Import raw data**]]{.hl}: functions starting with `import_..._data()` (code can be found in the `import_elections_data.R` file) are aimed at importing and preprocessing as raw as possible the `.DAT` election files from the Spanish Ministry of Interior files available in the Github repository \url{https://github.com/dadosdelaplace/pollspain-data}. See <...> for more examples about how to use them.
-
-
-```{r import-poll-station-data, eval = FALSE}
-# import and preprocess elections data at poll stations level for given election
-# types and dates, providing variables related to turnout, blank/valid votes, etc
-poll_data <- import_poll_station_data(type_elec = "congress", year = 2019)
-head(poll_data)
-```
+* [**Import raw data**]{.hl}: functions starting with `import_..._data()` (code can be found in the `import_elections_data.R` file) are aimed at importing and preprocessing as raw as possible the `.DAT` election files from the Spanish Ministry of Interior files available in the [pollspain-data Github repository](https://github.com/dadosdelaplace/pollspain-data). See <...> for more examples about how to use them.
 
 
 ## Authors
