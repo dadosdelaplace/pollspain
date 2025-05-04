@@ -1,0 +1,34 @@
+---
+title: "utils"
+output: rmarkdown::html_vignette
+author: "Javier Álvarez Liébana"
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{How to use utils functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 8,
+  fig.height = 7
+)
+```
+
+
+This tutorial aims to illustrate how more [**advanced developers can use the helper functions**]{.hl} in the `utils.R` script.
+
+## Required packages
+
+Let's load the required packages for this tutorial.
+
+```{r packages}
+library(pollspain)
+```
+

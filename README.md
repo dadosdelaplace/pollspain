@@ -175,6 +175,12 @@ extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
   Github repository](https://github.com/dadosdelaplace/pollspain-data).
   See \<…\> for more examples about how to use them.
 
+## Contributing
+
+Any contribution is warmly welcome, whether as a developer or a beta
+tester of the package. Please feel free to propose any suggestions by
+opening an issue for discussion.
+
 ## Authors
 
 **Javier Álvarez-Liébana (maintainer)**, **David Pereiro-Pol**,

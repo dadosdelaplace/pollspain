@@ -1,9 +1,20 @@
 <!-- 
+
+# pollspain 0.3.0
+
+- surveys
+
+# pollspain 0.2.0
+
+- vignettes
+
 # pollspain 0.1.9
 
 - Added `recod_parties()`
 - Allow the user to input only the year of the elections in `import_elections_data.R` and `get_elections_data.R`
-- by_parties
+- Fix `by_parties = TRUE` by default.
+- id_candidacies
+- CERA
 
 -->
 

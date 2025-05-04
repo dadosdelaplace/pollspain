@@ -150,6 +150,9 @@ extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
 
 * [**Import raw data**]{.hl}: functions starting with `import_..._data()` (code can be found in the `import_elections_data.R` file) are aimed at importing and preprocessing as raw as possible the `.DAT` election files from the Spanish Ministry of Interior files available in the [pollspain-data Github repository](https://github.com/dadosdelaplace/pollspain-data). See <...> for more examples about how to use them.
 
+## Contributing
+
+Any contribution is warmly welcome, whether as a developer or a beta tester of the package. Please feel free to propose any suggestions by opening an issue for discussion.
 
 ## Authors
 
