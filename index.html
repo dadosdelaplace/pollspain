@@ -58,7 +58,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The main objective of the R package <a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> is to provide social scientists, political analysts, journalists, and citizens with easy and straightforward <span class="hl"><strong>access to electoral data from Spain</strong></span>. This includes both <strong>aggregated election results</strong> extracted from polling stations and <strong>electoral survey data</strong> (including housing effects). The package also offers simple tools for seat allocation, vote simulation, and visualization. The package is designed under <span class="hl"><strong>tidyverse-style functions</strong></span> specially tailored for beginner users .</p>
+<p>The main objective of the R package <a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> is to provide social scientists, political analysts and citizens with easy and straightforward <span class="hl"><strong>access to electoral data from Spain</strong></span>. This includes both <strong>aggregated election results</strong> extracted from polling stations and <strong>electoral survey data</strong> (including housing effects). The package also offers tools for seat allocation, vote simulation, and visualization. The package is designed under <span class="hl"><strong>tidyverse-style functions</strong></span> specially tailored for beginners.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -145,7 +145,7 @@
 <p><a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> also provides <span class="hl"><strong>more advanced users with useful functions</strong></span> to preprocess and analyze electoral data—even their own data, as long as it is provided in a proper format.</p>
 <ul>
 <li>
-<span class="hl"><strong>Utils</strong></span>: functions contained in the <code>utils.R</code> script are intended to serve as <strong>helper functions for data preprocessing</strong>. See &lt;…&gt; for more examples about how to use them.</li>
+<span class="hl"><strong>Utils</strong></span>: functions contained in the <code>utils.R</code> script are intended to serve as <strong>helper functions for data preprocessing</strong>. See <a href="https://javieralvarezliebana.es/pollspain/articles/utils.html" class="external-link uri">https://javieralvarezliebana.es/pollspain/articles/utils.html</a> for <a href="https://javieralvarezliebana.es/pollspain/articles/utils.html" class="external-link"><strong>more examples</strong></a> about how to use them.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/type_to_code_election.html">type_to_code_election</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span><span class="op">)</span></span>
@@ -162,27 +162,156 @@
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
-<p>Any contribution is warmly welcome, whether as a developer or a beta tester of the package. Please feel free to propose any suggestions by opening an issue for discussion.</p>
-</div>
-<div class="section level2">
-<h2 id="authors">Authors<a class="anchor" aria-label="anchor" href="#authors"></a>
-</h2>
-<p><strong>Javier Álvarez-Liébana (maintainer)</strong>, <strong>David Pereiro-Pol</strong>, <strong>Mafalda González-González</strong>, <strong>Irene Bosque-Gala</strong> and <strong>Mikaela De Smedt</strong>.</p>
-<p><a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> package has been part of several Master’s Theses from the Master in Computational Data Science at UC3M (Madrid). The package’s usability and functionality have been tested by the following collaborators:</p>
+<p>Any contribution is warmly welcome, whether as a <strong>developer or a beta tester</strong> of the package. Please feel free to propose any suggestions by <a href="https://github.com/dadosdelaplace/pollspain/issues" class="external-link"><strong>opening an issue for discussion</strong></a>.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <p>This package has been designed based on the <strong>following resources and references</strong></p>
 <ul>
-<li><p>Albuja J. (2025). R pacakge <code>{electoral}</code>: allocating seats methods and party system scores (v0.1.4). <a href="https://cran.r-project.org/web/packages/electoral/index.html" class="external-link uri">https://cran.r-project.org/web/packages/electoral/index.html</a></p></li>
-<li><p>García Guzmán P. (2025). WikiBarrio: Explore Spanish socio-demographic data at the neighborhood level. <a href="https://www.wikibarrio.es/" class="external-link uri">https://www.wikibarrio.es/</a></p></li>
-<li><p>García Guzmán P. (2025). ineAtlas: Access to Spanish Household Income Distribution Atlas Data. R package version 0.1.3.9000, <a href="https://github.com/pablogguz/ineAtlas" class="external-link uri">https://github.com/pablogguz/ineAtlas</a></p></li>
-<li><p>Meleiro H. (2024). infoelectoral: Download Spanish Election Results. R package version 1.0.2, <a href="https://github.com/rOpenSpain/infoelectoral" class="external-link uri">https://github.com/rOpenSpain/infoelectoral</a></p></li>
-<li><p>Silge J., Nash J.C., and Graves S. (2018). Navigating the R Package Universe. The R Journal 10 (2): 558–63. <a href="https://doi.org/10.32614/RJ-2018-058" class="external-link uri">https://doi.org/10.32614/RJ-2018-058</a></p></li>
-<li><p>Wickham H. and Bryan J. R Packages: Organize, Test, Document, and Share Your Code (2023). <a href="https://r-pkgs.org/" class="external-link uri">https://r-pkgs.org/</a></p></li>
-<li><p>Electoral data download from repository of the Spanish Ministry of the Interior. <a href="https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/" class="external-link uri">https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/</a></p></li>
+<li>ACE: The Electoral Knowledge Network. <a href="https://aceproject.org/" class="external-link uri">https://aceproject.org/</a>
+</li>
+<li>Albuja J. (2025). R pacakge <code>{electoral}</code>: allocating seats methods and party system scores (v0.1.4). <a href="https://cran.r-project.org/web/packages/electoral/index.html" class="external-link uri">https://cran.r-project.org/web/packages/electoral/index.html</a>
+</li>
+<li>García Guzmán P. (2025). WikiBarrio: Explore Spanish socio-demographic data at the neighborhood level. <a href="https://www.wikibarrio.es/" class="external-link uri">https://www.wikibarrio.es/</a>
+</li>
+<li>García Guzmán P. (2025). ineAtlas: Access to Spanish Household Income Distribution Atlas Data. R package version 0.1.3.9000, <a href="https://github.com/pablogguz/ineAtlas" class="external-link uri">https://github.com/pablogguz/ineAtlas</a>
+</li>
+<li>Meleiro H. (2024). infoelectoral: Download Spanish Election Results. R package version 1.0.2, <a href="https://github.com/rOpenSpain/infoelectoral" class="external-link uri">https://github.com/rOpenSpain/infoelectoral</a>
+</li>
+<li>Silge J., Nash J.C., and Graves S. (2018). Navigating the R Package Universe. The R Journal 10 (2): 558–63. <a href="https://doi.org/10.32614/RJ-2018-058" class="external-link uri">https://doi.org/10.32614/RJ-2018-058</a>
+</li>
+<li>V-Dem Dataset. Varieties of Democracy (V-Dem) Project. <a href="https://v-dem.net/data/" class="external-link uri">https://v-dem.net/data/</a>
+</li>
+<li>Wickham H. and Bryan J. R Packages: Organize, Test, Document, and Share Your Code (2023). <a href="https://r-pkgs.org/" class="external-link uri">https://r-pkgs.org/</a>
+</li>
 </ul>
+<div class="section level3">
+<h3 id="data-sources">Data sources<a class="anchor" aria-label="anchor" href="#data-sources"></a>
+</h3>
+<ul>
+<li>Spanish electoral data downloaded from <a href="https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/" class="external-link"><strong>repository of the Spanish Ministry of the Interior</strong></a>.</li>
+<li>Worldwide electoral data downloaded from <a href="https://cses.org/data-download/" class="external-link"><strong>Comparative Study of Electoral Systems (CSES)</strong></a> and <a href="https://electiondataarchive.org/" class="external-link"><strong>Election Data Archive (ICPSR)</strong></a>
+</li>
+<li>Survey data download from Wikipedia links (<a href="https://en.wikipedia.org/wiki/Opinion_polling_for_the_2023_Spanish_general_election" class="external-link"><strong>example</strong></a>).</li>
+<li>Seat allocation methods checked in the <a href="https://www.idea.int/data-tools/data/electoral-system-design" class="external-link"><strong>Electoral System Design Database (International IDEA)</strong></a>
+</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="authors">Authors<a class="anchor" aria-label="anchor" href="#authors"></a>
+</h2>
+<p><strong>Javier Álvarez-Liébana (maintainer)</strong>, <strong>David Pereiro-Pol</strong>, <strong>Mafalda González-González</strong>, <strong>Irene Bosque-Gala</strong> and <strong>Mikaela De Smedt</strong>. The development of <a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> package has been part of several Master’s Theses from the Master in Computational Data Science at UC3M (Madrid).</p>
+<div class="section level3">
+<h3 id="usability">Usability<a class="anchor" aria-label="anchor" href="#usability"></a>
+</h3>
+<p>The <strong>package’s usability and functionality</strong> have been tested by the following collaborators:</p>
+<details><summary>
+Contributor database
+</summary><table class="table">
+<colgroup>
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+</colgroup>
+<thead><tr class="header">
+<th>Contributor</th>
+<th>R knowledge</th>
+<th>Political science knowledge</th>
+<th>Usability score</th>
+<th>Functionality score</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>…</td>
+<td>9</td>
+<td>9</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>9</td>
+<td>2</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>5</td>
+<td>9</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>6</td>
+<td>7</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>2</td>
+<td>3</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>6</td>
+<td>1</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>10</td>
+<td>7</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>2</td>
+<td>8</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>5</td>
+<td>5</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>10</td>
+<td>3</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>3</td>
+<td>9</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>9</td>
+<td>5</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table></details>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
