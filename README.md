@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# pollspain <img src="pollspain_sticker.png" align="right" width="130"/>
+# pollspain <img src="man/figures/pollspain_sticker.png" align="right" width="120"/>
 
 <!-- badges: start -->
 
@@ -16,11 +16,11 @@ The main objective of the R package `{pollspain}` is to provide social
 scientists, political analysts and citizens with easy and
 straightforward <span class="hl">**access to electoral data from
 Spain**</span>. This includes both **aggregated election results**
-extracted from polling stations and **electoral survey data** (including
-housing effects). The package also offers tools for seat allocation,
-vote simulation, and visualization. The package is designed under
-<span class="hl">**tidyverse-style functions**</span> specially tailored
-for beginners.
+extracted from polling stations and **survey data** (including housing
+effects). It also offers tools for seat allocation, vote simulation, and
+dataviz. The package is designed under
+<span class="hl">**tidyverse-style**</span> specially tailored for
+beginners.
 
 ## Installation
 
