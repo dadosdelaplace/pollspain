@@ -13,14 +13,14 @@ release](https://img.shields.io/github/v/release/dadosdelaplace/pollspain)](http
 <!-- badges: end -->
 
 The main objective of the R package `{pollspain}` is to provide social
-scientists, political analysts, journalists, and citizens with easy and
+scientists, political analysts and citizens with easy and
 straightforward <span class="hl">**access to electoral data from
 Spain**</span>. This includes both **aggregated election results**
 extracted from polling stations and **electoral survey data** (including
-housing effects). The package also offers simple tools for seat
-allocation, vote simulation, and visualization. The package is designed
-under <span class="hl">**tidyverse-style functions**</span> specially
-tailored for beginner users .
+housing effects). The package also offers tools for seat allocation,
+vote simulation, and visualization. The package is designed under
+<span class="hl">**tidyverse-style functions**</span> specially tailored
+for beginners.
 
 ## Installation
 
@@ -156,7 +156,11 @@ their own data, as long as it is provided in a proper format.
 
 - <span class="hl">**Utils**</span>: functions contained in the
   `utils.R` script are intended to serve as **helper functions for data
-  preprocessing**. See \<…\> for more examples about how to use them.
+  preprocessing**. See
+  <https://javieralvarezliebana.es/pollspain/articles/utils.html> for
+  [**more
+  examples**](https://javieralvarezliebana.es/pollspain/articles/utils.html)
+  about how to use them.
 
 ``` r
 type_to_code_election(type_elec = "congress")
@@ -177,47 +181,82 @@ extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
 
 ## Contributing
 
-Any contribution is warmly welcome, whether as a developer or a beta
-tester of the package. Please feel free to propose any suggestions by
-opening an issue for discussion.
-
-## Authors
-
-**Javier Álvarez-Liébana (maintainer)**, **David Pereiro-Pol**,
-**Mafalda González-González**, **Irene Bosque-Gala** and **Mikaela De
-Smedt**.
-
-`{pollspain}` package has been part of several Master’s Theses from the
-Master in Computational Data Science at UC3M (Madrid). The package’s
-usability and functionality have been tested by the following
-collaborators:
+Any contribution is warmly welcome, whether as a **developer or a beta
+tester** of the package. Please feel free to propose any suggestions by
+[**opening an issue for
+discussion**](https://github.com/dadosdelaplace/pollspain/issues).
 
 ## References
 
 This package has been designed based on the **following resources and
 references**
 
+- ACE: The Electoral Knowledge Network. <https://aceproject.org/>
 - Albuja J. (2025). R pacakge `{electoral}`: allocating seats methods
   and party system scores (v0.1.4).
   <https://cran.r-project.org/web/packages/electoral/index.html>
-
 - García Guzmán P. (2025). WikiBarrio: Explore Spanish socio-demographic
   data at the neighborhood level. <https://www.wikibarrio.es/>
-
 - García Guzmán P. (2025). ineAtlas: Access to Spanish Household Income
   Distribution Atlas Data. R package version 0.1.3.9000,
   <https://github.com/pablogguz/ineAtlas>
-
 - Meleiro H. (2024). infoelectoral: Download Spanish Election Results. R
   package version 1.0.2, <https://github.com/rOpenSpain/infoelectoral>
-
 - Silge J., Nash J.C., and Graves S. (2018). Navigating the R Package
   Universe. The R Journal 10 (2): 558–63.
   <https://doi.org/10.32614/RJ-2018-058>
-
+- V-Dem Dataset. Varieties of Democracy (V-Dem) Project.
+  <https://v-dem.net/data/>
 - Wickham H. and Bryan J. R Packages: Organize, Test, Document, and
   Share Your Code (2023). <https://r-pkgs.org/>
 
-- Electoral data download from repository of the Spanish Ministry of the
-  Interior.
-  <https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/>
+### Data sources
+
+- Spanish electoral data downloaded from [**repository of the Spanish
+  Ministry of the
+  Interior**](https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/).
+- Worldwide electoral data downloaded from [**Comparative Study of
+  Electoral Systems (CSES)**](https://cses.org/data-download/) and
+  [**Election Data Archive (ICPSR)**](https://electiondataarchive.org/)
+- Survey data download from Wikipedia links
+  ([**example**](https://en.wikipedia.org/wiki/Opinion_polling_for_the_2023_Spanish_general_election)).
+- Seat allocation methods checked in the [**Electoral System Design
+  Database (International
+  IDEA)**](https://www.idea.int/data-tools/data/electoral-system-design)
+
+## Authors
+
+**Javier Álvarez-Liébana (maintainer)**, **David Pereiro-Pol**,
+**Mafalda González-González**, **Irene Bosque-Gala** and **Mikaela De
+Smedt**. The development of `{pollspain}` package has been part of
+several Master’s Theses from the Master in Computational Data Science at
+UC3M (Madrid).
+
+### Usability
+
+The **package’s usability and functionality** have been tested by the
+following collaborators:
+
+<details>
+
+<summary>
+
+Contributor database
+</summary>
+
+| Contributor | R knowledge | Political science knowledge | Usability score | Functionality score |
+|----|----|----|----|----|
+| … | 9 | 9 | … | … |
+| … | 9 | 2 | … | … |
+| … | 5 | 9 | … | … |
+| … | 6 | 7 | … | … |
+| … | 2 | 3 | … | … |
+| … | 6 | 1 | … | … |
+| … | 10 | 7 | … | … |
+| … | 2 | 8 | … | … |
+| … | 5 | 5 | … | … |
+| … | 10 | 3 | … | … |
+| … | 3 | 9 | … | … |
+| … | 9 | 5 | … | … |
+
+</details>
