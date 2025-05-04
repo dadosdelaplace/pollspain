@@ -1,5 +1,5 @@
 ---
-title: "utils"
+title: "How to use utils functions"
 output: rmarkdown::html_vignette
 author: "Javier Álvarez Liébana"
 date: "`r Sys.Date()`"

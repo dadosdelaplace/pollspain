@@ -6,15 +6,16 @@
 
 # pollspain 0.2.0
 
-- vignettes
+- update vignettes
 
 # pollspain 0.1.9
 
-- Added `recod_parties()`
-- Allow the user to input only the year of the elections in `import_elections_data.R` and `get_elections_data.R`
-- Fix `by_parties = TRUE` by default.
-- id_candidacies
-- CERA
+- Added `recod_parties()` (done)
+- Allow the user to input only the year of the elections in `import_elections_data.R` and `get_elections_data.R` (pending mezclar años y echas)
+- Fix `by_parties = TRUE` by default (pending)
+- id_candidacies (check)
+- CERA (check)
+- Added `How to use utils functions` to vignettes (pending)
 
 -->
 
