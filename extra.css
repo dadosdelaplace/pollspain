@@ -7,6 +7,10 @@
   );
 }
 
+.nav-link {
+  color: #ff6600 !important; /* El color que quieras */
+}
+
 .nav-section a.nav-link {
   color: #3a9078 !important;
 }
