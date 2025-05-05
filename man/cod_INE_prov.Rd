@@ -12,7 +12,8 @@ A data frame with 52 rows and 2 variables:
 }
 }
 \source{
-Data extracted from \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
+Data extracted from
+\href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
 }
 \usage{
 data(cod_INE_prov)
@@ -26,6 +27,6 @@ of Spanish provinces and regions. Last update: 2023/02/25
 data(cod_INE_prov)
 }
 \author{
-Data gathered and processed by Javier Álvarez-Liébana.
+Javier Álvarez-Liébana and David Pereiro-Pol.
 }
 \keyword{datasets}

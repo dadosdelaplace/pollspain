@@ -81,7 +81,7 @@
 #' each poll station.}
 #'
 #' @details This function fetches municipal-level data for the
-#' specified elections by downloading the corresponding `.rda` files
+#' specified elections by downloading the corresponding `.csv` files
 #' from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
 #' (directly downloaded from MIR website) and processing them into a
 #' tidy format. It automatically handles the download, loading, and
@@ -96,43 +96,44 @@
 #'
 #' ## Correct examples
 #'
-#' # Congress elections in April 2019
-#' # Fetch elections data for the congress elections in April 2019
-#' elections_data1 <- get_election_data("congress", 2019, 4)
+#' # Congress elections in June 2016
+#' # Fetch elections data for the congress elections in June 2016
+#' elections_data1 <- get_election_data("congress", 2016)
 #'
 #' # Fetch elections data for the congress and senate elections
-#' # in April 2019 in a long version
+#' # in June 2016 in a long version
 #' elections_data2 <-
-#'   get_election_data(c("congress", "senate"), 2019, 4,
+#'   get_election_data(c("congress", "senate"), 2016,
 #'                     short_version = FALSE)
 #'
 #' # Fetch elections data for congress elections in Nov 2019,
-#' # April 2019, and June 2016
+#' # April 2019, and June 2016, for 2019 election an interactive
+#' # panel will appear to select the desire option
 #' combined_elections_data <-
 #'   get_election_data(c("congress", "congress"),
-#'                     c(2019, 2016), c(11, 6))
+#'                     c(2019, 2016))
 #'
 #' # Example usage providing date instead of month and year
 #' date_example <- get_election_data("congress", date = "2016-06-26")
 #'
 #' # Example usage providing external tables
-#' election_data <- import_poll_station_data("congress", 2019, 4)
-#' ballots_data <- import_candidacies_data("congress", 2019, 4)
+#' election_data <- import_poll_station_data("congress", 2016)
+#' ballots_data <- import_candidacies_data("congress", 2016)
 #' join_data <-
-#'   get_election_data("congress", 2019, 4,
+#'   get_election_data("congress", 2016,
 #'                      election_data = election_data,
 #'                      ballots_data = ballots_data)
 #'
 #' # Example usage providing external tables with different
 #' # column names
 #' election_data <-
-#'   import_poll_station_data("congress", 2019, 4) |>
+#'   import_poll_station_data("congress", 2016) |>
 #'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
 #' ballots_data <-
-#'   import_candidacies_data("congress", 2019, 4) |>
+#'   import_candidacies_data("congress", 2016) |>
 #'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
 #' join_data <-
-#'   get_election_data("congress", 2019, 4,
+#'   get_election_data("congress", 2016,
 #'                     election_data = election_data,
 #'                     ballots_data = ballots_data,
 #'                     col_id_elec = "invent_1",
@@ -146,28 +147,24 @@
 #' # Wrong examples
 #'
 #' # Invalid election type: "national" is not a valid election type
-#' get_election_data("national", 2019, 4)
-#'
-#' # Invalid election: no congress elections are available in 5-2019.
-#' # Please check dataset dates_elections_spain
-#' get_election_data("congress", 2019, 5)
+#' get_election_data("national", 2019)
 #'
 #' # Invalid date format: date should be in %Y-%m-%d format
 #' get_election_data("congress", date = "26-06-2016")
 #'
 #' # Invalid short version flag: short_version should be a
 #' # logical variable
-#' get_election_data("congress", 2019, 4, short_version = "yes")
+#' get_election_data("congress", 2019, short_version = "yes")
 #'
-#' # Invalid include_candidates flag: include_candidates should be
-#' # a logical variable
-#' get_election_data("congress", 2019, 4, include_candidates = "no")
+#' # Invalid parameters: include_candidates is not a valid
+#' # argument
+#' get_election_data("congress", 2019, include_candidates = "no")
 #'
 #' # Invalid key columns: col_id_elec and col_id_poll should be
 #' # columns included in datasets election_data and ballots_data
-#' election_data <- import_poll_station_data("congress", 2019, 4)
-#' ballots_data <- import_candidacies_data("congress", 2019, 4)
-#' get_election_data("congress", 2019, 4,
+#' election_data <- import_poll_station_data("congress", 2019)
+#' ballots_data <- import_candidacies_data("congress", 2019)
+#' get_election_data("congress", 2019,
 #'                    election_data = election_data,
 #'                    ballots_data = ballots_data,
 #'                    col_id_elec = "invent_1",
@@ -180,14 +177,13 @@ get_election_data <-
            election_data = NULL, ballots_data = NULL,
            col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
            prec_round = 3, short_version = TRUE,
-           repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-           file_ext = ".rda", verbose = TRUE) {
+           repo_url = "https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data/",
+           verbose = TRUE) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
       stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
-
 
     }
 
@@ -195,6 +191,53 @@ get_election_data <-
 
       message(yellow("🔎 Check if parameters are allowed..."))
       Sys.sleep(1/20)
+
+    }
+
+    ambiguous_years <- intersect(year, 2019)
+    chosen_dates <- NULL
+
+    if (length(ambiguous_years > 0)) {
+
+      normal_years <- setdiff(year, 2019)
+
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec & year %in% normal_years) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+
+
+      if (interactive()) {
+
+        sel <- menu(c("April (28‑04‑2019)",
+                      "November (10‑11‑2019)",
+                      "Both dates"),
+                    title = paste0("What 2019 election do you want?"))
+
+        chosen_dates <- c(
+          chosen_dates,
+          switch(sel,
+                 "2019-04-28",
+                 "2019-11-10",
+                 c("2019-04-28", "2019-11-10"))
+        )
+      } else {
+
+        chosen_dates <- c(chosen_dates, c("2019-04-28", "2019-11-10"))
+      }
+
+      date <- c(date, normal_dates, chosen_dates)
+
+    } else {
+
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec & year %in% !!year) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+
+      date <- c(date, normal_dates)
 
     }
 
@@ -212,7 +255,7 @@ get_election_data <-
         import_poll_station_data(type_elec = type_elec, year = year,
                                  date = date, prec_round = prec_round,
                                  short_version = short_version,
-                                 repo_url = repo_url, file_ext = file_ext,
+                                 repo_url = repo_url,
                                  verbose = FALSE)
 
     }
@@ -231,8 +274,7 @@ get_election_data <-
 
       ballots_data <-
         import_candidacies_data(type_elec = type_elec, year = year,
-                                date = date,
-                                repo_url = repo_url, file_ext = file_ext,
+                                date = date, repo_url = repo_url,
                                 short_version = short_version,
                                 verbose = FALSE)
 
@@ -265,52 +307,27 @@ get_election_data <-
     # output
     return(join_data)
 
-  }
 
-# agg_nat <- election_data |> aggregate_election_data(level = "all")
-# agg_ccaa <- election_data |> aggregate_election_data(level = "ccaa")
-# agg_prov <- election_data |> aggregate_election_data(level = "prov")
-# agg_mun <- election_data |> aggregate_election_data(level = "mun")
-#
-# elections_data |>
-#   aggregate_election_data() |>
-#   select(-pop_res_all, -census_counting_all) |>
-#   bind_rows(
-#     elections_data |>
-#     aggregate_election_data(level = "ccaa") |>
-#     summarise(across(blank_ballots:n_poll_stations, sum), .by = id_elec)) |>
-#   bind_rows(
-#     elections_data |>
-#       aggregate_election_data(level = "prov") |>
-#       summarise(across(blank_ballots:n_poll_stations, sum), .by = id_elec)) |>
-#   bind_rows(
-#     elections_data |>
-#       aggregate_election_data(level = "mun") |>
-#       summarise(across(blank_ballots:n_poll_stations, sum), .by = id_elec)) |>
-#   bind_rows(
-#     elections_data |>
-#       aggregate_election_data(level = "mun_district") |>
-#       summarise(across(blank_ballots:n_poll_stations, sum), .by = id_elec)) |>
-#   bind_rows(
-#     elections_data |>
-#       aggregate_election_data(level = "sec") |>
-#       summarise(across(blank_ballots:n_poll_stations, sum), .by = id_elec)) |>
-#   distinct()
+    }
 
 #' @title Aggregate elections data at provided level (ccaa, prov, etc)
 #'
-#' @description pending...
+#' @description Aggregate and summarise polling‑station election results
+#' to any chosen territorial level, keeping
+#' party‑level vote totals by default. The function returns total ballots,
+#' number of polling stations and contextual sums,
+#' rounded to the requested precision.
 #'
 #' @inheritParams import_poll_station_data
 #' @inheritParams import_candidacies_data
 #' @inheritParams get_election_data
 #' @param level A string providing the level of aggregation at which
-#' the data is to be provided. The allowe values are the following:
+#' the data is to be provided. The allowed values are the following:
 #' 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec' or
 #' 'poll_station'. Defaults to \code{"all"}.
 #' @param by_parties A flag indicates whether user wants a summary by
 #' candidacies/parties or just global results at given \code{level}.
-#' Defaults to \code{FALSE}.
+#' Defaults to \code{TRUE}.
 #' @param cols_mun_var A vector of variable names that, in their raw
 #' version, are only available at the municipal level (or higher).
 #' Defaults to \code{c("pop_res_mun", "census_counting_mun")}.
@@ -321,7 +338,7 @@ get_election_data <-
 #' column containg the names and/or acronyms of candidacies.
 #' Defaults to \code{c("abbrev_candidacies", "name_candidacies")}.
 #'
-#' @return A tibble with rows corresponding to municipalities for
+#' @return A tibble with rows corresponding to the level of aggregation for
 #' each election, including the following variables:
 #' \item{id_elec}{election's id constructed from the election code
 #' \code{cod_elec} and date \code{date_elec}.}
@@ -368,10 +385,10 @@ get_election_data <-
 #' \item{abbrev_candidacies, name_candidacies}{acronym and full name
 #' of the candidacies.}
 #' \item{ballots}{number of ballots obtained for each candidacy at
-#' each poll station.}
+#' each level section.}
 #'
 #' @details This function fetches municipal-level data for the
-#' specified elections by downloading the corresponding `.rda` files
+#' specified elections by downloading the corresponding `.csv` files
 #' from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
 #' (directly downloaded from MIR website) and processing them into a
 #' tidy format. It automatically handles the download, loading, and
@@ -383,55 +400,28 @@ get_election_data <-
 #' @name aggregate_election_data
 #' @import crayon
 #' @examples
-#'
-#' \dontrun{
 #' ## Correct examples
 #'
-#' # Congress elections in April 2019
-#' # Fetch elections data for the congress elections in April 2019
-#' elections_data1 <- join_election_data("congress", 2019, 4)
+#' # Aggregate results to the country level without party breakdown of
+#' # the June 2016 elections
+#' ps_2019 <- get_election_data(type_elec = "congress",
+#'                              year = 2016)
 #'
-#' # Fetch join_election_data("congress", 2019, 4, prec_round = 7)
-#' # data for the congress elections in April 2019
-#' # with percentages rounded to 7 decimals
-#' elections_data2 <-
-#'   join_election_data("congress", 2019, 4, prec_round = 7)
+#' nat_2016 <- aggregate_election_data(ps_2016,
+#'                                     level = "all",
+#'                                     by_parties = FALSE)
 #'
-#' # Fetch elections data for the congress and senate elections in
-#' # April 2019 in a short version
-#' elections_data3 <-
-#'   join_election_data(c("congress", "senate"), 2019, 4, short_version = TRUE)
 #'
-#' # Example usage to combine data from different elections into one table
-#' # Fetch elections data for congress elections in Nov 2019 and June 2016
-#' combined_elections_data <-
-#'   join_election_data(c("congress", "congress"),
-#'                      c(2019, 2016), c(11, 6))
+#' # Province‑level results by party of the June 2016 elections
+#' prov_2016 <- aggregate_election_data(ps_2016,
+#'                                      level = "prov")
 #'
-#' # Example usage providing date instead of month and year
-#' date_example <- join_election_data("congress", date = "2016-06-26")
+#' # Municipality‑level results by party of the June 2016 elections
+#' mun_2016 <- aggregate_election_data(ps_2016,
+#'                                      level = "prov")
 #'
-#' # Example usage providing external tables
-#' election_data <- import_poll_station_data("congress", 2019, 4)
-#' ballots_data <- import_candidacies_data("congress", 2019, 4)
-#' join_election_data("congress", 2019, 4,
-#'                    election_data = election_data,
-#'                    ballots_data = ballots_data)
 #'
-#' # Example usage providing external tables with different
-#' # column names
-#' election_data <-
-#'   import_poll_station_data("congress", 2019, 4) |>
-#'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
-#' ballots_data <-
-#'   import_candidacies_data("congress", 2019, 4) |>
-#'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
-#' join_data <-
-#'   join_election_data("congress", 2019, 4,
-#'                      election_data = election_data,
-#'                      ballots_data = ballots_data,
-#'                      col_id_elec = "invent_1",
-#'                      col_id_poll = "invent_2")
+#' \dontrun{
 #'
 #' # ----
 #' # Incorrect examples
@@ -439,42 +429,29 @@ get_election_data <-
 #'
 #' # Wrong examples
 #'
-#' # Invalid election type: "national" is not a valid election type
-#' join_election_data("national", 2019, 4)
+#' # Invalid 'level' argument,"district" is not allowed
 #'
-#' # Invalid election: no congress elections are available in 5-2019.
-#' # Please check dataset dates_elections_spain
-#' join_election_data("congress", 2019, 5)
+#' aggregate_election_data(ps_2016, level = "district")
 #'
-#' # Invalid date format: date should be in %Y-%m-%d format
-#' join_election_data("congress", date = "26-06-2016")
+#' # Invalid 'by_parties' flag: it must be logical, not character
 #'
-#' # Invalid short version flag: short_version should be a
-#' # logical variable
-#' join_election_data("congress", 2019, 4, short_version = "yes")
+#' aggregate_election_data(ps_2016,
+#'                           level = "prov",
+#'                           by_parties = "yes")
 #'
-#' # Invalid include_candidates flag: include_candidates should be a
-#' # logical variable
-#' join_election_data("congress", 2019, 4, include_candidates = "no")
+#' # Invalid parameters: include_candidates is not a valid
+#' # argument
+#' aggregate_election_data(ps_2016, level = "mun", include_candidates = "no")
 #'
-#' # Invalid key columns: col_id_elec and col_id_poll should be
-#' # columns included in datasets election_data and ballots_data
-#' election_data <- import_poll_station_data("congress", 2019, 4)
-#' ballots_data <- import_candidacies_data("congress", 2019, 4)
-#' join_election_data("congress", 2019, 4,
-#'                    election_data = election_data,
-#'                    ballots_data = ballots_data,
-#'                    col_id_elec = "invent_1",
-#'                    col_id_poll = "invent_2")
 #' }
 #'
 #' @export
 aggregate_election_data <-
-  function(election_data, level = "all", by_parties = FALSE,
+  function(election_data, level = "all", by_parties = TRUE,
            col_id_elec = "id_elec",
            col_id_poll_station = "id_INE_poll_station",
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-           col_id_candidacies = "id_candidacies",
+           col_id_candidacies = "id_candidacies_nat",
            cols_names_candidacies = c("abbrev_candidacies", "name_candidacies"),
            prec_round = 3,
            verbose = TRUE) {
@@ -596,6 +573,46 @@ aggregate_election_data <-
       col_id_mun <- "id_INE_mun"
     }
 
+    # Este código es por si finalmente decidimos crear una fila individual para el CERA
+    # if (level != "all"){
+    #   if (!by_parties){
+    #     if (min(hierarchy_levels[hierarchy_levels >= level]) <= "mun"){
+    #
+    #       df_cera <- election_data %>%
+    #         filter(cod_INE_mun == 999) %>%
+    #         summarise(
+    #           across(where(is.numeric), ~ sum(.x, na.rm = TRUE)),
+    #           across(!where(is.numeric), first),
+    #           .groups = "drop"
+    #         ) |>
+    #         mutate(cod_INE_ccaa = "99",
+    #                cod_INE_prov = "99")
+    #
+    #       df_rest <- election_data %>%
+    #         filter(cod_INE_mun != 999)
+    #
+    #       election_data <- bind_rows(df_rest, df_cera)
+    #       }
+    # } else {
+    #
+    #   df_cera <- election_data %>%
+    #     filter(cod_INE_mun == 999) %>%
+    #     group_by(!!sym(col_id_candidacies)) %>%
+    #     summarise(
+    #       across(where(is.numeric), ~ sum(.x, na.rm = TRUE)),
+    #       across(!where(is.numeric), first),
+    #       .groups = "drop"
+    #     ) |>
+    #     mutate(cod_INE_ccaa = "99",
+    #            cod_INE_prov = "99")
+    #
+    #   df_rest <- election_data %>%
+    #     filter(cod_INE_mun != 999)
+    #
+    #   election_data <- bind_rows(df_rest, df_cera)
+    #     }
+    #   }
+
     if (!by_parties) {
 
       agg_data <-
@@ -632,7 +649,7 @@ aggregate_election_data <-
                              .data[[col_id_candidacies]],
                              .keep_all = TRUE) |>
                     summarise("ballots" = sum(ballots, na.rm = TRUE),
-                              .by = c(group_var, col_id_candidacies, cols_names_candidacies)),
+                              .by = c(group_var, col_id_candidacies)),
                   by = group_var) |>
         left_join(election_data |>
                     distinct(.data[[col_id_elec]], .data[[col_id_mun]],
@@ -659,7 +676,9 @@ aggregate_election_data <-
 #' @title Summaries of the electoral and candidacies ballots data for
 #' a given aggregation level (ccaa, prov, etc)
 #'
-#' @description pending...
+#' @description Import, preprocess and aggregate election data at the same time for
+#' a given election and aggregation level. This function also lets remove parties below a given
+#' vote‑share threshold.
 #'
 #' @inheritParams import_poll_station_data
 #' @inheritParams import_candidacies_data
@@ -670,9 +689,63 @@ aggregate_election_data <-
 #' to filter the parties (as long as \code{by_parties = TRUE}).
 #' Defaults to \code{NA}.
 #'
-#' @return A tibble with rows corresponding to ...pending
+#' @return A tibble with rows corresponding to the level of aggregation for
+#' each election, including the following variables:
+#' \item{id_elec}{election's id constructed from the election code
+#' \code{cod_elec} and date \code{date_elec}.}
+#' \item{cod_elec}{code representing the type of election:
+#' \code{"01"} (referendum), \code{"02"} (congress),
+#' \code{"03"} (senate), \code{"04"} (local elections),
+#' \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
+#' (European Parliament elections).}
+#' \item{type_elec}{type of election.}
+#' \item{date_elec}{date of the election.}
+#' \item{id_INE_poll_station}{poll station's id constructed from the
+#' ccaa-prov-municipality and poll station codes.}
+#' \item{id_INE_mun}{municipality ID constructed from the
+#' ccaa-prov-mun codes provided by INE.}
+#' \item{cod_INE_ccaa, ccaa}{codes and names for regions (ccaa)
+#' to which the municipalities belong.}
+#' \item{cod_INE_prov, prov}{codes and names for the provinces to
+#' which the municipalities belong.}
+#' \item{cod_INE_mun, mun}{code, and name for
+#' municipalities.}
+#' \item{cod_mun_district, cod_sec, cod_poll_station}{codes for the
+#' municipal district, census tract and poll station.}
+#' \item{ballots_1, turnout_1}{number of total ballots and turnout
+#' percentage in the first round.}
+#' \item{ballots_2, turnout_2}{number of total ballots and turnout
+#' percentage in the second round (if applicable).}
+#' \item{blank_ballots, invalid_ballots}{blank and invalid ballots.}
+#' \item{party_ballots, valid_ballots, total_ballots}{ballots to
+#' candidacies/parties, valid ballots (sum of \code{blank_ballots} and
+#' \code{party_ballots}) and total ballots (sum of
+#' \code{valid_ballots} and \code{invalid_ballots}).}
+#' \item{turnout}{final turnout percentage.}
+#' \item{porc_valid, porc_invalid, porc_parties, porc_blank}{perc (%)
+#' values of \code{valid_ballots}, \code{invalid_ballots},
+#' \code{party_ballots} and \code{blank_ballots}.}
+#' \item{n_poll_stations}{number of polling stations.}
+#' \item{pop_res_mun}{population census of residents (CER + CERA) at
+#' municipality level.}
+#' \item{census_counting_mun}{population eligible to vote after
+#' claims at municipality level.}
+#' \item{id_candidacies}{id for candidacies (at province level).}
+#' \item{id_candidacies_ccaa, id_candidacies_nat}{id for
+#' candidacies (at region - ccaa - and national level).}
+#' \item{abbrev_candidacies, name_candidacies}{acronym and full name
+#' of the candidacies.}
+#' \item{ballots}{number of ballots obtained for each candidacy at
+#' each level section.}
+#' \item{porc_candidacies_parties}{percentage of ballots obtained for each candidacy over the
+#' total number of party ballots of each level section.}
+#' \item{porc_candidacies_valid}{percentage of ballots obtained for each candidacy over the
+#' total number of valid ballots of each level section.}
+#' \item{porc_candidacies_census}{percentage of ballots obtained for each candidacy over the
+#' census of the corresponding aggregation level.}
 #'
-#' @details This function ... pending
+#' @details A tibble with rows corresponding to the level of aggregation for
+#' each election, including the following variables:
 #'
 #' @author Javier Álvarez-Liébana and David Pereiro-Pol.
 #' @keywords get_elections_data
@@ -682,25 +755,30 @@ aggregate_election_data <-
 #'
 #' ## Correct examples
 #'
-#' # Summary election data at national level (general data
-#' # without candidacies ballots)
-#' summary_data_all <- summary_election_data("congress", 2019, 4)
-#'
 #' # Summary election data at national level, aggregating the
 #' # candidacies ballots
-#' summary_data_all_parties <-
-#'   summary_election_data("congress", 2019, 4, by_parties = TRUE)
+#' summary_data_all <- summary_election_data("congress", 2019)
 #'
-#' # Summary election data at ccaa level (general data
+#' # Summary election data at national level, (general data
 #' # without candidacies ballots)
-#' summary_data_ccaa <-
-#'   summary_election_data("congress", 2019, 4, level = "ccaa")
+#' summary_data_all_parties <-
+#'   summary_election_data("congress", 2019, by_parties = FALSE)
 #'
 #' # Summary election data at ccaa level, aggregating the
 #' # candidacies ballots
-#'summary_data_ccaa_parties <-
-#'   summary_election_data("congress", 2019, 4, level = "ccaa",
-#'                         by_parties = TRUE)
+#' summary_data_ccaa <-
+#'   summary_election_data("congress", 2019, level = "ccaa")
+#'
+#' # Summary election data at ccaa level, (general data
+#' # without candidacies ballots)
+#' summary_data_ccaa_parties <-
+#'   summary_election_data("congress", 2019, level = "ccaa",
+#'                         by_parties = FALSE)
+#'
+#' # Filter parties that took <5% of valid ballots at country level
+#' nat19_gt5 <- summary_election_data("congress", 2019,
+#'                                    by_parties = TRUE,
+#'                                    filter_porc_ballots = 5)
 #'
 #' \dontrun{
 #' # ----
@@ -708,6 +786,22 @@ aggregate_election_data <-
 #' # ----
 #'
 #' # Wrong examples
+#'
+#' # Invalid aggregation level
+#' summary_election_data("congress", 2019, level = "district")
+#'
+#' # filter_porc_ballots outside 0–100
+#' summary_election_data("congress", 2019,
+#'                       filter_porc_ballots = 150)
+#'
+#' # filter_porc_ballots supplied while by_parties = FALSE
+#' summary_election_data("congress", 2019,
+#'                       by_parties = FALSE,
+#'                       filter_porc_ballots = 5)
+#'
+#' # Wrong election type
+#' summary_election_data("national", 2019)
+#' }
 #'
 #' }
 #'
@@ -717,11 +811,11 @@ summary_election_data <-
            election_data = NULL, ballots_data = NULL,
            col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
            prec_round = 3, short_version = TRUE,
-           repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-           file_ext = ".rda", level = "all", by_parties = FALSE,
+           repo_url = "https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data/",
+           level = "all", by_parties = TRUE,
            filter_porc_ballots = NA,
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-           col_id_candidacies = "id_candidacies",
+           col_id_candidacies = "id_candidacies_nat",
            cols_names_candidacies = c("abbrev_candidacies", "name_candidacies"),
            verbose = TRUE) {
 
@@ -758,12 +852,11 @@ summary_election_data <-
     }
 
     election_data <-
-      get_election_data(type_elec = type_elec, year = year,
-                        date = date,
+      get_election_data(type_elec = type_elec, year = year, date = date,
                         election_data = NULL, ballots_data = NULL,
                         col_id_elec = col_id_elec, col_id_poll_station = col_id_poll_station,
                         prec_round = prec_round, short_version = short_version,
-                        repo_url = repo_url, file_ext = file_ext, verbose = FALSE)
+                        repo_url = repo_url, verbose = FALSE)
 
     if (verbose) {
 
@@ -823,9 +916,5 @@ summary_election_data <-
 
     return(summary_data)
 }
-
-
-
-# ¿arreglar CERA?
 
 

@@ -8,7 +8,6 @@ a given aggregation level (ccaa, prov, etc)}
 summary_election_data(
   type_elec,
   year = 2019,
-  month = 4,
   date = NULL,
   election_data = NULL,
   ballots_data = NULL,
@@ -16,13 +15,13 @@ summary_election_data(
   col_id_poll_station = "id_INE_poll_station",
   prec_round = 3,
   short_version = TRUE,
-  repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
+  repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main/data",
   file_ext = ".rda",
   level = "all",
   by_parties = FALSE,
   filter_porc_ballots = NA,
   cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-  col_id_candidacies = "id_candidacies",
+  col_id_candidacies = "id_candidacies_nat",
   cols_names_candidacies = c("abbrev_candidacies", "name_candidacies"),
   verbose = TRUE
 )
@@ -34,18 +33,16 @@ It should be one of the following values: "referendum",
 or "EU".}
 
 \item{year}{A vector or single value representing the years of the
-elections to be considered.}
-
-\item{month}{A vector or single value representing the months of
-the elections to be considered. Please, check (refer to
-\code{dates_elections_spain}) that elections of the specified type
-are available for the provided year and month.}
+elections to be considered. Please, check in
+\code{dates_elections_spain} that elections of the specified type
+are available for the provided year.}
 
 \item{date}{A vector or single value representing the dates of
 the elections to be considered. If date was provided, it should be
 in format \%Y-\%m-\%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
-If no date was provided, \code{month} and \code{year} should be
-both numerical variables.}
+If no date was provided, \code{year} should be provided as
+numerical variable. Please, check in \code{dates_elections_spain}
+that elections of the specified type are available.}
 
 \item{election_data}{A database containing general election data
 already provided (by other functions or by the user). Database
@@ -122,7 +119,7 @@ This function ... pending
 
 # Summary election data at national level (general data
 # without candidacies ballots)
-summary_data_all <- summary_election_data("congress", 2019, 4)
+summary_data_all <- summary_election_data("congress", 2019)
 
 # Summary election data at national level, aggregating the
 # candidacies ballots
