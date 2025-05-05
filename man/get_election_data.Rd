@@ -8,7 +8,6 @@ stations and votes for candidacies.}
 get_election_data(
   type_elec,
   year = 2019,
-  month = 4,
   date = NULL,
   election_data = NULL,
   ballots_data = NULL,
@@ -28,18 +27,16 @@ It should be one of the following values: "referendum",
 or "EU".}
 
 \item{year}{A vector or single value representing the years of the
-elections to be considered.}
-
-\item{month}{A vector or single value representing the months of
-the elections to be considered. Please, check (refer to
-\code{dates_elections_spain}) that elections of the specified type
-are available for the provided year and month.}
+elections to be considered. Please, check in
+\code{dates_elections_spain} that elections of the specified type
+are available for the provided year.}
 
 \item{date}{A vector or single value representing the dates of
 the elections to be considered. If date was provided, it should be
 in format \%Y-\%m-\%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
-If no date was provided, \code{month} and \code{year} should be
-both numerical variables.}
+If no date was provided, \code{year} should be provided as
+numerical variable. Please, check in \code{dates_elections_spain}
+that elections of the specified type are available.}
 
 \item{election_data}{A database containing general election data
 already provided (by other functions or by the user). Database
@@ -154,19 +151,19 @@ the user.
 
 # Congress elections in April 2019
 # Fetch elections data for the congress elections in April 2019
-elections_data1 <- get_election_data("congress", 2019, 4)
+elections_data1 <- get_election_data("congress", 2019)
 
 # Fetch elections data for the congress and senate elections
 # in April 2019 in a long version
 elections_data2 <-
-  get_election_data(c("congress", "senate"), 2019, 4,
+  get_election_data(c("congress", "senate"), 2019,
                     short_version = FALSE)
 
 # Fetch elections data for congress elections in Nov 2019,
 # April 2019, and June 2016
 combined_elections_data <-
   get_election_data(c("congress", "congress"),
-                    c(2019, 2016), c(11, 6))
+                    c(2019, 2016))
 
 # Example usage providing date instead of month and year
 date_example <- get_election_data("congress", date = "2016-06-26")
@@ -202,28 +199,24 @@ join_data <-
 # Wrong examples
 
 # Invalid election type: "national" is not a valid election type
-get_election_data("national", 2019, 4)
-
-# Invalid election: no congress elections are available in 5-2019.
-# Please check dataset dates_elections_spain
-get_election_data("congress", 2019, 5)
+get_election_data("national", 2019)
 
 # Invalid date format: date should be in \%Y-\%m-\%d format
 get_election_data("congress", date = "26-06-2016")
 
 # Invalid short version flag: short_version should be a
 # logical variable
-get_election_data("congress", 2019, 4, short_version = "yes")
+get_election_data("congress", 2019, short_version = "yes")
 
 # Invalid include_candidates flag: include_candidates should be
 # a logical variable
-get_election_data("congress", 2019, 4, include_candidates = "no")
+get_election_data("congress", 2019, include_candidates = "no")
 
 # Invalid key columns: col_id_elec and col_id_poll should be
 # columns included in datasets election_data and ballots_data
-election_data <- import_poll_station_data("congress", 2019, 4)
-ballots_data <- import_candidacies_data("congress", 2019, 4)
-get_election_data("congress", 2019, 4,
+election_data <- import_poll_station_data("congress", 2019)
+ballots_data <- import_candidacies_data("congress", 2019)
+get_election_data("congress", 2019,
                    election_data = election_data,
                    ballots_data = ballots_data,
                    col_id_elec = "invent_1",

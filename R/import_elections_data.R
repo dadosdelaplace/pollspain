@@ -22,8 +22,6 @@
 #' @param repo_url A string with the url in which the raw data can be
 #' found. Defaults to
 #' \url{https://github.com/dadosdelaplace/pollspain-data/blob/main}.
-#' @param file_ext A string with the file's extension. Defaults to
-#' \code{".rda"}.
 #' @param verbose Flag to indicate whether detailed messages should
 #' be printed during execution. Defaults to \code{TRUE}.
 #'
@@ -118,8 +116,8 @@
 #' @export
 import_mun_census_data <-
   function(type_elec, year = 2023, date = NULL,
-           repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-           file_ext = ".rda", verbose = TRUE) {
+           repo_url = "https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data/",
+           verbose = TRUE) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
@@ -148,7 +146,7 @@ import_mun_census_data <-
       year <- year(date)
       date <- as_date(date)
 
-      if (is.na(date)) {
+      if (any(is.na(date))) {
 
         stop(red("😵 If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
 
@@ -226,10 +224,10 @@ import_mun_census_data <-
     }
 
     # Construct the set of URL for the specific election directory
-    dirs <- glue("data/{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
+    dirs <- glue("{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
     dirs <- glue("{dirs}/{allowed_elections$cod_elec}{allowed_elections$year}{sprintf('%02d', allowed_elections$month)}")
     elections_dir <- glue("{repo_url}/{dirs}")
-    files_url <- glue("{elections_dir}/raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
+    files_url <- glue("{elections_dir}/raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.csv")
 
     if (verbose) {
 
@@ -254,27 +252,10 @@ import_mun_census_data <-
       }
     }
 
-    # download files in a temp_folder
-    temp_files <- replicate(n = length(files_url),
-                            expr = tempfile(fileext = file_ext))
-
-    # loop to avoid rmd error when examples are generated
-    for (i in 1:length(files_url)){
-
-      download.file(files_url[i], destfile = temp_files[i], mode = "wb", quiet = TRUE)
-
-      # Check the downloaded file before loading
-      if (any(file.info(temp_files[i])$size == 0)) {
-
-        stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
-
-      }
-    }
-
     # Import the data
     mun_data <-
-      temp_files |>
-      map(function(x) { get(load(x)) }) |>
+      files_url |>
+      map(function(x) { suppressMessages(read_csv(file = x)) }) |>
       list_rbind()
 
     # Recode mun data
@@ -429,8 +410,8 @@ import_mun_census_data <-
 import_poll_station_data <-
   function(type_elec, year = 2019, date = NULL,
            prec_round = 3, short_version = TRUE,
-           repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-           file_ext = ".rda", verbose = TRUE) {
+           repo_url = "https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data/",
+           verbose = TRUE) {
 
     # Check if prec_round is a positive number
     if (prec_round != as.integer(prec_round) | prec_round < 1) {
@@ -472,7 +453,7 @@ import_poll_station_data <-
       year <- year(date)
       date <- as_date(date)
 
-      if (is.na(date)) {
+      if (any(is.na(date))) {
 
         stop(red("😵 If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
 
@@ -550,10 +531,10 @@ import_poll_station_data <-
     }
 
     # Construct the set of URL for the specific election directory
-    dirs <- glue("data/{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
+    dirs <- glue("{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
     dirs <- glue("{dirs}/{allowed_elections$cod_elec}{allowed_elections$year}{sprintf('%02d', allowed_elections$month)}")
     elections_dir <- glue("{repo_url}/{dirs}")
-    files_url <- glue("{elections_dir}/raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
+    files_url <- glue("{elections_dir}/raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.csv")
 
     if (verbose) {
 
@@ -578,27 +559,10 @@ import_poll_station_data <-
       }
     }
 
-    # download files in a temp_folder
-    temp_files <- replicate(n = length(files_url),
-                            expr = tempfile(fileext = file_ext))
-
-    # loop to avoid rmd error when examples are generated
-    for (i in 1:length(files_url)){
-
-      download.file(files_url[i], destfile = temp_files[i], mode = "wb", quiet = TRUE)
-
-      # Check the downloaded file before loading
-      if (any(file.info(temp_files[i])$size == 0)) {
-
-        stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
-
-      }
-    }
-
     # Import the data
     poll_station_raw_data <-
-      temp_files |>
-      map(function(x) { get(load(x)) }) |>
+      files_url |>
+      map(function(x) { suppressMessages(read_csv(file = x)) }) |>
       list_rbind() |>
       # census variable will be extracted from the mun census
       select(-contains("census"))
@@ -634,8 +598,8 @@ import_poll_station_data <-
     poll_station_data <-
       poll_station_data |>
       dplyr::filter(cod_INE_mun != "999") |>
-      left_join(import_mun_census_data(type_elec, year, date, repo_url, file_ext,
-                                       verbose = verbose),
+      left_join(import_mun_census_data(type_elec, year, date, repo_url,
+                                       verbose = FALSE),
                 by = c("cod_elec", "type_elec", "date_elec", "id_INE_mun"),
                 suffix = c("", ".y")) |>
       select(-contains(".y"))
@@ -823,8 +787,8 @@ import_poll_station_data <-
 #' @export
 import_candidacies_data <-
   function(type_elec, year = 2019, date = NULL,
-           repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-           file_ext = ".rda", short_version = TRUE, verbose = TRUE) {
+           repo_url = "https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data/",
+           short_version = TRUE, verbose = TRUE) {
 
     # check if short_version is a logical variable
     if (is.na(short_version) | !is.logical(short_version)) {
@@ -859,7 +823,7 @@ import_candidacies_data <-
       year <- year(date)
       date <- as_date(date)
 
-      if (is.na(date)) {
+      if (any(is.na(date))) {
 
         stop(red("😵 If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
 
@@ -937,10 +901,10 @@ import_candidacies_data <-
     }
 
     # Construct the set of URL for the specific election directory
-    dirs <- glue("data/{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
+    dirs <- glue("{allowed_elections$cod_elec}-{allowed_elections$type_elec}")
     dirs <- glue("{dirs}/{allowed_elections$cod_elec}{allowed_elections$year}{sprintf('%02d', allowed_elections$month)}")
     elections_dir <- glue("{repo_url}/{dirs}")
-    files_url <- glue("{elections_dir}/raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
+    files_url <- glue("{elections_dir}/raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.csv")
 
     if (verbose) {
 
@@ -967,27 +931,10 @@ import_candidacies_data <-
       message(magenta("⏳ Please wait, the volume of data downloaded and the internet connection may take a few seconds"))
     }
 
-    # download files in a temp_folder
-    temp_files <- replicate(n = length(files_url),
-                            expr = tempfile(fileext = file_ext))
-
-    # loop to avoid rmd error when examples are generated
-    for (i in 1:length(files_url)){
-
-      download.file(files_url[i], destfile = temp_files[i], mode = "wb", quiet = TRUE)
-
-      # Check the downloaded file before loading
-      if (any(file.info(temp_files[i])$size == 0)) {
-
-        stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
-
-      }
-    }
-
     # Import the data
     candidacies_raw_data <-
-      temp_files |>
-      map(function(x) { get(load(x)) }) |>
+      files_url |>
+      map(function(x) { suppressMessages(read_csv(file = x, col_types = cols(id_candidacies = col_character()))) }) |>
       list_rbind()
 
     # Recode mun data
@@ -1042,29 +989,15 @@ import_candidacies_data <-
                cod_INE_prov, prov, cod_INE_mun, mun, .after = id_MIR_mun)
 
     # Include candidacies info
-    files_url <- glue("{elections_dir}/raw_candidacies_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.rda?raw=true")
+    files_url <- glue("{elections_dir}/raw_candidacies_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.csv")
 
-    # download files in a temp_folder
-    temp_files <- replicate(n = length(files_url),
-                            expr = tempfile(fileext = file_ext))
-
-    # loop to avoid rmd error when examples are generated
-    for (i in 1:length(files_url)){
-
-      download.file(files_url[i], destfile = temp_files[i], mode = "wb", quiet = TRUE)
-
-      # Check the downloaded file before loading
-      if (any(file.info(temp_files[i])$size == 0)) {
-
-        stop(red("😵 Any of downloaded files is empty. Please, be sure that you are connected to the internet."))
-
-      }
-    }
 
     # Import the data
     candidacies_raw_info <-
-      temp_files |>
-      map(function(x) { get(load(x)) }) |>
+      files_url |>
+      map(function(x) { suppressMessages(read_csv(file = x, col_types = cols(id_candidacies = col_character(),
+                                                                             id_candidacies_ccaa = col_character(),
+                                                                             id_candidacies_nat = col_character()))) }) |>
       list_rbind()
 
     # include candidacies info to candidacies ballots data

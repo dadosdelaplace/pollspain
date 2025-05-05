@@ -7,7 +7,6 @@
 import_poll_station_data(
   type_elec,
   year = 2019,
-  month = 4,
   date = NULL,
   prec_round = 3,
   short_version = TRUE,
@@ -23,18 +22,16 @@ It should be one of the following values: "referendum",
 or "EU".}
 
 \item{year}{A vector or single value representing the years of the
-elections to be considered.}
-
-\item{month}{A vector or single value representing the months of
-the elections to be considered. Please, check (refer to
-\code{dates_elections_spain}) that elections of the specified type
-are available for the provided year and month.}
+elections to be considered. Please, check in
+\code{dates_elections_spain} that elections of the specified type
+are available for the provided year.}
 
 \item{date}{A vector or single value representing the dates of
 the elections to be considered. If date was provided, it should be
 in format \%Y-\%m-\%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
-If no date was provided, \code{month} and \code{year} should be
-both numerical variables.}
+If no date was provided, \code{year} should be provided as
+numerical variable. Please, check in \code{dates_elections_spain}
+that elections of the specified type are available.}
 
 \item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
@@ -119,31 +116,22 @@ the user.
 
 ## Correct examples
 
-# Congress elections in April 2019
-# Fetch poll station data for the congress elections in April 2019
-# in a short version
-poll_station_data1 <- import_poll_station_data("congress", 2019, 4)
+# Fetch poll station data for the congress elections in 2019
+# (both April and November) in a short version
+poll_station_data_2019 <-
+  import_poll_station_data(type_elec = "congress", year = 2019)
 
-#' # Fetch poll station data for the congress and senate elections
-# in April 2019 in a short version
-poll_station_data2 <-
-  import_poll_station_data(c("congress", "senate"), 2019, 4)
+# Fetch poll station data for the congress elections
+# in April 2019 in a long version
+poll_station_data_4_2019 <-
+  import_poll_station_data(type_elec = "congress", date = "2019-04-28")
 
-# Fetch poll station data for the congress and senate elections in
-# April 2019 in a long version
-poll_station_data3 <-
-  import_poll_station_data(c("congress", "senate"), 2019, 4,
-                           short_version = FALSE)
-
-# Fetch poll station data for congress elections in Nov 2019
-# and June 2016
-combined_poll_station_data <-
-  import_poll_station_data(c("congress", "congress"),
-                           c(2019, 2016), c(11, 6))
-
-# Example usage providing date instead of month and year
-date_example <-
-  import_poll_station_data("congress", date = "2016-06-26")
+# Fetch poll station data for the congress elections in
+# 2016, 2015 and 1986 in a long version
+combined_poll_station_data_long <-
+  import_poll_station_data(type_elec = "congress",
+                           year = c(2016, 2015, 1986)
+                           short_version = TRUE)
 
 # ----
 # Incorrect examples
@@ -153,18 +141,18 @@ date_example <-
 # Wrong examples
 
 # Invalid election type: "national" is not a valid election type
-import_poll_station_data("national", 2019, 4)
+import_poll_station_data(type_elec = "national", year = 2019)
 
-# Invalid election: no congress elections are available in 5-2019.
+# Invalid election: no congress elections are available in 2018
 # Please check dataset dates_elections_spain
-import_poll_station_data("congress", 2019, 5)
+import_poll_station_data(type_elec = "congress", year = 2019)
 
 # Invalid date format: date should be in \%Y-\%m-\%d format
-import_poll_station_data("congress", date = "26-06-2016")
+import_poll_station_data(type_elec = "congress", date = "26-06-2016")
 
 # Invalid short version flag: short_version should be a logical
 # variable
-import_poll_station_data("congress", 2019, 4,
+import_poll_station_data(type_elec = "congress", year = 2019,
                          short_version = "yes")
 }
 

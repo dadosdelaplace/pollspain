@@ -10,8 +10,7 @@ Some definitions of variables were extracted from
 \usage{
 import_mun_census_data(
   type_elec,
-  year = 2019,
-  month = 4,
+  year = 2023,
   date = NULL,
   repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
   file_ext = ".rda",
@@ -25,18 +24,16 @@ It should be one of the following values: "referendum",
 or "EU".}
 
 \item{year}{A vector or single value representing the years of the
-elections to be considered.}
-
-\item{month}{A vector or single value representing the months of
-the elections to be considered. Please, check (refer to
-\code{dates_elections_spain}) that elections of the specified type
-are available for the provided year and month.}
+elections to be considered. Please, check in
+\code{dates_elections_spain} that elections of the specified type
+are available for the provided year.}
 
 \item{date}{A vector or single value representing the dates of
 the elections to be considered. If date was provided, it should be
 in format \%Y-\%m-\%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
-If no date was provided, \code{month} and \code{year} should be
-both numerical variables.}
+If no date was provided, \code{year} should be provided as
+numerical variable. Please, check in \code{dates_elections_spain}
+that elections of the specified type are available.}
 
 \item{repo_url}{A string with the url in which the raw data can be
 found. Defaults to
@@ -81,8 +78,12 @@ for EU elections at municipality level.}
 }
 \description{
 Import municipal census data for one or more elections
-at the municipal level. This function downloads and processes raw
-municipal data files for specified elections.
+at the municipal level (from 1982 onwards). This function
+downloads and processes raw municipal data files for specified
+elections. No CERA data is included as municipalities (note that
+CERA ballots will be included in the summaries (see
+\code{import_poll_station_data()} and
+\code{import_candidacies_data()})
 }
 \details{
 This function fetches municipal-level data for the
@@ -97,27 +98,24 @@ the user.
 
 ## Correct examples
 
-# Congress elections in April 2019
+# Congress elections in April and November 2019
+# Fetch municipal census data for the congress elections in
+# April and November 2019
+mun_census_2019 <-
+  import_mun_census_data(type_elec = "congress", year = 2019)
+
 # Fetch municipal census data for the congress elections in
 # April 2019
-mun_census_data1 <- import_mun_census_data("congress", 2019, 4)
-
-# Senate elections in April 2019
-# Fetch municipal census data for the senate elections in
-# April 2019
-mun_census_data2 <- import_mun_census_data("senate", 2019, 4)
+mun_census_04_2019 <-
+  import_mun_census_data(type_elec = "congress",
+                         date = "2019-04-28")
 
 # Example usage to combine data from different elections into
-# one table
-# Fetch municipal census data for congress elections in Nov 2019
-# and June 2016
+# one table. Fetch municipal census data for congress elections
+# in Nov 2019 and June 2016
 combined_mun_census_data <-
-  import_mun_census_data(c("congress", "congress"),
-                         c(2019, 2016), c(11, 6))
-
-# Example usage providing date instead of month and year
-date_example <-
-  import_mun_census_data("congress", date = "2016-06-26")
+  import_mun_census_data(type_elec = "congress",
+                         year = c(2019, 2016, 1982, 1986))
 
 # ----
 # Incorrect examples
@@ -126,11 +124,15 @@ date_example <-
 # Wrong examples
 
 # Invalid election type: "national" is not a valid election type
-import_mun_census_data("national", 2019, 4)
+import_mun_census_data("national", 2019)
 
 # Invalid election: no congress elections are available in 5-2019.
 # Please check dataset dates_elections_spain
-import_mun_census_data("congress", 2019, 5)
+import_mun_census_data("congress", date = "2019-05-01")
+
+#' # Invalid election: no congress elections are available in 2018.
+# Please check dataset dates_elections_spain
+import_mun_census_data("congress", year = 2018)
 
 # Invalid date format: date should be in \%Y-\%m-\%d format
 import_mun_census_data("congress", date = "26-06-2016")

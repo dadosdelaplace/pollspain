@@ -7,7 +7,6 @@
 import_candidacies_data(
   type_elec,
   year = 2019,
-  month = 4,
   date = NULL,
   repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
   file_ext = ".rda",
@@ -22,18 +21,16 @@ It should be one of the following values: "referendum",
 or "EU".}
 
 \item{year}{A vector or single value representing the years of the
-elections to be considered.}
-
-\item{month}{A vector or single value representing the months of
-the elections to be considered. Please, check (refer to
-\code{dates_elections_spain}) that elections of the specified type
-are available for the provided year and month.}
+elections to be considered. Please, check in
+\code{dates_elections_spain} that elections of the specified type
+are available for the provided year.}
 
 \item{date}{A vector or single value representing the dates of
 the elections to be considered. If date was provided, it should be
 in format \%Y-\%m-\%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
-If no date was provided, \code{month} and \code{year} should be
-both numerical variables.}
+If no date was provided, \code{year} should be provided as
+numerical variable. Please, check in \code{dates_elections_spain}
+that elections of the specified type are available.}
 
 \item{repo_url}{A string with the url in which the raw data can be
 found. Defaults to
@@ -105,26 +102,20 @@ the user.
 
 ## Correct examples
 
-# Congress elections in April 2019
-# Fetch candidacies data for the congress elections in April 2019
-candidacies_data1 <- import_candidacies_data("congress", 2019, 4)
+# Fetch candidacies data for the congress elections in 2019
+candidacies_data_2019 <-
+    import_candidacies_data(type_elec = "congress",
+                            year = 2019)
 
-# Fetch candidacies data for the congress and senate elections
-# in April 2019
-candidacies_data2 <-
-  import_candidacies_data(c("congress", "senate"), 2019, 4)
+# Fetch candidacies data for the congress elections in Nov 2019
+candidacies_data_11_2019 <-
+  import_candidacies_data(type_elec = "congress", date = "2019-11-10")
 
 # Example usage to combine data from different elections into
 # one table
-# Fetch candidacies data for congress elections in Nov 2019
-# and June 2016
 combined_candidacies_data <-
-  import_candidacies_data(c("congress", "congress"),
-                          c(2019, 2016), c(11, 6))
-
-# Example usage providing date instead of month and year
-date_example <-
-  import_candidacies_data("congress", date = "2016-06-26")
+  import_candidacies_data(type_elec = "congress",
+                          year = c(1982, 1986, 1993))
 
 # ----
 # Incorrect examples
@@ -134,14 +125,13 @@ date_example <-
 # Wrong examples
 
 # Invalid election type: "national" is not a valid election type
-import_candidacies_data("national", 2019, 4)
+import_candidacies_data(type_elec = "national", year = 2019)
 
-# Invalid election: no congress elections are available in 5-2019.
-# Please check dataset dates_elections_spain
-import_candidacies_data("congress", 2019, 5)
+# Invalid election: no congress elections are available in 2018.
+import_candidacies_data(type_elec = "congress", 2018)
 
 # Invalid date format: date should be in \%Y-\%m-\%d format
-import_candidacies_data("congress", date = "26-06-2016")
+import_candidacies_data(type_elec = "congress", date = "26-06-2016")
 
 }
 

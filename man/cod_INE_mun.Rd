@@ -32,6 +32,6 @@ updated by INE on 2020/01/01)
 data(cod_INE_mun)
 }
 \author{
-Data gathered and processed by Javier Álvarez-Liébana.
+Javier Álvarez-Liébana and David Pereiro-Pol.
 }
 \keyword{datasets}
