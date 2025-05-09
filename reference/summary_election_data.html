@@ -66,8 +66,7 @@ vote share threshold.</p>
 <span>  filter_porc_ballots <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  filter_candidacies <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  cols_mun_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pop_res_mun"</span>, <span class="st">"census_counting_mun"</span><span class="op">)</span>,</span>
-<span>  id_candidacies_nat <span class="op">=</span> <span class="st">"id_candidacies_nat"</span>,</span>
-<span>  id_candidacies_prov <span class="op">=</span> <span class="st">"id_candidacies"</span>,</span>
+<span>  col_id_candidacies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>id_prov <span class="op">=</span> <span class="st">"id_candidacies"</span>, id_nat <span class="op">=</span> <span class="st">"id_candidacies_nat"</span><span class="op">)</span>,</span>
 <span>  col_abbrev_candidacies <span class="op">=</span> <span class="st">"abbrev_candidacies"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -112,10 +111,6 @@ Defaults to <code>NULL</code>.</p></dd>
 the different candidacies, already provided (by other functions or
 by the user). Database should contain a
 <code>col_id_poll_station</code> column. Defaults to <code>NULL</code>.</p></dd>
-
-
-<dt id="arg-candidacies-data">candidacies_data<a class="anchor" aria-label="anchor" href="#arg-candidacies-data"></a></dt>
-<dd><p>pending</p></dd>
 
 
 <dt id="arg-col-id-elec">col_id_elec<a class="anchor" aria-label="anchor" href="#arg-col-id-elec"></a></dt>
@@ -175,16 +170,15 @@ version, are only available at the municipal level (or higher).
 Defaults to <code>c("pop_res_mun", "census_counting_mun")</code>.</p></dd>
 
 
-<dt id="arg-id-candidacies-nat">id_candidacies_nat<a class="anchor" aria-label="anchor" href="#arg-id-candidacies-nat"></a></dt>
-<dd><p>pending</p></dd>
-
-
-<dt id="arg-id-candidacies-prov">id_candidacies_prov<a class="anchor" aria-label="anchor" href="#arg-id-candidacies-prov"></a></dt>
-<dd><p>pending</p></dd>
+<dt id="arg-col-id-candidacies">col_id_candidacies<a class="anchor" aria-label="anchor" href="#arg-col-id-candidacies"></a></dt>
+<dd><p>A named vector (with names "id_prov" and
+"id_nat") in which user provides the column names for the
+candidacies id at province level and national level. Defaults to
+c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").</p></dd>
 
 
 <dt id="arg-col-abbrev-candidacies">col_abbrev_candidacies<a class="anchor" aria-label="anchor" href="#arg-col-abbrev-candidacies"></a></dt>
-<dd><p>pending</p></dd>
+<dd><p>pending...</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -316,14 +310,17 @@ each election, including the following variables:</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Correct examples</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Summary 2023 election data at national level, aggregating the</span></span></span>
+<span class="r-in"><span><span class="co"># Summary 2023 and 2016 election data at national level, without</span></span></span>
 <span class="r-in"><span><span class="co"># candidacies ballots, in a short version</span></span></span>
-<span class="r-in"><span><span class="va">summary_2023</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">summary_all</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                        date <span class="op">=</span> <span class="st">"2016-06-26"</span>, short_version <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                        by_parties <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, the volume of data to be aggregated may take a few seconds</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">[...] Check if parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2023-07-24</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2016-06-26</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies and ballots data (at poll station level) ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
@@ -332,25 +329,60 @@ each election, including the following variables:</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBBBB; background-color: #000000;">[x] Join information sources and last summaries ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Summary 2023 election data at national level, aggregating the</span></span></span>
-<span class="r-in"><span><span class="co"># candidacies ballots, in a short version, without candidacies ballots</span></span></span>
-<span class="r-in"><span><span class="co"># summary_2023 &lt;-</span></span></span>
-<span class="r-in"><span> <span class="co"># summary_election_data(type_elec = "congress", year = 2023,</span></span></span>
-<span class="r-in"><span>                        <span class="co"># by_parties = FALSE)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Summary 2023 election data at national level, aggregating the</span></span></span>
-<span class="r-in"><span><span class="co"># candidacies ballots, in a long version</span></span></span>
-<span class="r-in"><span><span class="va">summary_2023</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span><span class="co"># Summary 2023 and 2016 election data at national level,</span></span></span>
+<span class="r-in"><span><span class="co"># aggregating the candidacies ballots, in a long version</span></span></span>
+<span class="r-in"><span><span class="va">summary_all</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
-<span class="r-in"><span>                        short_version <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                        date <span class="op">=</span> <span class="st">"2016-06-26"</span>, short_version <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, the volume of data to be aggregated may take a few seconds</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">[...] Check if parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2023-07-24</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2016-06-26</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies and ballots data (at poll station level) ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Aggregate data at national level ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   ... check if aggregation parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBBBB; background-color: #000000;">[x] Join information sources and last summaries ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Summary 2023 election data at ccaa level, aggregating the</span></span></span>
+<span class="r-in"><span><span class="co"># candidacies ballots, in a short version</span></span></span>
+<span class="r-in"><span><span class="va">summary_ccaa</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                        date <span class="op">=</span> <span class="st">"2016-06-26"</span>, level <span class="op">=</span> <span class="st">"ccaa"</span>,</span></span>
+<span class="r-in"><span>                        short_version <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, the volume of data to be aggregated may take a few seconds</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2023-07-24</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2016-06-26</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies and ballots data (at poll station level) ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Aggregate data at ccaa level ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   ... check if aggregation parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBBBB; background-color: #000000;">[x] Join information sources and last summaries ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Summary 2023 election data at prov level, aggregating the</span></span></span>
+<span class="r-in"><span><span class="co"># candidacies ballots, in a short version, and filtering ballots</span></span></span>
+<span class="r-in"><span><span class="co"># (percentage between 0 and 100)</span></span></span>
+<span class="r-in"><span><span class="va">summary_prov</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                        date <span class="op">=</span> <span class="st">"2016-06-26"</span>, level <span class="op">=</span> <span class="st">"prov"</span>,</span></span>
+<span class="r-in"><span>                        short_version <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                        filter_porc_ballots <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, the volume of data to be aggregated may take a few seconds</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2023-07-24</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2016-06-26</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies and ballots data (at poll station level) ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Aggregate data at prov level ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   ... check if aggregation parameters are allowed...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBBBB; background-color: #000000;">[x] Join information sources and last summaries ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>

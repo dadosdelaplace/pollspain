@@ -56,8 +56,7 @@ total ballots, number of polling stations and contextual sums.</p>
 <span>  col_id_elec <span class="op">=</span> <span class="st">"id_elec"</span>,</span>
 <span>  col_id_poll_station <span class="op">=</span> <span class="st">"id_INE_poll_station"</span>,</span>
 <span>  cols_mun_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pop_res_mun"</span>, <span class="st">"census_counting_mun"</span><span class="op">)</span>,</span>
-<span>  candidacies_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  col_id_candidacies <span class="op">=</span> <span class="st">"id_candidacies"</span>,</span>
+<span>  col_id_candidacies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>id_prov <span class="op">=</span> <span class="st">"id_candidacies"</span>, id_nat <span class="op">=</span> <span class="st">"id_candidacies_nat"</span><span class="op">)</span>,</span>
 <span>  prec_round <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -104,14 +103,11 @@ version, are only available at the municipal level (or higher).
 Defaults to <code>c("pop_res_mun", "census_counting_mun")</code>.</p></dd>
 
 
-<dt id="arg-candidacies-data">candidacies_data<a class="anchor" aria-label="anchor" href="#arg-candidacies-data"></a></dt>
-<dd><p>pending</p></dd>
-
-
 <dt id="arg-col-id-candidacies">col_id_candidacies<a class="anchor" aria-label="anchor" href="#arg-col-id-candidacies"></a></dt>
-<dd><p>A string indicating the name of the
-column that uniquely identifies the candidacies. Defaults to
-<code>"id_candidacies"</code>.</p></dd>
+<dd><p>A named vector (with names "id_prov" and
+"id_nat") in which user provides the column names for the
+candidacies id at province level and national level. Defaults to
+c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").</p></dd>
 
 
 <dt id="arg-prec-round">prec_round<a class="anchor" aria-label="anchor" href="#arg-prec-round"></a></dt>
@@ -238,16 +234,16 @@ each level section.</p></dd>
 <span class="r-in"><span><span class="va">election_data</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>   <span class="fu"><a href="get_election_data.html">get_election_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2023</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                     date <span class="op">=</span> <span class="st">"1989-10-29"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">[...] Check if parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2023-07-24</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 1989-10-29</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies and ballots data (at poll station level) ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">Be careful! Some poll stations does not match the individual ballots with summaries provided by MIR. The discrepancies were resolved by using votes by candidacies. Poll stations with discrepancies (some of them): 02-44-001-01-0001-A / 05-38-001-01-0001-A / 08-16-001-01-0001-A / 07-34-001-01-0001-A / 07-42-001-01-0001-A.</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">Be careful! Some poll stations does not match individual ballots with summaries provided by MIR. The discrepancies were resolved by using votes by candidacies.</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">Be careful! A short version was asked (if you want all variables, run with `short_version = FALSE`)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">A short version was asked (if you want all variables, run with `short_version = FALSE`)</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># National level results</span></span></span>
 <span class="r-in"><span><span class="va">nat_agg</span> <span class="op">&lt;-</span> <span class="fu">aggregate_election_data</span><span class="op">(</span><span class="va">election_data</span>, level <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></span>
