@@ -51,10 +51,8 @@ combining data for multiple elections at once.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">import_candidacies_data</span><span class="op">(</span></span>
 <span>  <span class="va">type_elec</span>,</span>
-<span>  year <span class="op">=</span> <span class="fl">2019</span>,</span>
+<span>  year <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  date <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  repo_url <span class="op">=</span> <span class="st">"https://github.com/dadosdelaplace/pollspain-data/blob/main"</span>,</span>
-<span>  file_ext <span class="op">=</span> <span class="st">".rda"</span>,</span>
 <span>  short_version <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -85,17 +83,6 @@ in format %Y-%m-%d (e.g., '2000-01-01'). Defaults to <code>NULL</code>.
 If no date was provided, <code>year</code> should be provided as
 numerical variable. Please, check in <code>dates_elections_spain</code>
 that elections of the specified type are available.</p></dd>
-
-
-<dt id="arg-repo-url">repo_url<a class="anchor" aria-label="anchor" href="#arg-repo-url"></a></dt>
-<dd><p>A string with the url in which the raw data can be
-found. Defaults to
-<a href="https://github.com/dadosdelaplace/pollspain-data/blob/main" class="external-link">https://github.com/dadosdelaplace/pollspain-data/blob/main</a>.</p></dd>
-
-
-<dt id="arg-file-ext">file_ext<a class="anchor" aria-label="anchor" href="#arg-file-ext"></a></dt>
-<dd><p>A string with the file's extension. Defaults to
-<code>".rda"</code>.</p></dd>
 
 
 <dt id="arg-short-version">short_version<a class="anchor" aria-label="anchor" href="#arg-short-version"></a></dt>
@@ -179,17 +166,15 @@ each poll station.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function fetches candidates data for the
-specified elections by downloading the corresponding <code>.rda</code> files
-from GitHub <a href="https://github.com/dadosdelaplace/pollspain-data" class="external-link">https://github.com/dadosdelaplace/pollspain-data</a>
-(directly downloaded from MIR website) and processing them into a
-tidy format. It automatically handles the download, loading, and
-merging of data across multiple election periods as specified by
-the user.</p>
+specified elections by downloading the corresponding files from
+pollspaindata package and processing them into a tidy format.
+It automatically handles the download, loading, and merging of
+data across multiple election periods as specified by the user.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
-    <p>Javier Álvarez-Liébana, David Pereiro Pol, Mafalda González
-González, Irene Bosque Gala and Mikaela De Smedt.</p>
+    <p>Javier Alvarez-Liebana, David Pereiro Pol, Mafalda Gonzalez
+Gonzalez, Irene Bosque Gala and Mikaela De Smedt.</p>
     </div>
 
     <div class="section level2">
@@ -201,39 +186,28 @@ González, Irene Bosque Gala and Mikaela De Smedt.</p>
 <span class="r-in"><span><span class="va">candidacies_data_2019</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>    <span class="fu">import_candidacies_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>,</span></span>
 <span class="r-in"><span>                            year <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">🔎 Check if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">⚠️ Multiple congress elections are available. If you only want one of them, please provide a specific date in the `date` argument</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">📦 Import candidacies data at poll station level from ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">- https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data//02-congress/02201904/raw_candidacies_poll_congress_2019_04.csv</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">- https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data//02-congress/02201911/raw_candidacies_poll_congress_2019_11.csv</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">⏳ Please wait, the volume of data downloaded and the internet connection may take a few seconds</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">⚠️ A short version was asked. If you require all variables, please run with `short_version = FALSE'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">[...] Check if parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies data at poll station level from ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... Please wait, the volume of data downloaded and the internet connection may take a few seconds</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">Be careful! A short version was asked. If you require all variables, please run with `short_version = FALSE'</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fetch candidacies data for the congress elections in Nov 2019</span></span></span>
 <span class="r-in"><span><span class="va">candidacies_data_11_2019</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu">import_candidacies_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, date <span class="op">=</span> <span class="st">"2019-11-10"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">🔎 Check if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">📦 Import candidacies data at poll station level from ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">- https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data//02-congress/02201911/raw_candidacies_poll_congress_2019_11.csv</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">⏳ Please wait, the volume of data downloaded and the internet connection may take a few seconds</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">⚠️ A short version was asked. If you require all variables, please run with `short_version = FALSE'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">[...] Check if parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies data at poll station level from ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... Please wait, the volume of data downloaded and the internet connection may take a few seconds</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">Be careful! A short version was asked. If you require all variables, please run with `short_version = FALSE'</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example usage to combine data from different elections into</span></span></span>
 <span class="r-in"><span><span class="co"># one table</span></span></span>
 <span class="r-in"><span><span class="va">combined_candidacies_data</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu">import_candidacies_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>,</span></span>
 <span class="r-in"><span>                          year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1982</span>, <span class="fl">1986</span>, <span class="fl">1993</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">🔎 Check if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">⚠️ Multiple congress elections are available. If you only want one of them, please provide a specific date in the `date` argument</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">📦 Import candidacies data at poll station level from ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">- https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data//02-congress/02198210/raw_candidacies_poll_congress_1982_10.csv</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">- https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data//02-congress/02198606/raw_candidacies_poll_congress_1986_06.csv</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">- https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data//02-congress/02199306/raw_candidacies_poll_congress_1993_06.csv</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">⏳ Please wait, the volume of data downloaded and the internet connection may take a few seconds</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">⚠️ A short version was asked. If you require all variables, please run with `short_version = FALSE'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">[...] Check if parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies data at poll station level from ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... Please wait, the volume of data downloaded and the internet connection may take a few seconds</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">Be careful! A short version was asked. If you require all variables, please run with `short_version = FALSE'</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ----</span></span></span>
 <span class="r-in"><span><span class="co"># Incorrect examples</span></span></span>
