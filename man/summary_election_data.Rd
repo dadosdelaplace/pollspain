@@ -22,8 +22,7 @@ summary_election_data(
   filter_porc_ballots = NA,
   filter_candidacies = NA,
   cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-  id_candidacies_nat = "id_candidacies_nat",
-  id_candidacies_prov = "id_candidacies",
+  col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat"),
   col_abbrev_candidacies = "abbrev_candidacies",
   verbose = TRUE
 )
@@ -55,8 +54,6 @@ Defaults to \code{NULL}.}
 the different candidacies, already provided (by other functions or
 by the user). Database should contain a
 \code{col_id_poll_station} column. Defaults to \code{NULL}.}
-
-\item{candidacies_data}{pending}
 
 \item{col_id_elec}{Column name in \code{election_data} to uniquely
 identify the elections. Defaults to \code{"id_elec"}.}
@@ -95,11 +92,12 @@ Defaults to \code{NA}.}
 version, are only available at the municipal level (or higher).
 Defaults to \code{c("pop_res_mun", "census_counting_mun")}.}
 
-\item{id_candidacies_nat}{pending}
+\item{col_id_candidacies}{A named vector (with names "id_prov" and
+"id_nat") in which user provides the column names for the
+candidacies id at province level and national level. Defaults to
+c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").}
 
-\item{id_candidacies_prov}{pending}
-
-\item{col_abbrev_candidacies}{pending}
+\item{col_abbrev_candidacies}{pending...}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
@@ -173,22 +171,34 @@ each election, including the following variables:
 
 ## Correct examples
 
-# Summary 2023 election data at national level, aggregating the
+# Summary 2023 and 2016 election data at national level, without
 # candidacies ballots, in a short version
-summary_2023 <-
-  summary_election_data(type_elec = "congress", year = 2023)
-
-# Summary 2023 election data at national level, aggregating the
-# candidacies ballots, in a short version, without candidacies ballots
-# summary_2023 <-
- # summary_election_data(type_elec = "congress", year = 2023,
-                        # by_parties = FALSE)
-
-# Summary 2023 election data at national level, aggregating the
-# candidacies ballots, in a long version
-summary_2023 <-
+summary_all <-
   summary_election_data(type_elec = "congress", year = 2023,
+                        date = "2016-06-26", short_version = TRUE,
+                        by_parties = FALSE)
+
+# Summary 2023 and 2016 election data at national level,
+# aggregating the candidacies ballots, in a long version
+summary_all <-
+  summary_election_data(type_elec = "congress", year = 2023,
+                        date = "2016-06-26", short_version = FALSE)
+
+# Summary 2023 election data at ccaa level, aggregating the
+# candidacies ballots, in a short version
+summary_ccaa <-
+  summary_election_data(type_elec = "congress", year = 2023,
+                        date = "2016-06-26", level = "ccaa",
                         short_version = FALSE)
+
+# Summary 2023 election data at prov level, aggregating the
+# candidacies ballots, in a short version, and filtering ballots
+# (percentage between 0 and 100)
+summary_prov <-
+  summary_election_data(type_elec = "congress", year = 2023,
+                        date = "2016-06-26", level = "prov",
+                        short_version = FALSE,
+                        filter_porc_ballots = 15)
 
 \dontrun{
 # ----

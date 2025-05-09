@@ -11,7 +11,10 @@
 # pollspain 0.3.0
 
 - surveys
-- vignettes para el resto
+
+# pollspain 0.2.1
+
+- vignettes
 
 # pollspain 0.2.0
 
@@ -22,24 +25,15 @@
 - Allowed the user to provide both year and dates for different elections.
 - Checked examples and documentation.
 - Fixed `by_parties = TRUE` by default.
-- Fixed aggregate() function.
+- Fixed aggregate_election_data() function (now ccaa-prov-mun names are included as well as a properly id_INE_...).
+- aggregate_election_data() function now includes a list of id_candidacies at province level when we aggregate 
+- Fixed summary_election_data()
+- Included a CERA flag in summary_election_data() to allow remove CERA ballots.
 
-- pending: agregar nombre de ccca-prov-mun en aggregate
-- pending: agregar id_INE_... lo que sea
-- pending:Arreglar que 2019-11-10 pregunta y no debería preguntar
-- pending:en el summary -> dar id_nat e id_prov
-- pending:chequear si hay id_ccaa y id_prov distintos
-   * si es nacional -> en id_prov dar una lista
-   * si es ccaa -> ¿?
-   * si es prov o menos -> id_nacional e id_prov por separado e individual
-- documentar como se exporta el CERA (pending).
-- Included a CERA flag in summary() to allow remove CERA ballots.
-- check summary
-
-
-- Added `How to use utils functions` to vignettes (pending).
-- Added `recod_parties()` (pending).
-- añadir nombre partidos en el aggregte (pending)
+- pending: Fixed documentation of get_elections_data(), aggregate_election_data(), summary_election_data()
+- pending: add more examples in summary()
+- pending: Added `recod_parties()`
+- pending: añadir nombre partidos en el aggregte
 
 - Fix discrepancies in files. Some poll stations does not match the individual ballots with summaries provided by Ministry of the Interior. The discrepancies were resolved by using the individual votes by party. Discrepancies were found in the following poll stations 
   - `2015` a lot of them with a small (1-2 ballots) discrepancies.

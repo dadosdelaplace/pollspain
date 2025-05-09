@@ -13,6 +13,7 @@ get_election_data(
   ballots_data = NULL,
   col_id_elec = "id_elec",
   col_id_poll_station = "id_INE_poll_station",
+  col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat"),
   prec_round = 3,
   short_version = TRUE,
   verbose = TRUE
@@ -52,6 +53,11 @@ identify the elections. Defaults to \code{"id_elec"}.}
 \item{col_id_poll_station}{Column name in \code{ballots_data} to
 uniquely identify poll stations. Defaults to
 \code{"id_INE_poll_station"}.}
+
+\item{col_id_candidacies}{A named vector (with names "id_prov" and
+"id_nat") in which user provides the column names for the
+candidacies id at province level and national level. Defaults to
+c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").}
 
 \item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
@@ -128,13 +134,7 @@ single values and vector inputs for fetching and combining data
 for multiple elections at once.
 }
 \details{
-This function fetches municipal-level data for the
-specified elections by downloading the corresponding \code{.csv} files
-from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
-(directly downloaded from MIR website) and processing them into a
-tidy format. It automatically handles the download, loading, and
-merging of data across multiple election periods as specified by
-the user.
+This function ...
 }
 \examples{
 

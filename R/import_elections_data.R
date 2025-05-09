@@ -123,7 +123,7 @@ import_mun_census_data <-
 
     if (verbose) {
 
-      message(yellow("[...] Check if parameters are allowed..."))
+      message(yellow("... Check if parameters are allowed..."))
       Sys.sleep(1/20)
 
     }
@@ -434,7 +434,7 @@ import_poll_station_data <-
 
     if (verbose) {
 
-      message(yellow("[...] Check if parameters are allowed..."))
+      message(yellow("... Check if parameters are allowed..."))
       Sys.sleep(1/20)
 
     }
@@ -672,7 +672,7 @@ import_poll_station_data <-
 
       if (verbose) {
 
-        message(yellow("Be careful! A short version was asked. If you require all variables, please run with `short_version = FALSE'"))
+        message(yellow("A short version was asked (if you want all variables, run with `short_version = FALSE`)"))
 
       }
 
@@ -806,7 +806,7 @@ import_candidacies_data <-
 
     if (verbose) {
 
-      message(yellow("[...] Check if parameters are allowed..."))
+      message(yellow("... Check if parameters are allowed..."))
       Sys.sleep(1/20)
 
     }
@@ -1025,8 +1025,7 @@ import_candidacies_data <-
 
       if (verbose) {
 
-        message(yellow("Be careful! A short version was asked. If you require all variables, please run with `short_version = FALSE'"))
-
+        message(yellow("A short version was asked (if you want all variables, run with `short_version = FALSE`)"))
       }
 
       # Select just few variables

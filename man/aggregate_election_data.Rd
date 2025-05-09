@@ -11,8 +11,7 @@ aggregate_election_data(
   col_id_elec = "id_elec",
   col_id_poll_station = "id_INE_poll_station",
   cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-  candidacies_data = NULL,
-  col_id_candidacies = "id_candidacies",
+  col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat"),
   prec_round = 3,
   verbose = TRUE
 )
@@ -43,11 +42,10 @@ uniquely identify poll stations. Defaults to
 version, are only available at the municipal level (or higher).
 Defaults to \code{c("pop_res_mun", "census_counting_mun")}.}
 
-\item{candidacies_data}{pending}
-
-\item{col_id_candidacies}{A string indicating the name of the
-column that uniquely identifies the candidacies. Defaults to
-\code{"id_candidacies"}.}
+\item{col_id_candidacies}{A named vector (with names "id_prov" and
+"id_nat") in which user provides the column names for the
+candidacies id at province level and national level. Defaults to
+c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").}
 
 \item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}

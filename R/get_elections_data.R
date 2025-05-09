@@ -23,6 +23,10 @@
 #' @param col_id_poll_station Column name in \code{ballots_data} to
 #' uniquely identify poll stations. Defaults to
 #' \code{"id_INE_poll_station"}.
+#' @param col_id_candidacies A named vector (with names "id_prov" and
+#' "id_nat") in which user provides the column names for the
+#' candidacies id at province level and national level. Defaults to
+#' c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").
 #'
 #' @return A tibble with rows corresponding to municipalities for
 #' each election, including the following variables:
@@ -80,13 +84,7 @@
 #' \item{ballots}{number of ballots obtained for each candidacy at
 #' each poll station.}
 #'
-#' @details This function fetches municipal-level data for the
-#' specified elections by downloading the corresponding `.csv` files
-#' from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
-#' (directly downloaded from MIR website) and processing them into a
-#' tidy format. It automatically handles the download, loading, and
-#' merging of data across multiple election periods as specified by
-#' the user.
+#' @details This function ...
 #'
 #' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #' @keywords get_elections_data
@@ -167,7 +165,10 @@
 get_election_data <-
   function(type_elec, year = NULL, date = NULL,
            election_data = NULL, ballots_data = NULL,
-           col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
+           col_id_elec = "id_elec",
+           col_id_poll_station = "id_INE_poll_station",
+           col_id_candidacies = c("id_prov" = "id_candidacies",
+                                  "id_nat" = "id_candidacies_nat"),
            prec_round = 3, short_version = TRUE, verbose = TRUE) {
 
     # Check if verbose is correct
@@ -179,11 +180,18 @@ get_election_data <-
 
     if (verbose) {
 
-      message(yellow("[...] Check if parameters are allowed..."))
+      message(yellow("... Check if parameters are allowed..."))
       Sys.sleep(1/20)
 
     }
 
+    if (!is.null(election_data)) {
+      if (!all(col_id_candidacies %in% names(ballots_data))) {
+
+        stop(red("Ups! Variables names in `col_id_candidacies` should be matched with column names in ballots_data"))
+
+      }
+    }
     # Check date
     if (!is.null(date)) {
 
@@ -268,7 +276,7 @@ get_election_data <-
     ambiguous_years <- intersect(allowed_elections$year, 2019)
     chosen_dates <- NULL
 
-    if (length(ambiguous_years) > 0) {
+    if (length(ambiguous_years) > 0 & is.null(date)) {
 
       normal_years <- setdiff(year, 2019)
       normal_dates <- dates_elections_spain |>
@@ -379,7 +387,8 @@ get_election_data <-
     if (nrow(check_totals) > 0) {
       if (verbose) {
 
-        message(yellow(glue("Be careful! Some poll stations does not match the individual ballots with summaries provided by MIR. The discrepancies were resolved by using votes by candidacies. Poll stations with discrepancies (some of them): {paste((check_totals |> pull(id_INE_poll_station))[1:5], collapse = ' / ')}.\n")))
+        message(yellow(glue("Be careful! Some poll stations does not match individual ballots with summaries provided by MIR. The discrepancies were resolved by using votes by candidacies.")))
+
       }
 
       join_data <-
@@ -399,7 +408,7 @@ get_election_data <-
     if (short_version) {
 
       if (verbose) {
-        message(yellow("\nBe careful! A short version was asked (if you want all variables, run with `short_version = FALSE`)"))
+        message(yellow("\nA short version was asked (if you want all variables, run with `short_version = FALSE`)"))
       }
 
       join_data <-
@@ -409,9 +418,10 @@ get_election_data <-
                id_INE_mun, ccaa, prov, mun, blank_ballots,
                invalid_ballots, party_ballots, valid_ballots,
                total_ballots, turnout, porc_valid, porc_invalid,
-               porc_parties, porc_blank, pop_res_mun,
-               census_counting_mun,
-               id_candidacies, abbrev_candidacies, name_candidacies, ballots)
+               porc_parties, porc_blank, pop_res_mun, census_counting_mun,
+               .data[[col_id_candidacies[["id_prov"]]]],
+               .data[[col_id_candidacies[["id_nat"]]]],
+               abbrev_candidacies, name_candidacies, ballots)
     }
 
     # output
@@ -437,10 +447,11 @@ get_election_data <-
 #' @param cols_mun_var A vector of variable names that, in their raw
 #' version, are only available at the municipal level (or higher).
 #' Defaults to \code{c("pop_res_mun", "census_counting_mun")}.
-#' @param candidacies_data pending
-#' @param col_id_candidacies A string indicating the name of the
-#' column that uniquely identifies the candidacies. Defaults to
-#' \code{"id_candidacies"}.
+#' @param col_id_candidacies A named vector (with names "id_prov" and
+#' "id_nat") in which user provides the column names for the
+#' candidacies id at province level and national level. Defaults to
+#' c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").
+#'
 #'
 #' @return A tibble with rows corresponding to the level of aggregation for
 #' each election, including the following variables:
@@ -550,8 +561,8 @@ aggregate_election_data <-
            col_id_elec = "id_elec",
            col_id_poll_station = "id_INE_poll_station",
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-           candidacies_data = NULL,
-           col_id_candidacies = "id_candidacies",
+           col_id_candidacies = c("id_prov" = "id_candidacies",
+                                  "id_nat" = "id_candidacies_nat"),
            prec_round = 3, verbose = TRUE) {
 
     # Check if verbose is correct
@@ -623,7 +634,8 @@ aggregate_election_data <-
     election_nodup_data <-
       election_data |>
       distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
-               .data[[col_id_candidacies]], .keep_all = TRUE)
+               .data[[col_id_candidacies[["id_prov"]]]],
+               .data[[col_id_candidacies[["id_nat"]]]], .keep_all = TRUE)
 
     if (nrow(election_nodup_data) != nrow(election_data)) {
 
@@ -677,47 +689,6 @@ aggregate_election_data <-
       col_id_mun <- "id_INE_mun"
     }
 
-    # Este codigo es por si finalmente decidimos crear una fila
-    # individual para el CERA
-    # if (level != "all"){
-    #   if (!by_parties){
-    #     if (min(hierarchy_levels[hierarchy_levels >= level]) <= "mun"){
-    #
-    #       df_cera <- election_data %>%
-    #         filter(cod_INE_mun == 999) %>%
-    #         summarise(
-    #           across(where(is.numeric), ~ sum(.x, na.rm = TRUE)),
-    #           across(!where(is.numeric), first),
-    #           .groups = "drop"
-    #         ) |>
-    #         mutate(cod_INE_ccaa = "99",
-    #                cod_INE_prov = "99")
-    #
-    #       df_rest <- election_data %>%
-    #         filter(cod_INE_mun != 999)
-    #
-    #       election_data <- bind_rows(df_rest, df_cera)
-    #       }
-    # } else {
-    #
-    #   df_cera <- election_data %>%
-    #     filter(cod_INE_mun == 999) %>%
-    #     group_by(!!sym(col_id_candidacies)) %>%
-    #     summarise(
-    #       across(where(is.numeric), ~ sum(.x, na.rm = TRUE)),
-    #       across(!where(is.numeric), first),
-    #       .groups = "drop"
-    #     ) |>
-    #     mutate(cod_INE_ccaa = "99",
-    #            cod_INE_prov = "99")
-    #
-    #   df_rest <- election_data %>%
-    #     filter(cod_INE_mun != 999)
-    #
-    #   election_data <- bind_rows(df_rest, df_cera)
-    #     }
-    #   }
-
     if (!by_parties) {
 
       agg_data <-
@@ -747,14 +718,20 @@ aggregate_election_data <-
                   n_poll_stations = n_distinct(.data[[col_id_poll_station]]),
                   .by = group_var)
 
+      group_candidacies <-
+        if_else(level == "all", col_id_candidacies["id_nat"],
+                col_id_candidacies["id_prov"])
       agg_data <-
         poll_data |>
         left_join(election_data |>
                     distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
-                             .data[[col_id_candidacies]],
+                             .data[[col_id_candidacies[["id_prov"]]]],
+                             .data[[col_id_candidacies[["id_nat"]]]],
                              .keep_all = TRUE) |>
                     summarise("ballots" = sum(ballots, na.rm = TRUE),
-                              .by = c(group_var, col_id_candidacies)),
+                              "id_candidacies" = list(unique(.data[[col_id_candidacies["id_prov"]]])),
+                              "id_candidacies_nat" = list(unique(.data[[col_id_candidacies["id_nat"]]])),
+                              .by = c(group_var, as.character(group_candidacies))),
                   by = group_var) |>
         left_join(election_data |>
                     distinct(.data[[col_id_elec]], .data[[col_id_mun]],
@@ -763,10 +740,46 @@ aggregate_election_data <-
                                      function(x) { sum(x, na.rm = TRUE) }),
                               .by = group_var_mun),
                   by = group_var_mun)
-      names(agg_data)[names(agg_data) == col_id_candidacies] <- "id_candidacies"
 
-      # if (is.null(candidacies_data)) {}
+    }
 
+    # join info ccaa-prov-mun from INE
+    if (level != "all") {
+
+      agg_data <-
+        agg_data |>
+        left_join(election_data |>
+                    select(-matches("id|cd_INE|MIR")) |>
+                    select(matches(paste0(as.character(hierarchy_levels[hierarchy_levels >= level]), collapse = "|"))) |>
+                    select(-any_of(c("cod_mun_district", "cod_sec", "cod_poll_station",
+                                     cols_mun_var))) |>
+                    distinct(.keep_all = TRUE),
+                  by = c(group_var[group_var %in%
+                                     c("cod_INE_ccaa", "cod_INE_prov", "cod_INE_mun")])) |>
+        unite(!!paste0("id_INE_", level), group_var[group_var != col_id_elec],
+              sep = "-") |>
+        select(col_id_elec, paste0("id_INE_", level),
+               any_of(c("ccaa", "prov", "mun")),
+               everything())
+
+    }
+
+    if (by_parties) {
+      if (all(lengths(agg_data$id_candidacies) == 1)) {
+
+        agg_data <-
+          agg_data |>
+          mutate("id_candidacies" = unlist(id_candidacies))
+      }
+    }
+
+    if (by_parties) {
+      if (all(lengths(agg_data$id_candidacies_nat) == 1)) {
+
+        agg_data <-
+          agg_data |>
+          mutate("id_candidacies_nat" = unlist(id_candidacies_nat))
+      }
     }
 
     # if level is greater than mun, mun_variables have been aggregated
@@ -795,9 +808,8 @@ aggregate_election_data <-
 #' @param CERA_remove pending
 #' @param filter_candidacies A string of characters ... pending
 #' (as long as \code{by_parties = TRUE}). Defaults to \code{NA}.
-#' @param col_abbrev_candidacies pending
-#' @param id_candidacies_nat pending
-#' @param id_candidacies_prov pending
+#' @param candidacies_data pending...
+#' @param col_abbrev_candidacies pending...
 #' @param filter_porc_ballots A numerical argument representing the
 #' vote percentage threshold (out of 100) that the user wants to use
 #' to filter the parties (as long as \code{by_parties = TRUE}).
@@ -869,22 +881,34 @@ aggregate_election_data <-
 #'
 #' ## Correct examples
 #'
-#' # Summary 2023 election data at national level, aggregating the
+#' # Summary 2023 and 2016 election data at national level, without
 #' # candidacies ballots, in a short version
-#' summary_2023 <-
-#'   summary_election_data(type_elec = "congress", year = 2023)
-#'
-#' # Summary 2023 election data at national level, aggregating the
-#' # candidacies ballots, in a short version, without candidacies ballots
-#' # summary_2023 <-
-#'  # summary_election_data(type_elec = "congress", year = 2023,
-#'                         # by_parties = FALSE)
-#'
-#' # Summary 2023 election data at national level, aggregating the
-#' # candidacies ballots, in a long version
-#' summary_2023 <-
+#' summary_all <-
 #'   summary_election_data(type_elec = "congress", year = 2023,
+#'                         date = "2016-06-26", short_version = TRUE,
+#'                         by_parties = FALSE)
+#'
+#' # Summary 2023 and 2016 election data at national level,
+#' # aggregating the candidacies ballots, in a long version
+#' summary_all <-
+#'   summary_election_data(type_elec = "congress", year = 2023,
+#'                         date = "2016-06-26", short_version = FALSE)
+#'
+#' # Summary 2023 election data at ccaa level, aggregating the
+#' # candidacies ballots, in a short version
+#' summary_ccaa <-
+#'   summary_election_data(type_elec = "congress", year = 2023,
+#'                         date = "2016-06-26", level = "ccaa",
 #'                         short_version = FALSE)
+#'
+#' # Summary 2023 election data at prov level, aggregating the
+#' # candidacies ballots, in a short version, and filtering ballots
+#' # (percentage between 0 and 100)
+#' summary_prov <-
+#'   summary_election_data(type_elec = "congress", year = 2023,
+#'                         date = "2016-06-26", level = "prov",
+#'                         short_version = FALSE,
+#'                         filter_porc_ballots = 15)
 #'
 #' \dontrun{
 #' # ----
@@ -919,8 +943,8 @@ summary_election_data <-
            level = "all", by_parties = TRUE, filter_porc_ballots = NA,
            filter_candidacies = NA,
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-           id_candidacies_nat = "id_candidacies_nat",
-           id_candidacies_prov = "id_candidacies",
+           col_id_candidacies = c("id_prov" = "id_candidacies",
+                                  "id_nat" = "id_candidacies_nat"),
            col_abbrev_candidacies = "abbrev_candidacies",
            verbose = TRUE) {
 
@@ -954,17 +978,19 @@ summary_election_data <-
     }
 
     # check abbrev_candidacies
-    if (!is.null(candidacies_data) & !(all(c(col_abbrev_candidacies, id_candidacies_prov, id_candidacies_nat) %in% names(election_data)))) {
+    # Check id_candidacies
+    if (!is.null(candidacies_data) &
+        !all(c(col_abbrev_candidacies, col_id_candidacies) %in% names(candidacies_data))) {
 
-      stop(red("Ups! Variables names in `col_abbrev_candidacies` should be matched if candidacies_data is provided."))
+      stop(red("Ups! Variables names in `col_abbrev_candidacies` and `col_id_candidacies` should be matched with column names in candidacies_data"))
 
     }
 
     # check id_candidacies
     if (!is.null(election_data) &
-        !all(c(id_candidacies_nat, id_candidacies_prov) %in% names(election_data))) {
+        !all(col_id_candidacies %in% names(election_data))) {
 
-      stop(red("Ups! Variables names in `id_candidacies` should be matched if election_data is provided."))
+      stop(red("Ups! Variables names in `col_id_candidacies` should be matched if election_data is provided."))
 
     }
 
@@ -1005,8 +1031,7 @@ summary_election_data <-
                               col_id_elec = col_id_elec,
                               col_id_poll_station = col_id_poll_station,
                               cols_mun_var = cols_mun_var,
-                              candidacies_data = candidacies_data,
-                              col_id_candidacies = id_candidacies_prov,
+                              col_id_candidacies = col_id_candidacies,
                               prec_round = prec_round,
                               verbose = verbose)
 
@@ -1037,8 +1062,7 @@ summary_election_data <-
 
       summary_data  <-
         summary_data |>
-        select(-c(ballots_1, ballots_2, n_poll_stations),
-               -contains(cols_mun_var))
+        select(-any_of(c("ballots_1", "ballots_2", "n_poll_stations", cols_mun_var)))
     }
 
     if (!is.na(filter_porc_ballots)) {
