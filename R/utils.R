@@ -20,8 +20,8 @@
 #'   \item \code{"07"}: European Parlament elections.
 #' }
 #'
-#' @author Javier Álvarez-Liébana, David Pereiro-Pol, Mafalda
-#' González-González and Irene Bosque-Gala.
+#' @author Javier Alvarez-Liebana, David Pereiro-Pol, Mafalda
+#' Gonzalez-Gonzalez and Irene Bosque-Gala.
 #' @source Data extracted from
 #' \url{https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/}{Spanish Ministry of Interior}
 #' @keywords utils
@@ -91,8 +91,8 @@ type_to_code_election <- function(type_elec) {
 #' @return A string code subtract from the whole code the properly id
 #' for the aggregation level required.
 #'
-#' @author Javier Álvarez-Liébana, David Pereiro-Pol, Mafalda
-#' González-González and Irene Bosque-Gala.
+#' @author Javier Alvarez-Liebana, David Pereiro-Pol, Mafalda
+#' Gonzalez-Gonzalez and Irene Bosque-Gala.
 #' @keywords utils
 #' @name extract_code
 #'
@@ -259,8 +259,8 @@ recod_mun <- function(mun_data) {
 #' the function applies a series of pattern-matching rules to recode
 #' specific party names and abbreviations to standardized versions.
 #'
-#' @author Javier Álvarez-Liébana, David Pereiro-Pol, Mafalda
-#' González-González and Irene Bosque-Gala.
+#' @author Javier Alvarez-Liebana, David Pereiro-Pol, Mafalda
+#' Gonzalez-Gonzalez and Irene Bosque-Gala.
 #' @keywords utils
 #' @name recod_parties
 #'
@@ -303,7 +303,7 @@ recod_parties <-
     # General Cleanup
     parties_data <-
       parties_data |>
-      # Remove ' and ´ and . and , and "
+      # Remove quotes
       mutate("abbrev_candidacies" = str_remove_all(abbrev_candidacies, "'|\\.|\\,|´"),
              "abbrev_candidacies" = str_remove_all(abbrev_candidacies, '\\"')) |>
       # Trimming. Reformat -. Translate to Latin-ASCIII (remove tildes)

@@ -6,12 +6,10 @@
 \usage{
 import_poll_station_data(
   type_elec,
-  year = 2019,
+  year = NULL,
   date = NULL,
   prec_round = 3,
   short_version = TRUE,
-  repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-  file_ext = ".rda",
   verbose = TRUE
 )
 }
@@ -39,13 +37,6 @@ that elections of the specified type are available.}
 \item{short_version}{Flag to indicate whether it should be returned
 a short version of the data (just key variables) or not.
 Defaults to \code{TRUE}.}
-
-\item{repo_url}{A string with the url in which the raw data can be
-found. Defaults to
-\url{https://github.com/dadosdelaplace/pollspain-data/blob/main}.}
-
-\item{file_ext}{A string with the file's extension. Defaults to
-\code{".rda"}.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
@@ -105,12 +96,10 @@ data for multiple elections at once.
 }
 \details{
 This function fetches poll station-level data for the
-specified elections by downloading the corresponding \code{.rda} files
-from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
-(directly downloaded from MIR website) and processing them into a
-tidy format. It automatically handles the download, loading, and
-merging of data across multiple election periods as specified by
-the user.
+specified elections by downloading the corresponding files from
+{pollspaindata} and processing them into a tidy format. It
+automatically handles the download, loading, and merging of data
+across multiple election periods as specified by the user.
 }
 \examples{
 
@@ -130,7 +119,7 @@ poll_station_data_4_2019 <-
 # 2016, 2015 and 1986 in a long version
 combined_poll_station_data_long <-
   import_poll_station_data(type_elec = "congress",
-                           year = c(2016, 2015, 1986)
+                           year = c(2016, 2015, 1986),
                            short_version = TRUE)
 
 # ----
@@ -158,7 +147,7 @@ import_poll_station_data(type_elec = "congress", year = 2019,
 
 }
 \author{
-Javier Álvarez-Liébana, David Pereiro Pol, Mafalda González
-González, Irene Bosque Gala and Mikaela De Smedt.
+Javier Alvarez-Liebana, David Pereiro Pol, Mafalda Gonzalez
+Gonzalez, Irene Bosque Gala and Mikaela De Smedt.
 }
 \keyword{import_elections_data}

@@ -88,7 +88,7 @@
 #' merging of data across multiple election periods as specified by
 #' the user.
 #'
-#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
+#' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #' @keywords get_elections_data
 #' @name get_election_data
 #' @import crayon
@@ -96,44 +96,37 @@
 #'
 #' ## Correct examples
 #'
-#' # Congress elections in June 2016
-#' # Fetch elections data for the congress elections in June 2016
-#' elections_data1 <- get_election_data("congress", 2016)
+#' # Example for a given year
+#' # Congress elections in year = 2016 (2016-06-26)
+#' elections_data_2016 <-
+#'   get_election_data(type_elec = "congress", year = 2016)
 #'
-#' # Fetch elections data for the congress and senate elections
-#' # in June 2016 in a long version
-#' elections_data2 <-
-#'   get_election_data(c("congress", "senate"), 2016,
+#' # Example for a vector of years
+#' elections_data_2008_2016 <-
+#'   get_election_data(type_elec = "congress", year = c(2008, 2016))
+#'
+#' # Example for a given date
+#' # Congress elections in date = "2023-07-24" in a long version
+#' elections_data_2023 <-
+#'   get_election_data(type_elec = "congress", date = "2023-07-24",
 #'                     short_version = FALSE)
 #'
-#' # Fetch elections data for congress elections in Nov 2019,
-#' # April 2019, and June 2016, for 2019 election an interactive
-#' # panel will appear to select the desire option
-#' combined_elections_data <-
-#'   get_election_data(c("congress", "congress"),
-#'                     c(2019, 2016))
-#'
-#' # Example usage providing date instead of month and year
-#' date_example <- get_election_data("congress", date = "2016-06-26")
-#'
-#' # Example usage providing external tables
-#' election_data <- import_poll_station_data("congress", 2016)
-#' ballots_data <- import_candidacies_data("congress", 2016)
-#' join_data <-
-#'   get_election_data("congress", 2016,
-#'                      election_data = election_data,
-#'                      ballots_data = ballots_data)
+#' # Congress elections in 2008 (2008-03-09) and 2016 (2016-06-26),
+#' # and "2023-07-24" and "1989-10-29"
+#' elections_data_multiple <-
+#'   get_election_data(type_elec = "congress", year = c(2008, 2016),
+#'                     date = c("2023-07-24"))
 #'
 #' # Example usage providing external tables with different
 #' # column names
 #' election_data <-
-#'   import_poll_station_data("congress", 2016) |>
+#'   import_poll_station_data(type_elec = "congress", year = 2016) |>
 #'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
 #' ballots_data <-
-#'   import_candidacies_data("congress", 2016) |>
+#'   import_candidacies_data(type_elec = "congress", year = 2016) |>
 #'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
 #' join_data <-
-#'   get_election_data("congress", 2016,
+#'   get_election_data(type_elec = "congress", year = 2016,
 #'                     election_data = election_data,
 #'                     ballots_data = ballots_data,
 #'                     col_id_elec = "invent_1",
@@ -147,24 +140,23 @@
 #' # Wrong examples
 #'
 #' # Invalid election type: "national" is not a valid election type
-#' get_election_data("national", 2019)
+#' get_election_data(type_elec = "national", year = 2019)
 #'
 #' # Invalid date format: date should be in %Y-%m-%d format
-#' get_election_data("congress", date = "26-06-2016")
+#' get_election_data(type_elec = "congress", date = "26-06-2016")
 #'
 #' # Invalid short version flag: short_version should be a
 #' # logical variable
-#' get_election_data("congress", 2019, short_version = "yes")
-#'
-#' # Invalid parameters: include_candidates is not a valid
-#' # argument
-#' get_election_data("congress", 2019, include_candidates = "no")
+#' get_election_data(type_elec = "congress", year = 2019,
+#'                   short_version = "yes")
 #'
 #' # Invalid key columns: col_id_elec and col_id_poll should be
 #' # columns included in datasets election_data and ballots_data
-#' election_data <- import_poll_station_data("congress", 2019)
-#' ballots_data <- import_candidacies_data("congress", 2019)
-#' get_election_data("congress", 2019,
+#' election_data <-
+#'   import_poll_station_data(type_elec = "congress", year = 2019)
+#' ballots_data <-
+#'   import_candidacies_data("type_elec = congress", year = 2019)
+#' get_election_data(type_elec = "congress", year = 2019,
 #'                    election_data = election_data,
 #'                    ballots_data = ballots_data,
 #'                    col_id_elec = "invent_1",
@@ -173,45 +165,122 @@
 #'
 #' @export
 get_election_data <-
-  function(type_elec, year = 2019, date = NULL,
+  function(type_elec, year = NULL, date = NULL,
            election_data = NULL, ballots_data = NULL,
            col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
-           prec_round = 3, short_version = TRUE,
-           repo_url = "https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data/",
-           verbose = TRUE) {
+           prec_round = 3, short_version = TRUE, verbose = TRUE) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
-      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
+      stop(red("Ups! `verbose` argument should be a TRUE/FALSE logical flag."))
 
     }
 
     if (verbose) {
 
-      message(yellow("🔎 Check if parameters are allowed..."))
+      message(yellow("[...] Check if parameters are allowed..."))
       Sys.sleep(1/20)
 
     }
 
-    ambiguous_years <- intersect(year, 2019)
+    # Check date
+    if (!is.null(date)) {
+
+      date <- as_date(date)
+      if (any(is.na(date))) {
+
+        stop(red("Ups! If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
+
+      }
+    } else {
+      if (!is.numeric(year)) {
+        stop(red("Ups! If no date was provided, `year` should be a numerical variable."))
+      }
+    }
+
+    # Design a tibble with all elections asked by user
+    # Ensure input parameters are vectors
+    if (!is.null(year)) {
+
+      asked_elections <-
+        expand_grid(as.vector(type_elec), as.vector(year))
+      names(asked_elections) <- c("type_elec", "year")
+      asked_elections <-
+        asked_elections |>
+        distinct(type_elec, year) |>
+        mutate("cod_elec" = type_to_code_election(as.vector(type_elec)),
+               .before = everything())
+
+      allowed_elections <-
+        dates_elections_spain |>
+        inner_join(asked_elections,
+                   by = c("cod_elec", "type_elec", "year"),
+                   suffix = c("", ".rm")) |>
+        select(-contains("rm")) |>
+        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+
+    }
+
+    if (!is.null(date)) {
+
+      asked_elections_date <-
+        expand_grid(as.vector(type_elec), as_date(date)) |>
+        mutate("year" = year(date))
+      names(asked_elections_date) <- c("type_elec", "date", "year")
+      asked_elections_date <-
+        asked_elections_date |>
+        distinct(type_elec, date, year) |>
+        mutate("cod_elec" = type_to_code_election(as.vector(type_elec)),
+               .before = everything())
+
+      allowed_elections_date <-
+        dates_elections_spain |>
+        inner_join(asked_elections_date,
+                   by = c("cod_elec", "type_elec", "date"),
+                   suffix = c("", ".rm")) |>
+        select(-contains("rm")) |>
+        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+    }
+
+    if (!is.null(year)) {
+      if (!is.null(date)) {
+
+        allowed_elections <-
+          allowed_elections |>
+          bind_rows(allowed_elections_date) |>
+          distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+      }
+    } else {
+
+      allowed_elections <- allowed_elections_date
+
+      if (!is.null(date)) {
+
+        allowed_elections <-
+          allowed_elections_date |>
+          bind_rows(allowed_elections) |>
+          distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+      }
+    }
+
+
+    ambiguous_years <- intersect(allowed_elections$year, 2019)
     chosen_dates <- NULL
 
-    if (length(ambiguous_years > 0)) {
+    if (length(ambiguous_years) > 0) {
 
       normal_years <- setdiff(year, 2019)
-
       normal_dates <- dates_elections_spain |>
         filter(type_elec %in% !!type_elec & year %in% normal_years) |>
         pull(date)
 
       normal_dates <- as.character(normal_dates)
 
-
       if (interactive()) {
 
-        sel <- menu(c("April (28‑04‑2019)",
-                      "November (10‑11‑2019)",
+        sel <- menu(c("April (2019-04-28)",
+                      "November (2019-11-10)",
                       "Both dates"),
                     title = paste0("What 2019 election do you want?"))
 
@@ -227,55 +296,55 @@ get_election_data <-
         chosen_dates <- c(chosen_dates, c("2019-04-28", "2019-11-10"))
       }
 
-      date <- c(date, normal_dates, chosen_dates)
+      dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))
 
     } else {
 
       normal_dates <- dates_elections_spain |>
-        filter(type_elec %in% !!type_elec & year %in% !!year) |>
+        filter(type_elec %in% !!type_elec &
+                 year %in% allowed_elections$year) |>
         pull(date)
 
       normal_dates <- as.character(normal_dates)
+      dates_ok <- as_date(unique(c(date, normal_dates)))
 
-      date <- c(date, normal_dates)
+    }
+    allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
+
+    if (verbose) {
+
+      # Print the file URL for debugging purposes
+      message(blue("[x] Import poll station data ..."))
+      Sys.sleep(1/20)
+      message(green(paste0("   ... ", allowed_elections$type_elec, " elections on ", allowed_elections$date, "\n")))
 
     }
 
     if (is.null(election_data)) {
 
-      if (verbose) {
-
-        # Print the file URL for debugging purposes
-        message(blue("📦 Import poll station data ..."))
-        Sys.sleep(1/20)
-
-      }
-
       election_data <-
-        import_poll_station_data(type_elec = type_elec, year = year,
-                                 date = date, prec_round = prec_round,
-                                 short_version = short_version,
-                                 repo_url = repo_url,
+        import_poll_station_data(type_elec = type_elec, year = NULL,
+                                 date = allowed_elections$date, prec_round = prec_round,
+                                 short_version = FALSE,
                                  verbose = FALSE)
+
+    }
+
+    if (verbose) {
+
+      # Print the file URL for debugging purposes
+      message(blue("[x] Import candidacies and ballots data (at poll station level) ..."))
+      Sys.sleep(1/20)
+      message(magenta("   ... please wait, volume of data downloaded and internet connection may take a few seconds"))
 
     }
 
     if (is.null(ballots_data)) {
 
-      if (verbose) {
-
-        # Print the file URL for debugging purposes
-        message(blue("📦 Import candidacies and ballots data (at poll station level) ..."))
-        Sys.sleep(1/20)
-
-        message(magenta("⏳ Please wait, the volume of data downloaded and the internet connection may take a few seconds"))
-
-      }
-
       ballots_data <-
-        import_candidacies_data(type_elec = type_elec, year = year,
-                                date = date, repo_url = repo_url,
-                                short_version = short_version,
+        import_candidacies_data(type_elec = type_elec, year = NULL,
+                                date = allowed_elections$date,
+                                short_version = FALSE,
                                 verbose = FALSE)
 
     }
@@ -284,7 +353,7 @@ get_election_data <-
     if (!all(c(col_id_elec, col_id_poll_station) %in% names(election_data)) |
         !all(c(col_id_elec, col_id_poll_station) %in% names(ballots_data))) {
 
-      stop(red("😵 Columns provided in `col_id_elec`and `col_id_poll_station_station` should be available in both tables."))
+      stop(red("Ups! Columns provided in `col_id_elec`and `col_id_poll_station_station` should be available in both tables."))
 
     }
 
@@ -298,25 +367,62 @@ get_election_data <-
                 suffix = c("", ".rm")) |>
       select(-contains("rm"))
 
-    if (short_version & verbose) {
 
-      message(yellow("⚠️ A short version was asked. If you require all variables, please run with `short_version = FALSE'"))
+    # Check summaries
+    check_totals <-
+      join_data |>
+      summarise("sum_party_ballots" = sum(ballots),
+                "party_ballots" = unique(party_ballots),
+                .by = group_vars) |>
+      filter(sum_party_ballots != party_ballots)
 
+    if (nrow(check_totals) > 0) {
+      if (verbose) {
+
+        message(yellow(glue("Be careful! Some poll stations does not match the individual ballots with summaries provided by MIR. The discrepancies were resolved by using votes by candidacies. Poll stations with discrepancies (some of them): {paste((check_totals |> pull(id_INE_poll_station))[1:5], collapse = ' / ')}.\n")))
+      }
+
+      join_data <-
+        join_data |>
+        mutate("party_ballots" = sum(ballots), .by = group_vars) |>
+        mutate("valid_ballots" = party_ballots + blank_ballots,
+               "total_ballots" = valid_ballots + invalid_ballots,
+               "turnout" = round(100 * total_ballots / census_counting_mun, prec_round),
+               "porc_valid" =
+                 round(100 * valid_ballots / total_ballots, prec_round),
+               "porc_invalid" =
+                 round(100 * invalid_ballots / total_ballots, prec_round),
+               "porc_parties" = round(100 * party_ballots / valid_ballots, prec_round),
+               "porc_blank" = round(100 * blank_ballots / valid_ballots, prec_round))
+    }
+
+    if (short_version) {
+
+      if (verbose) {
+        message(yellow("\nBe careful! A short version was asked (if you want all variables, run with `short_version = FALSE`)"))
+      }
+
+      join_data <-
+        join_data |>
+        select(.data[[col_id_elec]], type_elec, date_elec,
+               .data[[col_id_poll_station]],
+               id_INE_mun, ccaa, prov, mun, blank_ballots,
+               invalid_ballots, party_ballots, valid_ballots,
+               total_ballots, turnout, porc_valid, porc_invalid,
+               porc_parties, porc_blank, pop_res_mun,
+               census_counting_mun,
+               id_candidacies, abbrev_candidacies, name_candidacies, ballots)
     }
 
     # output
     return(join_data)
-
-
-    }
+ }
 
 #' @title Aggregate elections data at provided level (ccaa, prov, etc)
 #'
-#' @description Aggregate and summarise polling‑station election results
-#' to any chosen territorial level, keeping
-#' party‑level vote totals by default. The function returns total ballots,
-#' number of polling stations and contextual sums,
-#' rounded to the requested precision.
+#' @description Aggregate polling station election results
+#' to any chosen territorial level, providing party level ballots,
+#' total ballots, number of polling stations and contextual sums.
 #'
 #' @inheritParams import_poll_station_data
 #' @inheritParams import_candidacies_data
@@ -331,12 +437,10 @@ get_election_data <-
 #' @param cols_mun_var A vector of variable names that, in their raw
 #' version, are only available at the municipal level (or higher).
 #' Defaults to \code{c("pop_res_mun", "census_counting_mun")}.
+#' @param candidacies_data pending
 #' @param col_id_candidacies A string indicating the name of the
 #' column that uniquely identifies the candidacies. Defaults to
 #' \code{"id_candidacies"}.
-#' @param cols_names_candidacies A string indicating the name of the
-#' column containg the names and/or acronyms of candidacies.
-#' Defaults to \code{c("abbrev_candidacies", "name_candidacies")}.
 #'
 #' @return A tibble with rows corresponding to the level of aggregation for
 #' each election, including the following variables:
@@ -387,39 +491,35 @@ get_election_data <-
 #' \item{ballots}{number of ballots obtained for each candidacy at
 #' each level section.}
 #'
-#' @details This function fetches municipal-level data for the
-#' specified elections by downloading the corresponding `.csv` files
-#' from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
-#' (directly downloaded from MIR website) and processing them into a
-#' tidy format. It automatically handles the download, loading, and
-#' merging of data across multiple election periods as specified by
-#' the user.
+#' @details ...
 #'
-#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
+#' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #' @keywords get_elections_data
 #' @name aggregate_election_data
 #' @import crayon
 #' @examples
 #' ## Correct examples
 #'
-#' # Aggregate results to the country level without party breakdown of
-#' # the June 2016 elections
-#' ps_2019 <- get_election_data(type_elec = "congress",
-#'                              year = 2016)
+#' # Election date from 2023 and 1989 dates
+#' election_data <-
+#'    get_election_data(type_elec = "congress", year = c(2023),
+#'                      date = "1989-10-29")
 #'
-#' nat_2016 <- aggregate_election_data(ps_2016,
-#'                                     level = "all",
-#'                                     by_parties = FALSE)
+#' # National level results
+#' nat_agg <- aggregate_election_data(election_data, level = "all")
 #'
+#' # National level results (without parties)
+#' nat_agg <-
+#'   aggregate_election_data(election_data, level = "all",
+#'                           by_parties = FALSE)
 #'
-#' # Province‑level results by party of the June 2016 elections
-#' prov_2016 <- aggregate_election_data(ps_2016,
-#'                                      level = "prov")
+#' # Province level results
+#' prov_agg <- aggregate_election_data(election_data, level = "prov")
 #'
-#' # Municipality‑level results by party of the June 2016 elections
-#' mun_2016 <- aggregate_election_data(ps_2016,
-#'                                      level = "prov")
-#'
+#' #  Municipality level results results (without parties)
+#' mun_agg <-
+#'   aggregate_election_data(election_data, level = "mun",
+#'                           by_parties = FALSE)
 #'
 #' \dontrun{
 #'
@@ -431,17 +531,16 @@ get_election_data <-
 #'
 #' # Invalid 'level' argument,"district" is not allowed
 #'
-#' aggregate_election_data(ps_2016, level = "district")
+#' aggregate_election_data(electoral_level, level = "district")
 #'
 #' # Invalid 'by_parties' flag: it must be logical, not character
+#' aggregate_election_data(electoral_level, level = "prov",
+#'                         by_parties = "yes")
 #'
-#' aggregate_election_data(ps_2016,
-#'                           level = "prov",
-#'                           by_parties = "yes")
-#'
-#' # Invalid parameters: include_candidates is not a valid
-#' # argument
-#' aggregate_election_data(ps_2016, level = "mun", include_candidates = "no")
+#' # Invalid parameters: col_id_candidacies should be matched with
+#' # the variable names
+#' aggregate_election_data(electoral_level, level = "ccaa",
+#'                         col_id_candidacies = "wrong_id")
 #'
 #' }
 #'
@@ -451,21 +550,20 @@ aggregate_election_data <-
            col_id_elec = "id_elec",
            col_id_poll_station = "id_INE_poll_station",
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-           col_id_candidacies = "id_candidacies_nat",
-           cols_names_candidacies = c("abbrev_candidacies", "name_candidacies"),
-           prec_round = 3,
-           verbose = TRUE) {
+           candidacies_data = NULL,
+           col_id_candidacies = "id_candidacies",
+           prec_round = 3, verbose = TRUE) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
-      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
+      stop(red("Ups! `verbose` argument should be a TRUE/FALSE logical flag."))
 
     }
 
     if (verbose) {
 
-      message(yellow("🔎 Check if parameters are allowed..."))
+      message(yellow("   ... check if aggregation parameters are allowed..."))
       Sys.sleep(1/20)
 
     }
@@ -474,7 +572,7 @@ aggregate_election_data <-
     if ((!is.data.frame(election_data) & !is_tibble(election_data)) |
         nrow(election_data) == 0 | ncol(election_data) == 0) {
 
-      stop(red("😵 `election_data` must be a tibble or data.frame whose number of rows and columns should be greater than 0."))
+      stop(red("Ups! `election_data` must be a tibble or data.frame whose number of rows and columns should be greater than 0."))
 
     }
 
@@ -482,21 +580,21 @@ aggregate_election_data <-
     if (!(level %in% c("all", "ccaa", "prov", "mun",
                        "mun_district", "sec", "poll_station"))) {
 
-      stop(red("😵 Aggregation level provided by 'level' parameter should be taken from the following values: 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec', 'poll_station'"))
+      stop(red("Ups! Aggregation level provided by 'level' parameter should be taken from the following values: 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec', 'poll_station'"))
 
     }
 
     # Check if col_id_elec and col_id_elec_level exist within the data
     if (!all(c(col_id_elec, col_id_poll_station) %in% names(election_data))) {
 
-      stop(red("😵 Columns provided in `col_id_elec` and `col_id_poll_station` should be available in the table."))
+      stop(red("Ups! Columns provided in `col_id_elec` and `col_id_poll_station` should be available in the table."))
 
     }
 
     # Check if cols_mun_var exist within the data
     if (!all(cols_mun_var %in% names(election_data))) {
 
-      stop(red("😵 Columns provided in `cols_mun_var` should be available in the table."))
+      stop(red("Ups! Columns provided in `cols_mun_var` should be available in the table."))
 
     }
 
@@ -504,15 +602,21 @@ aggregate_election_data <-
     # Check if prec_round is a positive number
     if (prec_round != as.integer(prec_round) | prec_round < 1) {
 
-      stop(red("😵 Parameter 'prec_round' must be a positive integer greater than 0"))
+      stop(red("Ups! Parameter 'prec_round' must be a positive integer greater than 0"))
 
     }
 
     # Check: if by_parties is a logical variable
     if (!is.logical(by_parties)) {
 
-      stop(red("😵 Parameter 'by_parties' must be a logical variable, just TRUE/FALSE are avoided"))
+      stop(red("Ups! Parameter 'by_parties' must be a logical variable, just TRUE/FALSE are avoided"))
 
+    }
+
+    # Check id_candidacies
+    if (!all(col_id_candidacies %in% names(election_data))) {
+
+      stop(red("Ups! Variables names in `col_id_candidacies` should be matched with column names in electoral_data"))
     }
 
     # Check duplicates (without candidacies data)
@@ -523,7 +627,7 @@ aggregate_election_data <-
 
     if (nrow(election_nodup_data) != nrow(election_data)) {
 
-      message(yellow(glue("⚠️ {nrow(election_data) - nrow(election_nodup_data)} duplicates were found and removed.")))
+      message(yellow(glue("Be careful! {nrow(election_data) - nrow(election_nodup_data)} duplicates were found and removed.")))
 
     }
     election_data <- election_nodup_data
@@ -573,7 +677,8 @@ aggregate_election_data <-
       col_id_mun <- "id_INE_mun"
     }
 
-    # Este código es por si finalmente decidimos crear una fila individual para el CERA
+    # Este codigo es por si finalmente decidimos crear una fila
+    # individual para el CERA
     # if (level != "all"){
     #   if (!by_parties){
     #     if (min(hierarchy_levels[hierarchy_levels >= level]) <= "mun"){
@@ -658,6 +763,9 @@ aggregate_election_data <-
                                      function(x) { sum(x, na.rm = TRUE) }),
                               .by = group_var_mun),
                   by = group_var_mun)
+      names(agg_data)[names(agg_data) == col_id_candidacies] <- "id_candidacies"
+
+      # if (is.null(candidacies_data)) {}
 
     }
 
@@ -676,14 +784,20 @@ aggregate_election_data <-
 #' @title Summaries of the electoral and candidacies ballots data for
 #' a given aggregation level (ccaa, prov, etc)
 #'
-#' @description Import, preprocess and aggregate election data at the same time for
+#' @description pending Import, preprocess and aggregate election data at the same time for
 #' a given election and aggregation level. This function also lets remove parties below a given
-#' vote‑share threshold.
+#' vote share threshold.
 #'
 #' @inheritParams import_poll_station_data
 #' @inheritParams import_candidacies_data
 #' @inheritParams get_election_data
 #' @inheritParams aggregate_election_data
+#' @param CERA_remove pending
+#' @param filter_candidacies A string of characters ... pending
+#' (as long as \code{by_parties = TRUE}). Defaults to \code{NA}.
+#' @param col_abbrev_candidacies pending
+#' @param id_candidacies_nat pending
+#' @param id_candidacies_prov pending
 #' @param filter_porc_ballots A numerical argument representing the
 #' vote percentage threshold (out of 100) that the user wants to use
 #' to filter the parties (as long as \code{by_parties = TRUE}).
@@ -747,7 +861,7 @@ aggregate_election_data <-
 #' @details A tibble with rows corresponding to the level of aggregation for
 #' each election, including the following variables:
 #'
-#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
+#' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #' @keywords get_elections_data
 #' @name summary_election_data
 #' @import crayon
@@ -755,30 +869,22 @@ aggregate_election_data <-
 #'
 #' ## Correct examples
 #'
-#' # Summary election data at national level, aggregating the
-#' # candidacies ballots
-#' summary_data_all <- summary_election_data("congress", 2019)
+#' # Summary 2023 election data at national level, aggregating the
+#' # candidacies ballots, in a short version
+#' summary_2023 <-
+#'   summary_election_data(type_elec = "congress", year = 2023)
 #'
-#' # Summary election data at national level, (general data
-#' # without candidacies ballots)
-#' summary_data_all_parties <-
-#'   summary_election_data("congress", 2019, by_parties = FALSE)
+#' # Summary 2023 election data at national level, aggregating the
+#' # candidacies ballots, in a short version, without candidacies ballots
+#' # summary_2023 <-
+#'  # summary_election_data(type_elec = "congress", year = 2023,
+#'                         # by_parties = FALSE)
 #'
-#' # Summary election data at ccaa level, aggregating the
-#' # candidacies ballots
-#' summary_data_ccaa <-
-#'   summary_election_data("congress", 2019, level = "ccaa")
-#'
-#' # Summary election data at ccaa level, (general data
-#' # without candidacies ballots)
-#' summary_data_ccaa_parties <-
-#'   summary_election_data("congress", 2019, level = "ccaa",
-#'                         by_parties = FALSE)
-#'
-#' # Filter parties that took <5% of valid ballots at country level
-#' nat19_gt5 <- summary_election_data("congress", 2019,
-#'                                    by_parties = TRUE,
-#'                                    filter_porc_ballots = 5)
+#' # Summary 2023 election data at national level, aggregating the
+#' # candidacies ballots, in a long version
+#' summary_2023 <-
+#'   summary_election_data(type_elec = "congress", year = 2023,
+#'                         short_version = FALSE)
 #'
 #' \dontrun{
 #' # ----
@@ -790,7 +896,7 @@ aggregate_election_data <-
 #' # Invalid aggregation level
 #' summary_election_data("congress", 2019, level = "district")
 #'
-#' # filter_porc_ballots outside 0–100
+#' # filter_porc_ballots outside range 0 from 100
 #' summary_election_data("congress", 2019,
 #'                       filter_porc_ballots = 150)
 #'
@@ -803,66 +909,94 @@ aggregate_election_data <-
 #' summary_election_data("national", 2019)
 #' }
 #'
-#' }
-#'
 #' @export
 summary_election_data <-
-  function(type_elec, year = 2019, date = NULL,
+  function(type_elec, year = NULL, date = NULL,
            election_data = NULL, ballots_data = NULL,
+           candidacies_data = NULL,
            col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
-           prec_round = 3, short_version = TRUE,
-           repo_url = "https://raw.githubusercontent.com/dadosdelaplace/pollspain-data/refs/heads/main/data/",
-           level = "all", by_parties = TRUE,
-           filter_porc_ballots = NA,
+           prec_round = 3, short_version = TRUE, CERA_remove = FALSE,
+           level = "all", by_parties = TRUE, filter_porc_ballots = NA,
+           filter_candidacies = NA,
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-           col_id_candidacies = "id_candidacies_nat",
-           cols_names_candidacies = c("abbrev_candidacies", "name_candidacies"),
+           id_candidacies_nat = "id_candidacies_nat",
+           id_candidacies_prov = "id_candidacies",
+           col_abbrev_candidacies = "abbrev_candidacies",
            verbose = TRUE) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
-      stop(red("😵 `verbose` argument should be a TRUE/FALSE logical flag."))
+      stop(red("Ups! `verbose` argument should be a TRUE/FALSE logical flag."))
 
     }
 
-    # check filter_porc_ballots
+    # check filter_candidacies
     if (!(is.na(filter_porc_ballots) |
           (is.numeric(filter_porc_ballots) & filter_porc_ballots > 0 & filter_porc_ballots < 100))) {
 
-      stop(red("😵 `filter_porc_ballots` argument should be NA or a numeric value between 0 and 100."))
+      stop(red("Ups! `filter_porc_ballots` argument should be NA or a numeric value between 0 and 100."))
+
+    }
+
+    # check filter_candidacies
+    if (!is.na(filter_candidacies) & !is.character(filter_candidacies)) {
+
+      stop(red("Ups! `filter_candidacies` argument should be NA or a string of characters."))
+
+    }
+
+    # check cols_mun_var
+    if (!is.null(election_data) & !all(cols_mun_var %in% names(election_data))) {
+
+      stop(red("Ups! Variables names in `cols_mun_var` should be matched if election_data is provided."))
+
+    }
+
+    # check abbrev_candidacies
+    if (!is.null(candidacies_data) & !(all(c(col_abbrev_candidacies, id_candidacies_prov, id_candidacies_nat) %in% names(election_data)))) {
+
+      stop(red("Ups! Variables names in `col_abbrev_candidacies` should be matched if candidacies_data is provided."))
+
+    }
+
+    # check id_candidacies
+    if (!is.null(election_data) &
+        !all(c(id_candidacies_nat, id_candidacies_prov) %in% names(election_data))) {
+
+      stop(red("Ups! Variables names in `id_candidacies` should be matched if election_data is provided."))
 
     }
 
     if (verbose) {
 
-      message(yellow("🔎 Check if parameters are allowed..."))
-      Sys.sleep(1/20)
-
-    }
-
-    if (verbose) {
-
-      message(blue("📦 Import data at poll station level ..."))
-      Sys.sleep(1/20)
-
-      message(magenta("⏳ Please wait, the volume of data downloaded and the internet connection may take a few seconds"))
-
+      message(magenta("   ... please wait, the volume of data to be aggregated may take a few seconds"))
 
     }
 
     election_data <-
       get_election_data(type_elec = type_elec, year = year, date = date,
-                        election_data = NULL, ballots_data = NULL,
+                        election_data = election_data, ballots_data = ballots_data,
                         col_id_elec = col_id_elec, col_id_poll_station = col_id_poll_station,
-                        prec_round = prec_round, short_version = short_version,
-                        repo_url = repo_url, verbose = FALSE)
+                        prec_round = prec_round, short_version = FALSE,
+                        verbose = verbose)
+    names(election_data)[names(election_data) %in% cols_mun_var] <-
+      c("pop_res_mun", "census_counting_mun")
 
     if (verbose) {
 
-      message(blue(glue("   🗺 Aggregate data at {ifelse(level == 'all', 'national', level)} level ...")))
+      message(blue(glue("[x] Aggregate data at {ifelse(level == 'all', 'national', level)} level ...")))
       Sys.sleep(1/20)
 
+    }
+
+    if (CERA_remove) {
+
+      message(yellow("Be careful! CERA ballots have been removed. Please, fix `CERA_remove = FALSE` if you want all ballots."))
+
+      election_data <-
+        election_data |>
+        filter(!str_detect(id_INE_poll_station, "-999-"))
     }
 
     summary_data <-
@@ -871,14 +1005,14 @@ summary_election_data <-
                               col_id_elec = col_id_elec,
                               col_id_poll_station = col_id_poll_station,
                               cols_mun_var = cols_mun_var,
-                              col_id_candidacies = col_id_candidacies,
-                              cols_names_candidacies = cols_names_candidacies,
+                              candidacies_data = candidacies_data,
+                              col_id_candidacies = id_candidacies_prov,
                               prec_round = prec_round,
-                              verbose = FALSE)
+                              verbose = verbose)
 
     if (verbose) {
 
-      message(bgYellow(black("✅🖇 Join information sources and last summaries ...\n")))
+      message(bgBlack(white("[x] Join information sources and last summaries ...\n")))
       Sys.sleep(1/20)
 
     }
@@ -899,18 +1033,50 @@ summary_election_data <-
 
     }
 
+    if (short_version) {
+
+      summary_data  <-
+        summary_data |>
+        select(-c(ballots_1, ballots_2, n_poll_stations),
+               -contains(cols_mun_var))
+    }
+
     if (!is.na(filter_porc_ballots)) {
 
       if (!by_parties) {
 
-        message(yellow("⚠️ If `by_parties` is FALSE, a filtering by percentage of party ballots cannot be achieved"))
+        message(yellow("Be careful! If `by_parties` is FALSE, a filtering by percentage of party ballots cannot be achieved"))
 
       } else {
 
-        agg_data <-
-          agg_data |>
+        summary_data  <-
+          summary_data  |>
           filter(porc_candidacies_valid >= filter_porc_ballots)
 
+      }
+    }
+
+    if (!is.na(filter_candidacies)) {
+
+      if (!by_parties) {
+
+        message(yellow("Be careful! If `by_parties` is FALSE, a filtering by candidacies cannot be achieved"))
+
+      } else {
+
+        aux <-
+          summary_data  |>
+          filter(str_detect(.data[[col_abbrev_candidacies]], filter_candidacies))
+
+        if (nrow(aux) == 0) {
+
+          message(yellow("Be careful! Candidacies filter achieved by `filter_candidacies` provides a empty table so `filter_candidacies` was ignored."))
+
+        } else {
+
+          summary_data <- aux
+
+        }
       }
     }
 

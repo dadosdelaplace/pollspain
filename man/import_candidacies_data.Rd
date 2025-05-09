@@ -6,10 +6,8 @@
 \usage{
 import_candidacies_data(
   type_elec,
-  year = 2019,
+  year = NULL,
   date = NULL,
-  repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-  file_ext = ".rda",
   short_version = TRUE,
   verbose = TRUE
 )
@@ -31,13 +29,6 @@ in format \%Y-\%m-\%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
 If no date was provided, \code{year} should be provided as
 numerical variable. Please, check in \code{dates_elections_spain}
 that elections of the specified type are available.}
-
-\item{repo_url}{A string with the url in which the raw data can be
-found. Defaults to
-\url{https://github.com/dadosdelaplace/pollspain-data/blob/main}.}
-
-\item{file_ext}{A string with the file's extension. Defaults to
-\code{".rda"}.}
 
 \item{short_version}{flag to indicate whether it should be returned
 a short version of the data (just key  variables)
@@ -91,12 +82,10 @@ combining data for multiple elections at once.
 }
 \details{
 This function fetches candidates data for the
-specified elections by downloading the corresponding \code{.rda} files
-from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
-(directly downloaded from MIR website) and processing them into a
-tidy format. It automatically handles the download, loading, and
-merging of data across multiple election periods as specified by
-the user.
+specified elections by downloading the corresponding files from
+{pollspaindata} package and processing them into a tidy format.
+It automatically handles the download, loading, and merging of
+data across multiple election periods as specified by the user.
 }
 \examples{
 
@@ -137,7 +126,7 @@ import_candidacies_data(type_elec = "congress", date = "26-06-2016")
 
 }
 \author{
-Javier Álvarez-Liébana, David Pereiro Pol, Mafalda González
-González, Irene Bosque Gala and Mikaela De Smedt.
+Javier Alvarez-Liebana, David Pereiro Pol, Mafalda Gonzalez
+Gonzalez, Irene Bosque Gala and Mikaela De Smedt.
 }
 \keyword{import_elections_data}

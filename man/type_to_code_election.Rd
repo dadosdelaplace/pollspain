@@ -51,7 +51,7 @@ type_to_code_election(type_elec = "national")
 
 }
 \author{
-Javier Álvarez-Liébana, David Pereiro-Pol, Mafalda
-González-González and Irene Bosque-Gala.
+Javier Alvarez-Liebana, David Pereiro-Pol, Mafalda
+Gonzalez-Gonzalez and Irene Bosque-Gala.
 }
 \keyword{utils}

@@ -61,7 +61,7 @@ extract_code(id_INE_poll_station, level = "district", full_cod = TRUE)
 
 }
 \author{
-Javier Álvarez-Liébana, David Pereiro-Pol, Mafalda
-González-González and Irene Bosque-Gala.
+Javier Alvarez-Liebana, David Pereiro-Pol, Mafalda
+Gonzalez-Gonzalez and Irene Bosque-Gala.
 }
 \keyword{utils}

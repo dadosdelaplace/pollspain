@@ -7,7 +7,7 @@ stations and votes for candidacies.}
 \usage{
 get_election_data(
   type_elec,
-  year = 2019,
+  year = NULL,
   date = NULL,
   election_data = NULL,
   ballots_data = NULL,
@@ -15,8 +15,6 @@ get_election_data(
   col_id_poll_station = "id_INE_poll_station",
   prec_round = 3,
   short_version = TRUE,
-  repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main",
-  file_ext = ".rda",
   verbose = TRUE
 )
 }
@@ -61,13 +59,6 @@ uniquely identify poll stations. Defaults to
 \item{short_version}{Flag to indicate whether it should be returned
 a short version of the data (just key variables) or not.
 Defaults to \code{TRUE}.}
-
-\item{repo_url}{A string with the url in which the raw data can be
-found. Defaults to
-\url{https://github.com/dadosdelaplace/pollspain-data/blob/main}.}
-
-\item{file_ext}{A string with the file's extension. Defaults to
-\code{".rda"}.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
@@ -138,7 +129,7 @@ for multiple elections at once.
 }
 \details{
 This function fetches municipal-level data for the
-specified elections by downloading the corresponding \code{.rda} files
+specified elections by downloading the corresponding \code{.csv} files
 from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
 (directly downloaded from MIR website) and processing them into a
 tidy format. It automatically handles the download, loading, and
@@ -149,43 +140,37 @@ the user.
 
 ## Correct examples
 
-# Congress elections in April 2019
-# Fetch elections data for the congress elections in April 2019
-elections_data1 <- get_election_data("congress", 2019)
+# Example for a given year
+# Congress elections in year = 2016 (2016-06-26)
+elections_data_2016 <-
+  get_election_data(type_elec = "congress", year = 2016)
 
-# Fetch elections data for the congress and senate elections
-# in April 2019 in a long version
-elections_data2 <-
-  get_election_data(c("congress", "senate"), 2019,
+# Example for a vector of years
+elections_data_2008_2016 <-
+  get_election_data(type_elec = "congress", year = c(2008, 2016))
+
+# Example for a given date
+# Congress elections in date = "2023-07-24" in a long version
+elections_data_2023 <-
+  get_election_data(type_elec = "congress", date = "2023-07-24",
                     short_version = FALSE)
 
-# Fetch elections data for congress elections in Nov 2019,
-# April 2019, and June 2016
-combined_elections_data <-
-  get_election_data(c("congress", "congress"),
-                    c(2019, 2016))
-
-# Example usage providing date instead of month and year
-date_example <- get_election_data("congress", date = "2016-06-26")
-
-# Example usage providing external tables
-election_data <- import_poll_station_data("congress", 2019, 4)
-ballots_data <- import_candidacies_data("congress", 2019, 4)
-join_data <-
-  get_election_data("congress", 2019, 4,
-                     election_data = election_data,
-                     ballots_data = ballots_data)
+# Congress elections in 2008 (2008-03-09) and 2016 (2016-06-26),
+# and "2023-07-24" and "1989-10-29"
+elections_data_multiple <-
+  get_election_data(type_elec = "congress", year = c(2008, 2016),
+                    date = c("2023-07-24"))
 
 # Example usage providing external tables with different
 # column names
 election_data <-
-  import_poll_station_data("congress", 2019, 4) |>
+  import_poll_station_data(type_elec = "congress", year = 2016) |>
   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
 ballots_data <-
-  import_candidacies_data("congress", 2019, 4) |>
+  import_candidacies_data(type_elec = "congress", year = 2016) |>
   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
 join_data <-
-  get_election_data("congress", 2019, 4,
+  get_election_data(type_elec = "congress", year = 2016,
                     election_data = election_data,
                     ballots_data = ballots_data,
                     col_id_elec = "invent_1",
@@ -199,24 +184,23 @@ join_data <-
 # Wrong examples
 
 # Invalid election type: "national" is not a valid election type
-get_election_data("national", 2019)
+get_election_data(type_elec = "national", year = 2019)
 
 # Invalid date format: date should be in \%Y-\%m-\%d format
-get_election_data("congress", date = "26-06-2016")
+get_election_data(type_elec = "congress", date = "26-06-2016")
 
 # Invalid short version flag: short_version should be a
 # logical variable
-get_election_data("congress", 2019, short_version = "yes")
-
-# Invalid include_candidates flag: include_candidates should be
-# a logical variable
-get_election_data("congress", 2019, include_candidates = "no")
+get_election_data(type_elec = "congress", year = 2019,
+                  short_version = "yes")
 
 # Invalid key columns: col_id_elec and col_id_poll should be
 # columns included in datasets election_data and ballots_data
-election_data <- import_poll_station_data("congress", 2019)
-ballots_data <- import_candidacies_data("congress", 2019)
-get_election_data("congress", 2019,
+election_data <-
+  import_poll_station_data(type_elec = "congress", year = 2019)
+ballots_data <-
+  import_candidacies_data("type_elec = congress", year = 2019)
+get_election_data(type_elec = "congress", year = 2019,
                    election_data = election_data,
                    ballots_data = ballots_data,
                    col_id_elec = "invent_1",
@@ -225,6 +209,6 @@ get_election_data("congress", 2019,
 
 }
 \author{
-Javier Álvarez-Liébana and David Pereiro-Pol.
+Javier Alvarez-Liebana and David Pereiro-Pol.
 }
 \keyword{get_elections_data}

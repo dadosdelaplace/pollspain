@@ -7,22 +7,24 @@ a given aggregation level (ccaa, prov, etc)}
 \usage{
 summary_election_data(
   type_elec,
-  year = 2019,
+  year = NULL,
   date = NULL,
   election_data = NULL,
   ballots_data = NULL,
+  candidacies_data = NULL,
   col_id_elec = "id_elec",
   col_id_poll_station = "id_INE_poll_station",
   prec_round = 3,
   short_version = TRUE,
-  repo_url = "https://github.com/dadosdelaplace/pollspain-data/blob/main/data",
-  file_ext = ".rda",
+  CERA_remove = FALSE,
   level = "all",
-  by_parties = FALSE,
+  by_parties = TRUE,
   filter_porc_ballots = NA,
+  filter_candidacies = NA,
   cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-  col_id_candidacies = "id_candidacies_nat",
-  cols_names_candidacies = c("abbrev_candidacies", "name_candidacies"),
+  id_candidacies_nat = "id_candidacies_nat",
+  id_candidacies_prov = "id_candidacies",
+  col_abbrev_candidacies = "abbrev_candidacies",
   verbose = TRUE
 )
 }
@@ -54,6 +56,8 @@ the different candidacies, already provided (by other functions or
 by the user). Database should contain a
 \code{col_id_poll_station} column. Defaults to \code{NULL}.}
 
+\item{candidacies_data}{pending}
+
 \item{col_id_elec}{Column name in \code{election_data} to uniquely
 identify the elections. Defaults to \code{"id_elec"}.}
 
@@ -68,74 +72,123 @@ uniquely identify poll stations. Defaults to
 a short version of the data (just key variables) or not.
 Defaults to \code{TRUE}.}
 
-\item{repo_url}{A string with the url in which the raw data can be
-found. Defaults to
-\url{https://github.com/dadosdelaplace/pollspain-data/blob/main}.}
-
-\item{file_ext}{A string with the file's extension. Defaults to
-\code{".rda"}.}
+\item{CERA_remove}{pending}
 
 \item{level}{A string providing the level of aggregation at which
-the data is to be provided. The allowe values are the following:
+the data is to be provided. The allowed values are the following:
 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec' or
 'poll_station'. Defaults to \code{"all"}.}
 
 \item{by_parties}{A flag indicates whether user wants a summary by
 candidacies/parties or just global results at given \code{level}.
-Defaults to \code{FALSE}.}
+Defaults to \code{TRUE}.}
 
 \item{filter_porc_ballots}{A numerical argument representing the
 vote percentage threshold (out of 100) that the user wants to use
 to filter the parties (as long as \code{by_parties = TRUE}).
 Defaults to \code{NA}.}
 
+\item{filter_candidacies}{A string of characters ... pending
+(as long as \code{by_parties = TRUE}). Defaults to \code{NA}.}
+
 \item{cols_mun_var}{A vector of variable names that, in their raw
 version, are only available at the municipal level (or higher).
 Defaults to \code{c("pop_res_mun", "census_counting_mun")}.}
 
-\item{col_id_candidacies}{A string indicating the name of the
-column that uniquely identifies the candidacies. Defaults to
-\code{"id_candidacies"}.}
+\item{id_candidacies_nat}{pending}
 
-\item{cols_names_candidacies}{A string indicating the name of the
-column containg the names and/or acronyms of candidacies.
-Defaults to \code{c("abbrev_candidacies", "name_candidacies")}.}
+\item{id_candidacies_prov}{pending}
+
+\item{col_abbrev_candidacies}{pending}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
 }
 \value{
-A tibble with rows corresponding to ...pending
+A tibble with rows corresponding to the level of aggregation for
+each election, including the following variables:
+\item{id_elec}{election's id constructed from the election code
+\code{cod_elec} and date \code{date_elec}.}
+\item{cod_elec}{code representing the type of election:
+\code{"01"} (referendum), \code{"02"} (congress),
+\code{"03"} (senate), \code{"04"} (local elections),
+\code{"06"} (cabildo - Canarian council - elections), \code{"07"}
+(European Parliament elections).}
+\item{type_elec}{type of election.}
+\item{date_elec}{date of the election.}
+\item{id_INE_poll_station}{poll station's id constructed from the
+ccaa-prov-municipality and poll station codes.}
+\item{id_INE_mun}{municipality ID constructed from the
+ccaa-prov-mun codes provided by INE.}
+\item{cod_INE_ccaa, ccaa}{codes and names for regions (ccaa)
+to which the municipalities belong.}
+\item{cod_INE_prov, prov}{codes and names for the provinces to
+which the municipalities belong.}
+\item{cod_INE_mun, mun}{code, and name for
+municipalities.}
+\item{cod_mun_district, cod_sec, cod_poll_station}{codes for the
+municipal district, census tract and poll station.}
+\item{ballots_1, turnout_1}{number of total ballots and turnout
+percentage in the first round.}
+\item{ballots_2, turnout_2}{number of total ballots and turnout
+percentage in the second round (if applicable).}
+\item{blank_ballots, invalid_ballots}{blank and invalid ballots.}
+\item{party_ballots, valid_ballots, total_ballots}{ballots to
+candidacies/parties, valid ballots (sum of \code{blank_ballots} and
+\code{party_ballots}) and total ballots (sum of
+\code{valid_ballots} and \code{invalid_ballots}).}
+\item{turnout}{final turnout percentage.}
+\item{porc_valid, porc_invalid, porc_parties, porc_blank}{perc (\%)
+values of \code{valid_ballots}, \code{invalid_ballots},
+\code{party_ballots} and \code{blank_ballots}.}
+\item{n_poll_stations}{number of polling stations.}
+\item{pop_res_mun}{population census of residents (CER + CERA) at
+municipality level.}
+\item{census_counting_mun}{population eligible to vote after
+claims at municipality level.}
+\item{id_candidacies}{id for candidacies (at province level).}
+\item{id_candidacies_ccaa, id_candidacies_nat}{id for
+candidacies (at region - ccaa - and national level).}
+\item{abbrev_candidacies, name_candidacies}{acronym and full name
+of the candidacies.}
+\item{ballots}{number of ballots obtained for each candidacy at
+each level section.}
+\item{porc_candidacies_parties}{percentage of ballots obtained for each candidacy over the
+total number of party ballots of each level section.}
+\item{porc_candidacies_valid}{percentage of ballots obtained for each candidacy over the
+total number of valid ballots of each level section.}
+\item{porc_candidacies_census}{percentage of ballots obtained for each candidacy over the
+census of the corresponding aggregation level.}
 }
 \description{
-pending...
+pending Import, preprocess and aggregate election data at the same time for
+a given election and aggregation level. This function also lets remove parties below a given
+vote share threshold.
 }
 \details{
-This function ... pending
+A tibble with rows corresponding to the level of aggregation for
+each election, including the following variables:
 }
 \examples{
 
 ## Correct examples
 
-# Summary election data at national level (general data
-# without candidacies ballots)
-summary_data_all <- summary_election_data("congress", 2019)
+# Summary 2023 election data at national level, aggregating the
+# candidacies ballots, in a short version
+summary_2023 <-
+  summary_election_data(type_elec = "congress", year = 2023)
 
-# Summary election data at national level, aggregating the
-# candidacies ballots
-summary_data_all_parties <-
-  summary_election_data("congress", 2019, 4, by_parties = TRUE)
+# Summary 2023 election data at national level, aggregating the
+# candidacies ballots, in a short version, without candidacies ballots
+# summary_2023 <-
+ # summary_election_data(type_elec = "congress", year = 2023,
+                        # by_parties = FALSE)
 
-# Summary election data at ccaa level (general data
-# without candidacies ballots)
-summary_data_ccaa <-
-  summary_election_data("congress", 2019, 4, level = "ccaa")
-
-# Summary election data at ccaa level, aggregating the
-# candidacies ballots
-summary_data_ccaa_parties <-
-  summary_election_data("congress", 2019, 4, level = "ccaa",
-                        by_parties = TRUE)
+# Summary 2023 election data at national level, aggregating the
+# candidacies ballots, in a long version
+summary_2023 <-
+  summary_election_data(type_elec = "congress", year = 2023,
+                        short_version = FALSE)
 
 \dontrun{
 # ----
@@ -144,10 +197,24 @@ summary_data_ccaa_parties <-
 
 # Wrong examples
 
+# Invalid aggregation level
+summary_election_data("congress", 2019, level = "district")
+
+# filter_porc_ballots outside range 0 from 100
+summary_election_data("congress", 2019,
+                      filter_porc_ballots = 150)
+
+# filter_porc_ballots supplied while by_parties = FALSE
+summary_election_data("congress", 2019,
+                      by_parties = FALSE,
+                      filter_porc_ballots = 5)
+
+# Wrong election type
+summary_election_data("national", 2019)
 }
 
 }
 \author{
-Javier Álvarez-Liébana and David Pereiro-Pol.
+Javier Alvarez-Liebana and David Pereiro-Pol.
 }
 \keyword{get_elections_data}

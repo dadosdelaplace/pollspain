@@ -18,6 +18,7 @@ downloading and analyzing election data and polls in Spain.
 Useful links:
 \itemize{
   \item \url{https://github.com/dadosdelaplace/pollspain}
+  \item \url{http://javieralvarezliebana.es/pollspain/}
   \item Report bugs at \url{https://github.com/dadosdelaplace/pollspain/issues}
 }
 

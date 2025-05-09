@@ -45,6 +45,7 @@
 #' @importFrom tidyr unite
 #' @importFrom utils download.file
 #' @importFrom utils globalVariables
+#' @importFrom utils menu
 #' @importFrom utils unzip
 ## usethis namespace: end
 #' @aliases pollspain pollspain-package

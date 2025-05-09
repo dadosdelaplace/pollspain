@@ -7,12 +7,12 @@
 aggregate_election_data(
   election_data,
   level = "all",
-  by_parties = FALSE,
+  by_parties = TRUE,
   col_id_elec = "id_elec",
   col_id_poll_station = "id_INE_poll_station",
   cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-  col_id_candidacies = "id_candidacies_nat",
-  cols_names_candidacies = c("abbrev_candidacies", "name_candidacies"),
+  candidacies_data = NULL,
+  col_id_candidacies = "id_candidacies",
   prec_round = 3,
   verbose = TRUE
 )
@@ -24,13 +24,13 @@ should contain a \code{col_id_elec} column.
 Defaults to \code{NULL}.}
 
 \item{level}{A string providing the level of aggregation at which
-the data is to be provided. The allowe values are the following:
+the data is to be provided. The allowed values are the following:
 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec' or
 'poll_station'. Defaults to \code{"all"}.}
 
 \item{by_parties}{A flag indicates whether user wants a summary by
 candidacies/parties or just global results at given \code{level}.
-Defaults to \code{FALSE}.}
+Defaults to \code{TRUE}.}
 
 \item{col_id_elec}{Column name in \code{election_data} to uniquely
 identify the elections. Defaults to \code{"id_elec"}.}
@@ -43,13 +43,11 @@ uniquely identify poll stations. Defaults to
 version, are only available at the municipal level (or higher).
 Defaults to \code{c("pop_res_mun", "census_counting_mun")}.}
 
+\item{candidacies_data}{pending}
+
 \item{col_id_candidacies}{A string indicating the name of the
 column that uniquely identifies the candidacies. Defaults to
 \code{"id_candidacies"}.}
-
-\item{cols_names_candidacies}{A string indicating the name of the
-column containg the names and/or acronyms of candidacies.
-Defaults to \code{c("abbrev_candidacies", "name_candidacies")}.}
 
 \item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
@@ -58,7 +56,7 @@ Defaults to \code{c("abbrev_candidacies", "name_candidacies")}.}
 be printed during execution. Defaults to \code{TRUE}.}
 }
 \value{
-A tibble with rows corresponding to municipalities for
+A tibble with rows corresponding to the level of aggregation for
 each election, including the following variables:
 \item{id_elec}{election's id constructed from the election code
 \code{cod_elec} and date \code{date_elec}.}
@@ -105,70 +103,41 @@ candidacies (at region - ccaa - and national level).}
 \item{abbrev_candidacies, name_candidacies}{acronym and full name
 of the candidacies.}
 \item{ballots}{number of ballots obtained for each candidacy at
-each poll station.}
+each level section.}
 }
 \description{
-pending...
+Aggregate polling station election results
+to any chosen territorial level, providing party level ballots,
+total ballots, number of polling stations and contextual sums.
 }
 \details{
-This function fetches municipal-level data for the
-specified elections by downloading the corresponding \code{.rda} files
-from GitHub \url{https://github.com/dadosdelaplace/pollspain-data}
-(directly downloaded from MIR website) and processing them into a
-tidy format. It automatically handles the download, loading, and
-merging of data across multiple election periods as specified by
-the user.
+...
 }
 \examples{
-
-\dontrun{
 ## Correct examples
 
-# Congress elections in April 2019
-# Fetch elections data for the congress elections in April 2019
-elections_data1 <- join_election_data("congress", 2019, 4)
-
-# Fetch join_election_data("congress", 2019, 4, prec_round = 7)
-# data for the congress elections in April 2019
-# with percentages rounded to 7 decimals
-elections_data2 <-
-  join_election_data("congress", 2019, 4, prec_round = 7)
-
-# Fetch elections data for the congress and senate elections in
-# April 2019 in a short version
-elections_data3 <-
-  join_election_data(c("congress", "senate"), 2019, 4, short_version = TRUE)
-
-# Example usage to combine data from different elections into one table
-# Fetch elections data for congress elections in Nov 2019 and June 2016
-combined_elections_data <-
-  join_election_data(c("congress", "congress"),
-                     c(2019, 2016), c(11, 6))
-
-# Example usage providing date instead of month and year
-date_example <- join_election_data("congress", date = "2016-06-26")
-
-# Example usage providing external tables
-election_data <- import_poll_station_data("congress", 2019, 4)
-ballots_data <- import_candidacies_data("congress", 2019, 4)
-join_election_data("congress", 2019, 4,
-                   election_data = election_data,
-                   ballots_data = ballots_data)
-
-# Example usage providing external tables with different
-# column names
+# Election date from 2023 and 1989 dates
 election_data <-
-  import_poll_station_data("congress", 2019, 4) |>
-  dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
-ballots_data <-
-  import_candidacies_data("congress", 2019, 4) |>
-  dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
-join_data <-
-  join_election_data("congress", 2019, 4,
-                     election_data = election_data,
-                     ballots_data = ballots_data,
-                     col_id_elec = "invent_1",
-                     col_id_poll = "invent_2")
+   get_election_data(type_elec = "congress", year = c(2023),
+                     date = "1989-10-29")
+
+# National level results
+nat_agg <- aggregate_election_data(election_data, level = "all")
+
+# National level results (without parties)
+nat_agg <-
+  aggregate_election_data(election_data, level = "all",
+                          by_parties = FALSE)
+
+# Province level results
+prov_agg <- aggregate_election_data(election_data, level = "prov")
+
+#  Municipality level results results (without parties)
+mun_agg <-
+  aggregate_election_data(election_data, level = "mun",
+                          by_parties = FALSE)
+
+\dontrun{
 
 # ----
 # Incorrect examples
@@ -176,37 +145,23 @@ join_data <-
 
 # Wrong examples
 
-# Invalid election type: "national" is not a valid election type
-join_election_data("national", 2019, 4)
+# Invalid 'level' argument,"district" is not allowed
 
-# Invalid election: no congress elections are available in 5-2019.
-# Please check dataset dates_elections_spain
-join_election_data("congress", 2019, 5)
+aggregate_election_data(electoral_level, level = "district")
 
-# Invalid date format: date should be in \%Y-\%m-\%d format
-join_election_data("congress", date = "26-06-2016")
+# Invalid 'by_parties' flag: it must be logical, not character
+aggregate_election_data(electoral_level, level = "prov",
+                        by_parties = "yes")
 
-# Invalid short version flag: short_version should be a
-# logical variable
-join_election_data("congress", 2019, 4, short_version = "yes")
+# Invalid parameters: col_id_candidacies should be matched with
+# the variable names
+aggregate_election_data(electoral_level, level = "ccaa",
+                        col_id_candidacies = "wrong_id")
 
-# Invalid include_candidates flag: include_candidates should be a
-# logical variable
-join_election_data("congress", 2019, 4, include_candidates = "no")
-
-# Invalid key columns: col_id_elec and col_id_poll should be
-# columns included in datasets election_data and ballots_data
-election_data <- import_poll_station_data("congress", 2019, 4)
-ballots_data <- import_candidacies_data("congress", 2019, 4)
-join_election_data("congress", 2019, 4,
-                   election_data = election_data,
-                   ballots_data = ballots_data,
-                   col_id_elec = "invent_1",
-                   col_id_poll = "invent_2")
 }
 
 }
 \author{
-Javier Álvarez-Liébana and David Pereiro-Pol.
+Javier Alvarez-Liebana and David Pereiro-Pol.
 }
 \keyword{get_elections_data}
