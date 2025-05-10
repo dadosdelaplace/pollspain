@@ -31,12 +31,12 @@ You can <span class="hl">**install the development version**</span> from
 # install.packages("devtools") # only if not already installed
 devtools::install_github("dadosdelaplace/pollspain")
 library(pollspain) # after installing
+library(dplyr)
 ```
 
-An **internet connection** is required for installing and downloading
-data. Data is stored in the accompanying `pollspain-data` repository.
-You can find **more information about the data structure** at
-<https://github.com/dadosdelaplace/pollspain-data>
+An **internet connection** is just required for installing. Data is
+stored in the accompanying `pollspaindata` package. **See more** at
+<https://github.com/dadosdelaplace/pollspaindata>
 
 ## Usage
 
@@ -52,21 +52,46 @@ with
 - a geographic **level for aggregation** (e.g., `level = "ccaa"` or
   `level = "prov"`)
 
-returns a <span class="hl">**summary table of election results
-aggregated at the administrative level**</span>. This includes both
-general data (blank votes, turnout, etc) and the **ballots received by
-each party or candidacy**. The available <span class="hl">**aggregation
-levels**</span> (`level`) are: `"all"` (for a national summary),
+returns a <span class="hl">**summary of election results aggregated at
+the administrative level**</span>. This includes both general data
+(blank votes, turnout, etc) and **ballots by each candidacy**. The
+available <span class="hl">**levels**</span> (`level`) are: `"all"`,
 `"ccaa"` (autonomous communities), `"prov"` (province), `"mun"`
-(municipality), `"mun_district"` (electoral district), `"sec"` (census
-section), and `"poll_station"`.
+(municipality), `"mun_district"` (district), `"sec"` (census tract), and
+`"poll_station"`.
 
 ``` r
-# Summary election data at national level for both elections in 2019
-# (general data without candidacies ballots)
-summary_data_all <- summary_election_data(type_elec = "congress", year = 2019)
+# Summary election data at ccaa level for both elections in 2023 and 2016
+summary_data_all <- summary_election_data(type_elec = "congress", year = 2023)
 summary_data_all
 ```
+
+    #> # A tibble: 59 × 7
+    #>    id_elec       id_candidacies_nat ballots blank_ballots invalid_ballots
+    #>    <glue>        <chr>                <dbl>         <dbl>           <dbl>
+    #>  1 02-2023-07-24 000001               46053        200682          264382
+    #>  2 02-2023-07-24 000002             7821777        200682          264382
+    #>  3 02-2023-07-24 000003               23289        200682          264382
+    #>  4 02-2023-07-24 000004                 874        200682          264382
+    #>  5 02-2023-07-24 000005             8161117        200682          264382
+    #>  6 02-2023-07-24 000006             3057068        200682          264382
+    #>  7 02-2023-07-24 000007              169240        200682          264382
+    #>  8 02-2023-07-24 000008                 263        200682          264382
+    #>  9 02-2023-07-24 000009               23421        200682          264382
+    #> 10 02-2023-07-24 000010             3044983        200682          264382
+    #>    party_ballots porc_candidacies_valid
+    #>            <dbl>                  <dbl>
+    #>  1      24487589                  0.188
+    #>  2      24487589                 31.9  
+    #>  3      24487589                  0.095
+    #>  4      24487589                  0.004
+    #>  5      24487589                 33.3  
+    #>  6      24487589                 12.5  
+    #>  7      24487589                  0.691
+    #>  8      24487589                  0.001
+    #>  9      24487589                  0.096
+    #> 10      24487589                 12.4  
+    #> # ℹ 49 more rows
 
 ``` r
 # Summary election data, aggregating candidacies ballots at prov level
@@ -77,13 +102,10 @@ head(summary_data_prov_parties, 5)
 ```
 
 `summary_election_data()` is a **user-friendly combination** of
-`get_election_data()` (which merges different data sources at the
-polling station level) and `aggregate_election_data()` (which aggregates
-the data to the requested level). See <span class="hl">**some uses and
-detailed input arguments**</span> in
-[…](https://javieralvarezliebana.es/pollspain/articles/...), and
-[…](https://javieralvarezliebana.es/pollspain/articles/...) for
-**advanced users**.
+`get_election_data()` (merges different data sources at the polling
+station level) and `aggregate_election_data()` (aggregates the data).
+See [**some use cases and
+tutorials**](https://javieralvarezliebana.es/pollspain/#other-functions).
 
 <details>
 
@@ -148,6 +170,8 @@ autónoma y provincial. …
 * ¿algún lollipop para mostrar housing efects? con flechas y eso.
 -->
 
+## Tutorials
+
 ## Other functions
 
 `{pollspain}` also provides <span class="hl">**more advanced users with
@@ -156,10 +180,8 @@ their own data, as long as it is provided in a proper format.
 
 - <span class="hl">**Utils**</span>: functions contained in the
   `utils.R` script are intended to serve as **helper functions for data
-  preprocessing**. See
-  <https://javieralvarezliebana.es/pollspain/articles/utils.html> for
-  [**more
-  examples**](https://javieralvarezliebana.es/pollspain/articles/utils.html)
+  preprocessing**. See [**more examples and use
+  cases**](https://javieralvarezliebana.es/pollspain/articles/utils.html)
   about how to use them.
 
 ``` r
@@ -172,12 +194,13 @@ extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
 ```
 
 - <span class="hl">**Import raw data**</span>: functions starting with
-  `import_..._data()` (code can be found in the
-  `import_elections_data.R` file) are aimed at importing and
-  preprocessing as raw as possible the `.DAT` election files from the
-  Spanish Ministry of Interior files available in the [pollspain-data
-  Github repository](https://github.com/dadosdelaplace/pollspain-data).
-  See \<…\> for more examples about how to use them.
+  `import_..._data()` (code can be found in `import_elections_data.R`
+  file) are aimed at importing and preprocessing as raw as possible the
+  `.DAT` election files from the files available in the [pollspaindata
+  package](https://github.com/dadosdelaplace/pollspaindata). See [**more
+  examples about how to use them**](...).
+
+- <span class="hl">**Recoding candidacies**</span>:
 
 ## Contributing
 
@@ -226,11 +249,14 @@ references**
 
 ## Authors
 
-**Javier Álvarez-Liébana (maintainer)**, **David Pereiro-Pol**,
-**Mafalda González-González**, **Irene Bosque-Gala** and **Mikaela De
-Smedt**. The development of `{pollspain}` package has been part of
-several Master’s Theses from the Master in Computational Data Science at
-UC3M (Madrid).
+[Javier Álvarez-Liébana (maintainer)](https://javieralvarezliebana.es),
+David Pereiro-Pol, Mafalda González-González, [Irene
+Bosque-Gala](https://es.linkedin.com/in/irene-bosque-gala-701271293) and
+[Mikaela De
+Smedt](https://www.linkedin.com/in/mikaela-de-smedt-11179020a/?locale=en_US).
+The development of `{pollspain}` package has been part of several
+Master’s Theses from the Master in Computational Data Science at UC3M
+(Madrid).
 
 ### Usability
 

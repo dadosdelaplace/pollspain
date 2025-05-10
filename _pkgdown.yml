@@ -1,3 +1,7 @@
+package: pollspain
+title: "pollspain"
+logo: man/figures/pollspain_sticker.png
+
 url: http://javieralvarezliebana.es/pollspain/
 template:
   bootstrap: 5
