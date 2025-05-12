@@ -65,7 +65,7 @@ summary_data_all
 # Summary election data at national level for 2023 election
 summary_data_2023 <- summary_election_data(type_elec = "congress", year = 2023)
 print(summary_data_2023 |> 
-  select(id_elec, id_candidacies_nat, ballots,
+  dplyr::select(id_elec, id_candidacies_nat, ballots,
          blank_ballots, invalid_ballots, party_ballots,porc_candidacies_valid),
   width = Inf)
 ```

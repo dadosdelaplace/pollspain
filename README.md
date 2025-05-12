@@ -31,7 +31,6 @@ You can <span class="hl">**install the development version**</span> from
 # install.packages("devtools") # only if not already installed
 devtools::install_github("dadosdelaplace/pollspain")
 library(pollspain) # after installing
-library(dplyr)
 ```
 
 An **internet connection** is just required for installing. Data is
