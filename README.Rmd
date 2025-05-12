@@ -34,13 +34,11 @@ You can [**install the development version**]{.hl} from [GitHub](https://github.
 # install.packages("devtools") # only if not already installed
 devtools::install_github("dadosdelaplace/pollspain")
 library(pollspain) # after installing
-library(dplyr)
 ```
 
 
 ```{r message = FALSE, warning = FALSE, echo = FALSE}
 library(pollspain)
-library(dplyr)
 ```
 
 An **internet connection** is just required for installing. Data is stored in the accompanying `pollspaindata` package. **See more** at <https://github.com/dadosdelaplace/pollspaindata>

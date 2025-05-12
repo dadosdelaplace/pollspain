@@ -17,6 +17,15 @@
 #' @import stringr
 #' @import tibble
 ## usethis namespace: start
+#' @importFrom dplyr arrange
+#' @importFrom dplyr between
+#' @importFrom dplyr case_when
+#' @importFrom dplyr contains
+#' @importFrom dplyr filter
+#' @importFrom dplyr if_else
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom dplyr summarise
 #' @importFrom glue glue
 #' @importFrom lubridate as_date
 #' @importFrom lubridate day
