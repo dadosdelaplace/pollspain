@@ -61,7 +61,7 @@
                         <h4 data-toc-skip class="author">Javier Álvarez
 Liébana</h4>
             
-            <h4 data-toc-skip class="date">2025-05-12</h4>
+            <h4 data-toc-skip class="date">2025-05-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dadosdelaplace/pollspain/blob/main/vignettes/utils.Rmd" class="external-link"><code>vignettes/utils.Rmd</code></a></small>
       <div class="d-none name"><code>utils.Rmd</code></div>
@@ -70,38 +70,110 @@ Liébana</h4>
     
     
 <p>This tutorial aims to illustrate how more <span class="hl"><strong>advanced developers can use the helper
-functions</strong></span> in the <code>utils.R</code> script.</p>
+functions</strong></span> in the <code>utils.R</code> script:</p>
+<ul>
+<li><code><a href="../reference/type_to_code_election.html">type_to_code_election()</a></code></li>
+<li><code><a href="../reference/extract_code.html">extract_code()</a></code></li>
+<li><code>recod_mun()</code></li>
+</ul>
 <div class="section level2">
 <h2 id="required-packages">Required packages<a class="anchor" aria-label="anchor" href="#required-packages"></a>
 </h2>
 <p>Let’s load the required packages for this tutorial.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a></span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="a">a<a class="anchor" aria-label="anchor" href="#a"></a>
-</h3>
-<p>dasdas dsad asdasdasdas dasmdi amsi dasmi masim dasdimqoeqm oqqw qom
-qm qw mdqomqo mqom dqsom odmqom oqmd oqwmoqm odqwx dasdas dsad
-asdasdasdas dasmdi amsi dasmi masim dasdimqoeqm oqqw qom qm qw mdqomqo
-mqom dqsom odmqom oqmd oqwmoqm odqwx dasdas dsad asdasdasdas dasmdi
-amsi</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level2">
-<h2 id="b">b<a class="anchor" aria-label="anchor" href="#b"></a>
+<h2 id="convert-type-of-election-to-code">Convert type of election to code<a class="anchor" aria-label="anchor" href="#convert-type-of-election-to-code"></a>
 </h2>
-<p>dasdas dsad asdasdasdas dasmdi amsi dasmi masim dasdimqoeqm oqqw qom
-qm qw mdqomqo mqom dqsom odmqom oqmd oqwmoqm odqwx dasdas dsad
-asdasdasdas dasmdi amsi dasmi masim dasdimqoeqm oqqw qom qm qw mdqomqo
-mqom dqsom odmqom oqmd oqwmoqm odqwx dasdas dsad asdasdasdas dasmdi amsi
-dasmi masim dasdimqoeqm oqqw qom qm qw mdqomqo mqom dqsom odmqom oqmd
-oqwmoqm odqwx dasdas dsad asdasdasdas dasmdi amsi dasmi masim
-dasdimqoeqm oqqw qom qm qw mdqomqo mqom dqsom odmqom oqmd oqwmoqm
-odqwx</p>
+<p>Según los datos extraídos de la <a href="https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/Spanish" class="external-link">web
+del Ministerio de Interior en España</a> cada tipo de elección tiene
+asociado en las bases de datos un código alfanumérico concreto: “01”
+(referendum), “02” (congress), “03” (senate), “04” (local elections),
+“06” (cabildo - Canarian council - elections) y “07” (European Parlament
+elections).</p>
+<p>Sin embargo, de cara al usuario, es mucho más sencillo proporcionar
+órdenes lexicográficamente explícitas, por ejemplo escribiendo
+“congress” para las elecciones al congreso o “senate” para elecciones al
+senado. La función <code><a href="../reference/type_to_code_election.html">type_to_code_election()</a></code> nos permite
+hacer esa conversión de la palabra proporcionada por el usuario al
+código que necesitaremos en nuestras bases de datos.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/type_to_code_election.html">type_to_code_election</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "02"</span></span>
+<span><span class="fu"><a href="../reference/type_to_code_election.html">type_to_code_election</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"senate"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "03"</span></span>
+<span><span class="fu"><a href="../reference/type_to_code_election.html">type_to_code_election</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"local"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "04"</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="extract-region-codes">Extract region codes<a class="anchor" aria-label="anchor" href="#extract-region-codes"></a>
+</h2>
+<p>De la misma manera, el usuario tiene a su disposición en muchas de
+las funciones del paquete la opción de agregar bajo distintos niveles
+geográficos, que el usuario puede proporcionar fácilmente como “all”,
+“ccaa”, “prov”, “mun”, “mun_district”, “sec” (census tract) and
+“poll_station”. Sin embargo, a nivel interno, cada mesa electoral viene
+geolocalizado por una colección de códigos proporcionados por el
+Instituto Nacional de Estadística (INE) de España</p>
+<p>Extract region codes (for aggregation levels ccaa, prov, mun,
+municipal districts and census sections) for a given poll station code
+provided by Spanish Ministry of Interior (MIR) and Spanish Statistical
+Office (INE). La función <code><a href="../reference/extract_code.html">extract_code()</a></code> nos permite, dado
+un código entera de una mesa eletoral, extraer el código al nivel de
+desagregación pedido.</p>
+<p>Por ejemplo vamos a aplicar la función para la mesa B de la sección
+censal <code>"004"</code> del primer distrito municipal del municio de
+Adra (<code>"003"</code>) de la provincia de Almería
+(<code>"04"</code>), perteneciente a la comunidad autonónoma de
+Andalucía (<code>"01"</code>).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">id_INE_poll_station</span> <span class="op">&lt;-</span> <span class="st">"01-04-003-01-004-B"</span></span></code></pre></div>
+<p>¿Cuál sería el código identificar del municipio al que pertenece la
+mesa electoral?</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="va">id_INE_poll_station</span>, level <span class="op">=</span> <span class="st">"mun"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "003"</span></span></code></pre></div>
+<p>¿Y la provincia?</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="va">id_INE_poll_station</span>, level <span class="op">=</span> <span class="st">"prov"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "04"</span></span></code></pre></div>
+<p>¿Y el código del distrito municipal?</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="va">id_INE_poll_station</span>, level <span class="op">=</span> <span class="st">"mun_district"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "01"</span></span></code></pre></div>
+<p>Si observas por defecto solo proporciona el código al nivel de
+agregación pedido pero fijando <code>full_cod = TRUE</code> se puede
+obtener también el código completo, incluyendo el código no solo de
+dicho nivel sino de todos sus niveles superiores (por ejemplo, todas las
+provincias tienen un municipio con código <code>"001"</code>, por lo que
+necesitamos su código de provincia y de comunidad autónoma para
+identificarlo de manera unívoca)</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="va">id_INE_poll_station</span>, level <span class="op">=</span> <span class="st">"mun"</span>, full_cod <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "01-04-003"</span></span>
+<span><span class="fu"><a href="../reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="va">id_INE_poll_station</span>, level <span class="op">=</span> <span class="st">"prov"</span>, full_cod <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "01-04"</span></span>
+<span><span class="fu"><a href="../reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="va">id_INE_poll_station</span>, level <span class="op">=</span> <span class="st">"mun_district"</span>, full_cod <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "01-04-003-01"</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="recoding-nombres-de-municipios">Recoding nombres de municipios<a class="anchor" aria-label="anchor" href="#recoding-nombres-de-municipios"></a>
+</h2>
+<p>A lo largo de los años se han producido diferentes procesos de fusión
+de municipios en España, por lo que no en todas las elecciones podemos
+encontrar los mismos municipios ni asociados a los mismos códigos
+identificativos. Con el fin de unificar y estandarizar los resultados
+proporcionados al usuario, todas las tablas proporcionadas hacen
+referencia a la última recodificación de municipios del INE (última
+actualización: 2023).</p>
+<p>La función auxiliar <code>recod_mun()</code> proporciona de manera
+transparente la recodificación realizada, reasignado los códigos de
+municipios fusionados.</p>
+</div>
+<div class="section level2">
+<h2 id="recoding-parties">Recoding parties<a class="anchor" aria-label="anchor" href="#recoding-parties"></a>
+</h2>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
