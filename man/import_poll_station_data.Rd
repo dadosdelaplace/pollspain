@@ -134,7 +134,7 @@ import_poll_station_data(type_elec = "national", year = 2019)
 
 # Invalid election: no congress elections are available in 2018
 # Please check dataset dates_elections_spain
-import_poll_station_data(type_elec = "congress", year = 2019)
+import_poll_station_data(type_elec = "congress", year = 2018)
 
 # Invalid date format: date should be in \%Y-\%m-\%d format
 import_poll_station_data(type_elec = "congress", date = "26-06-2016")

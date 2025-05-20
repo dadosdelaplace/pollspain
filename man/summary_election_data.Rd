@@ -55,6 +55,8 @@ the different candidacies, already provided (by other functions or
 by the user). Database should contain a
 \code{col_id_poll_station} column. Defaults to \code{NULL}.}
 
+\item{candidacies_data}{pending...}
+
 \item{col_id_elec}{Column name in \code{election_data} to uniquely
 identify the elections. Defaults to \code{"id_elec"}.}
 

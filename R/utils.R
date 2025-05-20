@@ -83,7 +83,7 @@ type_to_code_election <- function(type_elec) {
 #' according to the INE/MIR format").
 #' @param level aggregation level, for which we want to extract codes. It
 #' should be taken from the following values: 'ccaa', 'prov', 'mun',
-#' 'mun-district', 'sec' or 'poll-station'
+#' 'mun-district', 'sec' or 'poll_station'
 #' @param full_cod flag to indicate if codes should be provided in a
 #' full format (including codes of more aggregated levels) or not.
 #' Defaults to \code{FALSE}.
@@ -142,7 +142,7 @@ extract_code <-
     if (!(level %in% c("ccaa", "prov", "mun", "mun_district",
                        "sec", "poll_station"))) {
 
-      stop("Aggregation level provided by 'level' parameter must be taken from the following values: 'ccaa', 'prov', 'mun', 'mun-district', 'sec', 'poll_station'")
+      stop("Aggregation level provided by 'level' parameter must be taken from the following values: 'ccaa', 'prov', 'mun', 'mun_district', 'sec', 'poll_station'")
 
     }
 

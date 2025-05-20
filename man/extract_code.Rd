@@ -13,7 +13,7 @@ according to the INE/MIR format").}
 
 \item{level}{aggregation level, for which we want to extract codes. It
 should be taken from the following values: 'ccaa', 'prov', 'mun',
-'mun-district', 'sec' or 'poll-station'}
+'mun-district', 'sec' or 'poll_station'}
 
 \item{full_cod}{flag to indicate if codes should be provided in a
 full format (including codes of more aggregated levels) or not.

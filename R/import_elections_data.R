@@ -111,8 +111,7 @@
 #' }
 #' @export
 import_mun_census_data <-
-  function(type_elec, year = NULL, date = NULL,
-           verbose = TRUE) {
+  function(type_elec, year = NULL, date = NULL, verbose = TRUE) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
@@ -395,7 +394,7 @@ import_mun_census_data <-
 #'
 #' # Invalid election: no congress elections are available in 2018
 #' # Please check dataset dates_elections_spain
-#' import_poll_station_data(type_elec = "congress", year = 2019)
+#' import_poll_station_data(type_elec = "congress", year = 2018)
 #'
 #' # Invalid date format: date should be in %Y-%m-%d format
 #' import_poll_station_data(type_elec = "congress", date = "26-06-2016")
@@ -547,7 +546,7 @@ import_poll_station_data <-
       # Print the file URL for debugging purposes
       message(blue("[x] Import poll station data .."))
       Sys.sleep(1/20)
-      message(green(glue("  - {allowed_elections$type_elec} elections on {allowed_elections$date}")))
+      message(green(paste0("  - ", allowed_elections$type_elec, " elections on ", allowed_elections$date, "\n")))
 
     }
 
@@ -667,6 +666,32 @@ import_poll_station_data <-
       relocate(id_INE_poll_station, .after = date_elec) |>
       relocate(turnout_1, .after = ballots_1) |>
       relocate(turnout_2, .after = ballots_2)
+
+    # include summaries for CERA
+    poll_station_data <-
+      poll_station_data |>
+      mutate("valid_ballots" =
+               if_else(str_detect(id_INE_mun, "-999"),
+                       blank_ballots + party_ballots, valid_ballots),
+             "total_ballots" =
+               if_else(str_detect(id_INE_mun, "-999"),
+                       valid_ballots + invalid_ballots, total_ballots),
+             "porc_valid" =
+               if_else(str_detect(id_INE_mun, "-999"),
+                       round(100 * valid_ballots / total_ballots, prec_round),
+                       porc_valid),
+             "porc_invalid" =
+               if_else(str_detect(id_INE_mun, "-999"),
+                       round(100 * invalid_ballots / total_ballots, prec_round),
+                       porc_invalid),
+             "porc_parties" =
+               if_else(str_detect(id_INE_mun, "-999"),
+                       round(100 * party_ballots / valid_ballots, prec_round),
+                       porc_parties),
+             "porc_blank" =
+               if_else(str_detect(id_INE_mun, "-999"),
+                       round(100 * blank_ballots / valid_ballots, prec_round),
+                       porc_blank))
 
     if (short_version) {
 
