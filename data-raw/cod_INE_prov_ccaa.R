@@ -113,17 +113,17 @@ cod_INE_mun <-
 # ----- use data: rda -----
 
 usethis::use_data(cod_INE_prov_ccaa, overwrite = TRUE,
-                  compress = "gzip")
+                  compress = "xz")
 usethis::use_data(cod_INE_prov, overwrite = TRUE,
-                  compress = "gzip")
+                  compress = "xz")
 usethis::use_data(cod_INE_ccaa, overwrite = TRUE,
-                  compress = "gzip")
+                  compress = "xz")
 usethis::use_data(cod_INE_mun, overwrite = TRUE,
-                  compress = "gzip")
+                  compress = "xz")
 
 # ----- write_csv -----
 
-write_csv(cod_INE_mun, "./data/cod_INE_mun.csv")
+# write_csv(cod_INE_mun, "./data/cod_INE_mun.csv")
 
 
 

@@ -773,4 +773,4 @@ global_dict_parties <-
                      abbrev_candidacies == "UPN" ~ "#2a52be",
                      TRUE ~ NA_character_))
 usethis::use_data(global_dict_parties, overwrite = TRUE,
-                  compress = "gzip")
+                  compress = "xz")

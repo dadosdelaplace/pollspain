@@ -75,7 +75,7 @@ dates_elections_spain <-
 
 # ----- use data -----
 usethis::use_data(dates_elections_spain, overwrite = TRUE,
-                  compress = "gzip")
+                  compress = "xz")
 
 # ----- write_csv -----
 # write_csv(dates_elections_spain, "./data/csv/dates_elections_spain.csv")

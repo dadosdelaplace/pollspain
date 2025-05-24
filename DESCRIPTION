@@ -1,6 +1,6 @@
 Package: pollspain
 Title: A grammar for the analysis of electoral and poll data
-Date: 2025-05-03
+Date: 2025-05-24
 Version: 0.1.0
 Authors@R: c(
     person("Javier", "Álvarez-Liébana",
@@ -35,6 +35,7 @@ Imports:
     pollspaindata (>= 0.2.0),
     utils
 Suggests:
+    curl (>= 6.0.0),
     devtools (>= 2.4.5),
     ggplot2 (>= 3.4.4),
     knitr (>= 1.45),
