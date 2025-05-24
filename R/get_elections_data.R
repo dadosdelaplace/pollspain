@@ -394,6 +394,9 @@ get_election_data <-
                 suffix = c("", ".rm")) |>
       select(-contains("rm"))
 
+    # remove memory
+    rm(list = c("election_data", "ballots_data"))
+    gc()
 
     # Check summaries
     check_totals <-
@@ -671,6 +674,10 @@ aggregate_election_data <-
     }
     election_data <- election_nodup_data
 
+    # remove memory
+    rm(list = c("election_nodup_data"))
+    gc()
+
     # define factor levels
     hierarchy_levels <-
       factor(c("ccaa", "prov", "mun", "mun_district",
@@ -770,6 +777,7 @@ aggregate_election_data <-
       }
     }
 
+
     # join info ccaa-prov-mun from INE
     if (level != "all") {
 
@@ -790,6 +798,10 @@ aggregate_election_data <-
                everything())
 
     }
+
+    # remove memory
+    rm(list = c("election_data"))
+    gc()
 
     if (by_parties) {
       if (all(lengths(agg_data$id_candidacies) == 1)) {
@@ -1086,6 +1098,10 @@ summary_election_data <-
                               prec_round = prec_round,
                               verbose = verbose, short_version = FALSE)
 
+    # remove memory
+    rm(list = c("election_data"))
+    gc()
+
     if (verbose) {
 
       message(bgBlack(white("[x] Join information sources and last summaries ...\n")))
@@ -1199,6 +1215,9 @@ summary_election_data <-
           summary_data <- aux
 
         }
+        # remove memory
+        rm(list = c("aux"))
+        gc()
       }
     }
 
