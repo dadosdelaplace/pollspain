@@ -55,10 +55,12 @@ total ballots, number of polling stations and contextual sums.</p>
 <span>  by_parties <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  col_id_elec <span class="op">=</span> <span class="st">"id_elec"</span>,</span>
 <span>  col_id_poll_station <span class="op">=</span> <span class="st">"id_INE_poll_station"</span>,</span>
+<span>  col_id_mun <span class="op">=</span> <span class="st">"id_INE_mun"</span>,</span>
 <span>  cols_mun_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pop_res_mun"</span>, <span class="st">"census_counting_mun"</span><span class="op">)</span>,</span>
 <span>  col_id_candidacies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>id_prov <span class="op">=</span> <span class="st">"id_candidacies"</span>, id_nat <span class="op">=</span> <span class="st">"id_candidacies_nat"</span><span class="op">)</span>,</span>
 <span>  prec_round <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  short_version <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -97,6 +99,12 @@ uniquely identify poll stations. Defaults to
 <code>"id_INE_poll_station"</code>.</p></dd>
 
 
+<dt id="arg-col-id-mun">col_id_mun<a class="anchor" aria-label="anchor" href="#arg-col-id-mun"></a></dt>
+<dd><p>Column name in <code>election_data</code> to
+uniquely identify municipalities. Defaults to
+<code>"id_INE_mun"</code>.</p></dd>
+
+
 <dt id="arg-cols-mun-var">cols_mun_var<a class="anchor" aria-label="anchor" href="#arg-cols-mun-var"></a></dt>
 <dd><p>A vector of variable names that, in their raw
 version, are only available at the municipal level (or higher).
@@ -118,6 +126,12 @@ c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").</p></dd>
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>Flag to indicate whether detailed messages should
 be printed during execution. Defaults to <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg-short-version">short_version<a class="anchor" aria-label="anchor" href="#arg-short-version"></a></dt>
+<dd><p>Flag to indicate whether it should be returned
+a short version of the data (just key variables) or not.
+Defaults to <code>TRUE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -275,15 +289,15 @@ each level section.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Invalid 'level' argument,"district" is not allowed</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">aggregate_election_data</span><span class="op">(</span><span class="va">electoral_level</span>, level <span class="op">=</span> <span class="st">"district"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">aggregate_election_data</span><span class="op">(</span><span class="va">election_data</span>, level <span class="op">=</span> <span class="st">"district"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Invalid 'by_parties' flag: it must be logical, not character</span></span></span>
-<span class="r-in"><span><span class="fu">aggregate_election_data</span><span class="op">(</span><span class="va">electoral_level</span>, level <span class="op">=</span> <span class="st">"prov"</span>,</span></span>
+<span class="r-in"><span><span class="fu">aggregate_election_data</span><span class="op">(</span><span class="va">election_data</span>, level <span class="op">=</span> <span class="st">"prov"</span>,</span></span>
 <span class="r-in"><span>                        by_parties <span class="op">=</span> <span class="st">"yes"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Invalid parameters: col_id_candidacies should be matched with</span></span></span>
 <span class="r-in"><span><span class="co"># the variable names</span></span></span>
-<span class="r-in"><span><span class="fu">aggregate_election_data</span><span class="op">(</span><span class="va">electoral_level</span>, level <span class="op">=</span> <span class="st">"ccaa"</span>,</span></span>
+<span class="r-in"><span><span class="fu">aggregate_election_data</span><span class="op">(</span><span class="va">election_data</span>, level <span class="op">=</span> <span class="st">"ccaa"</span>,</span></span>
 <span class="r-in"><span>                        col_id_candidacies <span class="op">=</span> <span class="st">"wrong_id"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
