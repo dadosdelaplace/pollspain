@@ -23,6 +23,9 @@
 #' @param col_id_poll_station Column name in \code{ballots_data} to
 #' uniquely identify poll stations. Defaults to
 #' \code{"id_INE_poll_station"}.
+#' @param col_id_mun Column name in \code{election_data} to
+#' uniquely identify municipalities. Defaults to
+#' \code{"id_INE_mun"}.
 #' @param col_id_candidacies A named vector (with names "id_prov" and
 #' "id_nat") in which user provides the column names for the
 #' candidacies id at province level and national level. Defaults to
@@ -167,6 +170,7 @@ get_election_data <-
            election_data = NULL, ballots_data = NULL,
            col_id_elec = "id_elec",
            col_id_poll_station = "id_INE_poll_station",
+           col_id_mun = "id_INE_mun",
            col_id_candidacies = c("id_prov" = "id_candidacies",
                                   "id_nat" = "id_candidacies_nat"),
            prec_round = 3, short_version = TRUE, verbose = TRUE) {
@@ -185,6 +189,20 @@ get_election_data <-
 
     }
 
+    # for the moment, just congress election
+    if (!all(type_elec %in% c("congress", "senate"))) {
+
+      stop(red("Ups! The package is currently under development so, for the moment, it only allows access to congress and senate data."))
+
+    }
+
+    # check short_version
+    if (!is.logical(short_version) | is.na(short_version)) {
+
+      stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
+
+    }
+
     if (!is.null(election_data)) {
       if (!all(col_id_candidacies %in% names(ballots_data))) {
 
@@ -195,11 +213,12 @@ get_election_data <-
     # Check date
     if (!is.null(date)) {
 
-      date <- as_date(date)
-      if (any(is.na(date))) {
+      if (!all(str_detect(date, "^\\d{4}-\\d{2}-\\d{2}$")) | any(is.na(date))) {
 
         stop(red("Ups! If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
 
+      } else {
+        date <- as_date(date)
       }
     } else {
       if (!is.numeric(year)) {
@@ -381,7 +400,7 @@ get_election_data <-
       join_data |>
       summarise("sum_party_ballots" = sum(ballots),
                 "party_ballots" = unique(party_ballots),
-                .by = group_vars) |>
+                .by = all_of(group_vars)) |>
       filter(sum_party_ballots != party_ballots)
 
     if (nrow(check_totals) > 0) {
@@ -393,7 +412,7 @@ get_election_data <-
 
       join_data <-
         join_data |>
-        mutate("party_ballots" = sum(ballots), .by = group_vars) |>
+        mutate("party_ballots" = sum(ballots), .by = all_of(group_vars)) |>
         mutate("valid_ballots" = party_ballots + blank_ballots,
                "total_ballots" = valid_ballots + invalid_ballots,
                "turnout" = round(100 * total_ballots / census_counting_mun, prec_round),
@@ -413,15 +432,16 @@ get_election_data <-
 
       join_data <-
         join_data |>
-        select(.data[[col_id_elec]], type_elec, date_elec,
-               .data[[col_id_poll_station]],
-               id_INE_mun, ccaa, prov, mun, blank_ballots,
+        select(all_of(c(col_id_elec, "type_elec",
+                        col_id_poll_station,
+                        col_id_mun)),
+               ccaa, prov, mun, blank_ballots,
                invalid_ballots, party_ballots, valid_ballots,
                total_ballots, turnout, porc_valid, porc_invalid,
                porc_parties, porc_blank, pop_res_mun, census_counting_mun,
-               .data[[col_id_candidacies[["id_prov"]]]],
-               .data[[col_id_candidacies[["id_nat"]]]],
-               abbrev_candidacies, name_candidacies, ballots)
+               ballots,
+               all_of(c(col_id_candidacies[["id_prov"]],
+                        col_id_candidacies[["id_nat"]])))
     }
 
     # output
@@ -451,7 +471,6 @@ get_election_data <-
 #' "id_nat") in which user provides the column names for the
 #' candidacies id at province level and national level. Defaults to
 #' c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").
-#'
 #'
 #' @return A tibble with rows corresponding to the level of aggregation for
 #' each election, including the following variables:
@@ -542,15 +561,15 @@ get_election_data <-
 #'
 #' # Invalid 'level' argument,"district" is not allowed
 #'
-#' aggregate_election_data(electoral_level, level = "district")
+#' aggregate_election_data(election_data, level = "district")
 #'
 #' # Invalid 'by_parties' flag: it must be logical, not character
-#' aggregate_election_data(electoral_level, level = "prov",
+#' aggregate_election_data(election_data, level = "prov",
 #'                         by_parties = "yes")
 #'
 #' # Invalid parameters: col_id_candidacies should be matched with
 #' # the variable names
-#' aggregate_election_data(electoral_level, level = "ccaa",
+#' aggregate_election_data(election_data, level = "ccaa",
 #'                         col_id_candidacies = "wrong_id")
 #'
 #' }
@@ -560,10 +579,11 @@ aggregate_election_data <-
   function(election_data, level = "all", by_parties = TRUE,
            col_id_elec = "id_elec",
            col_id_poll_station = "id_INE_poll_station",
+           col_id_mun = "id_INE_mun",
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
            col_id_candidacies = c("id_prov" = "id_candidacies",
                                   "id_nat" = "id_candidacies_nat"),
-           prec_round = 3, verbose = TRUE) {
+           prec_round = 3, verbose = TRUE, short_version = TRUE) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
@@ -584,6 +604,13 @@ aggregate_election_data <-
         nrow(election_data) == 0 | ncol(election_data) == 0) {
 
       stop(red("Ups! `election_data` must be a tibble or data.frame whose number of rows and columns should be greater than 0."))
+
+    }
+
+    # check short_version
+    if (!is.logical(short_version) | is.na(short_version)) {
+
+      stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
 
     }
 
@@ -652,6 +679,15 @@ aggregate_election_data <-
                         "mun", "prov", "ccaa"),
              ordered = TRUE)
 
+    if (!(col_id_mun %in% names(election_data))) {
+
+      election_data <-
+        election_data |>
+        mutate(!!col_id_mun :=
+                 extract_code(.data[[col_id_poll_station]],
+                              level = "mun",
+                              full_cod = TRUE))
+    }
     # variables to be grouped (for general and mun variables)
     group_var <- group_var_mun <- col_id_elec
     if (level != "all") {
@@ -673,20 +709,6 @@ aggregate_election_data <-
 
         }
       }
-    }
-
-    if (any(names(election_data) == "id_INE_mun")) {
-
-      col_id_mun <- "id_INE_mun"
-
-    } else {
-
-      election_data <-
-        election_data |>
-        mutate("id_INE_mun" =
-                 extract_code(.data[[col_id_poll_station]],
-                              level = "mun", full_cod = TRUE))
-      col_id_mun <- "id_INE_mun"
     }
 
     if (!by_parties) {
@@ -729,18 +751,23 @@ aggregate_election_data <-
                              .data[[col_id_candidacies[["id_nat"]]]],
                              .keep_all = TRUE) |>
                     summarise("ballots" = sum(ballots, na.rm = TRUE),
-                              "id_candidacies" = list(unique(.data[[col_id_candidacies["id_prov"]]])),
-                              "id_candidacies_nat" = list(unique(.data[[col_id_candidacies["id_nat"]]])),
+                              "id_candidacies" = list(sort(unique(.data[[col_id_candidacies["id_prov"]]]))),
+                              "id_candidacies_nat" = list(sort(unique(.data[[col_id_candidacies["id_nat"]]]))),
                               .by = c(group_var, as.character(group_candidacies))),
-                  by = group_var) |>
-        left_join(election_data |>
-                    distinct(.data[[col_id_elec]], .data[[col_id_mun]],
-                             .keep_all = TRUE) |>
-                    summarise(across(cols_mun_var,
-                                     function(x) { sum(x, na.rm = TRUE) }),
-                              .by = group_var_mun),
-                  by = group_var_mun)
+                  by = group_var)
 
+      if (!short_version) {
+
+        agg_data <-
+          agg_data |>
+          left_join(election_data |>
+                      distinct(.data[[col_id_elec]], .data[[col_id_mun]],
+                               .keep_all = TRUE) |>
+                      summarise(across(cols_mun_var,
+                                       function(x) { sum(x, na.rm = TRUE) }),
+                                .by = group_var_mun),
+                    by = group_var_mun)
+      }
     }
 
     # join info ccaa-prov-mun from INE
@@ -885,7 +912,7 @@ aggregate_election_data <-
 #' # candidacies ballots, in a short version
 #' summary_all <-
 #'   summary_election_data(type_elec = "congress", year = 2023,
-#'                         date = "2016-06-26", short_version = TRUE,
+#'                         date = "2016-06-26",
 #'                         by_parties = FALSE)
 #'
 #' # Summary 2023 and 2016 election data at national level,
@@ -938,7 +965,9 @@ summary_election_data <-
   function(type_elec, year = NULL, date = NULL,
            election_data = NULL, ballots_data = NULL,
            candidacies_data = NULL,
-           col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
+           col_id_elec = "id_elec",
+           col_id_poll_station = "id_INE_poll_station",
+           col_id_mun = "id_INE_mun",
            prec_round = 3, short_version = TRUE, CERA_remove = FALSE,
            level = "all", by_parties = TRUE, filter_porc_ballots = NA,
            filter_candidacies = NA,
@@ -963,10 +992,31 @@ summary_election_data <-
 
     }
 
+    # for the moment, just congress election
+    if (!all(type_elec %in% c("congress", "senate"))) {
+
+      stop(red("Ups! The package is currently under development so, for the moment, it only allows access to congress and senate data."))
+
+    }
+
     # check filter_candidacies
     if (!is.na(filter_candidacies) & !is.character(filter_candidacies)) {
 
       stop(red("Ups! `filter_candidacies` argument should be NA or a string of characters."))
+
+    }
+
+    # check by_parties
+    if (!is.logical(by_parties) | is.na(by_parties)) {
+
+      stop(red("Ups! `by_parties` argument should be a TRUE/FALSE variable."))
+
+    }
+
+    # check by_parties
+    if (!is.logical(short_version) | is.na(short_version)) {
+
+      stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
 
     }
 
@@ -1030,10 +1080,11 @@ summary_election_data <-
       aggregate_election_data(level = level, by_parties = by_parties,
                               col_id_elec = col_id_elec,
                               col_id_poll_station = col_id_poll_station,
+                              col_id_mun = col_id_mun,
                               cols_mun_var = cols_mun_var,
                               col_id_candidacies = col_id_candidacies,
                               prec_round = prec_round,
-                              verbose = verbose)
+                              verbose = verbose, short_version = FALSE)
 
     if (verbose) {
 
@@ -1062,7 +1113,54 @@ summary_election_data <-
 
       summary_data  <-
         summary_data |>
-        select(-any_of(c("ballots_1", "ballots_2", "n_poll_stations", cols_mun_var)))
+        select(-any_of(c("ballots_1", "ballots_2", "n_poll_stations",
+                         cols_mun_var)), -contains("pop_res"))
+    }
+
+    if (by_parties) {
+
+      id_party <- if_else(level == "all", col_id_candidacies[["id_nat"]],
+                          col_id_candidacies[["id_prov"]])
+
+      summary_data <-
+        summary_data |>
+        left_join(global_dict_parties |>
+                    select(-color) |>
+                    filter(id_elec %in% unique(summary_data |> pull(col_id_elec))) |>
+                    distinct(.data[[col_id_elec]], .data[[id_party]], .keep_all = TRUE),
+                  by = c("id_elec" = col_id_elec, id_party),
+                  suffix = c("", ".rm")) |>
+          select(-contains(".rm")) |>
+          relocate(col_abbrev_candidacies, .after = id_party)
+
+      if (level == "all") {
+
+        summary_data <-
+          summary_data |>
+          select(-any_of(c("name_candidacies", col_id_candidacies[["id_prov"]]))) |>
+          rename(id_candidacies = col_id_candidacies[["id_nat"]],
+                 name_candidacies = name_candidacies_nat) |>
+          relocate(name_candidacies, .after = col_abbrev_candidacies)
+
+      } else {
+
+        summary_data <-
+          summary_data |>
+          select(-any_of(c("name_candidacies_nat", col_id_candidacies[["id_nat"]]))) |>
+          relocate(name_candidacies, .after = col_abbrev_candidacies)
+
+      }
+    }
+
+    if (short_version) {
+
+      summary_data <-
+        summary_data |>
+        select(-contains("census_counting"), -contains("pop_res"),
+               -contains("id_INE"),
+               -any_of(c("ballots_1", "ballots_2", "n_poll_stations")),
+               -any_of(c(col_id_candidacies[["id_nat"]], col_id_candidacies[["id_prov"]])))
+
     }
 
     if (!is.na(filter_porc_ballots)) {

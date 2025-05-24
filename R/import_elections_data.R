@@ -845,13 +845,12 @@ import_candidacies_data <-
 
     # Check date
     if (!is.null(date)) {
-
-      date <- as_date(date)
-
-      if (any(is.na(date))) {
+      if (!all(str_detect(date, "^\\d{4}-\\d{2}-\\d{2}$")) | any(is.na(date))) {
 
         stop(red("Ups! If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
 
+      } else {
+        date <- as_date(date)
       }
     } else {
       if (!is.numeric(year)) {

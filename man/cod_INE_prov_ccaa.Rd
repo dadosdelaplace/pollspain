@@ -29,6 +29,6 @@ of Spanish provinces and regions. Last update: 2023/02/25
 data(cod_INE_prov_ccaa)
 }
 \author{
-Javier Álvarez-Liébana and David Pereiro-Pol.
+Javier Alvarez-Liebana and David Pereiro-Pol.
 }
 \keyword{datasets}

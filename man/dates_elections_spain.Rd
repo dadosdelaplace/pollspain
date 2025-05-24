@@ -44,6 +44,6 @@ elections from 1980 onwards have been provided. Last update:
 data(dates_elections_spain)
 }
 \author{
-Javier Álvarez-Liébana and David Pereiro-Pol.
+Javier Alvarez-Liebana and David Pereiro-Pol.
 }
 \keyword{datasets}

@@ -10,10 +10,12 @@ aggregate_election_data(
   by_parties = TRUE,
   col_id_elec = "id_elec",
   col_id_poll_station = "id_INE_poll_station",
+  col_id_mun = "id_INE_mun",
   cols_mun_var = c("pop_res_mun", "census_counting_mun"),
   col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat"),
   prec_round = 3,
-  verbose = TRUE
+  verbose = TRUE,
+  short_version = TRUE
 )
 }
 \arguments{
@@ -38,6 +40,10 @@ identify the elections. Defaults to \code{"id_elec"}.}
 uniquely identify poll stations. Defaults to
 \code{"id_INE_poll_station"}.}
 
+\item{col_id_mun}{Column name in \code{election_data} to
+uniquely identify municipalities. Defaults to
+\code{"id_INE_mun"}.}
+
 \item{cols_mun_var}{A vector of variable names that, in their raw
 version, are only available at the municipal level (or higher).
 Defaults to \code{c("pop_res_mun", "census_counting_mun")}.}
@@ -52,6 +58,10 @@ c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
+
+\item{short_version}{Flag to indicate whether it should be returned
+a short version of the data (just key variables) or not.
+Defaults to \code{TRUE}.}
 }
 \value{
 A tibble with rows corresponding to the level of aggregation for
@@ -145,15 +155,15 @@ mun_agg <-
 
 # Invalid 'level' argument,"district" is not allowed
 
-aggregate_election_data(electoral_level, level = "district")
+aggregate_election_data(election_data, level = "district")
 
 # Invalid 'by_parties' flag: it must be logical, not character
-aggregate_election_data(electoral_level, level = "prov",
+aggregate_election_data(election_data, level = "prov",
                         by_parties = "yes")
 
 # Invalid parameters: col_id_candidacies should be matched with
 # the variable names
-aggregate_election_data(electoral_level, level = "ccaa",
+aggregate_election_data(election_data, level = "ccaa",
                         col_id_candidacies = "wrong_id")
 
 }

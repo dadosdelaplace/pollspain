@@ -26,7 +26,7 @@
 #'   \item \code{topic}: topic of referendums (\code{cod_elec = "01"})
 #' }
 #'
-#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
+#' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #'
 #' @source Data extracted from
 #' \href{https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/}{Spanish Ministry of Interior}
@@ -53,7 +53,7 @@
 #'   \item \code{prov}: name of province
 #' }
 #'
-#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
+#' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #'
 #' @source Data extracted from
 #' \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
@@ -78,7 +78,7 @@
 #'   \item \code{prov}: name of province
 #' }
 #'
-#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
+#' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #'
 #' @source Data extracted from
 #' \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
@@ -103,7 +103,7 @@
 #'   \item \code{ccaa}: name of regions
 #' }
 #'
-#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
+#' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #'
 #' @source Data extracted from
 #' \href{https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.htm}{INE}
@@ -134,7 +134,7 @@
 #'   \item \code{mun}: name of municipalities
 #' }
 #'
-#' @author Javier Álvarez-Liébana and David Pereiro-Pol.
+#' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #'
 #' @source Data extracted from \href{https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx}{INE}
 #' @docType data
@@ -148,6 +148,33 @@
 "cod_INE_mun"
 
 
-
+#' @title pending
+#'
+#' @description pending
+#'
+#' @format A data frame with pending:
+#' \itemize{
+#'   \item \code{cod_INE_ccaa}: code of regions
+#'   \item \code{ccaa}: name of regions
+#'   \item \code{cod_INE_prov}: code of provinces
+#'   \item \code{prov}: name of provinces
+#'   \item \code{cod_INE_mun}: code of municipalities
+#'   \item \code{cd_INE_mun}: check digit (see \href{https://www.ine.es/daco/daco42/codmun/codmun00i.htm}{documentation})
+#'   \item \code{mun}: name of municipalities
+#' }
+#'
+#' @author Irene Bosque-Gala, Mafalda Gonzalez-Gonzalez and Javier
+#' Alvarez-Liebana.
+#'
+#' @source Data ...
+#' @docType data
+#' @keywords datasets
+#' @name global_dict_parties
+#' @usage data(global_dict_parties)
+#'
+#' @examples
+#' # Load data
+#' data(global_dict_parties)
+"global_dict_parties"
 
 

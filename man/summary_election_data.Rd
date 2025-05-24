@@ -14,6 +14,7 @@ summary_election_data(
   candidacies_data = NULL,
   col_id_elec = "id_elec",
   col_id_poll_station = "id_INE_poll_station",
+  col_id_mun = "id_INE_mun",
   prec_round = 3,
   short_version = TRUE,
   CERA_remove = FALSE,
@@ -63,6 +64,10 @@ identify the elections. Defaults to \code{"id_elec"}.}
 \item{col_id_poll_station}{Column name in \code{ballots_data} to
 uniquely identify poll stations. Defaults to
 \code{"id_INE_poll_station"}.}
+
+\item{col_id_mun}{Column name in \code{election_data} to
+uniquely identify municipalities. Defaults to
+\code{"id_INE_mun"}.}
 
 \item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
@@ -177,7 +182,7 @@ each election, including the following variables:
 # candidacies ballots, in a short version
 summary_all <-
   summary_election_data(type_elec = "congress", year = 2023,
-                        date = "2016-06-26", short_version = TRUE,
+                        date = "2016-06-26",
                         by_parties = FALSE)
 
 # Summary 2023 and 2016 election data at national level,

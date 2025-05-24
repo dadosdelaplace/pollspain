@@ -13,6 +13,7 @@ get_election_data(
   ballots_data = NULL,
   col_id_elec = "id_elec",
   col_id_poll_station = "id_INE_poll_station",
+  col_id_mun = "id_INE_mun",
   col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat"),
   prec_round = 3,
   short_version = TRUE,
@@ -53,6 +54,10 @@ identify the elections. Defaults to \code{"id_elec"}.}
 \item{col_id_poll_station}{Column name in \code{ballots_data} to
 uniquely identify poll stations. Defaults to
 \code{"id_INE_poll_station"}.}
+
+\item{col_id_mun}{Column name in \code{election_data} to
+uniquely identify municipalities. Defaults to
+\code{"id_INE_mun"}.}
 
 \item{col_id_candidacies}{A named vector (with names "id_prov" and
 "id_nat") in which user provides the column names for the
