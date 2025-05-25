@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>How to use utils functions • pollspain</title>
+<title>How to use utils functions? • pollspain</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="How to use utils functions">
+<meta property="og:title" content="How to use utils functions?">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/utils.html">How to use utils functions</a></li>
+<li><a class="dropdown-item" href="../articles/about-data.html">About data</a></li>
+    <li><a class="dropdown-item" href="../articles/utils.html">How to use utils functions?</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -57,11 +58,11 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>How to use utils functions</h1>
+      <h1>How to use utils functions?</h1>
                         <h4 data-toc-skip class="author">Javier Álvarez
 Liébana</h4>
             
-            <h4 data-toc-skip class="date">2025-05-24</h4>
+            <h4 data-toc-skip class="date">2025-05-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dadosdelaplace/pollspain/blob/main/vignettes/utils.Rmd" class="external-link"><code>vignettes/utils.Rmd</code></a></small>
       <div class="d-none name"><code>utils.Rmd</code></div>
@@ -86,18 +87,19 @@ functions</strong></span> in the <code>utils.R</code> script:</p>
 <div class="section level2">
 <h2 id="convert-type-of-election-to-code">Convert type of election to code<a class="anchor" aria-label="anchor" href="#convert-type-of-election-to-code"></a>
 </h2>
-<p>Según los datos extraídos de la <a href="https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/Spanish" class="external-link">web
-del Ministerio de Interior en España</a> cada tipo de elección tiene
-asociado en las bases de datos un código alfanumérico concreto: “01”
-(referendum), “02” (congress), “03” (senate), “04” (local elections),
-“06” (cabildo - Canarian council - elections) y “07” (European Parlament
-elections).</p>
-<p>Sin embargo, de cara al usuario, es mucho más sencillo proporcionar
-órdenes lexicográficamente explícitas, por ejemplo escribiendo
-“congress” para las elecciones al congreso o “senate” para elecciones al
-senado. La función <code><a href="../reference/type_to_code_election.html">type_to_code_election()</a></code> nos permite
-hacer esa conversión de la palabra proporcionada por el usuario al
-código que necesitaremos en nuestras bases de datos.</p>
+<p>According to the data extracted from the <a href="https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/Spanish" class="external-link">website
+of the Spanish Ministry of the Interior</a>, each <strong>type of
+election is associated in the databases with a specific alphanumeric
+code</strong>: <code>"01"</code> (referendum), <code>"02"</code>
+(congress), <code>"03"</code> (senate), <code>"04"</code> (local
+elections), <code>"06"</code> (cabildo - Canarian council - elections),
+and <code>"07"</code> (European Parliament elections). However, for
+users, it’s much simpler to provide <strong>lexically explicit
+terms</strong> — for example, writing <code>"congress"</code> for
+congressional elections or <code>"senate"</code> for senatorial
+elections. The <code><a href="../reference/type_to_code_election.html">type_to_code_election()</a></code> function allows us
+to convert the user-provided term into the corresponding code required
+by our databases.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/type_to_code_election.html">type_to_code_election</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "02"</span></span>
@@ -109,46 +111,42 @@ código que necesitaremos en nuestras bases de datos.</p>
 <div class="section level2">
 <h2 id="extract-region-codes">Extract region codes<a class="anchor" aria-label="anchor" href="#extract-region-codes"></a>
 </h2>
-<p>De la misma manera, el usuario tiene a su disposición en muchas de
-las funciones del paquete la opción de agregar bajo distintos niveles
-geográficos, que el usuario puede proporcionar fácilmente como “all”,
-“ccaa”, “prov”, “mun”, “mun_district”, “sec” (census tract) and
-“poll_station”. Sin embargo, a nivel interno, cada mesa electoral viene
-geolocalizado por una colección de códigos proporcionados por el
-Instituto Nacional de Estadística (INE) de España</p>
-<p>Extract region codes (for aggregation levels ccaa, prov, mun,
-municipal districts and census sections) for a given poll station code
-provided by Spanish Ministry of Interior (MIR) and Spanish Statistical
-Office (INE). La función <code><a href="../reference/extract_code.html">extract_code()</a></code> nos permite, dado
-un código entera de una mesa eletoral, extraer el código al nivel de
-desagregación pedido.</p>
-<p>Por ejemplo vamos a aplicar la función para la mesa B de la sección
-censal <code>"004"</code> del primer distrito municipal del municio de
-Adra (<code>"003"</code>) de la provincia de Almería
-(<code>"04"</code>), perteneciente a la comunidad autonónoma de
-Andalucía (<code>"01"</code>).</p>
+<p>Similarly, many of the package’s functions allow the user to
+<strong>aggregate data at different geographic levels</strong>, which
+can be easily specified as <code>"all"</code>, <code>"ccaa"</code>,
+<code>"prov"</code>, <code>"mun"</code>, <code>"mun_district"</code>,
+<code>"sec"</code> (census tract), and <code>"poll_station"</code>.
+Internally, however, each polling station is geolocated using a set of
+codes provided by Spain’s National Statistics Institute (INE). The
+<code><a href="../reference/extract_code.html">extract_code()</a></code> function enables us to <strong>extract the
+code corresponding to the requested level of disaggregation from a full
+polling station code</strong>.</p>
+<p>For example, we can apply the function to polling station B of census
+tract <code>"004"</code> within the first municipal district of the
+municipality of Adra (<code>"003"</code>), located in the province of
+Almería (<code>"04"</code>), which belongs to the autonomous community
+of Andalusia (<code>"01"</code>).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">id_INE_poll_station</span> <span class="op">&lt;-</span> <span class="st">"01-04-003-01-004-B"</span></span></code></pre></div>
-<p>¿Cuál sería el código identificar del municipio al que pertenece la
-mesa electoral?</p>
+<p>What would be the municipality code corresponding to the polling
+station?</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="va">id_INE_poll_station</span>, level <span class="op">=</span> <span class="st">"mun"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "003"</span></span></code></pre></div>
-<p>¿Y la provincia?</p>
+<p>What about the province code?</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="va">id_INE_poll_station</span>, level <span class="op">=</span> <span class="st">"prov"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "04"</span></span></code></pre></div>
-<p>¿Y el código del distrito municipal?</p>
+<p>What about the municipal district?</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="va">id_INE_poll_station</span>, level <span class="op">=</span> <span class="st">"mun_district"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "01"</span></span></code></pre></div>
-<p>Si observas por defecto solo proporciona el código al nivel de
-agregación pedido pero fijando <code>full_cod = TRUE</code> se puede
-obtener también el código completo, incluyendo el código no solo de
-dicho nivel sino de todos sus niveles superiores (por ejemplo, todas las
-provincias tienen un municipio con código <code>"001"</code>, por lo que
-necesitamos su código de provincia y de comunidad autónoma para
-identificarlo de manera unívoca)</p>
+<p>By default, it only returns the code at the requested aggregation
+level, but if you set <code>full_cod = TRUE</code>, you can obtain the
+full code, including not only the code for that level but also for all
+higher levels. For example, every province has a municipality with the
+code <code>"001"</code>, so we need the corresponding province and
+autonomous community codes to uniquely identify it.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="va">id_INE_poll_station</span>, level <span class="op">=</span> <span class="st">"mun"</span>, full_cod <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "01-04-003"</span></span>
@@ -158,22 +156,17 @@ identificarlo de manera unívoca)</p>
 <span><span class="co">#&gt; [1] "01-04-003-01"</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="recoding-nombres-de-municipios">Recoding nombres de municipios<a class="anchor" aria-label="anchor" href="#recoding-nombres-de-municipios"></a>
+<h2 id="recoding-municipality-names">Recoding municipality names<a class="anchor" aria-label="anchor" href="#recoding-municipality-names"></a>
 </h2>
-<p>A lo largo de los años se han producido diferentes procesos de fusión
-de municipios en España, por lo que no en todas las elecciones podemos
-encontrar los mismos municipios ni asociados a los mismos códigos
-identificativos. Con el fin de unificar y estandarizar los resultados
-proporcionados al usuario, todas las tablas proporcionadas hacen
-referencia a la última recodificación de municipios del INE (última
-actualización: 2023).</p>
-<p>La función auxiliar <code>recod_mun()</code> proporciona de manera
-transparente la recodificación realizada, reasignado los códigos de
-municipios fusionados.</p>
-</div>
-<div class="section level2">
-<h2 id="recoding-parties">Recoding parties<a class="anchor" aria-label="anchor" href="#recoding-parties"></a>
-</h2>
+<p>Over the years, various municipal mergers have taken place in Spain,
+which means that not all elections feature the same set of
+municipalities or the same identifying codes. In order to unify and
+standardize the results provided to users, all output tables refer to
+the most recent municipality recoding by the Spanish National Statistics
+Institute (INE) (latest update: 2023). The helper function
+<code>recod_mun()</code> transparently returns the updated code based on
+that recoding, reassigning codes for merged municipalities
+accordingly.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -186,7 +179,7 @@ municipios fusionados.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

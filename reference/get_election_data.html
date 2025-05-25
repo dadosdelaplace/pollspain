@@ -15,7 +15,7 @@ for multiple elections at once."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,7 +26,8 @@ for multiple elections at once."></head><body>
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/utils.html">How to use utils functions</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/about-data.html">About data</a></li>
+    <li><a class="dropdown-item" href="../articles/utils.html">How to use utils functions?</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -272,49 +273,11 @@ each poll station.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Correct examples</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example for a given year</span></span></span>
-<span class="r-in"><span><span class="co"># Congress elections in year = 2016 (2016-06-26)</span></span></span>
-<span class="r-in"><span><span class="va">elections_data_2016</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">get_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2016-06-26</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies and ballots data (at poll station level) ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">A short version was asked (if you want all variables, run with `short_version = FALSE`)</span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example for a vector of years</span></span></span>
-<span class="r-in"><span><span class="va">elections_data_2008_2016</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">get_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2008</span>, <span class="fl">2016</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2008-03-09</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2016-06-26</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies and ballots data (at poll station level) ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">A short version was asked (if you want all variables, run with `short_version = FALSE`)</span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example for a given date</span></span></span>
-<span class="r-in"><span><span class="co"># Congress elections in date = "2023-07-24" in a long version</span></span></span>
-<span class="r-in"><span><span class="va">elections_data_2023</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">get_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, date <span class="op">=</span> <span class="st">"2023-07-24"</span>,</span></span>
-<span class="r-in"><span>                    short_version <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2023-07-24</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies and ballots data (at poll station level) ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Congress elections in 2008 (2008-03-09) and 2016 (2016-06-26),</span></span></span>
-<span class="r-in"><span><span class="co"># and "2023-07-24" and "1989-10-29"</span></span></span>
-<span class="r-in"><span><span class="va">elections_data_multiple</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span><span class="co"># Congress elections in year 2008, 2016 and "2023-07-24"</span></span></span>
+<span class="r-in"><span><span class="co"># in a short version</span></span></span>
+<span class="r-in"><span><span class="va">elections_data</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu">get_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2008</span>, <span class="fl">2016</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                    date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-07-24"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                    date <span class="op">=</span> <span class="st">"2023-07-24"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2008-03-09</span></span>
@@ -326,8 +289,21 @@ each poll station.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">A short version was asked (if you want all variables, run with `short_version = FALSE`)</span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example usage providing external tables with different</span></span></span>
-<span class="r-in"><span><span class="co"># column names</span></span></span>
+<span class="r-in"><span><span class="co"># Congress elections in 2008 and "1989-10-29"</span></span></span>
+<span class="r-in"><span><span class="co"># in a long version</span></span></span>
+<span class="r-in"><span><span class="va">elections_data</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">get_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2008</span>,</span></span>
+<span class="r-in"><span>                    date <span class="op">=</span> <span class="st">"1989-10-29"</span>, short_version <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2008-03-09</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 1989-10-29</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies and ballots data (at poll station level) ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">Be careful! Some poll stations does not match individual ballots with summaries provided by MIR. The discrepancies were resolved by using votes by candidacies.</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example usage providing external tables</span></span></span>
 <span class="r-in"><span><span class="va">election_data</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="import_poll_station_data.html">import_poll_station_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>invent_1 <span class="op">=</span> <span class="va">id_elec</span>, invent_2 <span class="op">=</span> <span class="va">id_INE_poll_station</span><span class="op">)</span></span></span>
@@ -344,15 +320,12 @@ each poll station.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... Please wait, the volume of data downloaded and the internet connection may take a few seconds</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">A short version was asked (if you want all variables, run with `short_version = FALSE`)</span></span>
 <span class="r-in"><span><span class="va">join_data</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">get_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2016</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">get_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>,</span></span>
 <span class="r-in"><span>                    election_data <span class="op">=</span> <span class="va">election_data</span>,</span></span>
 <span class="r-in"><span>                    ballots_data <span class="op">=</span> <span class="va">ballots_data</span>,</span></span>
 <span class="r-in"><span>                    col_id_elec <span class="op">=</span> <span class="st">"invent_1"</span>,</span></span>
 <span class="r-in"><span>                    col_id_poll_station <span class="op">=</span> <span class="st">"invent_2"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import poll station data ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">   ... congress elections on 2016-06-26</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import candidacies and ballots data (at poll station level) ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
@@ -400,7 +373,7 @@ each poll station.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

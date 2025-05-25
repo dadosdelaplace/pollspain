@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/utils.html">How to use utils functions</a></li>
+<li><a class="dropdown-item" href="articles/about-data.html">About data</a></li>
+    <li><a class="dropdown-item" href="articles/utils.html">How to use utils functions?</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -84,45 +85,43 @@
 <p>returns a <span class="hl"><strong>summary of election results aggregated at the administrative level</strong></span>. This includes both general data (blank votes, turnout, etc) and <strong>ballots by each candidacy</strong>. The available <span class="hl"><strong>levels</strong></span> (<code>level</code>) are: <code>"all"</code>, <code>"ccaa"</code> (autonomous communities), <code>"prov"</code> (province), <code>"mun"</code> (municipality), <code>"mun_district"</code> (district), <code>"sec"</code> (census tract), and <code>"poll_station"</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Summary election data at ccaa level for both elections in 2023 and 2016</span></span>
-<span><span class="va">summary_data_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/summary_election_data.html">summary_election_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span></span>
+<span><span class="va">summary_data_all</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="reference/summary_election_data.html">summary_election_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>, date <span class="op">=</span> <span class="st">"2016-06-26"</span><span class="op">)</span></span>
 <span><span class="va">summary_data_all</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">#&gt; # A tibble: 59 × 7</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;    id_elec       id_candidacies_nat ballots blank_ballots invalid_ballots</span></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;    &lt;glue&gt;        &lt;chr&gt;                &lt;dbl&gt;         &lt;dbl&gt;           &lt;dbl&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;  1 02-2023-07-24 000001               46053        200682          264382</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;  2 02-2023-07-24 000002             7821777        200682          264382</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;  3 02-2023-07-24 000003               23289        200682          264382</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;  4 02-2023-07-24 000004                 874        200682          264382</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt;  5 02-2023-07-24 000005             8161117        200682          264382</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;  6 02-2023-07-24 000006             3057068        200682          264382</span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;  7 02-2023-07-24 000007              169240        200682          264382</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt;  8 02-2023-07-24 000008                 263        200682          264382</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt;  9 02-2023-07-24 000009               23421        200682          264382</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 10 02-2023-07-24 000010             3044983        200682          264382</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt;    party_ballots porc_candidacies_valid</span></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt;            &lt;dbl&gt;                  &lt;dbl&gt;</span></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt;  1      24487589                  0.188</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt;  2      24487589                 31.9  </span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt;  3      24487589                  0.095</span></span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt;  4      24487589                  0.004</span></span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt;  5      24487589                 33.3  </span></span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt;  6      24487589                 12.5  </span></span>
-<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt;  7      24487589                  0.691</span></span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt;  8      24487589                  0.001</span></span>
-<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt;  9      24487589                  0.096</span></span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; 10      24487589                 12.4  </span></span>
-<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt; # ℹ 49 more rows</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 12</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;   id_elec       blank_ballots invalid_ballots party_ballots valid_ballots</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;   &lt;glue&gt;                &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; 1 02-2016-06-26        179081          225504      23874674      24053755</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; 2 02-2016-06-26        179081          225504      23874674      24053755</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; 3 02-2016-06-26        179081          225504      23874674      24053755</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; 4 02-2023-07-24        200682          264382      24487589      24688271</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 5 02-2023-07-24        200682          264382      24487589      24688271</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 6 02-2023-07-24        200682          264382      24487589      24688271</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;   total_ballots abbrev_candidacies name_candidacies                  ballots</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt;           &lt;dbl&gt; &lt;chr&gt;              &lt;chr&gt;                               &lt;dbl&gt;</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 1      24279259 PP                 PARTIDO POPULAR                   7941236</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 2      24279259 PSOE               PARTIDO SOCIALISTA OBRERO ESPANOL 5443846</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 3      24279259 PODEMOS            PODEMOS                           3227123</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 4      24952653 PP                 PARTIDO POPULAR                   8161117</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; 5      24952653 PSOE               PARTIDO SOCIALISTA OBRERO ESPANOL 7821777</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 6      24952653 VOX                VOX                               3057068</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt;   porc_candidacies_parties porc_candidacies_valid porc_candidacies_census</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt;                      &lt;dbl&gt;                  &lt;dbl&gt;                   &lt;dbl&gt;</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; 1                     33.3                   33.0                   23.0 </span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; 2                     22.8                   22.6                   15.7 </span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; 3                     13.5                   13.4                    9.33</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; 4                     33.3                   33.1                   23.2 </span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; 5                     31.9                   31.7                   22.3 </span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; 6                     12.5                   12.4                    8.70</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Summary election data, aggregating candidacies ballots at prov level</span></span>
 <span><span class="va">summary_data_prov_parties</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="reference/summary_election_data.html">summary_election_data</a></span><span class="op">(</span><span class="st">"congress"</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2008</span>, <span class="fl">2023</span><span class="op">)</span>,</span>
-<span>                        level <span class="op">=</span> <span class="st">"prov"</span>, by_parties <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">summary_data_prov_parties</span>, <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/summary_election_data.html">summary_election_data()</a></code> is a <strong>user-friendly combination</strong> of <code><a href="reference/get_election_data.html">get_election_data()</a></code> (merges different data sources at the polling station level) and <code><a href="reference/aggregate_election_data.html">aggregate_election_data()</a></code> (aggregates the data). See <a href="https://javieralvarezliebana.es/pollspain/#other-functions" class="external-link"><strong>some use cases and tutorials</strong></a>.</p>
+<span>  <span class="fu"><a href="reference/summary_election_data.html">summary_election_data</a></span><span class="op">(</span><span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>, date <span class="op">=</span> <span class="st">"2016-06-26"</span>, level <span class="op">=</span> <span class="st">"prov"</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="reference/summary_election_data.html">summary_election_data()</a></code> is a <strong>user-friendly combination</strong> of <code><a href="reference/get_election_data.html">get_election_data()</a></code> (merges different data sources at the polling station level) and <code><a href="reference/aggregate_election_data.html">aggregate_election_data()</a></code> (aggregates the data). See <a href="https://javieralvarezliebana.es/pollspain/#tutorials" class="external-link"><strong>some use cases and tutorials</strong></a>.</p>
 <details><summary>
 ⚠️ About municipalities
-</summary><p>The municipality data (names and codes) were <strong>extracted from the version published by the National Statistics Institute (INE) on February 6, 2025</strong>. The configuration of municipalities from previous years has been adapted to the most recent setup, recoding cases where municipalities have merged or disappeared.</p>
-<p>Data extracted from <a href="https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx" class="external-link uri">https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx</a></p>
+</summary><p>The municipality data (names and codes) were <strong>extracted from the version published by the National Statistics Institute (INE) on February 6, 2025</strong>. Over the years, various municipal mergers have taken place in Spain, which means that not all elections feature the same set of municipalities or the same identifying codes. In order to unify and standardize the results provided to users, all output tables refer to the most recent municipality recoding by the Spanish National Statistics Institute (INE). The helper function <code>recod_mun()</code> transparently returns the updated code based on that recoding, reassigning codes for merged municipalities accordingly.</p>
+Data extracted from <a href="https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx" class="external-link uri">https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx</a>.
 </details><details><summary>
 ⚠️ About CERA
 </summary><p>According to the National Statistics Institute (INE) «the electoral roll contains the registration of those who meet the requirements to be voters and are not definitively or temporarily deprived of the right to vote. The electoral roll is composed of:</p>
@@ -131,7 +130,7 @@
 <li>The <strong>electoral roll of Spanish citizens residing abroad (CERA)</strong>.</li>
 </ul>
 <p>The electoral roll of residents in Spain who are nationals of countries with Agreements for municipal elections (CERE Agreements), and the electoral roll of citizens of the European Union residing in Spain for municipal and European Parliament elections (CERE EU)».</p>
-<p>Los datos relativos a CERA se han agregado a nivel nacional, comunidad autónoma y provincial. …</p>
+<p><strong>CERA-related data is provided at the provincial constituency level</strong>. These votes are aggregated with the rest when <code>level = "all"</code>, <code>level = "ccaa"</code>, or <code>level = "prov"</code>. At any lower level of aggregation, 52 additional rows—one for each province—are included (for example, when aggregating data at the municipal level, the result includes as many rows as there are municipalities plus 52 «CERA municipalities»).</p>
 </details>
 </div>
 <div class="section level3">
@@ -140,14 +139,6 @@
 </div>
 <div class="section level3">
 <h3 id="surveys-summaries">Surveys summaries<a class="anchor" aria-label="anchor" href="#surveys-summaries"></a>
-</h3>
-</div>
-<div class="section level3">
-<h3 id="estimating-electoral-surveys">Estimating electoral surveys<a class="anchor" aria-label="anchor" href="#estimating-electoral-surveys"></a>
-</h3>
-</div>
-<div class="section level3">
-<h3 id="simulating-electoral-results">Simulating electoral results<a class="anchor" aria-label="anchor" href="#simulating-electoral-results"></a>
 </h3>
 </div>
 <div class="section level3">
@@ -165,8 +156,30 @@
 </div>
 </div>
 <div class="section level2">
+<h2 id="about-data">About data<a class="anchor" aria-label="anchor" href="#about-data"></a>
+</h2>
+<p>This package uses data collected from the following sources:</p>
+<ul>
+<li><p>Spanish electoral data downloaded from <a href="https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/" class="external-link"><strong>repository of the Spanish Ministry of the Interior</strong></a>.</p></li>
+<li><p>Worldwide electoral data downloaded from <a href="https://cses.org/data-download/" class="external-link"><strong>Comparative Study of Electoral Systems (CSES)</strong></a> and <a href="https://electiondataarchive.org/" class="external-link"><strong>Election Data Archive (ICPSR)</strong></a></p></li>
+<li><p>Survey data download from Wikipedia links (<a href="https://en.wikipedia.org/wiki/Opinion_polling_for_the_2023_Spanish_general_election" class="external-link"><strong>example</strong></a>).</p></li>
+<li><p>Seat allocation methods checked in the <a href="https://www.idea.int/data-tools/data/electoral-system-design" class="external-link"><strong>Electoral System Design Database (International IDEA)</strong></a></p></li>
+</ul>
+<p>See more details about data structure at <a href="https://javieralvarezliebana.es/pollspain/articles/about-data.html" class="external-link uri">https://javieralvarezliebana.es/pollspain/articles/about-data.html</a></p>
+</div>
+<div class="section level2">
 <h2 id="tutorials">Tutorials<a class="anchor" aria-label="anchor" href="#tutorials"></a>
 </h2>
+<ul>
+<li><p><a href="https://javieralvarezliebana.es/pollspain/articles/utils.html" class="external-link"><strong>How to use utils functions?</strong></a></p></li>
+<li><p><a href="..."><strong>Import raw election and survey files</strong></a></p></li>
+<li><p><a href="..."><strong>Getting election summaries</strong></a></p></li>
+<li><p><a href="..."><strong>Creating electoral maps (pollspain + mapSpain)</strong></a></p></li>
+<li><p><a href="..."><strong>Linking income data to electoral results (pollspain + ineAtlas)</strong></a></p></li>
+<li><p><a href="..."><strong>About seat allocation methods</strong></a></p></li>
+<li><p><a href="..."><strong>Getting survey summaries</strong></a></p></li>
+<li><p><a href="..."><strong>About survey house effects</strong></a></p></li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="other-functions">Other functions<a class="anchor" aria-label="anchor" href="#other-functions"></a>
@@ -184,8 +197,8 @@
 <span><span class="fu"><a href="reference/extract_code.html">extract_code</a></span><span class="op">(</span><span class="st">"01-04-003-01-004-B"</span>, level <span class="op">=</span> <span class="st">"mun"</span>, full_cod <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "01-04-003"</span></span></code></pre></div>
 <ul>
-<li><p><span class="hl"><strong>Import raw data</strong></span>: functions starting with <code>import_..._data()</code> (code can be found in <code>import_elections_data.R</code> file) are aimed at importing and preprocessing as raw as possible the <code>.DAT</code> election files from the files available in the <a href="https://github.com/dadosdelaplace/pollspaindata" class="external-link">pollspaindata package</a>. See <a href="..."><strong>more examples about how to use them</strong></a>.</p></li>
-<li><p><span class="hl"><strong>Recoding candidacies</strong></span>:</p></li>
+<li>
+<span class="hl"><strong>Import raw data</strong></span>: functions starting with <code>import_..._data()</code> (code can be found in <code>import_elections_data.R</code> file) are aimed at importing and preprocessing as raw as possible the <code>.DAT</code> election files from the files available in the <a href="https://github.com/dadosdelaplace/pollspaindata" class="external-link">pollspaindata package</a>. See <a href="..."><strong>more examples about how to use them</strong></a>.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -215,18 +228,6 @@
 <li>Wickham H. and Bryan J. R Packages: Organize, Test, Document, and Share Your Code (2023). <a href="https://r-pkgs.org/" class="external-link uri">https://r-pkgs.org/</a>
 </li>
 </ul>
-<div class="section level3">
-<h3 id="data-sources">Data sources<a class="anchor" aria-label="anchor" href="#data-sources"></a>
-</h3>
-<ul>
-<li>Spanish electoral data downloaded from <a href="https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/" class="external-link"><strong>repository of the Spanish Ministry of the Interior</strong></a>.</li>
-<li>Worldwide electoral data downloaded from <a href="https://cses.org/data-download/" class="external-link"><strong>Comparative Study of Electoral Systems (CSES)</strong></a> and <a href="https://electiondataarchive.org/" class="external-link"><strong>Election Data Archive (ICPSR)</strong></a>
-</li>
-<li>Survey data download from Wikipedia links (<a href="https://en.wikipedia.org/wiki/Opinion_polling_for_the_2023_Spanish_general_election" class="external-link"><strong>example</strong></a>).</li>
-<li>Seat allocation methods checked in the <a href="https://www.idea.int/data-tools/data/electoral-system-design" class="external-link"><strong>Electoral System Design Database (International IDEA)</strong></a>
-</li>
-</ul>
-</div>
 </div>
 <div class="section level2">
 <h2 id="authors">Authors<a class="anchor" aria-label="anchor" href="#authors"></a>
@@ -396,7 +397,7 @@ Contributor database
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

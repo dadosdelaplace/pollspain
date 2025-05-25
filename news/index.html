@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,8 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/utils.html">How to use utils functions</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/about-data.html">About data</a></li>
+    <li><a class="dropdown-item" href="../articles/utils.html">How to use utils functions?</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -36,6 +37,26 @@
       <small>Source: <a href="https://github.com/dadosdelaplace/pollspain/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.1" id="pollspain-021">pollspain 0.2.1<a class="anchor" aria-label="anchor" href="#pollspain-021"></a></h2>
+<ul><li>Fixed aggregate_election_data() function (now ccaa-prov-mun names are included as well as a properly id_INE_…).</li>
+<li>aggregate_election_data() function now includes a list of id_candidacies at province level when we aggregate</li>
+<li>Fixed summary_election_data()</li>
+<li>Included a CERA flag in summary_election_data() to allow remove CERA ballots.</li>
+<li>Included first unit tests for utils.R</li>
+<li>Included global dictionary parties.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="pollspain-020">pollspain 0.2.0<a class="anchor" aria-label="anchor" href="#pollspain-020"></a></h2>
+<ul><li>Created pollspaindata repository.</li>
+<li>Fixed 2019 elections (user has to choose between two dates).</li>
+<li>Fixed errors elections files (MIR files are corrupt).</li>
+<li>Allowed the user to input only the year of the elections in <code>import_elections_data.R</code> and <code>get_elections_data.R</code>.</li>
+<li>Allowed the user to provide both year and dates for different elections.</li>
+<li>Checked examples and documentation.</li>
+<li>Fixed <code>by_parties = TRUE</code> by default.</li>
+<li>Fix discrepancies in files. Some poll stations does not match the individual ballots with summaries provided by Ministry of the Interior. The discrepancies were resolved by using the individual votes by party.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="pollspain-010">pollspain 0.1.0<a class="anchor" aria-label="anchor" href="#pollspain-010"></a></h2>
 <ul><li>Fix errors in the accompanying <code>pollspain-data</code> repository.</li>
@@ -59,7 +80,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

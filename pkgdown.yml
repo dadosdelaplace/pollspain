@@ -1,9 +1,10 @@
 pandoc: 3.1.11
-pkgdown: 2.1.2
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
+  about-data: about-data.html
   utils: utils.html
-last_built: 2025-05-24T14:36Z
+last_built: 2025-05-25T19:31Z
 urls:
   reference: http://javieralvarezliebana.es/pollspain/reference
   article: http://javieralvarezliebana.es/pollspain/articles

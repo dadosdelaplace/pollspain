@@ -19,7 +19,7 @@ import_candidacies_data())"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +30,8 @@ import_candidacies_data())"></head><body>
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/utils.html">How to use utils functions</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/about-data.html">About data</a></li>
+    <li><a class="dropdown-item" href="../articles/utils.html">How to use utils functions?</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -180,28 +181,10 @@ Gonzalez, Irene Bosque Gala and Mikaela De Smedt.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Correct examples</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Congress elections in April and November 2019</span></span></span>
-<span class="r-in"><span><span class="co"># Fetch municipal census data for the congress elections in</span></span></span>
-<span class="r-in"><span><span class="co"># April and November 2019</span></span></span>
-<span class="r-in"><span><span class="va">mun_census_2019</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">import_mun_census_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import census mun data from ...</span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Fetch municipal census data for the congress elections in</span></span></span>
-<span class="r-in"><span><span class="co"># April 2019</span></span></span>
-<span class="r-in"><span><span class="va">mun_census_04_2019</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span><span class="co"># Fetch municipal census for congress elections in multiple dates</span></span></span>
+<span class="r-in"><span><span class="va">mun_census</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu">import_mun_census_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>,</span></span>
-<span class="r-in"><span>                         date <span class="op">=</span> <span class="st">"2019-04-28"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import census mun data from ...</span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example usage to combine data from different elections into</span></span></span>
-<span class="r-in"><span><span class="co"># one table. Fetch municipal census data for congress elections</span></span></span>
-<span class="r-in"><span><span class="co"># in Nov 2019 and June 2016</span></span></span>
-<span class="r-in"><span><span class="va">combined_mun_census_data</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">import_mun_census_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>,</span></span>
-<span class="r-in"><span>                         year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2019</span>, <span class="fl">2016</span>, <span class="fl">1982</span>, <span class="fl">1986</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                         year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2016</span>, <span class="fl">2023</span><span class="op">)</span>, date <span class="op">=</span> <span class="st">"2019-04-28"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">... Check if parameters are allowed...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Import census mun data from ...</span></span>
 <span class="r-in"><span></span></span>
@@ -236,7 +219,7 @@ Gonzalez, Irene Bosque Gala and Mikaela De Smedt.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
