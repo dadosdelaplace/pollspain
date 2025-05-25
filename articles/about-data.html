@@ -70,19 +70,305 @@ Liébana</h4>
 
     
     
-<p>This tutorial aims to illustrate how more <span class="hl"><strong>advanced developers can use the helper
-functions</strong></span> in the <code>utils.R</code> script:</p>
-<ul>
-<li><code><a href="../reference/type_to_code_election.html">type_to_code_election()</a></code></li>
-<li><code><a href="../reference/extract_code.html">extract_code()</a></code></li>
-<li><code>recod_mun()</code></li>
-</ul>
 <div class="section level2">
 <h2 id="required-packages">Required packages<a class="anchor" aria-label="anchor" href="#required-packages"></a>
 </h2>
 <p>Let’s load the required packages for this tutorial.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="dictionary-for-parties-and-candidacies">Dictionary for parties and candidacies<a class="anchor" aria-label="anchor" href="#dictionary-for-parties-and-candidacies"></a>
+</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">global_dict_parties</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,122 × 7</span></span></span>
+<span><span class="co">#&gt;    id_elec abbrev_candidacies name_candidacies id_candidacies_nat id_candidacies</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 02-201… JF                 PARTIDO DE JUBI… 000047             000047        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 02-200… LIT-CI             LLUITA INTERNAC… 000145             000277        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 02-201… MAS                MUERTE AL SISTE… 000050             000050        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 02-201… MAS                MUERTE AL SISTE… 902601             000992        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 02-201… MAS                MUERTE AL SISTE… 000103             000103        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 02-202… RDS                REFERENDUM SIST… 000079             000079        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 02-202… T3EA               TERCERA EDAD EN… 000042             000042        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 02-200… A                  ASAMBLEA DE AND… 000001             000001        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02-200… A                  ASAMBLEA DE AND… 000001             000001        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02-200… A-IZ               ASAMBLEA DE IZQ… 000002             000002        </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2,112 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: name_candidacies_nat &lt;chr&gt;, color &lt;chr&gt;</span></span></span></code></pre></div>
+<p>The dataset <code>global_dict_parties</code> contains, <span class="hl"><strong>for each election, the abbreviation and name for each
+candidacy, as well as the national id and province’s id</strong></span>.
+An hexadecimal code is proposed for the most important candidacies for
+dataviz purposes. The dataset is of our own creation and it was
+collected from all the election files by applying
+<code><a href="../reference/import_candidacies_data.html">import_candidacies_data()</a></code> function for each election.</p>
+<p>The dataset contains 7 columns:</p>
+<ul>
+<li>
+<code>id_elec</code>: id of elections (type of elections +
+date).</li>
+<li>
+<code>abbrev_candidacies</code>: party abbreviation.</li>
+<li>
+<code>name_candidacies</code>: party name (at each
+constituency).</li>
+<li>
+<code>id_candidacies_nat</code>: national id.</li>
+<li>
+<code>id_candidacies</code>: id at each constituency.</li>
+<li>
+<code>name_candidacies_nat</code>: party name (common at national
+level).</li>
+<li>
+<code>color</code>: hexadecimal (color) code for some parties.</li>
+</ul>
+<p><span class="hl"><strong>Several clarifications should be made
+regarding the construction</strong></span> of this dataset. Firstly,
+<strong>multiple records are provided for each party within a given
+election</strong>, as the <code>id_candidacies_nat</code> (which
+represents the national-level party identifier) is consistent across all
+entries. However, each party may appear under <strong>different
+<code>id_candidacies</code>, corresponding to its provincial-level
+identifiers</strong>. For instance, in the 2023 elections, the PSOE is
+assigned the national ID <code>id_candidacies_nat = "000002"</code>
+throughout the country, but it is listed under different
+<code>id_candidacies</code> in some provinces, reflecting its
+participation through various regional federations in the respective
+constituencies.”</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">global_dict_parties</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">abbrev_candidacies</span> <span class="op">==</span> <span class="st">"PSOE"</span> <span class="op">&amp;</span> <span class="va">id_elec</span> <span class="op">==</span> <span class="st">"02-2023-07-24"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">abbrev_candidacies</span><span class="op">:</span><span class="va">name_candidacies_nat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
+<span><span class="co">#&gt;   abbrev_candidacies name_candidacies          id_candidacies_nat id_candidacies</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PSOE               PARTIT DELS SOCIALISTES … 000002             000047        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> PSOE               PARTIDO DOS SOCIALISTAS … 000002             000064        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> PSOE               PARTIDO SOCIALISTA DE EU… 000002             000076        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> PSOE               PARTIDO SOCIALISTA DE IS… 000002             000029        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> PSOE               PARTIDO SOCIALISTA DE NA… 000002             000072        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> PSOE               PARTIDO SOCIALISTA OBRER… 000002             000002        </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: name_candidacies_nat &lt;chr&gt;</span></span></span></code></pre></div>
+<p>If we examine the previous dataset, we can also observe a common name
+in the <code>name_candidacies_nat</code> variable, which is the one used
+when aggregating data at the national level—under the most widely
+recognized branding of the party.</p>
+<p>Secondly, <span class="hl"><strong>certain groupings have been
+applied in order to simplify the dataset returned to the
+user</strong></span>. These adjustments, while practical, are worth
+noting—particularly for political science experts:</p>
+<details><summary>
+Notes about acronyms
+</summary><ul>
+<li><p>The predecessor of the Partido Popular (<code>PP</code>) was, in
+some instances, listed as <code>AP-PDP</code>, in others as
+<code>AP-PL</code>, and occasionally as <code>AP-PDP-PL</code>. In all
+such cases, votes for Alianza Popular (<code>AP</code>) and its allied
+formations have been grouped under the acronym <code>AP-PDP-PL</code>.
+Additionally, parties identified as <code>PP-FORO</code>,
+<code>PP-PAR</code>, <code>PP-UP</code>, <code>PP-EU</code>, and
+<code>PP-CDEG</code> have been consolidated under the <code>PP</code>
+acronym. The Unión del Pueblo Navarro (<code>UPN</code>) has retained
+its own acronym, although it shares the same
+<code>id_candidacies_nat</code> as <code>PP</code> due to their
+electoral coalition.</p></li>
+<li><p>The Socialist Party of the Basque Country (<code>PSE-EE</code>)
+has consistently been grouped under the acronym <code>PSOE</code>,
+despite having run independently in the 1982 and 1986
+elections.</p></li>
+<li><p>All federations and coalitions led by Podemos have been grouped
+under the acronym <code>PODEMOS</code>, even when they appeared on
+ballots as <code>UNIDAS/OS PODEMOS</code>. Unless explicitly indicated
+as a coalition, En Comú Podem has been treated as an independent label,
+using the acronym <code>ECP</code> (also including Guanyem).</p></li>
+<li><p>The Basque Nationalist Party (<code>PNV</code>), whose name in
+Basque sometimes appears as <code>PNV - EAJ</code>, has been grouped
+under the acronym <code>PNV</code>.</p></li>
+<li><p>The Andalusian Party has been unified under the acronym
+<code>PSA-PA</code> across all elections.</p></li>
+<li><p>The Basque party <code>HB</code> has been unified under the full
+name <code>HERRI BATASUNA</code>.</p></li>
+<li><p>In the context of the Catalan independence movement, the
+historical party <code>CIU</code> went to the 2023 elections under the
+name Partit Demòcrata Europeu Català - Espai CIU
+(<code>PDECAT-E-CIU</code>), after splitting from
+<code>JUNTS</code>.</p></li>
+<li><p>All federations and coalitions led by Izquierda Unida have been
+grouped under the acronym <code>IU</code>, including the 2015
+<code>UNIDAD POPULAR: ...</code> candidacies, which ran separately from
+the newly created party <code>PODEMOS</code>. Also grouped under
+<code>IU</code> are <code>IU-UPEC</code> and candidacies such as
+Esquerra Unida, Ezker Batua, and Ezker Anitza.</p></li>
+<li><p>Candidacies of the Spanish Communist Party have been grouped
+under the acronym <code>PCE</code>, although they sometimes appeared
+officially as <code>PCA-PCE</code>.</p></li>
+<li><p>The now-defunct Partido Socialista Galego (<code>PSG</code>),
+also appearing as <code>BLOQUE PSG</code> or <code>B-PSG</code>, has
+been unified under the acronym of the Bloque Nacionalista Galego
+(<code>BNG</code>), since its various offshoots ultimately merged into
+<code>BNG</code>. Similarly, <code>BNG</code> includes candidacies such
+as <code>BNG-NOS</code>.</p></li>
+<li><p>The party or candidacy Navarra Suma has been grouped under the
+acronym <code>NA-SUMA</code>.</p></li>
+<li><p>The party Coalición Canaria ran under the acronym
+<code>CC-PNC</code> in 2008, and as <code>CC-NC</code> in 2011 and 2019;
+all such cases have been grouped under Coalición Canaria.</p></li>
+</ul></details><p>Last update: 2025/05/25. The code used to generate the dataset can be
+found at <a href="https://github.com/dadosdelaplace/pollspain/tree/main/data-raw" class="external-link"><code>data-raw/dict_parties.R</code>
+script</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="datasets-about-elections">Datasets about elections<a class="anchor" aria-label="anchor" href="#datasets-about-elections"></a>
+</h2>
+<p>Pending to doc</p>
+</div>
+<div class="section level2">
+<h2 id="datasets-about-surveys">Datasets about surveys<a class="anchor" aria-label="anchor" href="#datasets-about-surveys"></a>
+</h2>
+<p>Pending to doc</p>
+</div>
+<div class="section level2">
+<h2 id="auxiliary-datasets">Auxiliary datasets<a class="anchor" aria-label="anchor" href="#auxiliary-datasets"></a>
+</h2>
+<div class="section level3">
+<h3 id="dates-of-spanish-elections">Dates of Spanish elections<a class="anchor" aria-label="anchor" href="#dates-of-spanish-elections"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dates_elections_spain</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 62 × 7</span></span></span>
+<span><span class="co">#&gt;    cod_elec type_elec  date        year month   day topic                       </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 01       referendum 1976-12-15  <span style="text-decoration: underline;">1</span>976    12    15 Ref. Proyecto Ley Reforma P…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 01       referendum 1978-12-06  <span style="text-decoration: underline;">1</span>978    12     6 Constitución                </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 01       referendum 1986-03-12  <span style="text-decoration: underline;">1</span>986     3    12 OTAN                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 01       referendum 2005-02-20  <span style="text-decoration: underline;">2</span>005     2    20 Constitución UE             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 02       congress   1982-10-28  <span style="text-decoration: underline;">1</span>982    10    28 <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 02       congress   1986-06-22  <span style="text-decoration: underline;">1</span>986     6    22 <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 02       congress   1989-10-29  <span style="text-decoration: underline;">1</span>989    10    29 <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 02       congress   1993-06-06  <span style="text-decoration: underline;">1</span>993     6     6 <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02       congress   1996-03-03  <span style="text-decoration: underline;">1</span>996     3     3 <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02       congress   2000-03-12  <span style="text-decoration: underline;">2</span>000     3    12 <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 52 more rows</span></span></span></code></pre></div>
+<p>The dataset <code>dates_elections_spain</code> contains the <span class="hl"><strong>dates of Spanish elections</strong></span> in
+referendum, congress, senate, municipal, cabildo (Canarian council) and
+European Parlament elections. The dataset is of our own creation and it
+contains 62 rows and 7 variables:</p>
+<ul>
+<li>
+<code>cod_elec</code>: code of type of elections.</li>
+<li>
+<code>type_elec</code>: type of elections (“referendum”, “congress”,
+“senate”, “local”, “regional”, “cabildo” or “EU”).</li>
+<li>
+<code>date</code>: date of election in <code>"YYYY-MM-DD"</code>
+format.</li>
+<li>
+<code>year, month, day</code>: year, month and day of election.</li>
+<li>
+<code>topic</code>: topic (just for referendum).</li>
+</ul>
+<p>Last update: 2025/05/25. The code used to generate the dataset can be
+found at <a href="https://github.com/dadosdelaplace/pollspain/tree/main/data-raw" class="external-link"><code>data-raw/dates_elections_spain.R</code>
+script</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="ines-code-for-ccaa-and-provinces">INE’s code for ccaa and provinces<a class="anchor" aria-label="anchor" href="#ines-code-for-ccaa-and-provinces"></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cod_INE_prov_ccaa</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 52 × 5</span></span></span>
+<span><span class="co">#&gt;    cod_INE_ccaa cod_MIR_ccaa ccaa      cod_INE_prov prov   </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 01           01           Andalucía 04           Almería</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 01           01           Andalucía 11           Cádiz  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 01           01           Andalucía 14           Córdoba</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 01           01           Andalucía 18           Granada</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 01           01           Andalucía 21           Huelva </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 01           01           Andalucía 23           Jaén   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 01           01           Andalucía 29           Málaga </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 01           01           Andalucía 41           Sevilla</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02           02           Aragón    22           Huesca </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02           02           Aragón    44           Teruel </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 42 more rows</span></span></span></code></pre></div>
+<p>The dataset <code>cod_INE_prov_ccaa</code> contains the <span class="hl"><strong>codes provided by INE of Spanish provinces and
+regions</strong></span>. It contains a tibble with 52 rows and 5
+variables:</p>
+<ul>
+<li>
+<code>cod_INE_ccaa</code>: code of region according INE.</li>
+<li>
+<code>cod_MIR_ccaa</code>: code of region according Spanish Ministry
+of the Interior (MIR).</li>
+<li>
+<code>ccaa</code>: name of region.</li>
+<li>
+<code>cod_INE_prov</code>: code of province.</li>
+<li>
+<code>prov</code>: name of province.</li>
+</ul>
+<p>Data was extracted from <a href="https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.html" class="external-link uri">https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.html</a>.</p>
+<p>Last update: 2025/05/25 (data updated by INE on 2023/02/25). The code
+used to generate the dataset can be found at <a href="https://github.com/dadosdelaplace/pollspain/tree/main/data-raw" class="external-link"><code>data-raw/cod_INE_prov_ccaa.R</code>
+script</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="ines-code-for-municipalities">INE’s code for municipalities<a class="anchor" aria-label="anchor" href="#ines-code-for-municipalities"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cod_INE_mun</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8,131 × 10</span></span></span>
+<span><span class="co">#&gt;    id_INE_mun id_MIR_mun cod_INE_ccaa cod_MIR_ccaa cod_INE_prov cod_INE_mun</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 16-01-051  14-01-051  16           14           01           051        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 16-01-001  14-01-001  16           14           01           001        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 16-01-002  14-01-002  16           14           01           002        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 16-01-049  14-01-049  16           14           01           049        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 16-01-003  14-01-003  16           14           01           003        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 16-01-006  14-01-006  16           14           01           006        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 16-01-037  14-01-037  16           14           01           037        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 16-01-008  14-01-008  16           14           01           008        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 16-01-004  14-01-004  16           14           01           004        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 16-01-009  14-01-009  16           14           01           009        </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 8,121 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: cd_INE_mun &lt;dbl&gt;, mun &lt;glue&gt;, ccaa &lt;chr&gt;, prov &lt;chr&gt;</span></span></span></code></pre></div>
+<p>The dataset <code>cod_INE_mun</code> contains the <span class="hl"><strong>codes provided by INE of Spanish
+municipalities</strong></span>. Data was extracted from <a href="https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx" class="external-link uri">https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx</a>
+and it contains a tibble with 8131 rows and 10 variables:</p>
+<ul>
+<li>
+<code>id_INE_mun, id_MIR_mun</code>: full id of municipalities
+(combining ccaa, province and mun’s id).</li>
+<li>
+<code>cod_INE_ccaa, cod_MIR_ccaa</code>: code of regions.</li>
+<li>
+<code>ccaa</code>: name of regions.</li>
+<li>
+<code>cod_INE_prov</code>: code of provinces.</li>
+<li>
+<code>prov</code>: name of provinces.</li>
+<li>
+<code>cod_INE_mun</code>: code of municipalities.</li>
+<li>
+<code>cd_INE_mun</code>: check digit (see <a href="documentation">https://www.ine.es/daco/daco42/codmun/codmun00i.htm</a>).</li>
+<li>
+<code>mun</code>: name of municipalities.</li>
+</ul>
+<p>The municipality data (names and codes) were <strong>extracted from
+the version published by the National Statistics Institute (INE) on
+February 6, 2025</strong>. Over the years, various municipal mergers
+have taken place in Spain, which means that not all elections feature
+the same set of municipalities or the same identifying codes. In order
+to unify and standardize the results provided to users, all output
+tables refer to the most recent municipality recoding by the Spanish
+National Statistics Institute (INE). The function <span class="hl"><strong><code><a href="../reference/recod_mun.html">recod_mun()</a></code> transparently returns the
+updated code based on that recoding, reassigning codes for merged
+municipalities accordingly</strong></span>.</p>
+<p>Data extracted from <a href="https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx" class="external-link uri">https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx</a>.</p>
+<p>Last update: 2025/05/25 (data updated by INE on 2020/01/01). The code
+used to generate the dataset can be found at <a href="https://javieralvarezliebana.es/pollspain/reference/recod_mun.html" class="external-link"><code>recod_mun()</code></a></p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

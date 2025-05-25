@@ -169,19 +169,17 @@ each election, including the following variables:</p>
 (European Parliament elections). Variable available only for
 long version.</p></dd>
 
-<dt>type_elec</dt>
-<dd><p>type of election.</p></dd>
-
 <dt>date_elec</dt>
-<dd><p>date of the election.</p></dd>
-
-<dt>id_INE_mun</dt>
-<dd><p>municipality ID constructed from the
-ccaa-prov-mun codes provided by INE.</p></dd>
+<dd><p>date of the election. Variable available only for
+long version.</p></dd>
 
 <dt>id_INE_poll_station</dt>
 <dd><p>poll station's id constructed from the
 ccaa-prov-municipality and poll station codes.</p></dd>
+
+<dt>id_INE_mun</dt>
+<dd><p>municipality ID constructed from the
+ccaa-prov-mun codes provided by INE.</p></dd>
 
 <dt>cod_INE_ccaa, ccaa</dt>
 <dd><p>codes and names for regions (ccaa)
@@ -198,12 +196,8 @@ municipalities. Codes available only for long version.</p></dd>
 
 <dt>cod_mun_district, cod_sec, cod_poll_station</dt>
 <dd><p>codes for the
-municipal district, census tract and poll station. Codes available
-only for long version.</p></dd>
-
-<dt>census_counting_mun</dt>
-<dd><p>population eligible to vote after claims
-at municipality level.</p></dd>
+municipal district, census tract and poll station. They are
+only available for long version.</p></dd>
 
 <dt>ballots_1, turnout_1</dt>
 <dd><p>number of total ballots and turnout
@@ -225,7 +219,8 @@ candidacies/parties, valid ballots (sum of <code>blank_ballots</code> and
 <code>valid_ballots</code> and <code>invalid_ballots</code>).</p></dd>
 
 <dt>turnout</dt>
-<dd><p>final turnout percentage.</p></dd>
+<dd><p>final turnout percentage. It is only
+available for long version.</p></dd>
 
 <dt>porc_valid, porc_invalid, porc_parties, porc_blank</dt>
 <dd><p>perc (%)
@@ -233,26 +228,28 @@ values of <code>valid_ballots</code>, <code>invalid_ballots</code>,
 <code>party_ballots</code> and <code>blank_ballots</code>.</p></dd>
 
 <dt>n_poll_stations</dt>
-<dd><p>number of polling stations.</p></dd>
+<dd><p>number of polling stations. It is only
+available for long version.</p></dd>
+
+<dt>census_counting_mun</dt>
+<dd><p>population eligible to vote after claims
+at municipality level.</p></dd>
 
 <dt>pop_res_mun</dt>
 <dd><p>population census of residents (CER + CERA) at
 municipality level.</p></dd>
 
-<dt>census_counting_mun</dt>
-<dd><p>population eligible to vote after
-claims at municipality level.</p></dd>
-
 <dt>id_candidacies</dt>
-<dd><p>id for candidacies (at province level).</p></dd>
+<dd><p>id for candidacies at province level.</p></dd>
 
 <dt>id_candidacies_ccaa, id_candidacies_nat</dt>
-<dd><p>id for
-candidacies (at region - ccaa - and national level).</p></dd>
+<dd><p>id for candidacies
+at ccaa level (only provided for long version) and at national
+level.</p></dd>
 
 <dt>abbrev_candidacies, name_candidacies</dt>
 <dd><p>acronym and full name
-of the candidacies.</p></dd>
+of the candidacies. They are only available for long version.</p></dd>
 
 <dt>ballots</dt>
 <dd><p>number of ballots obtained for each candidacy at
@@ -261,7 +258,16 @@ each poll station.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function ...</p>
+    <p>The purpose of this function is to easily combine the
+outputs of <code><a href="import_poll_station_data.html">import_poll_station_data()</a></code>,
+<code><a href="import_mun_census_data.html">import_mun_census_data()</a></code>, and
+<code><a href="import_candidacies_data.html">import_candidacies_data()</a></code>, providing a tibble at the
+polling station level with both general voting data (blank votes,
+null votes, etc.) and votes for each candidacy (identified by
+their corresponding ids). This function does not perform
+aggregations and is not intended as a final-use tool for basic
+users, but rather as an intermediate step for the
+<code><a href="summary_election_data.html">summary_election_data()</a></code> function.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

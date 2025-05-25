@@ -72,7 +72,8 @@ total ballots, number of polling stations and contextual sums.</p>
 <dl><dt id="arg-election-data">election_data<a class="anchor" aria-label="anchor" href="#arg-election-data"></a></dt>
 <dd><p>A database containing general election data
 already provided (by other functions or by the user). Database
-should contain a <code>col_id_elec</code> column.
+should contain <code>col_id_elec</code>, <code>col_id_poll_station</code>,
+<code>cols_mun_var</code> and <code>col_id_candidacies</code> columns.
 Defaults to <code>NULL</code>.</p></dd>
 
 
@@ -150,43 +151,13 @@ each election, including the following variables:</p>
 <code>"06"</code> (cabildo - Canarian council - elections), <code>"07"</code>
 (European Parliament elections).</p></dd>
 
-<dt>type_elec</dt>
-<dd><p>type of election.</p></dd>
+<dt>id_INE_xxx</dt>
+<dd><p>id for the xxx constituency provided in
+<code>level</code>: id_INE_ccaa, id_INE_prov, etc.</p></dd>
 
-<dt>date_elec</dt>
-<dd><p>date of the election.</p></dd>
-
-<dt>id_INE_poll_station</dt>
-<dd><p>poll station's id constructed from the
-ccaa-prov-municipality and poll station codes.</p></dd>
-
-<dt>id_INE_mun</dt>
-<dd><p>municipality ID constructed from the
-ccaa-prov-mun codes provided by INE.</p></dd>
-
-<dt>cod_INE_ccaa, ccaa</dt>
-<dd><p>codes and names for regions (ccaa)
-to which the municipalities belong.</p></dd>
-
-<dt>cod_INE_prov, prov</dt>
-<dd><p>codes and names for the provinces to
-which the municipalities belong.</p></dd>
-
-<dt>cod_INE_mun, mun</dt>
-<dd><p>code, and name for
-municipalities.</p></dd>
-
-<dt>cod_mun_district, cod_sec, cod_poll_station</dt>
-<dd><p>codes for the
-municipal district, census tract and poll station.</p></dd>
-
-<dt>ballots_1, turnout_1</dt>
-<dd><p>number of total ballots and turnout
-percentage in the first round.</p></dd>
-
-<dt>ballots_2, turnout_2</dt>
-<dd><p>number of total ballots and turnout
-percentage in the second round (if applicable).</p></dd>
+<dt>xxx</dt>
+<dd><p>names for the xxx constituency provided in
+<code>level</code>: ccaa, prov, etc.</p></dd>
 
 <dt>blank_ballots, invalid_ballots</dt>
 <dd><p>blank and invalid ballots.</p></dd>
@@ -197,35 +168,26 @@ candidacies/parties, valid ballots (sum of <code>blank_ballots</code> and
 <code>party_ballots</code>) and total ballots (sum of
 <code>valid_ballots</code> and <code>invalid_ballots</code>).</p></dd>
 
-<dt>turnout</dt>
-<dd><p>final turnout percentage.</p></dd>
-
-<dt>porc_valid, porc_invalid, porc_parties, porc_blank</dt>
-<dd><p>perc (%)
-values of <code>valid_ballots</code>, <code>invalid_ballots</code>,
-<code>party_ballots</code> and <code>blank_ballots</code>.</p></dd>
-
 <dt>n_poll_stations</dt>
 <dd><p>number of polling stations.</p></dd>
 
-<dt>pop_res_mun</dt>
+<dt>pop_res_xxx</dt>
 <dd><p>population census of residents (CER + CERA) at
-municipality level.</p></dd>
+xxx level (if level is below municipality level, it is provided at
+municipality level). It is only available for long version.</p></dd>
 
 <dt>census_counting_mun</dt>
 <dd><p>population eligible to vote after
-claims at municipality level.</p></dd>
+claims at xxx level (if level is below municipality level, it is
+provided at municipality level). It is only available for
+long version.</p></dd>
 
 <dt>id_candidacies</dt>
 <dd><p>id for candidacies (at province level).</p></dd>
 
-<dt>id_candidacies_ccaa, id_candidacies_nat</dt>
-<dd><p>id for
-candidacies (at region - ccaa - and national level).</p></dd>
-
-<dt>abbrev_candidacies, name_candidacies</dt>
-<dd><p>acronym and full name
-of the candidacies.</p></dd>
+<dt>id_candidacies_nat</dt>
+<dd><p>id for candidacies at region national
+level.</p></dd>
 
 <dt>ballots</dt>
 <dd><p>number of ballots obtained for each candidacy at
@@ -234,7 +196,16 @@ each level section.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>...</p>
+    <p>This function is actually a helper function that, given
+an electoral data file with a specific structure, aggregates the
+information to the level specified in <code>level</code>. Data that is
+only available at the provincial or municipal level is handled
+differently when the aggregation level is below those levels
+(for example, CERA data cannot be aggregated below the province,
+in which case 52 special constituencies are added). This function
+is not intended as a final-use tool for basic users, but rather as
+an intermediate step for the <code><a href="summary_election_data.html">summary_election_data()</a></code>
+function.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
