@@ -1,10 +1,10 @@
 ---
-title: "How to use utils functions"
+title: "How to use utils functions?"
 output: rmarkdown::html_vignette
 author: "Javier Álvarez Liébana"
 date: "`r Sys.Date()`"
 vignette: >
-  %\VignetteIndexEntry{How to use utils functions}
+  %\VignetteIndexEntry{How to use utils functions?}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -39,9 +39,8 @@ library(pollspain)
 
 ## Convert type of election to code
 
-Según los datos extraídos de la [web del Ministerio de Interior en España]( https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/Spanish) cada tipo de elección tiene asociado en las bases de datos un código alfanumérico concreto: "01" (referendum), "02" (congress), "03" (senate), "04" (local elections), "06" (cabildo - Canarian council - elections) y "07" (European Parlament elections).
+According to the data extracted from the [website of the Spanish Ministry of the Interior](https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/Spanish), each **type of election is associated in the databases with a specific alphanumeric code**: `"01"` (referendum), `"02"` (congress), `"03"` (senate), `"04"` (local elections), `"06"` (cabildo - Canarian council - elections), and `"07"` (European Parliament elections). However, for users, it's much simpler to provide **lexically explicit terms** — for example, writing `"congress"` for congressional elections or `"senate"` for senatorial elections. The `type_to_code_election()` function allows us to convert the user-provided term into the corresponding code required by our databases.
 
-Sin embargo, de cara al usuario, es mucho más sencillo proporcionar órdenes lexicográficamente explícitas, por ejemplo escribiendo "congress" para las elecciones al congreso o "senate" para elecciones al senado. La función `type_to_code_election()` nos permite hacer esa conversión de la palabra proporcionada por el usuario al código que necesitaremos en nuestras bases de datos.
 
 ```{r}
 type_to_code_election(type_elec = "congress")
@@ -53,37 +52,35 @@ type_to_code_election(type_elec = "local")
 
 ## Extract region codes
 
-De la misma manera, el usuario tiene a su disposición en muchas de las funciones del paquete la opción de agregar bajo distintos niveles geográficos, que el usuario puede proporcionar fácilmente como "all", "ccaa", "prov", "mun", "mun_district", "sec" (census tract) and "poll_station". Sin embargo, a nivel interno, cada mesa electoral viene geolocalizado por una colección de códigos proporcionados por el Instituto Nacional de Estadística (INE) de España
+Similarly, many of the package's functions allow the user to **aggregate data at different geographic levels**, which can be easily specified as `"all"`, `"ccaa"`, `"prov"`, `"mun"`, `"mun_district"`, `"sec"` (census tract), and `"poll_station"`. Internally, however, each polling station is geolocated using a set of codes provided by Spain’s National Statistics Institute (INE). The `extract_code()` function enables us to **extract the code corresponding to the requested level of disaggregation from a full polling station code**.
 
-
-Extract region codes (for aggregation levels ccaa, prov, mun, municipal districts and census sections) for a given poll station code provided by Spanish Ministry of Interior (MIR) and Spanish Statistical Office (INE). La función `extract_code()` nos permite, dado un código entera de una mesa eletoral, extraer el código al nivel de desagregación pedido. 
-
-Por ejemplo vamos a aplicar la función para la mesa B de la sección censal `"004"` del primer distrito municipal del municio de Adra (`"003"`) de la provincia de Almería (`"04"`), perteneciente a la comunidad autonónoma de Andalucía (`"01"`).
+For example, we can apply the function to polling station B of census tract `"004"` within the first municipal district of the municipality of Adra (`"003"`), located in the province of Almería (`"04"`), which belongs to the autonomous community of Andalusia (`"01"`).
 
 ```{r}
 id_INE_poll_station <- "01-04-003-01-004-B"
 ```
 
-¿Cuál sería el código identificar del municipio al que pertenece la mesa electoral?
+What would be the municipality code corresponding to the polling station?
+
 
 ```{r}
 extract_code(id_INE_poll_station, level = "mun")
 ```
 
-¿Y la provincia?
+What about the province code?
 
 ```{r}
 extract_code(id_INE_poll_station, level = "prov")
 ```
 
+What about the municipal district?
 
-¿Y el código del distrito municipal?
 
 ```{r}
 extract_code(id_INE_poll_station, level = "mun_district")
 ```
 
-Si observas por defecto solo proporciona el código al nivel de agregación pedido pero fijando `full_cod = TRUE` se puede obtener también el código completo, incluyendo el código no solo de dicho nivel sino de todos sus niveles superiores (por ejemplo, todas las provincias tienen un municipio con código `"001"`, por lo que necesitamos su código de provincia y de comunidad autónoma para identificarlo de manera unívoca)
+By default, it only returns the code at the requested aggregation level, but if you set `full_cod = TRUE`, you can obtain the full code, including not only the code for that level but also for all higher levels. For example, every province has a municipality with the code `"001"`, so we need the corresponding province and autonomous community codes to uniquely identify it.
 
 ```{r}
 extract_code(id_INE_poll_station, level = "mun", full_cod = TRUE)
@@ -91,10 +88,6 @@ extract_code(id_INE_poll_station, level = "prov", full_cod = TRUE)
 extract_code(id_INE_poll_station, level = "mun_district", full_cod = TRUE)
 ```
 
-## Recoding nombres de municipios
+## Recoding municipality names
 
-A lo largo de los años se han producido diferentes procesos de fusión de municipios en España, por lo que no en todas las elecciones podemos encontrar los mismos municipios ni asociados a los mismos códigos identificativos. Con el fin de unificar y estandarizar los resultados proporcionados al usuario, todas las tablas proporcionadas hacen referencia a la última recodificación de municipios del INE (última actualización: 2023).
-
-La función auxiliar `recod_mun()` proporciona de manera transparente la recodificación realizada, reasignado los códigos de municipios fusionados.
-
-## Recoding parties
+Over the years, various municipal mergers have taken place in Spain, which means that not all elections feature the same set of municipalities or the same identifying codes. In order to unify and standardize the results provided to users, all output tables refer to the most recent municipality recoding by the Spanish National Statistics Institute (INE) (latest update: 2023). The helper function `recod_mun()` transparently returns the updated code based on that recoding, reassigning codes for merged municipalities accordingly.

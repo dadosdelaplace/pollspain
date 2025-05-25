@@ -91,20 +91,19 @@ data across multiple election periods as specified by the user.
 
 ## Correct examples
 
-# Fetch candidacies data for the congress elections in 2019
-candidacies_data_2019 <-
-    import_candidacies_data(type_elec = "congress",
-                            year = 2019)
-
-# Fetch candidacies data for the congress elections in Nov 2019
-candidacies_data_11_2019 <-
-  import_candidacies_data(type_elec = "congress", date = "2019-11-10")
-
-# Example usage to combine data from different elections into
-# one table
-combined_candidacies_data <-
+# Fetch candidacies data for congress elections in multiple dates
+# in a short version
+candidacies_data <-
   import_candidacies_data(type_elec = "congress",
-                          year = c(1982, 1986, 1993))
+                          year = 2023,
+                          date = "2019-04-28")
+
+# Fetch candidacies data for congress elections in multiple dates
+# in a long version
+candidacies_data <-
+  import_candidacies_data(type_elec = "congress",
+                          year = c(1982, 2008),
+                          short_version = FALSE)
 
 # ----
 # Incorrect examples

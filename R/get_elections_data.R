@@ -97,29 +97,19 @@
 #'
 #' ## Correct examples
 #'
-#' # Example for a given year
-#' # Congress elections in year = 2016 (2016-06-26)
-#' elections_data_2016 <-
-#'   get_election_data(type_elec = "congress", year = 2016)
-#'
-#' # Example for a vector of years
-#' elections_data_2008_2016 <-
-#'   get_election_data(type_elec = "congress", year = c(2008, 2016))
-#'
-#' # Example for a given date
-#' # Congress elections in date = "2023-07-24" in a long version
-#' elections_data_2023 <-
-#'   get_election_data(type_elec = "congress", date = "2023-07-24",
-#'                     short_version = FALSE)
-#'
-#' # Congress elections in 2008 (2008-03-09) and 2016 (2016-06-26),
-#' # and "2023-07-24" and "1989-10-29"
-#' elections_data_multiple <-
+#' # Congress elections in year 2008, 2016 and "2023-07-24"
+#' # in a short version
+#' elections_data <-
 #'   get_election_data(type_elec = "congress", year = c(2008, 2016),
-#'                     date = c("2023-07-24"))
+#'                     date = "2023-07-24")
 #'
-#' # Example usage providing external tables with different
-#' # column names
+#' # Congress elections in 2008 and "1989-10-29"
+#' # in a long version
+#' elections_data <-
+#'   get_election_data(type_elec = "congress", year = 2008,
+#'                     date = "1989-10-29", short_version = FALSE)
+#'
+#' # Example usage providing external tables
 #' election_data <-
 #'   import_poll_station_data(type_elec = "congress", year = 2016) |>
 #'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
@@ -127,7 +117,7 @@
 #'   import_candidacies_data(type_elec = "congress", year = 2016) |>
 #'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
 #' join_data <-
-#'   get_election_data(type_elec = "congress", year = 2016,
+#'   get_election_data(type_elec = "congress",
 #'                     election_data = election_data,
 #'                     ballots_data = ballots_data,
 #'                     col_id_elec = "invent_1",
@@ -211,140 +201,144 @@ get_election_data <-
       }
     }
     # Check date
-    if (!is.null(date)) {
+    if (is.null(election_data)) {
+      if (!is.null(date)) {
 
-      if (!all(str_detect(date, "^\\d{4}-\\d{2}-\\d{2}$")) | any(is.na(date))) {
+        if (!all(str_detect(date, "^\\d{4}-\\d{2}-\\d{2}$")) | any(is.na(date))) {
 
-        stop(red("Ups! If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
+          stop(red("Ups! If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
 
+        } else {
+          date <- as_date(date)
+        }
       } else {
-        date <- as_date(date)
-      }
-    } else {
-      if (!is.numeric(year)) {
-        stop(red("Ups! If no date was provided, `year` should be a numerical variable."))
+        if (!is.numeric(year)) {
+          stop(red("Ups! If no date was provided, `year` should be a numerical variable."))
+        }
       }
     }
 
     # Design a tibble with all elections asked by user
     # Ensure input parameters are vectors
-    if (!is.null(year)) {
+    if (is.null(election_data)) {
+      if (!is.null(year)) {
 
-      asked_elections <-
-        expand_grid(as.vector(type_elec), as.vector(year))
-      names(asked_elections) <- c("type_elec", "year")
-      asked_elections <-
-        asked_elections |>
-        distinct(type_elec, year) |>
-        mutate("cod_elec" = type_to_code_election(as.vector(type_elec)),
-               .before = everything())
-
-      allowed_elections <-
-        dates_elections_spain |>
-        inner_join(asked_elections,
-                   by = c("cod_elec", "type_elec", "year"),
-                   suffix = c("", ".rm")) |>
-        select(-contains("rm")) |>
-        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
-
-    }
-
-    if (!is.null(date)) {
-
-      asked_elections_date <-
-        expand_grid(as.vector(type_elec), as_date(date)) |>
-        mutate("year" = year(date))
-      names(asked_elections_date) <- c("type_elec", "date", "year")
-      asked_elections_date <-
-        asked_elections_date |>
-        distinct(type_elec, date, year) |>
-        mutate("cod_elec" = type_to_code_election(as.vector(type_elec)),
-               .before = everything())
-
-      allowed_elections_date <-
-        dates_elections_spain |>
-        inner_join(asked_elections_date,
-                   by = c("cod_elec", "type_elec", "date"),
-                   suffix = c("", ".rm")) |>
-        select(-contains("rm")) |>
-        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
-    }
-
-    if (!is.null(year)) {
-      if (!is.null(date)) {
+        asked_elections <-
+          expand_grid(as.vector(type_elec), as.vector(year))
+        names(asked_elections) <- c("type_elec", "year")
+        asked_elections <-
+          asked_elections |>
+          distinct(type_elec, year) |>
+          mutate("cod_elec" = type_to_code_election(as.vector(type_elec)),
+                 .before = everything())
 
         allowed_elections <-
-          allowed_elections |>
-          bind_rows(allowed_elections_date) |>
+          dates_elections_spain |>
+          inner_join(asked_elections,
+                     by = c("cod_elec", "type_elec", "year"),
+                     suffix = c("", ".rm")) |>
+          select(-contains("rm")) |>
           distinct(cod_elec, type_elec, date, .keep_all = TRUE)
-      }
-    } else {
 
-      allowed_elections <- allowed_elections_date
+      }
 
       if (!is.null(date)) {
 
-        allowed_elections <-
-          allowed_elections_date |>
-          bind_rows(allowed_elections) |>
+        asked_elections_date <-
+          expand_grid(as.vector(type_elec), as_date(date)) |>
+          mutate("year" = year(date))
+        names(asked_elections_date) <- c("type_elec", "date", "year")
+        asked_elections_date <-
+          asked_elections_date |>
+          distinct(type_elec, date, year) |>
+          mutate("cod_elec" = type_to_code_election(as.vector(type_elec)),
+                 .before = everything())
+
+        allowed_elections_date <-
+          dates_elections_spain |>
+          inner_join(asked_elections_date,
+                     by = c("cod_elec", "type_elec", "date"),
+                     suffix = c("", ".rm")) |>
+          select(-contains("rm")) |>
           distinct(cod_elec, type_elec, date, .keep_all = TRUE)
       }
-    }
 
+      if (!is.null(year)) {
+        if (!is.null(date)) {
 
-    ambiguous_years <- intersect(allowed_elections$year, 2019)
-    chosen_dates <- NULL
-
-    if (length(ambiguous_years) > 0 & is.null(date)) {
-
-      normal_years <- setdiff(year, 2019)
-      normal_dates <- dates_elections_spain |>
-        filter(type_elec %in% !!type_elec & year %in% normal_years) |>
-        pull(date)
-
-      normal_dates <- as.character(normal_dates)
-
-      if (interactive()) {
-
-        sel <- menu(c("April (2019-04-28)",
-                      "November (2019-11-10)",
-                      "Both dates"),
-                    title = paste0("What 2019 election do you want?"))
-
-        chosen_dates <- c(
-          chosen_dates,
-          switch(sel,
-                 "2019-04-28",
-                 "2019-11-10",
-                 c("2019-04-28", "2019-11-10"))
-        )
+          allowed_elections <-
+            allowed_elections |>
+            bind_rows(allowed_elections_date) |>
+            distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+        }
       } else {
 
-        chosen_dates <- c(chosen_dates, c("2019-04-28", "2019-11-10"))
+        allowed_elections <- allowed_elections_date
+
+        if (!is.null(date)) {
+
+          allowed_elections <-
+            allowed_elections_date |>
+            bind_rows(allowed_elections) |>
+            distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+        }
       }
 
-      dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))
 
-    } else {
+      ambiguous_years <- intersect(allowed_elections$year, 2019)
+      chosen_dates <- NULL
 
-      normal_dates <- dates_elections_spain |>
-        filter(type_elec %in% !!type_elec &
-                 year %in% allowed_elections$year) |>
-        pull(date)
+      if (length(ambiguous_years) > 0 & is.null(date)) {
 
-      normal_dates <- as.character(normal_dates)
-      dates_ok <- as_date(unique(c(date, normal_dates)))
+        normal_years <- setdiff(year, 2019)
+        normal_dates <- dates_elections_spain |>
+          filter(type_elec %in% !!type_elec & year %in% normal_years) |>
+          pull(date)
 
-    }
-    allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
+        normal_dates <- as.character(normal_dates)
 
-    if (verbose) {
+        if (interactive()) {
 
-      # Print the file URL for debugging purposes
-      message(blue("[x] Import poll station data ..."))
-      Sys.sleep(1/20)
-      message(green(paste0("   ... ", allowed_elections$type_elec, " elections on ", allowed_elections$date, "\n")))
+          sel <- menu(c("April (2019-04-28)",
+                        "November (2019-11-10)",
+                        "Both dates"),
+                      title = paste0("What 2019 election do you want?"))
 
+          chosen_dates <- c(
+            chosen_dates,
+            switch(sel,
+                   "2019-04-28",
+                   "2019-11-10",
+                   c("2019-04-28", "2019-11-10"))
+          )
+        } else {
+
+          chosen_dates <- c(chosen_dates, c("2019-04-28", "2019-11-10"))
+        }
+
+        dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))
+
+      } else {
+
+        normal_dates <- dates_elections_spain |>
+          filter(type_elec %in% !!type_elec &
+                   year %in% allowed_elections$year) |>
+          pull(date)
+
+        normal_dates <- as.character(normal_dates)
+        dates_ok <- as_date(unique(c(date, normal_dates)))
+
+      }
+      allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
+
+      if (verbose) {
+
+        # Print the file URL for debugging purposes
+        message(blue("[x] Import poll station data ..."))
+        Sys.sleep(1/20)
+        message(green(paste0("   ... ", allowed_elections$type_elec, " elections on ", allowed_elections$date, "\n")))
+
+      }
     }
 
     if (is.null(election_data)) {
@@ -535,24 +529,15 @@ get_election_data <-
 #'
 #' # Election date from 2023 and 1989 dates
 #' election_data <-
-#'    get_election_data(type_elec = "congress", year = c(2023),
+#'    get_election_data(type_elec = "congress", year = 2023,
 #'                      date = "1989-10-29")
 #'
-#' # National level results
-#' nat_agg <- aggregate_election_data(election_data, level = "all")
-#'
 #' # National level results (without parties)
-#' nat_agg <-
-#'   aggregate_election_data(election_data, level = "all",
-#'                           by_parties = FALSE)
+#' nat_agg <- aggregate_election_data(election_data, level = "all",
+#'                                    by_parties = FALSE)
 #'
-#' # Province level results
+#' # Province level results (with parties)
 #' prov_agg <- aggregate_election_data(election_data, level = "prov")
-#'
-#' #  Municipality level results results (without parties)
-#' mun_agg <-
-#'   aggregate_election_data(election_data, level = "mun",
-#'                           by_parties = FALSE)
 #'
 #' \dontrun{
 #'
@@ -563,7 +548,6 @@ get_election_data <-
 #' # Wrong examples
 #'
 #' # Invalid 'level' argument,"district" is not allowed
-#'
 #' aggregate_election_data(election_data, level = "district")
 #'
 #' # Invalid 'by_parties' flag: it must be logical, not character
@@ -920,34 +904,21 @@ aggregate_election_data <-
 #'
 #' ## Correct examples
 #'
-#' # Summary 2023 and 2016 election data at national level, without
-#' # candidacies ballots, in a short version
-#' summary_all <-
-#'   summary_election_data(type_elec = "congress", year = 2023,
-#'                         date = "2016-06-26",
-#'                         by_parties = FALSE)
-#'
-#' # Summary 2023 and 2016 election data at national level,
-#' # aggregating the candidacies ballots, in a long version
-#' summary_all <-
-#'   summary_election_data(type_elec = "congress", year = 2023,
-#'                         date = "2016-06-26", short_version = FALSE)
-#'
-#' # Summary 2023 election data at ccaa level, aggregating the
-#' # candidacies ballots, in a short version
-#' summary_ccaa <-
-#'   summary_election_data(type_elec = "congress", year = 2023,
-#'                         date = "2016-06-26", level = "ccaa",
-#'                         short_version = FALSE)
-#'
-#' # Summary 2023 election data at prov level, aggregating the
-#' # candidacies ballots, in a short version, and filtering ballots
-#' # (percentage between 0 and 100)
+#' # Summary 2023 and 2016 election data at prov level,
+#' # aggregating the candidacies ballots, in a short version
 #' summary_prov <-
 #'   summary_election_data(type_elec = "congress", year = 2023,
-#'                         date = "2016-06-26", level = "prov",
-#'                         short_version = FALSE,
-#'                         filter_porc_ballots = 15)
+#'                         level = "prov", date = "2016-06-26")
+#'
+#' # Summary 2023 election data at mun level, aggregating the
+#' # candidacies ballots, in a long version, and filtering ballots
+#' # above 45% (percentage between 0 and 100) and just PP and PSOE
+#' # parties
+#' summary_mun <-
+#'   summary_election_data(type_elec = "congress", year = 2023,
+#'                         level = "mun", short_version = FALSE,
+#'                         filter_candidacies = c("PSOE", "PP"),
+#'                         filter_porc_ballots = 45)
 #'
 #' \dontrun{
 #' # ----
@@ -1012,7 +983,7 @@ summary_election_data <-
     }
 
     # check filter_candidacies
-    if (!is.na(filter_candidacies) & !is.character(filter_candidacies)) {
+    if (!all(is.na(filter_candidacies)) & !all(is.character(filter_candidacies))) {
 
       stop(red("Ups! `filter_candidacies` argument should be NA or a string of characters."))
 
@@ -1194,7 +1165,7 @@ summary_election_data <-
       }
     }
 
-    if (!is.na(filter_candidacies)) {
+    if (!any(is.na(filter_candidacies))) {
 
       if (!by_parties) {
 
@@ -1202,9 +1173,12 @@ summary_election_data <-
 
       } else {
 
+        filter_candidacies <-
+          filter_candidacies[!is.na(filter_candidacies)]
         aux <-
           summary_data  |>
-          filter(str_detect(.data[[col_abbrev_candidacies]], filter_candidacies))
+          filter(str_detect(.data[[col_abbrev_candidacies]],
+                            paste0(filter_candidacies, collapse = "|")))
 
         if (nrow(aux) == 0) {
 

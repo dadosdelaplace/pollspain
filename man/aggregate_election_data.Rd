@@ -126,24 +126,15 @@ total ballots, number of polling stations and contextual sums.
 
 # Election date from 2023 and 1989 dates
 election_data <-
-   get_election_data(type_elec = "congress", year = c(2023),
+   get_election_data(type_elec = "congress", year = 2023,
                      date = "1989-10-29")
 
-# National level results
-nat_agg <- aggregate_election_data(election_data, level = "all")
-
 # National level results (without parties)
-nat_agg <-
-  aggregate_election_data(election_data, level = "all",
-                          by_parties = FALSE)
+nat_agg <- aggregate_election_data(election_data, level = "all",
+                                   by_parties = FALSE)
 
-# Province level results
+# Province level results (with parties)
 prov_agg <- aggregate_election_data(election_data, level = "prov")
-
-#  Municipality level results results (without parties)
-mun_agg <-
-  aggregate_election_data(election_data, level = "mun",
-                          by_parties = FALSE)
 
 \dontrun{
 
@@ -154,7 +145,6 @@ mun_agg <-
 # Wrong examples
 
 # Invalid 'level' argument,"district" is not allowed
-
 aggregate_election_data(election_data, level = "district")
 
 # Invalid 'by_parties' flag: it must be logical, not character

@@ -39,6 +39,7 @@ library(pollspain) # after installing
 
 ```{r message = FALSE, warning = FALSE, echo = FALSE}
 library(pollspain)
+library(dplyr)
 ```
 
 An **internet connection** is just required for installing. Data is stored in the accompanying `pollspaindata` package. **See more** at <https://github.com/dadosdelaplace/pollspaindata>
@@ -57,45 +58,34 @@ returns a [**summary of election results aggregated at the administrative level*
 
 ```{r summary-election-data-1, eval = FALSE}
 # Summary election data at ccaa level for both elections in 2023 and 2016
-summary_data_all <- summary_election_data(type_elec = "congress", year = 2023)
+summary_data_all <-
+  summary_election_data(type_elec = "congress", year = 2023, date = "2016-06-26")
 summary_data_all
 ```
 
 ```{r summary-election-data-1-b, echo = FALSE, warning = FALSE, message = FALSE}
 # Summary election data at national level for 2023 election
-summary_data_2023 <- summary_election_data(type_elec = "congress", year = 2023)
-print(summary_data_2023 |> 
-  dplyr::select(id_elec, id_candidacies_nat, ballots,
-         blank_ballots, invalid_ballots, party_ballots,porc_candidacies_valid),
-  width = Inf)
+summary_data_2023 <-
+  summary_election_data(type_elec = "congress", year = 2023, date = "2016-06-26")
+print(summary_data_2023 |>
+        slice_max(ballots, n = 3, by = "id_elec"), width = Inf)
 ```
 
 ```{r summary-election-data-3, eval = FALSE}
 # Summary election data, aggregating candidacies ballots at prov level
 summary_data_prov_parties <-
-  summary_election_data("congress", year = c(2000, 2008, 2023),
-                        level = "prov", by_parties = TRUE)
-head(summary_data_prov_parties, 5)
+  summary_election_data("congress", year = 2023, date = "2016-06-26", level = "prov")
 ```
 
-```{r summary-election-data-3-b, echo = FALSE, warning = FALSE, message = FALSE, eval = FALSE}
-# Summary election data, aggregating candidacies ballots at prov level
-# for three elections
-summary_data_prov_parties <-
-  summary_election_data("congress", year = c(2000, 2008, 2023),
-                        level = "prov", by_parties = TRUE)
-knitr::kable(head(summary_data_prov_parties, 5))
-```
 
-`summary_election_data()` is a **user-friendly combination** of `get_election_data()` (merges different data sources at the polling station level) and `aggregate_election_data()` (aggregates the data). See [**some use cases and tutorials**](https://javieralvarezliebana.es/pollspain/#other-functions).
+`summary_election_data()` is a **user-friendly combination** of `get_election_data()` (merges different data sources at the polling station level) and `aggregate_election_data()` (aggregates the data). See [**some use cases and tutorials**](https://javieralvarezliebana.es/pollspain/#tutorials).
 
 <details>
 <summary>⚠️ About municipalities</summary>
 
-The municipality data (names and codes) were **extracted from the version published by the National Statistics Institute (INE) on February 6, 2025**. The configuration of municipalities from previous years has been adapted to the most recent setup, recoding cases where municipalities have merged or disappeared.
+The municipality data (names and codes) were **extracted from the version published by the National Statistics Institute (INE) on February 6, 2025**. Over the years, various municipal mergers have taken place in Spain, which means that not all elections feature the same set of municipalities or the same identifying codes. In order to unify and standardize the results provided to users, all output tables refer to the most recent municipality recoding by the Spanish National Statistics Institute (INE). The helper function `recod_mun()` transparently returns the updated code based on that recoding, reassigning codes for merged municipalities accordingly.
 
-Data extracted from <https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx>
-
+Data extracted from <https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx>. 
 </details>
 
 
@@ -109,7 +99,8 @@ According to the National Statistics Institute (INE) «the electoral roll contai
 
 The electoral roll of residents in Spain who are nationals of countries with Agreements for municipal elections (CERE Agreements), and the electoral roll of citizens of the European Union residing in Spain for municipal and European Parliament elections (CERE EU)».
 
-Los datos relativos a CERA se han agregado a nivel nacional, comunidad autónoma y provincial. ...
+**CERA-related data is provided at the provincial constituency level**. These votes are aggregated with the rest when `level = "all"`, `level = "ccaa"`, or `level = "prov"`. At any lower level of aggregation, 52 additional rows—one for each province—are included (for example, when aggregating data at the municipal level, the result includes as many rows as there are municipalities plus 52 «CERA municipalities»).
+
 
 </details>
 
@@ -119,12 +110,6 @@ Los datos relativos a CERA se han agregado a nivel nacional, comunidad autónoma
 
 
 ### Surveys summaries
-
-
-### Estimating electoral surveys
-
-
-### Simulating electoral results
 
 
 ### Data viz
@@ -139,7 +124,39 @@ Los datos relativos a CERA se han agregado a nivel nacional, comunidad autónoma
 * ¿algún lollipop para mostrar housing efects? con flechas y eso.
 -->
 
+## About data
+
+This package uses data collected from the following sources:
+
+* Spanish electoral data downloaded from [**repository of the Spanish Ministry of the Interior**](https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/).
+
+* Worldwide electoral data downloaded from [**Comparative Study of Electoral Systems (CSES)**](https://cses.org/data-download/) and [**Election Data Archive (ICPSR)**](https://electiondataarchive.org/)
+
+* Survey data download from Wikipedia links ([**example**](https://en.wikipedia.org/wiki/Opinion_polling_for_the_2023_Spanish_general_election)).
+
+* Seat allocation methods checked in the [**Electoral System Design Database (International IDEA)**](https://www.idea.int/data-tools/data/electoral-system-design)
+
+
+See more details about data structure at <https://javieralvarezliebana.es/pollspain/articles/about-data.html>
+
+
 ## Tutorials
+
+* [**How to use utils functions?**](https://javieralvarezliebana.es/pollspain/articles/utils.html)
+
+* [**Import raw election and survey files**](...)
+
+* [**Getting election summaries**](...)
+
+* [**Creating electoral maps (pollspain + mapSpain)**](...)
+
+* [**Linking income data to electoral results (pollspain + ineAtlas)**](...)
+
+* [**About seat allocation methods**](...)
+
+* [**Getting survey summaries**](...)
+
+* [**About survey house effects**](...)
 
 ## Other functions
 
@@ -155,7 +172,6 @@ extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
 
 * [**Import raw data**]{.hl}: functions starting with `import_..._data()` (code can be found in `import_elections_data.R` file) are aimed at importing and preprocessing as raw as possible the `.DAT` election files from the files available in the [pollspaindata package](https://github.com/dadosdelaplace/pollspaindata). See [**more examples about how to use them**](...).
 
-* [**Recoding candidacies**]{.hl}:
 
 ## Contributing
 
@@ -174,12 +190,6 @@ This package has been designed based on the **following resources and references
 * V-Dem Dataset. Varieties of Democracy (V-Dem) Project. <https://v-dem.net/data/>
 * Wickham H. and Bryan J. R Packages: Organize, Test, Document, and Share Your Code (2023). <https://r-pkgs.org/>
 
-### Data sources
-
-* Spanish electoral data downloaded from [**repository of the Spanish Ministry of the Interior**](https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/).
-* Worldwide electoral data downloaded from [**Comparative Study of Electoral Systems (CSES)**](https://cses.org/data-download/) and [**Election Data Archive (ICPSR)**](https://electiondataarchive.org/)
-* Survey data download from Wikipedia links ([**example**](https://en.wikipedia.org/wiki/Opinion_polling_for_the_2023_Spanish_general_election)).
-* Seat allocation methods checked in the [**Electoral System Design Database (International IDEA)**](https://www.idea.int/data-tools/data/electoral-system-design)
 
 ## Authors
 

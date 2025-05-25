@@ -61,50 +61,48 @@ available <span class="hl">**levels**</span> (`level`) are: `"all"`,
 
 ``` r
 # Summary election data at ccaa level for both elections in 2023 and 2016
-summary_data_all <- summary_election_data(type_elec = "congress", year = 2023)
+summary_data_all <-
+  summary_election_data(type_elec = "congress", year = 2023, date = "2016-06-26")
 summary_data_all
 ```
 
-    #> # A tibble: 59 × 7
-    #>    id_elec       id_candidacies_nat ballots blank_ballots invalid_ballots
-    #>    <glue>        <chr>                <dbl>         <dbl>           <dbl>
-    #>  1 02-2023-07-24 000001               46053        200682          264382
-    #>  2 02-2023-07-24 000002             7821777        200682          264382
-    #>  3 02-2023-07-24 000003               23289        200682          264382
-    #>  4 02-2023-07-24 000004                 874        200682          264382
-    #>  5 02-2023-07-24 000005             8161117        200682          264382
-    #>  6 02-2023-07-24 000006             3057068        200682          264382
-    #>  7 02-2023-07-24 000007              169240        200682          264382
-    #>  8 02-2023-07-24 000008                 263        200682          264382
-    #>  9 02-2023-07-24 000009               23421        200682          264382
-    #> 10 02-2023-07-24 000010             3044983        200682          264382
-    #>    party_ballots porc_candidacies_valid
-    #>            <dbl>                  <dbl>
-    #>  1      24487589                  0.188
-    #>  2      24487589                 31.9  
-    #>  3      24487589                  0.095
-    #>  4      24487589                  0.004
-    #>  5      24487589                 33.3  
-    #>  6      24487589                 12.5  
-    #>  7      24487589                  0.691
-    #>  8      24487589                  0.001
-    #>  9      24487589                  0.096
-    #> 10      24487589                 12.4  
-    #> # ℹ 49 more rows
+    #> # A tibble: 6 × 12
+    #>   id_elec       blank_ballots invalid_ballots party_ballots valid_ballots
+    #>   <glue>                <dbl>           <dbl>         <dbl>         <dbl>
+    #> 1 02-2016-06-26        179081          225504      23874674      24053755
+    #> 2 02-2016-06-26        179081          225504      23874674      24053755
+    #> 3 02-2016-06-26        179081          225504      23874674      24053755
+    #> 4 02-2023-07-24        200682          264382      24487589      24688271
+    #> 5 02-2023-07-24        200682          264382      24487589      24688271
+    #> 6 02-2023-07-24        200682          264382      24487589      24688271
+    #>   total_ballots abbrev_candidacies name_candidacies                  ballots
+    #>           <dbl> <chr>              <chr>                               <dbl>
+    #> 1      24279259 PP                 PARTIDO POPULAR                   7941236
+    #> 2      24279259 PSOE               PARTIDO SOCIALISTA OBRERO ESPANOL 5443846
+    #> 3      24279259 PODEMOS            PODEMOS                           3227123
+    #> 4      24952653 PP                 PARTIDO POPULAR                   8161117
+    #> 5      24952653 PSOE               PARTIDO SOCIALISTA OBRERO ESPANOL 7821777
+    #> 6      24952653 VOX                VOX                               3057068
+    #>   porc_candidacies_parties porc_candidacies_valid porc_candidacies_census
+    #>                      <dbl>                  <dbl>                   <dbl>
+    #> 1                     33.3                   33.0                   23.0 
+    #> 2                     22.8                   22.6                   15.7 
+    #> 3                     13.5                   13.4                    9.33
+    #> 4                     33.3                   33.1                   23.2 
+    #> 5                     31.9                   31.7                   22.3 
+    #> 6                     12.5                   12.4                    8.70
 
 ``` r
 # Summary election data, aggregating candidacies ballots at prov level
 summary_data_prov_parties <-
-  summary_election_data("congress", year = c(2000, 2008, 2023),
-                        level = "prov", by_parties = TRUE)
-head(summary_data_prov_parties, 5)
+  summary_election_data("congress", year = 2023, date = "2016-06-26", level = "prov")
 ```
 
 `summary_election_data()` is a **user-friendly combination** of
 `get_election_data()` (merges different data sources at the polling
 station level) and `aggregate_election_data()` (aggregates the data).
 See [**some use cases and
-tutorials**](https://javieralvarezliebana.es/pollspain/#other-functions).
+tutorials**](https://javieralvarezliebana.es/pollspain/#tutorials).
 
 <details>
 
@@ -115,13 +113,17 @@ tutorials**](https://javieralvarezliebana.es/pollspain/#other-functions).
 
 The municipality data (names and codes) were **extracted from the
 version published by the National Statistics Institute (INE) on February
-6, 2025**. The configuration of municipalities from previous years has
-been adapted to the most recent setup, recoding cases where
-municipalities have merged or disappeared.
+6, 2025**. Over the years, various municipal mergers have taken place in
+Spain, which means that not all elections feature the same set of
+municipalities or the same identifying codes. In order to unify and
+standardize the results provided to users, all output tables refer to
+the most recent municipality recoding by the Spanish National Statistics
+Institute (INE). The helper function `recod_mun()` transparently returns
+the updated code based on that recoding, reassigning codes for merged
+municipalities accordingly.
 
 Data extracted from
-<https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx>
-
+<https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx>.
 </details>
 
 <details>
@@ -144,18 +146,19 @@ with Agreements for municipal elections (CERE Agreements), and the
 electoral roll of citizens of the European Union residing in Spain for
 municipal and European Parliament elections (CERE EU)».
 
-Los datos relativos a CERA se han agregado a nivel nacional, comunidad
-autónoma y provincial. …
+**CERA-related data is provided at the provincial constituency level**.
+These votes are aggregated with the rest when `level = "all"`,
+`level = "ccaa"`, or `level = "prov"`. At any lower level of
+aggregation, 52 additional rows—one for each province—are included (for
+example, when aggregating data at the municipal level, the result
+includes as many rows as there are municipalities plus 52 «CERA
+municipalities»).
 
 </details>
 
 ### Seat allocation
 
 ### Surveys summaries
-
-### Estimating electoral surveys
-
-### Simulating electoral results
 
 ### Data viz
 
@@ -169,7 +172,47 @@ autónoma y provincial. …
 * ¿algún lollipop para mostrar housing efects? con flechas y eso.
 -->
 
+## About data
+
+This package uses data collected from the following sources:
+
+- Spanish electoral data downloaded from [**repository of the Spanish
+  Ministry of the
+  Interior**](https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/).
+
+- Worldwide electoral data downloaded from [**Comparative Study of
+  Electoral Systems (CSES)**](https://cses.org/data-download/) and
+  [**Election Data Archive (ICPSR)**](https://electiondataarchive.org/)
+
+- Survey data download from Wikipedia links
+  ([**example**](https://en.wikipedia.org/wiki/Opinion_polling_for_the_2023_Spanish_general_election)).
+
+- Seat allocation methods checked in the [**Electoral System Design
+  Database (International
+  IDEA)**](https://www.idea.int/data-tools/data/electoral-system-design)
+
+See more details about data structure at
+<https://javieralvarezliebana.es/pollspain/articles/about-data.html>
+
 ## Tutorials
+
+- [**How to use utils
+  functions?**](https://javieralvarezliebana.es/pollspain/articles/utils.html)
+
+- [**Import raw election and survey files**](...)
+
+- [**Getting election summaries**](...)
+
+- [**Creating electoral maps (pollspain + mapSpain)**](...)
+
+- [**Linking income data to electoral results (pollspain +
+  ineAtlas)**](...)
+
+- [**About seat allocation methods**](...)
+
+- [**Getting survey summaries**](...)
+
+- [**About survey house effects**](...)
 
 ## Other functions
 
@@ -198,8 +241,6 @@ extract_code("01-04-003-01-004-B", level = "mun", full_cod = TRUE)
   `.DAT` election files from the files available in the [pollspaindata
   package](https://github.com/dadosdelaplace/pollspaindata). See [**more
   examples about how to use them**](...).
-
-- <span class="hl">**Recoding candidacies**</span>:
 
 ## Contributing
 
@@ -231,20 +272,6 @@ references**
   <https://v-dem.net/data/>
 - Wickham H. and Bryan J. R Packages: Organize, Test, Document, and
   Share Your Code (2023). <https://r-pkgs.org/>
-
-### Data sources
-
-- Spanish electoral data downloaded from [**repository of the Spanish
-  Ministry of the
-  Interior**](https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/).
-- Worldwide electoral data downloaded from [**Comparative Study of
-  Electoral Systems (CSES)**](https://cses.org/data-download/) and
-  [**Election Data Archive (ICPSR)**](https://electiondataarchive.org/)
-- Survey data download from Wikipedia links
-  ([**example**](https://en.wikipedia.org/wiki/Opinion_polling_for_the_2023_Spanish_general_election)).
-- Seat allocation methods checked in the [**Electoral System Design
-  Database (International
-  IDEA)**](https://www.idea.int/data-tools/data/electoral-system-design)
 
 ## Authors
 

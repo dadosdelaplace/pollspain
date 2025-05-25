@@ -1,0 +1,38 @@
+---
+title: "About data"
+output: rmarkdown::html_vignette
+author: "Javier Álvarez Liébana"
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{About data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 8,
+  fig.height = 7
+)
+```
+
+
+This tutorial aims to illustrate how more [**advanced developers can use the helper functions**]{.hl} in the `utils.R` script:
+
+* `type_to_code_election()`
+* `extract_code()`
+* `recod_mun()`
+
+
+## Required packages
+
+Let's load the required packages for this tutorial.
+
+```{r packages}
+library(pollspain)
+```

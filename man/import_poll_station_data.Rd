@@ -105,22 +105,18 @@ across multiple election periods as specified by the user.
 
 ## Correct examples
 
-# Fetch poll station data for the congress elections in 2019
-# (both April and November) in a short version
-poll_station_data_2019 <-
-  import_poll_station_data(type_elec = "congress", year = 2019)
+# Fetch poll station data for congress elections in multiple dates
+# in a short version
+poll_station_data <-
+  import_poll_station_data(type_elec = "congress", year = 2023,
+                           date = "2019-04-28")
 
-# Fetch poll station data for the congress elections
-# in April 2019 in a long version
-poll_station_data_4_2019 <-
-  import_poll_station_data(type_elec = "congress", date = "2019-04-28")
-
-# Fetch poll station data for the congress elections in
-# 2016, 2015 and 1986 in a long version
-combined_poll_station_data_long <-
+# Fetch poll station data for congress elections in multiple dates
+# in a long version
+poll_station_data <-
   import_poll_station_data(type_elec = "congress",
-                           year = c(2016, 2015, 1986),
-                           short_version = TRUE)
+                           date = c("2019-04-28", "2023-07-24"),
+                           short_version = FALSE)
 
 # ----
 # Incorrect examples

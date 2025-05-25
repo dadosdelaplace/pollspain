@@ -178,34 +178,21 @@ each election, including the following variables:
 
 ## Correct examples
 
-# Summary 2023 and 2016 election data at national level, without
-# candidacies ballots, in a short version
-summary_all <-
-  summary_election_data(type_elec = "congress", year = 2023,
-                        date = "2016-06-26",
-                        by_parties = FALSE)
-
-# Summary 2023 and 2016 election data at national level,
-# aggregating the candidacies ballots, in a long version
-summary_all <-
-  summary_election_data(type_elec = "congress", year = 2023,
-                        date = "2016-06-26", short_version = FALSE)
-
-# Summary 2023 election data at ccaa level, aggregating the
-# candidacies ballots, in a short version
-summary_ccaa <-
-  summary_election_data(type_elec = "congress", year = 2023,
-                        date = "2016-06-26", level = "ccaa",
-                        short_version = FALSE)
-
-# Summary 2023 election data at prov level, aggregating the
-# candidacies ballots, in a short version, and filtering ballots
-# (percentage between 0 and 100)
+# Summary 2023 and 2016 election data at prov level,
+# aggregating the candidacies ballots, in a short version
 summary_prov <-
   summary_election_data(type_elec = "congress", year = 2023,
-                        date = "2016-06-26", level = "prov",
-                        short_version = FALSE,
-                        filter_porc_ballots = 15)
+                        level = "prov", date = "2016-06-26")
+
+# Summary 2023 election data at mun level, aggregating the
+# candidacies ballots, in a long version, and filtering ballots
+# above 45\% (percentage between 0 and 100) and just PP and PSOE
+# parties
+summary_mun <-
+  summary_election_data(type_elec = "congress", year = 2023,
+                        level = "mun", short_version = FALSE,
+                        filter_candidacies = c("PSOE", "PP"),
+                        filter_porc_ballots = 45)
 
 \dontrun{
 # ----

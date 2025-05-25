@@ -70,24 +70,10 @@
 #'
 #' ## Correct examples
 #'
-#' # Congress elections in April and November 2019
-#' # Fetch municipal census data for the congress elections in
-#' # April and November 2019
-#' mun_census_2019 <-
-#'   import_mun_census_data(type_elec = "congress", year = 2019)
-#'
-#' # Fetch municipal census data for the congress elections in
-#' # April 2019
-#' mun_census_04_2019 <-
+#' # Fetch municipal census for congress elections in multiple dates
+#' mun_census <-
 #'   import_mun_census_data(type_elec = "congress",
-#'                          date = "2019-04-28")
-#'
-#' # Example usage to combine data from different elections into
-#' # one table. Fetch municipal census data for congress elections
-#' # in Nov 2019 and June 2016
-#' combined_mun_census_data <-
-#'   import_mun_census_data(type_elec = "congress",
-#'                          year = c(2019, 2016, 1982, 1986))
+#'                          year = c(2016, 2023), date = "2019-04-28")
 #'
 #' # ----
 #' # Incorrect examples
@@ -365,22 +351,18 @@ import_mun_census_data <-
 #'
 #' ## Correct examples
 #'
-#' # Fetch poll station data for the congress elections in 2019
-#' # (both April and November) in a short version
-#' poll_station_data_2019 <-
-#'   import_poll_station_data(type_elec = "congress", year = 2019)
+#' # Fetch poll station data for congress elections in multiple dates
+#' # in a short version
+#' poll_station_data <-
+#'   import_poll_station_data(type_elec = "congress", year = 2023,
+#'                            date = "2019-04-28")
 #'
-#' # Fetch poll station data for the congress elections
-#' # in April 2019 in a long version
-#' poll_station_data_4_2019 <-
-#'   import_poll_station_data(type_elec = "congress", date = "2019-04-28")
-#'
-#' # Fetch poll station data for the congress elections in
-#' # 2016, 2015 and 1986 in a long version
-#' combined_poll_station_data_long <-
+#' # Fetch poll station data for congress elections in multiple dates
+#' # in a long version
+#' poll_station_data <-
 #'   import_poll_station_data(type_elec = "congress",
-#'                            year = c(2016, 2015, 1986),
-#'                            short_version = TRUE)
+#'                            date = c("2019-04-28", "2023-07-24"),
+#'                            short_version = FALSE)
 #'
 #' # ----
 #' # Incorrect examples
@@ -778,20 +760,19 @@ import_poll_station_data <-
 #'
 #' ## Correct examples
 #'
-#' # Fetch candidacies data for the congress elections in 2019
-#' candidacies_data_2019 <-
-#'     import_candidacies_data(type_elec = "congress",
-#'                             year = 2019)
-#'
-#' # Fetch candidacies data for the congress elections in Nov 2019
-#' candidacies_data_11_2019 <-
-#'   import_candidacies_data(type_elec = "congress", date = "2019-11-10")
-#'
-#' # Example usage to combine data from different elections into
-#' # one table
-#' combined_candidacies_data <-
+#' # Fetch candidacies data for congress elections in multiple dates
+#' # in a short version
+#' candidacies_data <-
 #'   import_candidacies_data(type_elec = "congress",
-#'                           year = c(1982, 1986, 1993))
+#'                           year = 2023,
+#'                           date = "2019-04-28")
+#'
+#' # Fetch candidacies data for congress elections in multiple dates
+#' # in a long version
+#' candidacies_data <-
+#'   import_candidacies_data(type_elec = "congress",
+#'                           year = c(1982, 2008),
+#'                           short_version = FALSE)
 #'
 #' # ----
 #' # Incorrect examples

@@ -82,24 +82,10 @@ of data across multiple election periods as specified by the user.
 
 ## Correct examples
 
-# Congress elections in April and November 2019
-# Fetch municipal census data for the congress elections in
-# April and November 2019
-mun_census_2019 <-
-  import_mun_census_data(type_elec = "congress", year = 2019)
-
-# Fetch municipal census data for the congress elections in
-# April 2019
-mun_census_04_2019 <-
+# Fetch municipal census for congress elections in multiple dates
+mun_census <-
   import_mun_census_data(type_elec = "congress",
-                         date = "2019-04-28")
-
-# Example usage to combine data from different elections into
-# one table. Fetch municipal census data for congress elections
-# in Nov 2019 and June 2016
-combined_mun_census_data <-
-  import_mun_census_data(type_elec = "congress",
-                         year = c(2019, 2016, 1982, 1986))
+                         year = c(2016, 2023), date = "2019-04-28")
 
 # ----
 # Incorrect examples

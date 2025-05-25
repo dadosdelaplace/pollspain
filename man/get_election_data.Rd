@@ -145,29 +145,19 @@ This function ...
 
 ## Correct examples
 
-# Example for a given year
-# Congress elections in year = 2016 (2016-06-26)
-elections_data_2016 <-
-  get_election_data(type_elec = "congress", year = 2016)
-
-# Example for a vector of years
-elections_data_2008_2016 <-
-  get_election_data(type_elec = "congress", year = c(2008, 2016))
-
-# Example for a given date
-# Congress elections in date = "2023-07-24" in a long version
-elections_data_2023 <-
-  get_election_data(type_elec = "congress", date = "2023-07-24",
-                    short_version = FALSE)
-
-# Congress elections in 2008 (2008-03-09) and 2016 (2016-06-26),
-# and "2023-07-24" and "1989-10-29"
-elections_data_multiple <-
+# Congress elections in year 2008, 2016 and "2023-07-24"
+# in a short version
+elections_data <-
   get_election_data(type_elec = "congress", year = c(2008, 2016),
-                    date = c("2023-07-24"))
+                    date = "2023-07-24")
 
-# Example usage providing external tables with different
-# column names
+# Congress elections in 2008 and "1989-10-29"
+# in a long version
+elections_data <-
+  get_election_data(type_elec = "congress", year = 2008,
+                    date = "1989-10-29", short_version = FALSE)
+
+# Example usage providing external tables
 election_data <-
   import_poll_station_data(type_elec = "congress", year = 2016) |>
   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
@@ -175,7 +165,7 @@ ballots_data <-
   import_candidacies_data(type_elec = "congress", year = 2016) |>
   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
 join_data <-
-  get_election_data(type_elec = "congress", year = 2016,
+  get_election_data(type_elec = "congress",
                     election_data = election_data,
                     ballots_data = ballots_data,
                     col_id_elec = "invent_1",
