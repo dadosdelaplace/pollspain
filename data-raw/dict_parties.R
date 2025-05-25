@@ -727,14 +727,7 @@ global_dict_parties <-
 #   distinct(abbrev_candidacies, name_candidacies) |>
 #   arrange(abbrev_candidacies)
 
-# colores
-
-# AP-PDP y PP (AP-PDP-PL SOLO EN UNAS --> AP-PDP)
-# CIU y sus escicisiones
-# PNV EAJ-PNV
-# PSA-PA
-# HB
-# PSE-EE se presentó fuera del PSOE al menos en el 82 y 86
+# colors
 global_dict_parties <-
   global_dict_parties |>
   mutate(color =

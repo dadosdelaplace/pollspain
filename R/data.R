@@ -6,7 +6,7 @@
 #' elections from 1980 onwards have been provided. Last update:
 #' 2025/05/01.
 #'
-#' @format A data frame with 61 rows and 7 variables:
+#' @format A tibble with 62 rows and 7 variables:
 #' \itemize{
 #'   \item \code{cod_elec}: code of type of elections. Allowed values:
 #'   \itemize{
@@ -45,9 +45,11 @@
 #' @description A dataset containing the codes provided by INE
 #' of Spanish provinces and regions. Last update: 2023/02/25
 #'
-#' @format A data frame with 52 rows and 4 variables:
+#' @format A tibble with 52 rows and 5 variables:
 #' \itemize{
-#'   \item \code{cod_INE_ccaa}: code of region
+#'   \item \code{cod_INE_ccaa}: code of region according INE.
+#'   \item \code{cod_MIR_ccaa}: code of region according Spanish
+#'   Ministry of the Interior (MIR).
 #'   \item \code{ccaa}: name of region
 #'   \item \code{cod_INE_prov}: code of province
 #'   \item \code{prov}: name of province
@@ -72,7 +74,7 @@
 #' @description A dataset containing the codes provided by INE
 #' of Spanish provinces and regions. Last update: 2023/02/25
 #'
-#' @format A data frame with 52 rows and 2 variables:
+#' @format A tibble with 52 rows and 2 variables:
 #' \itemize{
 #'   \item \code{cod_INE_prov}: code of province
 #'   \item \code{prov}: name of province
@@ -97,7 +99,7 @@
 #' @description A dataset containing the codes provided by INE
 #' of Spanish provinces and regions. Last update: 2023/02/25
 #'
-#' @format A data frame with 19 rows and 2 variables:
+#' @format A tibble with 19 rows and 2 variables:
 #' \itemize{
 #'   \item \code{cod_INE_ccaa}: code of regions
 #'   \item \code{ccaa}: name of regions
@@ -123,9 +125,11 @@
 #' of Spanish municipalities. Last update: 2025/05/03 (data
 #' updated by INE on 2020/01/01)
 #'
-#' @format A data frame with 8131 rows and 7 variables:
+#' @format A tibble with 8131 rows and 10 variables:
 #' \itemize{
-#'   \item \code{cod_INE_ccaa}: code of regions
+#'   \item \code{id_INE_ccaa, id_MIR_ccaa}: full id of municipalities
+#'   (combining ccaa, province and mun's id)
+#'   \item \code{cod_INE_ccaa, cod_MIR_ccaa}: code of regions
 #'   \item \code{ccaa}: name of regions
 #'   \item \code{cod_INE_prov}: code of provinces
 #'   \item \code{prov}: name of provinces
@@ -148,25 +152,29 @@
 "cod_INE_mun"
 
 
-#' @title pending
+#' @title Dictionary for parties and candidacies
 #'
-#' @description pending
+#' @description A dataset containing, for each election, the
+#' abbreviation and name for each candidacy, as well as the
+#' national id and province's id. An hexadecimal code is proposed
+#' for the most important candidacies for dataviz purposes.
 #'
-#' @format A data frame with pending:
+#' @format A tibble with 7 columns:
 #' \itemize{
-#'   \item \code{cod_INE_ccaa}: code of regions
-#'   \item \code{ccaa}: name of regions
-#'   \item \code{cod_INE_prov}: code of provinces
-#'   \item \code{prov}: name of provinces
-#'   \item \code{cod_INE_mun}: code of municipalities
-#'   \item \code{cd_INE_mun}: check digit (see \href{https://www.ine.es/daco/daco42/codmun/codmun00i.htm}{documentation})
-#'   \item \code{mun}: name of municipalities
+#'   \item \code{id_elec}: id of elections (type of elections + date).
+#'   \item \code{abbrev_candidacies}: party abbreviation.
+#'   \item \code{name_candidacies}: party name (at each constituency).
+#'   \item \code{id_candidacies_nat}: national id.
+#'   \item \code{id_candidacies}: id at each constituency.
+#'   \item \code{name_candidacies_nat}: party name (common at
+#'   national level).
+#'   \item \code{color}: hexadecimal (color) code for some parties.
 #' }
 #'
 #' @author Irene Bosque-Gala, Mafalda Gonzalez-Gonzalez and Javier
 #' Alvarez-Liebana.
 #'
-#' @source Data ...
+#' @source Data collected from all the election files.
 #' @docType data
 #' @keywords datasets
 #' @name global_dict_parties

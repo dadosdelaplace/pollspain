@@ -56,7 +56,9 @@ the different candidacies, already provided (by other functions or
 by the user). Database should contain a
 \code{col_id_poll_station} column. Defaults to \code{NULL}.}
 
-\item{candidacies_data}{pending...}
+\item{candidacies_data}{A database containing the information of
+candidacies. Database should contain \code{col_abbrev_candidacies}
+and \code{col_id_candidacies} columns. Defaults to \code{NULL}.}
 
 \item{col_id_elec}{Column name in \code{election_data} to uniquely
 identify the elections. Defaults to \code{"id_elec"}.}
@@ -76,7 +78,9 @@ uniquely identify municipalities. Defaults to
 a short version of the data (just key variables) or not.
 Defaults to \code{TRUE}.}
 
-\item{CERA_remove}{pending}
+\item{CERA_remove}{Flag to indicate whether it should be removed
+the ballots related to CERA constituencies. Defaults to
+\code{FALSE}.}
 
 \item{level}{A string providing the level of aggregation at which
 the data is to be provided. The allowed values are the following:
@@ -92,8 +96,9 @@ vote percentage threshold (out of 100) that the user wants to use
 to filter the parties (as long as \code{by_parties = TRUE}).
 Defaults to \code{NA}.}
 
-\item{filter_candidacies}{A string of characters ... pending
-(as long as \code{by_parties = TRUE}). Defaults to \code{NA}.}
+\item{filter_candidacies}{A string of characters containing
+party abbreviations which ballots will be filtered (as long as
+\code{by_parties = TRUE}). Defaults to \code{NA}.}
 
 \item{cols_mun_var}{A vector of variable names that, in their raw
 version, are only available at the municipal level (or higher).
@@ -104,7 +109,8 @@ Defaults to \code{c("pop_res_mun", "census_counting_mun")}.}
 candidacies id at province level and national level. Defaults to
 c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").}
 
-\item{col_abbrev_candidacies}{pending...}
+\item{col_abbrev_candidacies}{Column name to uniquely identify the
+party abbreviations. Defaults to \code{"abbrev_candidacies"}.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
@@ -114,56 +120,35 @@ A tibble with rows corresponding to the level of aggregation for
 each election, including the following variables:
 \item{id_elec}{election's id constructed from the election code
 \code{cod_elec} and date \code{date_elec}.}
-\item{cod_elec}{code representing the type of election:
-\code{"01"} (referendum), \code{"02"} (congress),
-\code{"03"} (senate), \code{"04"} (local elections),
-\code{"06"} (cabildo - Canarian council - elections), \code{"07"}
-(European Parliament elections).}
-\item{type_elec}{type of election.}
-\item{date_elec}{date of the election.}
-\item{id_INE_poll_station}{poll station's id constructed from the
-ccaa-prov-municipality and poll station codes.}
-\item{id_INE_mun}{municipality ID constructed from the
-ccaa-prov-mun codes provided by INE.}
-\item{cod_INE_ccaa, ccaa}{codes and names for regions (ccaa)
-to which the municipalities belong.}
-\item{cod_INE_prov, prov}{codes and names for the provinces to
-which the municipalities belong.}
-\item{cod_INE_mun, mun}{code, and name for
-municipalities.}
-\item{cod_mun_district, cod_sec, cod_poll_station}{codes for the
-municipal district, census tract and poll station.}
-\item{ballots_1, turnout_1}{number of total ballots and turnout
-percentage in the first round.}
-\item{ballots_2, turnout_2}{number of total ballots and turnout
-percentage in the second round (if applicable).}
+\item{id_INE_xxx}{id for the xxx constituency provided in
+\code{level}: id_INE_ccaa, id_INE_prov, etc. It is only provided
+for long version.}
+\item{xxx}{names for the xxx constituency provided in
+\code{level}: ccaa, prov, etc.}
+\item{ballots_1, ballots_2}{number of total ballots and turnout
+percentage in the first and second round (if applicable). It is
+only provided for long version.}
 \item{blank_ballots, invalid_ballots}{blank and invalid ballots.}
 \item{party_ballots, valid_ballots, total_ballots}{ballots to
 candidacies/parties, valid ballots (sum of \code{blank_ballots} and
 \code{party_ballots}) and total ballots (sum of
 \code{valid_ballots} and \code{invalid_ballots}).}
-\item{turnout}{final turnout percentage.}
-\item{porc_valid, porc_invalid, porc_parties, porc_blank}{perc (\%)
-values of \code{valid_ballots}, \code{invalid_ballots},
-\code{party_ballots} and \code{blank_ballots}.}
-\item{n_poll_stations}{number of polling stations.}
-\item{pop_res_mun}{population census of residents (CER + CERA) at
-municipality level.}
-\item{census_counting_mun}{population eligible to vote after
-claims at municipality level.}
-\item{id_candidacies}{id for candidacies (at province level).}
-\item{id_candidacies_ccaa, id_candidacies_nat}{id for
-candidacies (at region - ccaa - and national level).}
+\item{porc_candidacies_parties, porc_candidacies_valid,
+porc_candidacies_census}{perc (\%) values of \code{ballots} for
+each candidacy related to \code{party_ballots},
+\code{valid_ballots} and \code{census_counting_xxx}, respectively.}
+\item{n_poll_stations}{number of polling stations. It is only
+provided for long version.}
+\item{pop_res_xxx}{population census of residents (CER + CERA) at
+xxx level. It is only provided for long version.}
+\item{census_counting_xxx}{population eligible to vote after
+claims at xxx level. It is only provided for long version.}
+\item{id_candidacies}{id for candidacies: national ids when
+\code{level = "all"} and province ids otherwise.}
 \item{abbrev_candidacies, name_candidacies}{acronym and full name
 of the candidacies.}
 \item{ballots}{number of ballots obtained for each candidacy at
 each level section.}
-\item{porc_candidacies_parties}{percentage of ballots obtained for each candidacy over the
-total number of party ballots of each level section.}
-\item{porc_candidacies_valid}{percentage of ballots obtained for each candidacy over the
-total number of valid ballots of each level section.}
-\item{porc_candidacies_census}{percentage of ballots obtained for each candidacy over the
-census of the corresponding aggregation level.}
 }
 \description{
 pending Import, preprocess and aggregate election data at the same time for
@@ -171,8 +156,7 @@ a given election and aggregation level. This function also lets remove parties b
 vote share threshold.
 }
 \details{
-A tibble with rows corresponding to the level of aggregation for
-each election, including the following variables:
+pending...
 }
 \examples{
 

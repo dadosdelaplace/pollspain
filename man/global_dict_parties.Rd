@@ -3,27 +3,31 @@
 \docType{data}
 \name{global_dict_parties}
 \alias{global_dict_parties}
-\title{pending}
+\title{Dictionary for parties and candidacies}
 \format{
-A data frame with pending:
+A tibble with 7 columns:
 \itemize{
-\item \code{cod_INE_ccaa}: code of regions
-\item \code{ccaa}: name of regions
-\item \code{cod_INE_prov}: code of provinces
-\item \code{prov}: name of provinces
-\item \code{cod_INE_mun}: code of municipalities
-\item \code{cd_INE_mun}: check digit (see \href{https://www.ine.es/daco/daco42/codmun/codmun00i.htm}{documentation})
-\item \code{mun}: name of municipalities
+\item \code{id_elec}: id of elections (type of elections + date).
+\item \code{abbrev_candidacies}: party abbreviation.
+\item \code{name_candidacies}: party name (at each constituency).
+\item \code{id_candidacies_nat}: national id.
+\item \code{id_candidacies}: id at each constituency.
+\item \code{name_candidacies_nat}: party name (common at
+national level).
+\item \code{color}: hexadecimal (color) code for some parties.
 }
 }
 \source{
-Data ...
+Data collected from all the election files.
 }
 \usage{
 data(global_dict_parties)
 }
 \description{
-pending
+A dataset containing, for each election, the
+abbreviation and name for each candidacy, as well as the
+national id and province's id. An hexadecimal code is proposed
+for the most important candidacies for dataviz purposes.
 }
 \examples{
 # Load data

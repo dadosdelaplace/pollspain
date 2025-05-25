@@ -5,9 +5,11 @@
 \alias{cod_INE_prov_ccaa}
 \title{INE's code for ccaa and provinces}
 \format{
-A data frame with 52 rows and 4 variables:
+A tibble with 52 rows and 5 variables:
 \itemize{
-\item \code{cod_INE_ccaa}: code of region
+\item \code{cod_INE_ccaa}: code of region according INE.
+\item \code{cod_MIR_ccaa}: code of region according Spanish
+Ministry of the Interior (MIR).
 \item \code{ccaa}: name of region
 \item \code{cod_INE_prov}: code of province
 \item \code{prov}: name of province

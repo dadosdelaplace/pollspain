@@ -5,9 +5,11 @@
 \alias{cod_INE_mun}
 \title{INE's code for municipalities}
 \format{
-A data frame with 8131 rows and 7 variables:
+A tibble with 8131 rows and 10 variables:
 \itemize{
-\item \code{cod_INE_ccaa}: code of regions
+\item \code{id_INE_ccaa, id_MIR_ccaa}: full id of municipalities
+(combining ccaa, province and mun's id)
+\item \code{cod_INE_ccaa, cod_MIR_ccaa}: code of regions
 \item \code{ccaa}: name of regions
 \item \code{cod_INE_prov}: code of provinces
 \item \code{prov}: name of provinces

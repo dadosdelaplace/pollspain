@@ -5,7 +5,7 @@
 \alias{cod_INE_ccaa}
 \title{INE's code for ccaa and provinces}
 \format{
-A data frame with 19 rows and 2 variables:
+A tibble with 19 rows and 2 variables:
 \itemize{
 \item \code{cod_INE_ccaa}: code of regions
 \item \code{ccaa}: name of regions

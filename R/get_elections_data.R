@@ -41,12 +41,12 @@
 #' \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
 #' (European Parliament elections). Variable available only for
 #' long version.}
-#' \item{type_elec}{type of election.}
-#' \item{date_elec}{date of the election.}
-#' \item{id_INE_mun}{municipality ID constructed from the
-#' ccaa-prov-mun codes provided by INE.}
+#' \item{date_elec}{date of the election. Variable available only for
+#' long version.}
 #' \item{id_INE_poll_station}{poll station's id constructed from the
 #' ccaa-prov-municipality and poll station codes.}
+#' \item{id_INE_mun}{municipality ID constructed from the
+#' ccaa-prov-mun codes provided by INE.}
 #' \item{cod_INE_ccaa, ccaa}{codes and names for regions (ccaa)
 #' to which the municipalities belong. Codes available only for
 #' long version.}
@@ -55,10 +55,8 @@
 #' \item{cod_INE_mun, mun}{code, and name for
 #' municipalities. Codes available only for long version.}
 #' \item{cod_mun_district, cod_sec, cod_poll_station}{codes for the
-#' municipal district, census tract and poll station. Codes available
-#' only for long version.}
-#' \item{census_counting_mun}{population eligible to vote after claims
-#' at municipality level.}
+#' municipal district, census tract and poll station. They are
+#' only available for long version.}
 #' \item{ballots_1, turnout_1}{number of total ballots and turnout
 #' percentage in the first round. Variables available only for
 #' long version.}
@@ -70,24 +68,36 @@
 #' candidacies/parties, valid ballots (sum of \code{blank_ballots} and
 #' \code{party_ballots}) and total ballots (sum of
 #' \code{valid_ballots} and \code{invalid_ballots}).}
-#' \item{turnout}{final turnout percentage.}
+#' \item{turnout}{final turnout percentage. It is only
+#' available for long version.}
 #' \item{porc_valid, porc_invalid, porc_parties, porc_blank}{perc (%)
 #' values of \code{valid_ballots}, \code{invalid_ballots},
 #' \code{party_ballots} and \code{blank_ballots}.}
-#' \item{n_poll_stations}{number of polling stations.}
+#' \item{n_poll_stations}{number of polling stations. It is only
+#' available for long version.}
+#' \item{census_counting_mun}{population eligible to vote after claims
+#' at municipality level.}
 #' \item{pop_res_mun}{population census of residents (CER + CERA) at
 #' municipality level.}
-#' \item{census_counting_mun}{population eligible to vote after
-#' claims at municipality level.}
-#' \item{id_candidacies}{id for candidacies (at province level).}
-#' \item{id_candidacies_ccaa, id_candidacies_nat}{id for
-#' candidacies (at region - ccaa - and national level).}
+#' \item{id_candidacies}{id for candidacies at province level.}
+#' \item{id_candidacies_ccaa, id_candidacies_nat}{id for candidacies
+#' at ccaa level (only provided for long version) and at national
+#' level.}
 #' \item{abbrev_candidacies, name_candidacies}{acronym and full name
-#' of the candidacies.}
+#' of the candidacies. They are only available for long version.}
 #' \item{ballots}{number of ballots obtained for each candidacy at
 #' each poll station.}
 #'
-#' @details This function ...
+#' @details The purpose of this function is to easily combine the
+#' outputs of \code{import_poll_station_data()},
+#' \code{import_mun_census_data()}, and
+#' \code{import_candidacies_data()}, providing a tibble at the
+#' polling station level with both general voting data (blank votes,
+#' null votes, etc.) and votes for each candidacy (identified by
+#' their corresponding ids). This function does not perform
+#' aggregations and is not intended as a final-use tool for basic
+#' users, but rather as an intermediate step for the
+#' \code{summary_election_data()} function.
 #'
 #' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #' @keywords get_elections_data
@@ -454,6 +464,11 @@ get_election_data <-
 #' @inheritParams import_poll_station_data
 #' @inheritParams import_candidacies_data
 #' @inheritParams get_election_data
+#' @param election_data A database containing general election data
+#' already provided (by other functions or by the user). Database
+#' should contain \code{col_id_elec}, \code{col_id_poll_station},
+#' \code{cols_mun_var} and \code{col_id_candidacies} columns.
+#' Defaults to \code{NULL}.
 #' @param level A string providing the level of aggregation at which
 #' the data is to be provided. The allowed values are the following:
 #' 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec' or
@@ -478,47 +493,39 @@ get_election_data <-
 #' \code{"03"} (senate), \code{"04"} (local elections),
 #' \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
 #' (European Parliament elections).}
-#' \item{type_elec}{type of election.}
-#' \item{date_elec}{date of the election.}
-#' \item{id_INE_poll_station}{poll station's id constructed from the
-#' ccaa-prov-municipality and poll station codes.}
-#' \item{id_INE_mun}{municipality ID constructed from the
-#' ccaa-prov-mun codes provided by INE.}
-#' \item{cod_INE_ccaa, ccaa}{codes and names for regions (ccaa)
-#' to which the municipalities belong.}
-#' \item{cod_INE_prov, prov}{codes and names for the provinces to
-#' which the municipalities belong.}
-#' \item{cod_INE_mun, mun}{code, and name for
-#' municipalities.}
-#' \item{cod_mun_district, cod_sec, cod_poll_station}{codes for the
-#' municipal district, census tract and poll station.}
-#' \item{ballots_1, turnout_1}{number of total ballots and turnout
-#' percentage in the first round.}
-#' \item{ballots_2, turnout_2}{number of total ballots and turnout
-#' percentage in the second round (if applicable).}
+#' \item{id_INE_xxx}{id for the xxx constituency provided in
+#' \code{level}: id_INE_ccaa, id_INE_prov, etc.}
+#' \item{xxx}{names for the xxx constituency provided in
+#' \code{level}: ccaa, prov, etc.}
 #' \item{blank_ballots, invalid_ballots}{blank and invalid ballots.}
 #' \item{party_ballots, valid_ballots, total_ballots}{ballots to
 #' candidacies/parties, valid ballots (sum of \code{blank_ballots} and
 #' \code{party_ballots}) and total ballots (sum of
 #' \code{valid_ballots} and \code{invalid_ballots}).}
-#' \item{turnout}{final turnout percentage.}
-#' \item{porc_valid, porc_invalid, porc_parties, porc_blank}{perc (%)
-#' values of \code{valid_ballots}, \code{invalid_ballots},
-#' \code{party_ballots} and \code{blank_ballots}.}
 #' \item{n_poll_stations}{number of polling stations.}
-#' \item{pop_res_mun}{population census of residents (CER + CERA) at
-#' municipality level.}
+#' \item{pop_res_xxx}{population census of residents (CER + CERA) at
+#' xxx level (if level is below municipality level, it is provided at
+#' municipality level). It is only available for long version.}
 #' \item{census_counting_mun}{population eligible to vote after
-#' claims at municipality level.}
+#' claims at xxx level (if level is below municipality level, it is
+#' provided at municipality level). It is only available for
+#' long version.}
 #' \item{id_candidacies}{id for candidacies (at province level).}
-#' \item{id_candidacies_ccaa, id_candidacies_nat}{id for
-#' candidacies (at region - ccaa - and national level).}
-#' \item{abbrev_candidacies, name_candidacies}{acronym and full name
-#' of the candidacies.}
+#' \item{id_candidacies_nat}{id for candidacies at region national
+#' level.}
 #' \item{ballots}{number of ballots obtained for each candidacy at
 #' each level section.}
 #'
-#' @details ...
+#' @details This function is actually a helper function that, given
+#' an electoral data file with a specific structure, aggregates the
+#' information to the level specified in \code{level}. Data that is
+#' only available at the provincial or municipal level is handled
+#' differently when the aggregation level is below those levels
+#' (for example, CERA data cannot be aggregated below the province,
+#' in which case 52 special constituencies are added). This function
+#' is not intended as a final-use tool for basic users, but rather as
+#' an intermediate step for the \code{summary_election_data()}
+#' function.
 #'
 #' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #' @keywords get_elections_data
@@ -828,11 +835,17 @@ aggregate_election_data <-
 #' @inheritParams import_candidacies_data
 #' @inheritParams get_election_data
 #' @inheritParams aggregate_election_data
-#' @param CERA_remove pending
-#' @param filter_candidacies A string of characters ... pending
-#' (as long as \code{by_parties = TRUE}). Defaults to \code{NA}.
-#' @param candidacies_data pending...
-#' @param col_abbrev_candidacies pending...
+#' @param CERA_remove Flag to indicate whether it should be removed
+#' the ballots related to CERA constituencies. Defaults to
+#' \code{FALSE}.
+#' @param filter_candidacies A string of characters containing
+#' party abbreviations which ballots will be filtered (as long as
+#' \code{by_parties = TRUE}). Defaults to \code{NA}.
+#' @param candidacies_data A database containing the information of
+#' candidacies. Database should contain \code{col_abbrev_candidacies}
+#' and \code{col_id_candidacies} columns. Defaults to \code{NULL}.
+#' @param col_abbrev_candidacies Column name to uniquely identify the
+#' party abbreviations. Defaults to \code{"abbrev_candidacies"}.
 #' @param filter_porc_ballots A numerical argument representing the
 #' vote percentage threshold (out of 100) that the user wants to use
 #' to filter the parties (as long as \code{by_parties = TRUE}).
@@ -842,59 +855,37 @@ aggregate_election_data <-
 #' each election, including the following variables:
 #' \item{id_elec}{election's id constructed from the election code
 #' \code{cod_elec} and date \code{date_elec}.}
-#' \item{cod_elec}{code representing the type of election:
-#' \code{"01"} (referendum), \code{"02"} (congress),
-#' \code{"03"} (senate), \code{"04"} (local elections),
-#' \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
-#' (European Parliament elections).}
-#' \item{type_elec}{type of election.}
-#' \item{date_elec}{date of the election.}
-#' \item{id_INE_poll_station}{poll station's id constructed from the
-#' ccaa-prov-municipality and poll station codes.}
-#' \item{id_INE_mun}{municipality ID constructed from the
-#' ccaa-prov-mun codes provided by INE.}
-#' \item{cod_INE_ccaa, ccaa}{codes and names for regions (ccaa)
-#' to which the municipalities belong.}
-#' \item{cod_INE_prov, prov}{codes and names for the provinces to
-#' which the municipalities belong.}
-#' \item{cod_INE_mun, mun}{code, and name for
-#' municipalities.}
-#' \item{cod_mun_district, cod_sec, cod_poll_station}{codes for the
-#' municipal district, census tract and poll station.}
-#' \item{ballots_1, turnout_1}{number of total ballots and turnout
-#' percentage in the first round.}
-#' \item{ballots_2, turnout_2}{number of total ballots and turnout
-#' percentage in the second round (if applicable).}
+#' \item{id_INE_xxx}{id for the xxx constituency provided in
+#' \code{level}: id_INE_ccaa, id_INE_prov, etc. It is only provided
+#' for long version.}
+#' \item{xxx}{names for the xxx constituency provided in
+#' \code{level}: ccaa, prov, etc.}
+#' \item{ballots_1, ballots_2}{number of total ballots and turnout
+#' percentage in the first and second round (if applicable). It is
+#' only provided for long version.}
 #' \item{blank_ballots, invalid_ballots}{blank and invalid ballots.}
 #' \item{party_ballots, valid_ballots, total_ballots}{ballots to
 #' candidacies/parties, valid ballots (sum of \code{blank_ballots} and
 #' \code{party_ballots}) and total ballots (sum of
 #' \code{valid_ballots} and \code{invalid_ballots}).}
-#' \item{turnout}{final turnout percentage.}
-#' \item{porc_valid, porc_invalid, porc_parties, porc_blank}{perc (%)
-#' values of \code{valid_ballots}, \code{invalid_ballots},
-#' \code{party_ballots} and \code{blank_ballots}.}
-#' \item{n_poll_stations}{number of polling stations.}
-#' \item{pop_res_mun}{population census of residents (CER + CERA) at
-#' municipality level.}
-#' \item{census_counting_mun}{population eligible to vote after
-#' claims at municipality level.}
-#' \item{id_candidacies}{id for candidacies (at province level).}
-#' \item{id_candidacies_ccaa, id_candidacies_nat}{id for
-#' candidacies (at region - ccaa - and national level).}
+#' \item{porc_candidacies_parties, porc_candidacies_valid,
+#' porc_candidacies_census}{perc (%) values of \code{ballots} for
+#' each candidacy related to \code{party_ballots},
+#' \code{valid_ballots} and \code{census_counting_xxx}, respectively.}
+#' \item{n_poll_stations}{number of polling stations. It is only
+#' provided for long version.}
+#' \item{pop_res_xxx}{population census of residents (CER + CERA) at
+#' xxx level. It is only provided for long version.}
+#' \item{census_counting_xxx}{population eligible to vote after
+#' claims at xxx level. It is only provided for long version.}
+#' \item{id_candidacies}{id for candidacies: national ids when
+#' \code{level = "all"} and province ids otherwise.}
 #' \item{abbrev_candidacies, name_candidacies}{acronym and full name
 #' of the candidacies.}
 #' \item{ballots}{number of ballots obtained for each candidacy at
 #' each level section.}
-#' \item{porc_candidacies_parties}{percentage of ballots obtained for each candidacy over the
-#' total number of party ballots of each level section.}
-#' \item{porc_candidacies_valid}{percentage of ballots obtained for each candidacy over the
-#' total number of valid ballots of each level section.}
-#' \item{porc_candidacies_census}{percentage of ballots obtained for each candidacy over the
-#' census of the corresponding aggregation level.}
 #'
-#' @details A tibble with rows corresponding to the level of aggregation for
-#' each election, including the following variables:
+#' @details pending...
 #'
 #' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #' @keywords get_elections_data
@@ -1145,8 +1136,7 @@ summary_election_data <-
         summary_data |>
         select(-contains("census_counting"), -contains("pop_res"),
                -contains("id_INE"),
-               -any_of(c("ballots_1", "ballots_2", "n_poll_stations")),
-               -any_of(c(col_id_candidacies[["id_nat"]], col_id_candidacies[["id_prov"]])))
+               -any_of(c("ballots_1", "ballots_2", "n_poll_stations")))
 
     }
 

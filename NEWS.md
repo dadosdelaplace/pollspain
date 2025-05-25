@@ -15,20 +15,17 @@
 # pollspain 0.2.1
 
 - vignettes
-
 - pending: Fixed documentation of get_elections_data(), aggregate_election_data(), summary_election_data()
-- pending: add more examples in summary()
-
 
 -->
 
 # pollspain 0.2.1
 
-- Fixed aggregate_election_data() function (now ccaa-prov-mun names are included as well as a properly id_INE_...).
-- aggregate_election_data() function now includes a list of id_candidacies at province level when we aggregate 
-- Fixed summary_election_data()
-- Included a CERA flag in summary_election_data() to allow remove CERA ballots.
-- Included first unit tests for utils.R
+- Fixed `aggregate_election_data()` function (now ccaa-prov-mun names are included as well as a properly `id_INE_...`).
+- `aggregate_election_data()` function now includes a list of id_candidacies at province level when we aggregate 
+- Fixed `summary_election_data()`
+- Included a CERA flag in `summary_election_data()` to allow remove CERA ballots.
+- Included first unit tests for `utils.R`
 - Included global dictionary parties.
 
 

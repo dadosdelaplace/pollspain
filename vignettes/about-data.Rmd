@@ -22,17 +22,148 @@ knitr::opts_chunk$set(
 ```
 
 
-This tutorial aims to illustrate how more [**advanced developers can use the helper functions**]{.hl} in the `utils.R` script:
-
-* `type_to_code_election()`
-* `extract_code()`
-* `recod_mun()`
-
-
 ## Required packages
 
 Let's load the required packages for this tutorial.
 
 ```{r packages}
 library(pollspain)
+library(dplyr)
 ```
+
+
+## Dictionary for parties and candidacies
+
+```{r}
+global_dict_parties
+```
+
+The dataset `global_dict_parties` contains, [**for each election, the abbreviation and name for each candidacy, as well as the national id and province's id**]{.hl}. An hexadecimal code is proposed for the most important candidacies for dataviz purposes. The dataset is of our own creation and it was collected from all the election files by applying `import_candidacies_data()` function for each election.
+
+The dataset contains 7 columns:
+
+* `id_elec`: id of elections (type of elections + date).
+* `abbrev_candidacies`: party abbreviation.
+* `name_candidacies`: party name (at each constituency).
+* `id_candidacies_nat`: national id.
+* `id_candidacies`: id at each constituency.
+* `name_candidacies_nat`: party name (common at national level).
+* `color`: hexadecimal (color) code for some parties.
+
+[**Several clarifications should be made regarding the construction**]{.hl} of this dataset. Firstly, **multiple records are provided for each party within a given election**, as the `id_candidacies_nat` (which represents the national-level party identifier) is consistent across all entries. However, each party may appear under **different `id_candidacies`, corresponding to its provincial-level identifiers**. For instance, in the 2023 elections, the PSOE is assigned the national ID `id_candidacies_nat = "000002"` throughout the country, but it is listed under different `id_candidacies` in some provinces, reflecting its participation through various regional federations in the respective constituencies."
+
+```{r}
+global_dict_parties |>
+  filter(abbrev_candidacies == "PSOE" & id_elec == "02-2023-07-24") |> 
+  select(abbrev_candidacies:name_candidacies_nat)
+```
+
+If we examine the previous dataset, we can also observe a common name in the `name_candidacies_nat` variable, which is the one used when aggregating data at the national level—under the most widely recognized branding of the party.
+
+
+Secondly, [**certain groupings have been applied in order to simplify the dataset returned to the user**]{.hl}. These adjustments, while practical, are worth noting—particularly for political science experts:
+
+<details>
+<summary>Notes about acronyms</summary>
+
+* The predecessor of the Partido Popular (`PP`) was, in some instances, listed as `AP-PDP`, in others as `AP-PL`, and occasionally as `AP-PDP-PL`. In all such cases, votes for Alianza Popular (`AP`) and its allied formations have been grouped under the acronym `AP-PDP-PL`. Additionally, parties identified as `PP-FORO`, `PP-PAR`, `PP-UP`, `PP-EU`, and `PP-CDEG` have been consolidated under the `PP` acronym. The Unión del Pueblo Navarro (`UPN`) has retained its own acronym, although it shares the same `id_candidacies_nat` as `PP` due to their electoral coalition.
+
+* The Socialist Party of the Basque Country (`PSE-EE`) has consistently been grouped under the acronym `PSOE`, despite having run independently in the 1982 and 1986 elections.
+
+* All federations and coalitions led by Podemos have been grouped under the acronym `PODEMOS`, even when they appeared on ballots as `UNIDAS/OS PODEMOS`. Unless explicitly indicated as a coalition, En Comú Podem has been treated as an independent label, using the acronym `ECP` (also including Guanyem).
+
+* The Basque Nationalist Party (`PNV`), whose name in Basque sometimes appears as `PNV - EAJ`, has been grouped under the acronym `PNV`.
+
+* The Andalusian Party has been unified under the acronym `PSA-PA` across all elections.
+
+* The Basque party `HB` has been unified under the full name `HERRI BATASUNA`.
+
+* In the context of the Catalan independence movement, the historical party `CIU` went to the 2023 elections under the name Partit Demòcrata Europeu Català - Espai CIU (`PDECAT-E-CIU`), after splitting from `JUNTS`.
+
+* All federations and coalitions led by Izquierda Unida have been grouped under the acronym `IU`, including the 2015 `UNIDAD POPULAR: ...` candidacies, which ran separately from the newly created party `PODEMOS`. Also grouped under `IU` are `IU-UPEC` and candidacies such as Esquerra Unida, Ezker Batua, and Ezker Anitza.
+
+* Candidacies of the Spanish Communist Party have been grouped under the acronym `PCE`, although they sometimes appeared officially as `PCA-PCE`.
+
+* The now-defunct Partido Socialista Galego (`PSG`), also appearing as `BLOQUE PSG` or `B-PSG`, has been unified under the acronym of the Bloque Nacionalista Galego (`BNG`), since its various offshoots ultimately merged into `BNG`. Similarly, `BNG` includes candidacies such as `BNG-NOS`.
+
+* The party or candidacy Navarra Suma has been grouped under the acronym `NA-SUMA`.
+
+* The party Coalición Canaria ran under the acronym `CC-PNC` in 2008, and as `CC-NC` in 2011 and 2019; all such cases have been grouped under Coalición Canaria.
+
+</details>
+
+Last update: 2025/05/25. The code used to generate the dataset can be found at [`data-raw/dict_parties.R` script](https://github.com/dadosdelaplace/pollspain/tree/main/data-raw).
+
+## Datasets about elections
+
+Pending to doc
+
+## Datasets about surveys
+
+Pending to doc
+
+## Auxiliary datasets
+
+
+### Dates of Spanish elections
+
+```{r}
+dates_elections_spain
+```
+
+The dataset `dates_elections_spain` contains the [**dates of Spanish elections**]{.hl} in referendum, congress, senate, municipal, cabildo (Canarian council) and European Parlament elections. The dataset is of our own creation and it contains 62 rows and 7 variables:
+
+* `cod_elec`: code of type of elections.
+* `type_elec`: type of elections ("referendum", "congress", "senate", "local", "regional", "cabildo" or "EU").
+* `date`: date of election in `"YYYY-MM-DD"` format.
+* `year, month, day`: year, month and day of election.
+* `topic`: topic (just for referendum).
+
+Last update: 2025/05/25. The code used to generate the dataset can be found at [`data-raw/dates_elections_spain.R` script](https://github.com/dadosdelaplace/pollspain/tree/main/data-raw).
+
+
+### INE's code for ccaa and provinces
+
+
+```{r}
+cod_INE_prov_ccaa
+```
+
+The dataset `cod_INE_prov_ccaa` contains the [**codes provided by INE of Spanish provinces and regions**]{.hl}. It contains a tibble with 52 rows and 5 variables:
+
+
+* `cod_INE_ccaa`: code of region according INE.
+* `cod_MIR_ccaa`: code of region according Spanish Ministry of the Interior (MIR).
+* `ccaa`: name of region.
+* `cod_INE_prov`: code of province.
+* `prov`: name of province.
+
+Data was extracted from <https://www.ine.es/daco/daco42/codmun/cod_ccaa_provincia.html>.
+
+Last update: 2025/05/25 (data updated by INE on 2023/02/25). The code used to generate the dataset can be found at [`data-raw/cod_INE_prov_ccaa.R` script](https://github.com/dadosdelaplace/pollspain/tree/main/data-raw).
+
+
+### INE's code for municipalities
+
+```{r}
+cod_INE_mun
+```
+
+The dataset `cod_INE_mun` contains the [**codes provided by INE of Spanish municipalities**]{.hl}. Data was extracted from <https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx> and it contains a tibble with 8131 rows and 10 variables:
+
+* `id_INE_mun, id_MIR_mun`: full id of municipalities (combining ccaa, province and mun's id).
+* `cod_INE_ccaa, cod_MIR_ccaa`: code of regions.
+* `ccaa`: name of regions.
+* `cod_INE_prov`: code of provinces.
+* `prov`: name of provinces.
+* `cod_INE_mun`: code of municipalities.
+* `cd_INE_mun`: check digit (see [https://www.ine.es/daco/daco42/codmun/codmun00i.htm](documentation)).
+* `mun`: name of municipalities.
+
+The municipality data (names and codes) were **extracted from the version published by the National Statistics Institute (INE) on February 6, 2025**. Over the years, various municipal mergers have taken place in Spain, which means that not all elections feature the same set of municipalities or the same identifying codes. In order to unify and standardize the results provided to users, all output tables refer to the most recent municipality recoding by the Spanish National Statistics Institute (INE). The function [**`recod_mun()` transparently returns the updated code based on that recoding, reassigning codes for merged municipalities accordingly**]{.hl}.
+
+Data extracted from <https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx>.
+
+Last update: 2025/05/25 (data updated by INE on 2020/01/01). The code used to generate the dataset can be found at [`recod_mun()`](https://javieralvarezliebana.es/pollspain/reference/recod_mun.html)
+
+

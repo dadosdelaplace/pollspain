@@ -5,7 +5,7 @@
 \alias{cod_INE_prov}
 \title{INE's code for ccaa and provinces}
 \format{
-A data frame with 52 rows and 2 variables:
+A tibble with 52 rows and 2 variables:
 \itemize{
 \item \code{cod_INE_prov}: code of province
 \item \code{prov}: name of province

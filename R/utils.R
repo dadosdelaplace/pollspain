@@ -185,6 +185,29 @@ extract_code <-
     return(cod)
 }
 
+#' @title Recode municipalities
+#'
+#' @description Given a dataset with municipality data, this function
+#' transparently returns the updated code based on that recoding,
+#' reassigning codes for merge municipalities accordingly.
+#'
+#' @param mun_data a tibble with info about municipalities.
+#'
+#' @details The municipality data (names and codes) were extracted
+#' from the version published by the National Statistics Institute
+#' (INE) on February 6, 2025. Over the years, various municipal
+#' mergers have taken place in Spain, which means that not all
+#' elections feature the same set of municipalities or the same
+#' identifying codes. In order to unify and standardize the results
+#' provided to users, all output tables refer to the most recent
+#' municipality recoding by the Spanish National Statistics Institute
+#' (INE).
+#'
+#' @author Javier Alvarez-Liebana.
+#' @keywords utils
+#' @name recod_mun
+#'
+#' @export
 recod_mun <- function(mun_data) {
 
   mun_data <-

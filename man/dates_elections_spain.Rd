@@ -5,7 +5,7 @@
 \alias{dates_elections_spain}
 \title{Dates of Spanish elections}
 \format{
-A data frame with 61 rows and 7 variables:
+A tibble with 62 rows and 7 variables:
 \itemize{
 \item \code{cod_elec}: code of type of elections. Allowed values:
 \itemize{
