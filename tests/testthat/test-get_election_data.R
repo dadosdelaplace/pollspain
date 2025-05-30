@@ -3,8 +3,7 @@ test_that("get elections data", {
     sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29",
                          "1993-06-06", "1996-03-03", "2000-03-12",
                          "2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 2)
-
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1)
   expect_equal(get_election_data(type_elec = "congress", date = random_dates,
                                  verbose = FALSE) |>
                  summarise("party_ballots" = unique(party_ballots),
@@ -12,6 +11,12 @@ test_that("get elections data", {
                            .by = c("id_INE_poll_station", "id_elec")) |>
                  filter(sum_ballots != party_ballots) |>
                  nrow(), 0)
+
+  random_dates <-
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29",
+                         "1993-06-06", "1996-03-03", "2000-03-12",
+                         "2004-03-14", "2008-03-09", "2011-11-20",
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1)
   expect_equal(get_election_data(type_elec = "congress", date = random_dates,
                                  verbose = FALSE) |>
                  distinct(id_INE_poll_station, id_elec, .keep_all = TRUE) |>
@@ -19,6 +24,12 @@ test_that("get elections data", {
                         "total_compute" = valid_compute + invalid_ballots) |>
                  filter(valid_compute != valid_ballots | total_compute != total_ballots) |>
                  nrow(), 0)
+
+  random_dates <-
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29",
+                         "1993-06-06", "1996-03-03", "2000-03-12",
+                         "2004-03-14", "2008-03-09", "2011-11-20",
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1)
   expect_equal(get_election_data(type_elec = "congress", date = random_dates,
                                  verbose = FALSE) |>
                  distinct(id_INE_poll_station, id_elec, .keep_all = TRUE) |>

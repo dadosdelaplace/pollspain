@@ -16,8 +16,13 @@
 
 - vignettes
 - pending: Fixed documentation of get_elections_data(), aggregate_election_data(), summary_election_data()
+- menu 2019 en los import
 
 -->
+
+# pollspain 0.2.2
+
+- Lazy duckDB system of files was implemented: similar speed as before but between 6 and 10 times lower RAM consumption.
 
 # pollspain 0.2.1
 

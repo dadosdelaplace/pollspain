@@ -21,6 +21,12 @@
 #' that elections of the specified type are available.
 #' @param verbose Flag to indicate whether detailed messages should
 #' be printed during execution. Defaults to \code{TRUE}.
+#' @param lazy_duckdb Flag to indicate whether a lazy duckDB database
+#' should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
+#' Defaults to \code{FALSE}.
+#' @param con_duckdb Active connection between R and a specific
+#' database, allowing you to send queries, import data, or
+#' write tables to and from R. Defaults to \code{NULL}.
 #'
 #' @return A tibble with rows corresponding to municipalities for
 #' each election, including the following variables:
@@ -97,8 +103,10 @@
 #' }
 #' @export
 import_mun_census_data <-
-  function(type_elec, year = NULL, date = NULL, verbose = TRUE) {
+  function(type_elec, year = NULL, date = NULL, verbose = TRUE,
+           lazy_duckdb = FALSE, con_duckdb = NULL) {
 
+    options(warn=-1)
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
@@ -238,12 +246,22 @@ import_mun_census_data <-
     }
 
     # Import the data
-    files <- glue("raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.csv.gz")
+    if (is.null(con_duckdb)) {
+
+      con <- .get_duckdb_con()
+
+    } else {
+
+      con <- con_duckdb
+
+    }
+
+    files <- glue("raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
     paths <- system.file("extdata", files, package = "pollspaindata")
     mun_data <-
       paths |>
-      map(function(x) { suppressMessages(read_csv(file = x)) }) |>
-      list_rbind()
+      map(function(x) { suppressMessages(tbl(con, x)) })
+    mun_data <- Reduce(union_all, mun_data)
 
     # Recode mun data
     mun_data <-
@@ -254,14 +272,20 @@ import_mun_census_data <-
       distinct(cod_elec, date_elec, cod_INE_prov, cod_INE_mun, .keep_all = TRUE)
 
     # Join MIR and INE information
+    if (!dbExistsTable(con, "cod_INE_mun")) {
+
+      copy_to(con, cod_INE_mun, "cod_INE_mun", temporary = TRUE)
+
+    }
+
     mun_data <-
       mun_data |>
-      left_join(cod_INE_mun, by = c("cod_INE_prov", "cod_INE_mun"),
+      left_join(tbl(con, "cod_INE_mun"), by = c("cod_INE_prov", "cod_INE_mun"),
                 suffix = c(".x", "")) |>
       # Keep names from cod INE files instead of MIR files
       dplyr::select(-contains("x"), -month, -cd_INE_mun, -contains("MIR")) |>
       # create id_elec
-      mutate("id_elec" = glue("{cod_elec}-{date_elec}"),
+      mutate("id_elec" = paste0(cod_elec, "-", date_elec),
              .before = everything()) |>
       # Relocate
       relocate(id_INE_mun, .after = date_elec) |>
@@ -269,6 +293,12 @@ import_mun_census_data <-
       relocate(mun, .after = cod_INE_mun) |>
       relocate(ccaa, .after = cod_INE_ccaa) |>
       relocate(prov, .after = cod_INE_prov)
+
+    if (!lazy_duckdb) {
+
+      mun_data <- mun_data |> collect()
+      DBI::dbDisconnect(con, shutdown = TRUE)
+    }
 
     # output
     return(mun_data)
@@ -391,8 +421,10 @@ import_mun_census_data <-
 import_poll_station_data <-
   function(type_elec, year = NULL, date = NULL,
            prec_round = 3, short_version = TRUE,
-           verbose = TRUE) {
+           verbose = TRUE, lazy_duckdb = FALSE,
+           con_duckdb = NULL) {
 
+    options(warn=-1)
     # Check if prec_round is a positive number
     if (prec_round != as.integer(prec_round) | prec_round < 1) {
 
@@ -543,12 +575,23 @@ import_poll_station_data <-
     }
 
     # Import the data
-    files <- glue("raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.csv.gz")
+    if (is.null(con_duckdb)) {
+
+      con <- .get_duckdb_con()
+
+    } else {
+
+      con <- con_duckdb
+
+    }
+
+    files <- glue("raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
     paths <- system.file("extdata", files, package = "pollspaindata")
     poll_station_raw_data <-
       paths |>
-      map(function(x) { suppressMessages(read_csv(file = x)) }) |>
-      list_rbind() |>
+      map(function(x) { suppressMessages(tbl(con, x)) })
+    poll_station_raw_data <-
+      Reduce(union_all, poll_station_raw_data) |>
       # census variable will be extracted from the mun census
       select(-contains("census"))
 
@@ -564,13 +607,22 @@ import_poll_station_data <-
                cod_sec, cod_poll_station, .keep_all = TRUE)
 
     # Join MIR and INE information
+
+    if (!dbExistsTable(con, "cod_INE_mun")) {
+
+      copy_to(con, cod_INE_mun, "cod_INE_mun", temporary = TRUE)
+
+    }
+
     poll_station_data <-
       poll_station_raw_data |>
-      left_join(cod_INE_mun, by = c("cod_INE_prov", "cod_INE_mun"),
-                suffix = c(".x", "")) |>
+      left_join(tbl(con, "cod_INE_mun"),
+                by = c("cod_INE_prov", "cod_INE_mun"),
+                suffix = c(".rm", "")) |>
+      select(-contains(".rm")) |>
       dplyr::select(-cd_INE_mun) |>
       # create id_elec
-      mutate("id_elec" = glue("{cod_elec}-{date_elec}"),
+      mutate("id_elec" = paste0(cod_elec, "-", date_elec),
              .before = everything())
 
     # Some basic statistics
@@ -579,12 +631,13 @@ import_poll_station_data <-
       mutate("valid_ballots" = blank_ballots + party_ballots,
              "total_ballots" = valid_ballots + invalid_ballots)
 
-    # Include census
     poll_station_data <-
       poll_station_data |>
       dplyr::filter(cod_INE_mun != "999") |>
-      left_join(import_mun_census_data(type_elec, year, date,
-                                       verbose = FALSE),
+      left_join(
+        import_mun_census_data(type_elec, year, date,
+                               verbose = FALSE, lazy_duckdb = TRUE,
+                               con_duckdb = con),
                 by = c("cod_elec", "type_elec", "date_elec", "id_INE_mun"),
                 suffix = c("", ".y")) |>
       select(-contains(".y"))
@@ -600,12 +653,20 @@ import_poll_station_data <-
       relocate(mun, .after = cod_INE_mun)
 
     # Include CERA data and their ccaa and prov
+    if (!dbExistsTable(con, "census_2")) {
+
+      copy_to(con,
+              cod_INE_mun |>
+                distinct(cod_MIR_ccaa, cod_INE_prov, .keep_all = TRUE) |>
+                select(contains("ccaa") | contains("prov")),
+              "census_2", temporary = TRUE)
+    }
+
     poll_station_data <-
-      poll_station_data |>
-      bind_rows(poll_station_raw_data |> filter(cod_INE_mun == "999")) |>
-      left_join(cod_INE_mun |>
-                  distinct(cod_MIR_ccaa, cod_INE_prov, .keep_all = TRUE) |>
-                  select(contains("ccaa") | contains("prov")),
+      union_all(poll_station_data,
+                poll_station_raw_data |>
+                  filter(cod_INE_mun == "999")) |>
+      left_join(tbl(con, "census_2"),
                 by = c("cod_MIR_ccaa", "cod_INE_prov"),
                 suffix = c("", ".y")) |>
       # debugging codes
@@ -614,10 +675,12 @@ import_poll_station_data <-
                ifelse(is.na(cod_INE_ccaa), cod_INE_ccaa.y, cod_INE_ccaa),
              "ccaa" = ifelse(is.na(ccaa), ccaa.y, ccaa),
              "prov" = ifelse(is.na(prov), prov.y, prov),
-             "mun" = ifelse(cod_INE_mun == "999", glue("CERA ({prov})"), mun),
-             "id_INE_mun" = glue("{cod_INE_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
+             "mun" = ifelse(cod_INE_mun == "999",
+                            paste0("CERA (", prov, ")"), mun),
+             "id_INE_mun" =
+               paste0(cod_INE_ccaa, "-", cod_INE_prov, "-", cod_INE_mun),
              "pop_res_mun" = ifelse(cod_INE_mun == "999", census_INE_mun, pop_res_mun),
-             "id_elec" = glue("{cod_elec}-{date_elec}")) |>
+             "id_elec" = paste0(cod_elec, "-", date_elec)) |>
       # Remove variables
       select(-contains(".y"),
              -c(census_CERE_mun, voters_cere, census_INE_mun, turn,
@@ -628,9 +691,10 @@ import_poll_station_data <-
       poll_station_data |>
       # Remove MIR codes
       select(-contains("MIR")) |>
-      drop_na(id_INE_mun) |>
+      filter(!is.na(id_INE_mun)) |>
       mutate("id_INE_poll_station" =
-               glue("{id_INE_mun}-{cod_mun_district}-{cod_sec}-{cod_poll_station}"),
+               paste0(id_INE_mun, "-", cod_mun_district,
+                      "-", cod_sec, "-", cod_poll_station),
              "turnout_1" = round(100 * ballots_1 / census_counting_mun, prec_round),
              "turnout_2" = round(100 * ballots_2 / census_counting_mun, prec_round),
              "turnout" = round(100 * total_ballots / census_counting_mun, prec_round),
@@ -692,6 +756,14 @@ import_poll_station_data <-
                total_ballots, turnout, porc_valid, porc_invalid,
                porc_parties, porc_blank, pop_res_mun, census_counting_mun)
     }
+
+    if (!lazy_duckdb) {
+
+      poll_station_data <- poll_station_data |> collect()
+      DBI::dbDisconnect(con, shutdown = TRUE)
+
+    }
+
     # output
     return(poll_station_data)
   }
@@ -795,8 +867,10 @@ import_poll_station_data <-
 #' @export
 import_candidacies_data <-
   function(type_elec, year = NULL, date = NULL,
-           short_version = TRUE, verbose = TRUE) {
+           short_version = TRUE, verbose = TRUE,
+           lazy_duckdb = FALSE, con_duckdb = NULL) {
 
+    options(warn=-1)
     # check if short_version is a logical variable
     if (is.na(short_version) | !is.logical(short_version)) {
 
@@ -942,14 +1016,25 @@ import_candidacies_data <-
     }
 
     # Import the data
-    files <- glue("raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.csv.gz")
+    if (is.null(con_duckdb)) {
+
+      con <- .get_duckdb_con()
+
+    } else {
+
+      con <- con_duckdb
+
+    }
+
+    files <- glue("raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
     paths <- system.file("extdata", files, package = "pollspaindata")
     candidacies_raw_data <-
       paths |>
-      map(function(x) {
-        suppressMessages(read_csv(file = x,
-                                  col_types = cols(id_candidacies = col_character()))) }) |>
-      list_rbind()
+      map(function(x) { suppressMessages(tbl(con, x)) })
+    candidacies_raw_data <-
+      Reduce(union_all, candidacies_raw_data) |>
+      mutate("id_candidacies" = as.character(id_candidacies))
+
 
     # Recode mun data
     candidacies_raw_data <-
@@ -962,7 +1047,7 @@ import_candidacies_data <-
       distinct(cod_elec, date_elec, cod_INE_prov, cod_INE_mun, cod_mun_district,
                cod_sec, cod_poll_station, id_candidacies, .keep_all = TRUE) |>
       mutate("id_MIR_mun" =
-               glue("{cod_MIR_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
+               paste0(cod_MIR_ccaa, "-", cod_INE_prov, "-", cod_INE_mun),
              .before = everything())
 
     # include CERA codes to INE information: just one
@@ -971,18 +1056,25 @@ import_candidacies_data <-
       cod_INE_mun |>
       distinct(cod_INE_ccaa, cod_INE_prov, .keep_all  = TRUE) |>
       select(cod_INE_ccaa, cod_MIR_ccaa, cod_INE_prov, ccaa, prov) |>
-      mutate("mun" = glue("CERA ({prov})"), cod_INE_mun = "999") |>
+      mutate("mun" = paste0("CERA (", prov, ")"),
+             "cod_INE_mun" = "999") |>
       bind_rows(cod_INE_mun) |> # include "normal" mun
       mutate("id_INE_mun" =
-               glue("{cod_INE_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
+               paste0(cod_INE_ccaa, "-", cod_INE_prov, "-", cod_INE_mun),
              "id_MIR_mun" =
-               glue("{cod_MIR_ccaa}-{cod_INE_prov}-{cod_INE_mun}"),
+               paste0(cod_MIR_ccaa, "-", cod_INE_prov, "-", cod_INE_mun),
              .before = everything())
 
     # Join MIR and INE information
+    if (!dbExistsTable(con, "cod_INE_mun_CERA")) {
+
+      copy_to(con, cod_INE_mun_CERA, "cod_INE_mun_CERA", temporary = TRUE)
+
+    }
+
     candidacies_data <-
       candidacies_raw_data  |>
-      left_join(cod_INE_mun_CERA, by = "id_MIR_mun",
+      left_join(tbl(con, "cod_INE_mun_CERA"), by = "id_MIR_mun",
                 suffix = c(".x", "")) |>
       # Keep names from cod INE files instead of MIR files
       select(-contains(".x")) |>
@@ -990,8 +1082,9 @@ import_candidacies_data <-
       select(-cd_INE_mun, -turn) |>
       # Include id_INE_poll_station and id_elec
       mutate("id_INE_poll_station" =
-               glue("{id_INE_mun}-{cod_mun_district}-{cod_sec}-{cod_poll_station}"),
-             id_elec = glue("{cod_elec}-{date_elec}"))
+               paste0(id_INE_mun, "-", cod_mun_district, "-", cod_sec,
+                      "-", cod_poll_station),
+             id_elec = paste0(cod_elec, "-", date_elec))
 
     # Relocate
     candidacies_data <-
@@ -1005,20 +1098,25 @@ import_candidacies_data <-
     # Include candidacies info
     files <- glue("raw_candidacies_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.csv.gz")
     paths <- system.file("extdata", files, package = "pollspaindata")
+
     candidacies_raw_info <-
       paths |>
-      map(function(x) {
-        suppressMessages(read_csv(file = x,
-                                  col_types =
-                                    cols(id_candidacies = col_character(),
-                                         id_candidacies_ccaa = col_character(),
-                                         id_candidacies_nat = col_character()))) }) |>
-      list_rbind()
+      map(function(x) { suppressMessages(tbl(con, x)) })
+    candidacies_raw_info <-
+      Reduce(union_all, candidacies_raw_info)  |>
+      mutate("id_candidacies" = as.character(id_candidacies),
+             "id_candidacies_ccaa" = as.character(id_candidacies_ccaa),
+             "id_candidacies_nat" = as.character(id_candidacies_nat))
 
     # include candidacies info to candidacies ballots data
+    if (!dbExistsTable(con, "candidacies_raw_info")) {
+
+      copy_to(con, candidacies_raw_info, "candidacies_raw_info", temporary = TRUE)
+
+    }
     candidacies_data <-
       candidacies_data |>
-      left_join(candidacies_raw_info,
+      left_join(tbl(con, "candidacies_raw_info"),
                 by = c("cod_elec", "type_elec",
                        "date_elec", "id_candidacies")) |>
       relocate(abbrev_candidacies:id_candidacies_nat,
@@ -1041,6 +1139,15 @@ import_candidacies_data <-
                id_candidacies, id_candidacies_nat, abbrev_candidacies, name_candidacies,
                ballots)
     }
+
+    if (!lazy_duckdb) {
+
+      candidacies_data <- candidacies_data |> collect()
+      DBI::dbDisconnect(con, shutdown = TRUE)
+
+    }
+
+    # output
     return(candidacies_data)
   }
 

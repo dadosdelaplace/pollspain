@@ -25,7 +25,9 @@ summary_election_data(
   cols_mun_var = c("pop_res_mun", "census_counting_mun"),
   col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat"),
   col_abbrev_candidacies = "abbrev_candidacies",
-  verbose = TRUE
+  verbose = TRUE,
+  lazy_duckdb = FALSE,
+  con_duckdb = NULL
 )
 }
 \arguments{
@@ -114,6 +116,14 @@ party abbreviations. Defaults to \code{"abbrev_candidacies"}.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
+
+\item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
+should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
+Defaults to \code{FALSE}.}
+
+\item{con_duckdb}{Active connection between R and a specific
+database, allowing you to send queries, import data, or
+write tables to and from R. Defaults to \code{NULL}.}
 }
 \value{
 A tibble with rows corresponding to the level of aggregation for

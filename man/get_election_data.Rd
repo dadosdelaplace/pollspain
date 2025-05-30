@@ -17,7 +17,9 @@ get_election_data(
   col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat"),
   prec_round = 3,
   short_version = TRUE,
-  verbose = TRUE
+  verbose = TRUE,
+  lazy_duckdb = FALSE,
+  con_duckdb = NULL
 )
 }
 \arguments{
@@ -73,6 +75,14 @@ Defaults to \code{TRUE}.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
+
+\item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
+should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
+Defaults to \code{FALSE}.}
+
+\item{con_duckdb}{Active connection between R and a specific
+database, allowing you to send queries, import data, or
+write tables to and from R. Defaults to \code{NULL}.}
 }
 \value{
 A tibble with rows corresponding to municipalities for
@@ -204,7 +214,7 @@ get_election_data(type_elec = "congress", year = 2019,
 election_data <-
   import_poll_station_data(type_elec = "congress", year = 2019)
 ballots_data <-
-  import_candidacies_data("type_elec = congress", year = 2019)
+  import_candidacies_data(type_elec = "congress", year = 2019)
 get_election_data(type_elec = "congress", year = 2019,
                    election_data = election_data,
                    ballots_data = ballots_data,

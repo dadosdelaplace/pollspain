@@ -8,7 +8,14 @@ Some definitions of variables were extracted from
 \url{https://www.ige.gal}.
 }
 \usage{
-import_mun_census_data(type_elec, year = NULL, date = NULL, verbose = TRUE)
+import_mun_census_data(
+  type_elec,
+  year = NULL,
+  date = NULL,
+  verbose = TRUE,
+  lazy_duckdb = FALSE,
+  con_duckdb = NULL
+)
 }
 \arguments{
 \item{type_elec}{Type elections for which data is available.
@@ -30,6 +37,14 @@ that elections of the specified type are available.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
+
+\item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
+should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
+Defaults to \code{FALSE}.}
+
+\item{con_duckdb}{Active connection between R and a specific
+database, allowing you to send queries, import data, or
+write tables to and from R. Defaults to \code{NULL}.}
 }
 \value{
 A tibble with rows corresponding to municipalities for

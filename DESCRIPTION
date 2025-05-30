@@ -1,7 +1,7 @@
 Package: pollspain
 Title: A grammar for the analysis of electoral and poll data
-Date: 2025-05-24
-Version: 0.2.1
+Date: 2025-05-30
+Version: 0.2.2
 Authors@R: c(
     person("Javier", "Álvarez-Liébana",
            email = "javalv09@ucm.es",
@@ -21,6 +21,7 @@ Depends:
 Remotes:
     dadosdelaplace/pollspaindata
 Imports: 
+    arrow (>= 16.0.0),
     crayon (>= 1.5.3),
     dplyr (>= 1.1.4),
     glue (>= 1.7.0),
@@ -32,8 +33,10 @@ Imports:
     stringr (>= 1.5.1),
     tibble (>= 3.2.1),
     tidyr (>= 1.3.1),
-    pollspaindata (>= 0.2.0),
-    utils
+    pollspaindata (>= 0.4.0),
+    utils (>= 4.2.0),
+    DBI (>= 1.2.0),
+    duckdb (>= 0.10.0)
 Suggests:
     curl (>= 6.0.0),
     devtools (>= 2.4.5),

@@ -156,7 +156,7 @@
 #' election_data <-
 #'   import_poll_station_data(type_elec = "congress", year = 2019)
 #' ballots_data <-
-#'   import_candidacies_data("type_elec = congress", year = 2019)
+#'   import_candidacies_data(type_elec = "congress", year = 2019)
 #' get_election_data(type_elec = "congress", year = 2019,
 #'                    election_data = election_data,
 #'                    ballots_data = ballots_data,
@@ -173,7 +173,8 @@ get_election_data <-
            col_id_mun = "id_INE_mun",
            col_id_candidacies = c("id_prov" = "id_candidacies",
                                   "id_nat" = "id_candidacies_nat"),
-           prec_round = 3, short_version = TRUE, verbose = TRUE) {
+           prec_round = 3, short_version = TRUE, verbose = TRUE,
+           lazy_duckdb = FALSE, con_duckdb = NULL) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
@@ -351,13 +352,25 @@ get_election_data <-
       }
     }
 
+   # Import the data
+    if (is.null(con_duckdb)) {
+
+      con <- .get_duckdb_con()
+
+    } else {
+
+      con <- con_duckdb
+
+    }
+
     if (is.null(election_data)) {
 
       election_data <-
         import_poll_station_data(type_elec = type_elec, year = NULL,
                                  date = allowed_elections$date, prec_round = prec_round,
                                  short_version = FALSE,
-                                 verbose = FALSE)
+                                 verbose = FALSE, lazy_duckdb = TRUE,
+                                 con_duckdb = con)
 
     }
 
@@ -376,13 +389,26 @@ get_election_data <-
         import_candidacies_data(type_elec = type_elec, year = NULL,
                                 date = allowed_elections$date,
                                 short_version = FALSE,
-                                verbose = FALSE)
+                                verbose = FALSE, lazy_duckdb = TRUE,
+                                con_duckdb = con)
+
+    }
+
+    if (!any(dbListTables(con) == "election_data")) {
+
+      copy_to(con, election_data, name = "election_data", temporary = FALSE)
+
+    }
+
+    if (!any(dbListTables(con) == "ballots_data")) {
+
+      copy_to(con, ballots_data, name = "ballots_data", temporary = FALSE)
 
     }
 
     # Check if col_id_elec and col_id_elec_level exist within the data
-    if (!all(c(col_id_elec, col_id_poll_station) %in% names(election_data)) |
-        !all(c(col_id_elec, col_id_poll_station) %in% names(ballots_data))) {
+    if (!all(c(col_id_elec, col_id_poll_station) %in% colnames(election_data)) |
+        !all(c(col_id_elec, col_id_poll_station) %in% colnames(ballots_data))) {
 
       stop(red("Ups! Columns provided in `col_id_elec`and `col_id_poll_station_station` should be available in both tables."))
 
@@ -393,8 +419,8 @@ get_election_data <-
 
     # join data (without aggregate, just at poll station level)
     join_data <-
-      election_data |>
-      left_join(ballots_data, by = group_vars,
+      tbl(con, "election_data") |>
+      left_join(tbl(con, "ballots_data"), by = group_vars,
                 suffix = c("", ".rm")) |>
       select(-contains("rm"))
 
@@ -406,11 +432,12 @@ get_election_data <-
     check_totals <-
       join_data |>
       summarise("sum_party_ballots" = sum(ballots),
-                "party_ballots" = unique(party_ballots),
+                # unique not available in duckdb
+                "party_ballots" = min(party_ballots),
                 .by = all_of(group_vars)) |>
       filter(sum_party_ballots != party_ballots)
 
-    if (nrow(check_totals) > 0) {
+    if (nrow(check_totals |> collect()) > 0) {
       if (verbose) {
 
         message(yellow(glue("Be careful! Some poll stations does not match individual ballots with summaries provided by MIR. The discrepancies were resolved by using votes by candidacies.")))
@@ -451,8 +478,15 @@ get_election_data <-
                         col_id_candidacies[["id_nat"]])))
     }
 
+    if (!lazy_duckdb) {
+
+      join_data <- join_data |> collect()
+      DBI::dbDisconnect(con, shutdown = TRUE)
+    }
+
     # output
     return(join_data)
+
  }
 
 #' @title Aggregate elections data at provided level (ccaa, prov, etc)
@@ -577,7 +611,8 @@ aggregate_election_data <-
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
            col_id_candidacies = c("id_prov" = "id_candidacies",
                                   "id_nat" = "id_candidacies_nat"),
-           prec_round = 3, verbose = TRUE, short_version = TRUE) {
+           prec_round = 3, verbose = TRUE, short_version = TRUE,
+           lazy_duckdb = FALSE, con_duckdb = NULL) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
@@ -593,13 +628,6 @@ aggregate_election_data <-
 
     }
 
-    # Check if election_data is a data.frame or tibble
-    if ((!is.data.frame(election_data) & !is_tibble(election_data)) |
-        nrow(election_data) == 0 | ncol(election_data) == 0) {
-
-      stop(red("Ups! `election_data` must be a tibble or data.frame whose number of rows and columns should be greater than 0."))
-
-    }
 
     # check short_version
     if (!is.logical(short_version) | is.na(short_version)) {
@@ -617,14 +645,14 @@ aggregate_election_data <-
     }
 
     # Check if col_id_elec and col_id_elec_level exist within the data
-    if (!all(c(col_id_elec, col_id_poll_station) %in% names(election_data))) {
+    if (!all(c(col_id_elec, col_id_poll_station) %in% colnames(election_data))) {
 
       stop(red("Ups! Columns provided in `col_id_elec` and `col_id_poll_station` should be available in the table."))
 
     }
 
     # Check if cols_mun_var exist within the data
-    if (!all(cols_mun_var %in% names(election_data))) {
+    if (!all(cols_mun_var %in% colnames(election_data))) {
 
       stop(red("Ups! Columns provided in `cols_mun_var` should be available in the table."))
 
@@ -646,7 +674,7 @@ aggregate_election_data <-
     }
 
     # Check id_candidacies
-    if (!all(col_id_candidacies %in% names(election_data))) {
+    if (!all(col_id_candidacies %in% colnames(election_data))) {
 
       stop(red("Ups! Variables names in `col_id_candidacies` should be matched with column names in electoral_data"))
     }
@@ -657,12 +685,6 @@ aggregate_election_data <-
       distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
                .data[[col_id_candidacies[["id_prov"]]]],
                .data[[col_id_candidacies[["id_nat"]]]], .keep_all = TRUE)
-
-    if (nrow(election_nodup_data) != nrow(election_data)) {
-
-      message(yellow(glue("Be careful! {nrow(election_data) - nrow(election_nodup_data)} duplicates were found and removed.")))
-
-    }
     election_data <- election_nodup_data
 
     # remove memory
@@ -677,7 +699,7 @@ aggregate_election_data <-
                         "mun", "prov", "ccaa"),
              ordered = TRUE)
 
-    if (!(col_id_mun %in% names(election_data))) {
+    if (!(col_id_mun %in% colnames(election_data))) {
 
       election_data <-
         election_data |>
@@ -691,15 +713,19 @@ aggregate_election_data <-
     if (level != "all") {
 
       group_var <-
-        c(group_var, glue("cod{if_else(hierarchy_levels[hierarchy_levels >= level] >= 'mun', '_INE', '')}_{hierarchy_levels[hierarchy_levels >= level]}"))
+        c(group_var, paste0("cod", if_else(hierarchy_levels[hierarchy_levels >= level] >= 'mun', '_INE', ''),
+                            "_", hierarchy_levels[hierarchy_levels >= level]))
       group_var_mun <-
-        c(group_var_mun, glue("cod_INE_{hierarchy_levels[hierarchy_levels >= level & hierarchy_levels >= 'mun']}"))
+        c(group_var_mun,
+          paste0("cod_INE_",
+                 hierarchy_levels[hierarchy_levels >= level & hierarchy_levels >= 'mun']))
 
       for (i in 2:length(group_var)) {
-        if (!any(names(election_data) == group_var[i])) {
+        if (!any(colnames(election_data) == group_var[i])) {
 
           election_data <-
             election_data |>
+            collect() |>
             mutate(!!group_var[i] :=
                      extract_code(.data[[col_id_poll_station]],
                                   level = as.character(hierarchy_levels[i - 1]),
@@ -708,6 +734,19 @@ aggregate_election_data <-
         }
       }
     }
+
+    if (is.null(con_duckdb)) {
+
+      con <- .get_duckdb_con()
+
+    } else {
+
+      con <- con_duckdb
+
+    }
+    copy_to(con, election_data, name = "election_data", overwrite = TRUE)
+    rm(election_data)
+    election_data <- tbl(con, "election_data")
 
     if (!by_parties) {
 
@@ -741,17 +780,24 @@ aggregate_election_data <-
       group_candidacies <-
         if_else(level == "all", col_id_candidacies["id_nat"],
                 col_id_candidacies["id_prov"])
+
+      aux <-
+        election_data |>
+        distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
+                 .data[[col_id_candidacies[["id_prov"]]]],
+                 .data[[col_id_candidacies[["id_nat"]]]],
+                 .keep_all = TRUE) |>
+        collect() |>
+        summarise("ballots" = sum(ballots, na.rm = TRUE),
+                  "id_candidacies" = list(sort(unique(.data[[col_id_candidacies["id_prov"]]]))),
+                  "id_candidacies_nat" = list(sort(unique(.data[[col_id_candidacies["id_nat"]]]))),
+                  .by = c(group_var, as.character(group_candidacies)))
+
+      copy_to(con, aux, name = "aux", overwrite = TRUE)
+      rm(aux)
       agg_data <-
         poll_data |>
-        left_join(election_data |>
-                    distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
-                             .data[[col_id_candidacies[["id_prov"]]]],
-                             .data[[col_id_candidacies[["id_nat"]]]],
-                             .keep_all = TRUE) |>
-                    summarise("ballots" = sum(ballots, na.rm = TRUE),
-                              "id_candidacies" = list(sort(unique(.data[[col_id_candidacies["id_prov"]]]))),
-                              "id_candidacies_nat" = list(sort(unique(.data[[col_id_candidacies["id_nat"]]]))),
-                              .by = c(group_var, as.character(group_candidacies))),
+        left_join(tbl(con, "aux"),
                   by = group_var)
 
       if (!short_version) {
@@ -776,17 +822,22 @@ aggregate_election_data <-
         agg_data |>
         left_join(election_data |>
                     select(-matches("id|cd_INE|MIR")) |>
-                    select(matches(paste0(as.character(hierarchy_levels[hierarchy_levels >= level]), collapse = "|"))) |>
+                    select(matches(str_flatten(as.character(hierarchy_levels[hierarchy_levels >= level]), collapse = "|"))) |>
                     select(-any_of(c("cod_mun_district", "cod_sec", "cod_poll_station",
                                      cols_mun_var))) |>
                     distinct(.keep_all = TRUE),
                   by = c(group_var[group_var %in%
                                      c("cod_INE_ccaa", "cod_INE_prov", "cod_INE_mun")])) |>
+        collect() |>
         unite(!!paste0("id_INE_", level), group_var[group_var != col_id_elec],
               sep = "-") |>
         select(col_id_elec, paste0("id_INE_", level),
                any_of(c("ccaa", "prov", "mun")),
                everything())
+
+      copy_to(con, agg_data, name = "agg_data", overwrite = TRUE)
+      rm(agg_data)
+      agg_data <- tbl(con, "agg_data")
 
     }
 
@@ -795,7 +846,7 @@ aggregate_election_data <-
     gc()
 
     if (by_parties) {
-      if (all(lengths(agg_data$id_candidacies) == 1)) {
+      if (all(lengths(agg_data |> pull(id_candidacies)) == 1)) {
 
         agg_data <-
           agg_data |>
@@ -804,7 +855,7 @@ aggregate_election_data <-
     }
 
     if (by_parties) {
-      if (all(lengths(agg_data$id_candidacies_nat) == 1)) {
+      if (all(lengths(agg_data |> pull(id_candidacies_nat)) == 1)) {
 
         agg_data <-
           agg_data |>
@@ -817,10 +868,19 @@ aggregate_election_data <-
     if (min(hierarchy_levels[hierarchy_levels >= level]) >= "mun" |
         level == "all") {
 
-      names(agg_data) <-
-        str_replace_all(names(agg_data), "_mun", glue("_{level}"))
+      agg_data <-
+        agg_data |>
+        rename_with(~ str_replace_all(.x, "_mun", paste0("_", level)))
+
     }
 
+    if (!lazy_duckdb) {
+
+      agg_data <- agg_data |> collect()
+      DBI::dbDisconnect(con, shutdown = TRUE)
+    }
+
+    # output
     return(agg_data)
 }
 
@@ -949,7 +1009,7 @@ summary_election_data <-
            col_id_candidacies = c("id_prov" = "id_candidacies",
                                   "id_nat" = "id_candidacies_nat"),
            col_abbrev_candidacies = "abbrev_candidacies",
-           verbose = TRUE) {
+           verbose = TRUE, lazy_duckdb = FALSE, con_duckdb = NULL) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
@@ -1029,9 +1089,12 @@ summary_election_data <-
                         election_data = election_data, ballots_data = ballots_data,
                         col_id_elec = col_id_elec, col_id_poll_station = col_id_poll_station,
                         prec_round = prec_round, short_version = FALSE,
-                        verbose = verbose)
-    names(election_data)[names(election_data) %in% cols_mun_var] <-
-      c("pop_res_mun", "census_counting_mun")
+                        verbose = verbose, lazy_duckdb = TRUE) |>
+      rename_with(
+        ~ c("pop_res_mun", "census_counting_mun")[match(.x, cols_mun_var)],
+        .cols = cols_mun_var)
+    # names(election_data)[names(election_data) %in% cols_mun_var] <-
+    #   c("pop_res_mun", "census_counting_mun")
 
     if (verbose) {
 
@@ -1058,7 +1121,8 @@ summary_election_data <-
                               cols_mun_var = cols_mun_var,
                               col_id_candidacies = col_id_candidacies,
                               prec_round = prec_round,
-                              verbose = verbose, short_version = FALSE)
+                              verbose = verbose, short_version = FALSE,
+                              lazy_duckdb = TRUE)
 
     # remove memory
     rm(list = c("election_data"))
@@ -1075,7 +1139,7 @@ summary_election_data <-
 
       # Including some summaries
       census_var <-
-        names(summary_data)[str_detect(names(summary_data), "census_counting")]
+        colnames(summary_data)[str_detect(colnames(summary_data), "census_counting")]
       summary_data  <-
         summary_data  |>
         mutate("porc_candidacies_parties" =
@@ -1100,16 +1164,40 @@ summary_election_data <-
       id_party <- if_else(level == "all", col_id_candidacies[["id_nat"]],
                           col_id_candidacies[["id_prov"]])
 
+      if (is.null(con_duckdb)) {
+
+        con <- .get_duckdb_con()
+
+      } else {
+
+        con <- con_duckdb
+
+      }
+
+
+      dict_parties <-
+        global_dict_parties |>
+        select(-color) |>
+        filter(id_elec %in% unique(summary_data |> pull(col_id_elec))) |>
+        distinct(.data[[col_id_elec]], .data[[id_party]], .keep_all = TRUE)
+      if (!dbExistsTable(con, "dict_parties")) {
+
+        copy_to(con, dict_parties, "dict_parties", temporary = TRUE)
+
+      }
+
+      if (!dbExistsTable(con, "summary_data")) {
+
+        copy_to(con, summary_data, "summary_data", temporary = TRUE)
+
+      }
       summary_data <-
-        summary_data |>
-        left_join(global_dict_parties |>
-                    select(-color) |>
-                    filter(id_elec %in% unique(summary_data |> pull(col_id_elec))) |>
-                    distinct(.data[[col_id_elec]], .data[[id_party]], .keep_all = TRUE),
+        tbl(con, "summary_data") |>
+        left_join(tbl(con, "dict_parties"),
                   by = c("id_elec" = col_id_elec, id_party),
                   suffix = c("", ".rm")) |>
-          select(-contains(".rm")) |>
-          relocate(col_abbrev_candidacies, .after = id_party)
+        select(-contains(".rm")) |>
+        relocate(col_abbrev_candidacies, .after = id_party)
 
       if (level == "all") {
 
@@ -1168,9 +1256,9 @@ summary_election_data <-
         aux <-
           summary_data  |>
           filter(str_detect(.data[[col_abbrev_candidacies]],
-                            paste0(filter_candidacies, collapse = "|")))
+                            str_flatten(filter_candidacies, collapse = "|")))
 
-        if (nrow(aux) == 0) {
+        if (nrow(aux |> collect()) == 0) {
 
           message(yellow("Be careful! Candidacies filter achieved by `filter_candidacies` provides a empty table so `filter_candidacies` was ignored."))
 
@@ -1185,7 +1273,15 @@ summary_election_data <-
       }
     }
 
+    if (!lazy_duckdb) {
+
+      summary_data <- summary_data |> collect()
+      DBI::dbDisconnect(con, shutdown = TRUE)
+    }
+
+    # output
     return(summary_data)
+
 }
 
 
