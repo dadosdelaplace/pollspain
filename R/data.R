@@ -185,4 +185,48 @@
 #' data(global_dict_parties)
 "global_dict_parties"
 
+#' @title Election results according to Central Election Board
+#'
+#' @description A dataset with the data contained on the PDF
+#' documents provided since 2004 by Central Election Board (CEB) in
+#' Spain. This dataset is used in the unit tests since the data
+#' provided by the Ministry of the Interior are not always corrected
+#' by the CEB data (which are always at the province level,
+#' not below). The tests check that such discrepancies do not exceed
+#' 0.5% of the votes.
+#'
+#' @format A tibble with 15 columns
+#' \itemize{
+#'   \item \code{id_elec}: id of elections (type of elections + date).
+#'   \item \code{cod_elec}: code of elections.
+#'   \item \code{date}: date of elections.
+#'   \item \code{cod_INE_ccaa, cod_MIR_ccaa, ccaa}: codes and names
+#'   for ccaa.
+#'   \item \code{cod_INE_prov, id_INE_prov, prov}: codes and names
+#'   for provinces.
+#'   \item \code{census_counting_prov}: census for each election
+#'   and province.
+#'   \item \code{total_ballots}: total number of ballots, as a sum of
+#'   \code{valid_ballots} and \code{invalid_ballots}.
+#'   \item \code{valid_ballots}: total number of valid ballots, as a
+#'   sum of \code{party_ballots} and \code{blank_ballots}.
+#'   \item \code{party_ballots}: total number of ballots to
+#'   candidacies.
+#'   \item \code{blank_ballots}: total number of blank ballots.
+#'   \item \code{invalid_ballots}: total number of invalid ballots.
+#' }
+#'
+#' @author Javier Alvarez-Liebana.
+#'
+#' @source Data was scraped from the PDF documents provided since
+#' 2004 by Central Election Board (CEB) in Spain.
+#' @docType data
+#' @keywords datasets
+#' @name CEB_results
+#' @usage data(CEB_results)
+#'
+#' @examples
+#' # Load data
+#' data(CEB_results)
+"CEB_results"
 

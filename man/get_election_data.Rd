@@ -171,11 +171,15 @@ elections_data <-
   get_election_data(type_elec = "congress", year = c(2008, 2016),
                     date = "2023-07-24")
 
-# Congress elections in 2008 and "1989-10-29"
-# in a long version
+# Congress elections in 2008 in a long version
 elections_data <-
   get_election_data(type_elec = "congress", year = 2008,
-                    date = "1989-10-29", short_version = FALSE)
+                    short_version = FALSE)
+
+\dontrun{
+# ----
+# Correct examples
+# ----
 
 # Example usage providing external tables
 election_data <-
@@ -194,9 +198,6 @@ join_data <-
 # ----
 # Incorrect examples
 # ----
-
-\dontrun{
-# Wrong examples
 
 # Invalid election type: "national" is not a valid election type
 get_election_data(type_elec = "national", year = 2019)

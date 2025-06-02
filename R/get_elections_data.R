@@ -113,11 +113,15 @@
 #'   get_election_data(type_elec = "congress", year = c(2008, 2016),
 #'                     date = "2023-07-24")
 #'
-#' # Congress elections in 2008 and "1989-10-29"
-#' # in a long version
+#' # Congress elections in 2008 in a long version
 #' elections_data <-
 #'   get_election_data(type_elec = "congress", year = 2008,
-#'                     date = "1989-10-29", short_version = FALSE)
+#'                     short_version = FALSE)
+#'
+#' \dontrun{
+#' # ----
+#' # Correct examples
+#' # ----
 #'
 #' # Example usage providing external tables
 #' election_data <-
@@ -136,9 +140,6 @@
 #' # ----
 #' # Incorrect examples
 #' # ----
-#'
-#' \dontrun{
-#' # Wrong examples
 #'
 #' # Invalid election type: "national" is not a valid election type
 #' get_election_data(type_elec = "national", year = 2019)
@@ -955,11 +956,17 @@ aggregate_election_data <-
 #'
 #' ## Correct examples
 #'
-#' # Summary 2023 and 2016 election data at prov level,
+#' # Summary 2023 election data at prov level,
 #' # aggregating the candidacies ballots, in a short version
 #' summary_prov <-
 #'   summary_election_data(type_elec = "congress", year = 2023,
-#'                         level = "prov", date = "2016-06-26")
+#'                         level = "prov")
+#'
+#'
+#' \dontrun{
+#' # ----
+#' # Correct examples
+#' # ----
 #'
 #' # Summary 2023 election data at mun level, aggregating the
 #' # candidacies ballots, in a long version, and filtering ballots
@@ -967,11 +974,11 @@ aggregate_election_data <-
 #' # parties
 #' summary_mun <-
 #'   summary_election_data(type_elec = "congress", year = 2023,
-#'                         level = "mun", short_version = FALSE,
+#'                         date = "2016-06-26", level = "mun",
+#'                         short_version = FALSE,
 #'                         filter_candidacies = c("PSOE", "PP"),
 #'                         filter_porc_ballots = 45)
 #'
-#' \dontrun{
 #' # ----
 #' # Incorrect examples
 #' # ----
@@ -1276,7 +1283,7 @@ summary_election_data <-
     if (!lazy_duckdb) {
 
       summary_data <- summary_data |> collect()
-      DBI::dbDisconnect(con, shutdown = TRUE)
+      # DBI::dbDisconnect(con, shutdown = TRUE)
     }
 
     # output

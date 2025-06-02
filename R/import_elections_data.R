@@ -1096,7 +1096,7 @@ import_candidacies_data <-
                cod_INE_prov, prov, cod_INE_mun, mun, .after = id_MIR_mun)
 
     # Include candidacies info
-    files <- glue("raw_candidacies_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.csv.gz")
+    files <- glue("raw_candidacies_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
     paths <- system.file("extdata", files, package = "pollspaindata")
 
     candidacies_raw_info <-

@@ -17,7 +17,7 @@
 - vignettes
 - pending: Fixed documentation of get_elections_data(), aggregate_election_data(), summary_election_data()
 - menu 2019 en los import
-
+- check valores de level en summary sin esperar a agregar otras funciones dentro
 -->
 
 # pollspain 0.2.2

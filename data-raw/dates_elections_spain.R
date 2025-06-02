@@ -73,6 +73,27 @@ dates_elections_spain <-
   mutate(year = year(date), month = month(date), day = day(date)) %>%
   relocate(topic, .after = everything())
 
+# ----- Central Electoral Board pdf ------
+pdf_CEB <-
+  tibble("cod_elec" = "02",
+         "date" =
+           dates_elections_spain |>
+           filter(cod_elec == "02") |>
+           pull(date),
+         "pdf_CEB" =
+           c(NA, NA, NA, NA, NA, NA,
+             "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2004_Resultados.pdf",
+             "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2008_Resultados.pdf",
+             "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2011_Resultados.pdf",
+             "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2015_Resultados.pdf",
+             "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2016_Resultados.pdf",
+             "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2019_Resultado.pdf",
+             "https://www.juntaelectoralcentral.es/cs/jec/documentos/Generales_2019-R_Resultados.pdf",
+             "https://www.juntaelectoralcentral.es/cs/jec/documentos/Resultados%20Ceuta%20y%20Melilla.pdf"))
+
+dates_elections_spain <-
+  dates_elections_spain |>
+  left_join(pdf_CEB, by = c("cod_elec", "date"))
 # ----- use data -----
 usethis::use_data(dates_elections_spain, overwrite = TRUE,
                   compress = "xz")

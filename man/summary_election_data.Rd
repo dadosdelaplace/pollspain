@@ -172,11 +172,17 @@ pending...
 
 ## Correct examples
 
-# Summary 2023 and 2016 election data at prov level,
+# Summary 2023 election data at prov level,
 # aggregating the candidacies ballots, in a short version
 summary_prov <-
   summary_election_data(type_elec = "congress", year = 2023,
-                        level = "prov", date = "2016-06-26")
+                        level = "prov")
+
+
+\dontrun{
+# ----
+# Correct examples
+# ----
 
 # Summary 2023 election data at mun level, aggregating the
 # candidacies ballots, in a long version, and filtering ballots
@@ -184,11 +190,11 @@ summary_prov <-
 # parties
 summary_mun <-
   summary_election_data(type_elec = "congress", year = 2023,
-                        level = "mun", short_version = FALSE,
+                        date = "2016-06-26", level = "mun",
+                        short_version = FALSE,
                         filter_candidacies = c("PSOE", "PP"),
                         filter_porc_ballots = 45)
 
-\dontrun{
 # ----
 # Incorrect examples
 # ----
