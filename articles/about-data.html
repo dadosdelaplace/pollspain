@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Javier Álvarez
 Liébana</h4>
             
-            <h4 data-toc-skip class="date">2025-05-30</h4>
+            <h4 data-toc-skip class="date">2025-06-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dadosdelaplace/pollspain/blob/main/vignettes/about-data.Rmd" class="external-link"><code>vignettes/about-data.Rmd</code></a></small>
       <div class="d-none name"><code>about-data.Rmd</code></div>
@@ -237,19 +237,19 @@ script</a>.</p>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dates_elections_spain</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 62 × 7</span></span></span>
-<span><span class="co">#&gt;    cod_elec type_elec  date        year month   day topic                       </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 01       referendum 1976-12-15  <span style="text-decoration: underline;">1</span>976    12    15 Ref. Proyecto Ley Reforma P…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 01       referendum 1978-12-06  <span style="text-decoration: underline;">1</span>978    12     6 Constitución                </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 01       referendum 1986-03-12  <span style="text-decoration: underline;">1</span>986     3    12 OTAN                        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 01       referendum 2005-02-20  <span style="text-decoration: underline;">2</span>005     2    20 Constitución UE             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 02       congress   1982-10-28  <span style="text-decoration: underline;">1</span>982    10    28 <span style="color: #BB0000;">NA</span>                          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 02       congress   1986-06-22  <span style="text-decoration: underline;">1</span>986     6    22 <span style="color: #BB0000;">NA</span>                          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 02       congress   1989-10-29  <span style="text-decoration: underline;">1</span>989    10    29 <span style="color: #BB0000;">NA</span>                          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 02       congress   1993-06-06  <span style="text-decoration: underline;">1</span>993     6     6 <span style="color: #BB0000;">NA</span>                          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02       congress   1996-03-03  <span style="text-decoration: underline;">1</span>996     3     3 <span style="color: #BB0000;">NA</span>                          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02       congress   2000-03-12  <span style="text-decoration: underline;">2</span>000     3    12 <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 62 × 8</span></span></span>
+<span><span class="co">#&gt;    cod_elec type_elec  date        year month   day topic                pdf_CEB</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 01       referendum 1976-12-15  <span style="text-decoration: underline;">1</span>976    12    15 Ref. Proyecto Ley R… <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 01       referendum 1978-12-06  <span style="text-decoration: underline;">1</span>978    12     6 Constitución         <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 01       referendum 1986-03-12  <span style="text-decoration: underline;">1</span>986     3    12 OTAN                 <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 01       referendum 2005-02-20  <span style="text-decoration: underline;">2</span>005     2    20 Constitución UE      <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 02       congress   1982-10-28  <span style="text-decoration: underline;">1</span>982    10    28 <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 02       congress   1986-06-22  <span style="text-decoration: underline;">1</span>986     6    22 <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 02       congress   1989-10-29  <span style="text-decoration: underline;">1</span>989    10    29 <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 02       congress   1993-06-06  <span style="text-decoration: underline;">1</span>993     6     6 <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02       congress   1996-03-03  <span style="text-decoration: underline;">1</span>996     3     3 <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02       congress   2000-03-12  <span style="text-decoration: underline;">2</span>000     3    12 <span style="color: #BB0000;">NA</span>                   <span style="color: #BB0000;">NA</span>     </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 52 more rows</span></span></span></code></pre></div>
 <p>The dataset <code>dates_elections_spain</code> contains the <span class="hl"><strong>dates of Spanish elections</strong></span> in
 referendum, congress, senate, municipal, cabildo (Canarian council) and
