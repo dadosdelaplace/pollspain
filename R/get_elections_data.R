@@ -31,7 +31,7 @@
 #' candidacies id at province level and national level. Defaults to
 #' c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").
 #'
-#' @return A tibble with rows corresponding to municipalities for
+#' @return A tibble with rows corresponding to poll-stations for
 #' each election, including the following variables:
 #' \item{id_elec}{election's id constructed from the election code
 #' \code{cod_elec} and date \code{date_elec}.}
@@ -41,6 +41,7 @@
 #' \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
 #' (European Parliament elections). Variable available only for
 #' long version.}
+#' \itme{type_election}{type of the election.}
 #' \item{date_elec}{date of the election. Variable available only for
 #' long version.}
 #' \item{id_INE_poll_station}{poll station's id constructed from the
@@ -75,10 +76,10 @@
 #' \code{party_ballots} and \code{blank_ballots}.}
 #' \item{n_poll_stations}{number of polling stations. It is only
 #' available for long version.}
-#' \item{census_counting_mun}{population eligible to vote after claims
-#' at municipality level.}
 #' \item{pop_res_mun}{population census of residents (CER + CERA) at
 #' municipality level.}
+#' \item{census_counting_mun}{population eligible to vote after claims
+#' at municipality level.}
 #' \item{id_candidacies}{id for candidacies at province level.}
 #' \item{id_candidacies_ccaa, id_candidacies_nat}{id for candidacies
 #' at ccaa level (only provided for long version) and at national
@@ -538,13 +539,6 @@ get_election_data <-
 #' \code{party_ballots}) and total ballots (sum of
 #' \code{valid_ballots} and \code{invalid_ballots}).}
 #' \item{n_poll_stations}{number of polling stations.}
-#' \item{pop_res_xxx}{population census of residents (CER + CERA) at
-#' xxx level (if level is below municipality level, it is provided at
-#' municipality level). It is only available for long version.}
-#' \item{census_counting_mun}{population eligible to vote after
-#' claims at xxx level (if level is below municipality level, it is
-#' provided at municipality level). It is only available for
-#' long version.}
 #' \item{id_candidacies}{id for candidacies (at province level).}
 #' \item{id_candidacies_nat}{id for candidacies at region national
 #' level.}
@@ -569,7 +563,7 @@ get_election_data <-
 #' @examples
 #' ## Correct examples
 #'
-#' # Election date from 2023 and 1989 dates
+#' # Election data from 2023 and 1989
 #' election_data <-
 #'    get_election_data(type_elec = "congress", year = 2023,
 #'                      date = "1989-10-29")
@@ -946,7 +940,12 @@ aggregate_election_data <-
 #' \item{ballots}{number of ballots obtained for each candidacy at
 #' each level section.}
 #'
-#' @details pending...
+#' @details This function chains the two lower-level helpers \code{get_election_data()},
+#' which imports and cleans polling-station and candidacy ballots, and
+#' \code{aggregate_election_data()}, which rolls those data up to the requested
+#' territorial level. Then, this function performs a final round of post-processing
+#' so that the user obtains, in a single call, a tidy table with information of the
+#' chosen date and aggregation level that is ready for analysis or visualisation.
 #'
 #' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #' @keywords get_elections_data
@@ -962,11 +961,26 @@ aggregate_election_data <-
 #'   summary_election_data(type_elec = "congress", year = 2023,
 #'                         level = "prov")
 #'
-#'
 #' \dontrun{
-#' # ----
-#' # Correct examples
-#' # ----
+#'
+#' # Summary 2023 and April 2019 election data at mun_district level,
+#' # aggregating the candidacies ballots, in a long version
+#' summary_mun_district <-
+#'   summary_election_data(type_elec = "congress",
+#'                          year = 2023,
+#'                          date = "2019-11-10",
+#'                          level = "mun_district",
+#'                          short_version = FALSE)
+#'
+#' # Summary 2023 election data at prov level,
+#' # aggregating the candidacies ballots, in a short version, and
+#' # removing the CERA votes
+#' summary_prov <-
+#'   summary_election_data(type_elec = "congress",
+#'                          year = 2023,
+#'                          level = "prov",
+#'                          short_version = FALSE,
+#'                          CERA_remove = TRUE)
 #'
 #' # Summary 2023 election data at mun level, aggregating the
 #' # candidacies ballots, in a long version, and filtering ballots
@@ -996,6 +1010,11 @@ aggregate_election_data <-
 #' summary_election_data("congress", 2019,
 #'                       by_parties = FALSE,
 #'                       filter_porc_ballots = 5)
+#'
+#' # filter_candidacies  supplied while by_parties = FALSE
+#' summary_election_data("congress", 2019,
+#'                       by_parties = FALSE,
+#'                       filter_candidacies = c("PP", "PSOE"))
 #'
 #' # Wrong election type
 #' summary_election_data("national", 2019)
@@ -1261,7 +1280,7 @@ summary_election_data <-
         filter_candidacies <-
           filter_candidacies[!is.na(filter_candidacies)]
         aux <-
-          summary_data  |>
+          summary_data |>
           filter(str_detect(.data[[col_abbrev_candidacies]],
                             str_flatten(filter_candidacies, collapse = "|")))
 
