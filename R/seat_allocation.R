@@ -1,20 +1,45 @@
 
+#' @title Function to calculate the allocated seats according to the D'Hont method in a given
+#' electoral district
+#'
+#' @description Calculate seat allocation for a specofoc electoral district following the D'Hont
+#'  method that distributes seats proportionally to the votes received by each party.
+#'
+#'
+#' @param parties A vector containing the names or code of the parties that participated in the election.
+#' @param votes A vector containing the votes received by each party.
+#' @param blank_votes A vector or number with the blank votes.
+#' @param nseats A number indicating the number of seats that are going to distributed.
+#' @param threshold A number indicating the minimal percentage of votes needed to obtain representation.
+#' @param short_version Flag to indicate whether it should be returned
+#' a short version of the data (just key variables) or not.
+#' Defaults to \code{TRUE}.
+#'
+#' @returns A tibble
+#' @export
+#'
+#' @examples
+#'
+#'
+#'
+dhondt_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
 
-dhondt_seats <- function(parties, votes, nseats, threshold, short_version = TRUE) {
-  total_votes <- sum(votes)
+
+  total_votes <- sum(votes) + first(blank_votes)
+
   threshold_votes <- threshold * total_votes
 
   data <- tibble(party = parties, votes = votes) |>
     filter(party != "blank", votes > threshold_votes)
 
-
-  quotients <- tibble()
-  for (i in 1:nseats) {
-    quotients <- bind_rows(
-      quotients,
-      tibble(party = data$party, divisor = i, quotient = data$votes / i)
+  quotients <- map_dfr(
+    1:nseats,
+    function (x) {tibble(
+      party    = data |> pull(party),
+      divisor  = x,
+      quotient = data |> pull(votes) / x)
+      }
     )
-  }
 
   top_quotients <- quotients |> slice_max(quotient, n = nseats, with_ties = FALSE)
 
@@ -44,8 +69,8 @@ dhondt_seats <- function(parties, votes, nseats, threshold, short_version = TRUE
 
 #HAMILTON
 
-hamilton_seats <- function(parties, votes, nseats, threshold, short_version = TRUE) {
-  total_votes <- sum(votes)
+hamilton_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
+  total_votes <- sum(votes) + first(blank_votes)
   threshold_votes <- threshold * total_votes
 
   data <- tibble(party = parties, votes = votes) |>
@@ -88,20 +113,21 @@ hamilton_seats <- function(parties, votes, nseats, threshold, short_version = TR
 
 #WEBSTER
 
-webster_seats <- function(parties, votes, nseats, threshold, short_version = TRUE) {
-  total_votes <- sum(votes)
+webster_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
+  total_votes <- sum(votes) + first(blank_votes)
   threshold_votes <- threshold * total_votes
 
   data <- tibble(party = parties, votes = votes) |>
     filter(party != "blank", votes > threshold_votes)
 
-  quotients <- tibble()
-  for (i in seq(1, 2 * nseats - 1, by = 2)) {
-    quotients <- bind_rows(
-      quotients,
-      tibble(party = data$party, quotient = data$votes / i)
-    )
-  }
+  quotients <- map_dfr(
+    seq(1, 2 * nseats - 1, by = 2),
+    function (x) {tibble(
+      party    = data |> pull(party),
+      divisor  = x,
+      quotient = data |> pull(votes) / x)
+    }
+  )
 
   top_quotients <- quotients |>
     slice_max(quotient, n = nseats, with_ties = FALSE) |>
@@ -129,22 +155,21 @@ webster_seats <- function(parties, votes, nseats, threshold, short_version = TRU
 
 #HILL
 
-hills_seats <- function(parties, votes, nseats, threshold, short_version = TRUE) {
-  total_votes <- sum(votes)
+hills_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
+  total_votes <- sum(votes) + first(blank_votes)
   threshold_votes <- threshold * total_votes
 
   data <- tibble(party = parties, votes = votes) |>
     filter(party != "blank", votes > threshold_votes)
 
-  quotients <- tibble()
-
-  for (i in 1:nseats) {
-    quotients <- bind_rows(
-      quotients,
-      tibble(party = data$party, quotient = data$votes / (i + 1))
-    )
-  }
-
+  quotients <- map_dfr(
+    1:nseats,
+    function (x) {tibble(
+      party    = data |> pull(party),
+      divisor  = x,
+      quotient = data |> pull(votes) / (x + 1))
+    }
+  )
 
   top_quotients <- quotients |>
     slice_max(quotient, n = nseats, with_ties = FALSE) |>
@@ -173,32 +198,38 @@ hills_seats <- function(parties, votes, nseats, threshold, short_version = TRUE)
 
 #DEANS
 
-deans_seats <- function(parties, votes, nseats, threshold, short_version = TRUE) {
-  total_votes <- sum(votes)
+deans_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
+  total_votes <- sum(votes) + first(blank_votes)
   threshold_votes <- threshold * total_votes
 
   data <- tibble(party = parties, votes = votes) |>
-    filter(party != "blank", votes > threshold_votes) |>
-    mutate(seats = 0)
+    filter(party != "blank", votes > threshold_votes)
 
-  allocations <- tibble()
 
-  for (i in 1:nseats) {
-    data <- data |>
-      mutate(
-        divisor = if_else(seats == 0, 1, (2 * seats * (seats + 1)) / (2 * seats + 1)),
-        quotient = votes / divisor
+  divisor_dean <- function(s)
+    if_else(s == 0, 1,
+           (2 * s * (s + 1)) / (2 * s + 1))
+
+  divisors <- map_dbl(0:(nseats - 1), divisor_dean)
+
+  quotients <- pmap_dfr(
+    list(party = data$party, v = data$votes),
+    function(party, v) {
+      tibble(
+        party    = party,
+        divisor  = divisors,
+        quotient = v / divisors
       )
+    }
+  )
 
-    winner <- data |> slice_max(quotient, n = 1, with_ties = FALSE)
+  allocations <- quotients %>%
+    arrange(desc(quotient), party) %>%
+    slice_head(n = nseats)
 
-    allocations <- bind_rows(allocations, winner |> select(party, quotient))
-
-    data <- data |>
-      mutate(seats = if_else(party == winner$party, seats + 1, seats))
-  }
-
-  seats <- data |> select(party, seats) |> arrange(desc(seats))
+  seats <- allocations %>%
+    count(party, name = "seats") %>%
+    arrange(desc(seats), party)
 
 
   if (short_version) {
@@ -214,47 +245,41 @@ deans_seats <- function(parties, votes, nseats, threshold, short_version = TRUE)
 
 #ADAMS
 
-adams_seats <- function(parties, votes, nseats, threshold, short_version = TRUE) {
-  total_votes <- sum(votes)
+adams_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
+  total_votes <- sum(votes) + first(blank_votes)
   threshold_votes <- threshold * total_votes
 
   data <- tibble(party = parties, votes = votes) |>
     filter(party != "blank", votes > threshold_votes) |>
     mutate(seats = 0)
 
-  allocations <- tibble()
+  divisors <- 1:nseats
 
-  for (i in 1:nseats) {
-    data <- data |>
-      mutate(
-        divisor = seats + 1,
-        quotient = votes / divisor
+  quotients <- pmap_dfr(
+    list(party = data$party, v = data$votes),
+    function(party, v) {
+      tibble(
+        party    = party,
+        divisor  = divisors,
+        quotient = v / divisors
       )
+    }
+  )
 
-    winner <- data |> slice_max(quotient, n = 1, with_ties = FALSE)
+  allocations <- quotients %>%
+    arrange(desc(quotient), party) %>%
+    slice_head(n = nseats)
 
-    allocations <- bind_rows(allocations, winner |> select(party, quotient))
-
-    data <- data |>
-      mutate(seats = if_else(party == winner$party, seats + 1, seats))
-  }
-
-  seats <- data |> select(party, seats) |> arrange(desc(seats))
+  seats <- allocations %>%
+    count(party, name = "seats") %>%
+    arrange(desc(seats), party)
 
   if (short_version) {
     return(seats)
   } else {
 
-    all_quotients <- tibble()
-    for (i in 1:nseats) {
-      all_quotients <- bind_rows(
-        all_quotients,
-        tibble(party = data$party, quotient = data$votes / (data$seats + 1))
-      )
-    }
-
-    remainders <- anti_join(all_quotients, allocations, by = c("party", "quotient")) |>
-      select(party, quotient) |>
+    remainders <- anti_join(quotients, allocations,
+                            by = c("party", "divisor", "quotient")) %>%
       arrange(desc(quotient))
 
     return(list(

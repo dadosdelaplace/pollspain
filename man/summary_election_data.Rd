@@ -166,7 +166,12 @@ a given election and aggregation level. This function also lets remove parties b
 vote share threshold.
 }
 \details{
-pending...
+This function chains the two lower-level helpers \code{get_election_data()},
+which imports and cleans polling-station and candidacy ballots, and
+\code{aggregate_election_data()}, which rolls those data up to the requested
+territorial level. Then, this function performs a final round of post-processing
+so that the user obtains, in a single call, a tidy table with information of the
+chosen date and aggregation level that is ready for analysis or visualisation.
 }
 \examples{
 
@@ -178,11 +183,26 @@ summary_prov <-
   summary_election_data(type_elec = "congress", year = 2023,
                         level = "prov")
 
-
 \dontrun{
-# ----
-# Correct examples
-# ----
+
+# Summary 2023 and April 2019 election data at mun_district level,
+# aggregating the candidacies ballots, in a long version
+summary_mun_district <-
+  summary_election_data(type_elec = "congress",
+                         year = 2023,
+                         date = "2019-11-10",
+                         level = "mun_district",
+                         short_version = FALSE)
+
+# Summary 2023 election data at prov level,
+# aggregating the candidacies ballots, in a short version, and
+# removing the CERA votes
+summary_prov <-
+  summary_election_data(type_elec = "congress",
+                         year = 2023,
+                         level = "prov",
+                         short_version = FALSE,
+                         CERA_remove = TRUE)
 
 # Summary 2023 election data at mun level, aggregating the
 # candidacies ballots, in a long version, and filtering ballots
@@ -212,6 +232,11 @@ summary_election_data("congress", 2019,
 summary_election_data("congress", 2019,
                       by_parties = FALSE,
                       filter_porc_ballots = 5)
+
+# filter_candidacies  supplied while by_parties = FALSE
+summary_election_data("congress", 2019,
+                      by_parties = FALSE,
+                      filter_candidacies = c("PP", "PSOE"))
 
 # Wrong election type
 summary_election_data("national", 2019)

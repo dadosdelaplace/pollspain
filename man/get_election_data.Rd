@@ -85,7 +85,7 @@ database, allowing you to send queries, import data, or
 write tables to and from R. Defaults to \code{NULL}.}
 }
 \value{
-A tibble with rows corresponding to municipalities for
+A tibble with rows corresponding to poll-stations for
 each election, including the following variables:
 \item{id_elec}{election's id constructed from the election code
 \code{cod_elec} and date \code{date_elec}.}
@@ -95,6 +95,7 @@ each election, including the following variables:
 \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
 (European Parliament elections). Variable available only for
 long version.}
+\itme{type_election}{type of the election.}
 \item{date_elec}{date of the election. Variable available only for
 long version.}
 \item{id_INE_poll_station}{poll station's id constructed from the
@@ -129,10 +130,10 @@ values of \code{valid_ballots}, \code{invalid_ballots},
 \code{party_ballots} and \code{blank_ballots}.}
 \item{n_poll_stations}{number of polling stations. It is only
 available for long version.}
-\item{census_counting_mun}{population eligible to vote after claims
-at municipality level.}
 \item{pop_res_mun}{population census of residents (CER + CERA) at
 municipality level.}
+\item{census_counting_mun}{population eligible to vote after claims
+at municipality level.}
 \item{id_candidacies}{id for candidacies at province level.}
 \item{id_candidacies_ccaa, id_candidacies_nat}{id for candidacies
 at ccaa level (only provided for long version) and at national

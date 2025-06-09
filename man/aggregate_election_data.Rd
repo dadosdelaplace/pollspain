@@ -94,13 +94,6 @@ candidacies/parties, valid ballots (sum of \code{blank_ballots} and
 \code{party_ballots}) and total ballots (sum of
 \code{valid_ballots} and \code{invalid_ballots}).}
 \item{n_poll_stations}{number of polling stations.}
-\item{pop_res_xxx}{population census of residents (CER + CERA) at
-xxx level (if level is below municipality level, it is provided at
-municipality level). It is only available for long version.}
-\item{census_counting_mun}{population eligible to vote after
-claims at xxx level (if level is below municipality level, it is
-provided at municipality level). It is only available for
-long version.}
 \item{id_candidacies}{id for candidacies (at province level).}
 \item{id_candidacies_nat}{id for candidacies at region national
 level.}
@@ -127,7 +120,7 @@ function.
 \examples{
 ## Correct examples
 
-# Election date from 2023 and 1989 dates
+# Election data from 2023 and 1989
 election_data <-
    get_election_data(type_elec = "congress", year = 2023,
                      date = "1989-10-29")
