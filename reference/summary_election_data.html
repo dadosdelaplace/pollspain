@@ -255,8 +255,17 @@ chosen date and aggregation level that is ready for analysis or visualisation.</
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Aggregate data at prov level ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   ... check if aggregation parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBBBB; background-color: #000000;">[x] Join information sources and last summaries ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in db_copy_to(dest$con, name, df, overwrite = overwrite, types = types,     temporary = temporary, unique_indexes = unique_indexes, indexes = indexes,     analyze = analyze, in_transaction = in_transaction, ...):</span> Can't copy data to table <span style="color: #00BB00;">agg_data</span>.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `dplyr::db_write_table()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Can't write table table <span style="color: #00BB00;">agg_data</span>.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `duckdb_result()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> rapi_execute: Failed to run query</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> Error: Invalid Error: std::exception</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in db_copy_to(dest$con, name, df, overwrite = overwrite, types = types,     temporary = temporary, unique_indexes = unique_indexes, indexes = indexes,     analyze = analyze, in_transaction = in_transaction, ...):</span> Can't copy data to table <span style="color: #00BB00;">agg_data</span>.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `dplyr::db_write_table()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Can't write table table <span style="color: #00BB00;">agg_data</span>.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `.local()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> TransactionContext Error: Current transaction is aborted (please ROLLBACK)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span></span></span>
