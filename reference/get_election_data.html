@@ -15,7 +15,7 @@ for multiple elections at once."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,17 +60,10 @@ for multiple elections at once.</p>
 <span>  <span class="va">type_elec</span>,</span>
 <span>  year <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  date <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  election_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  ballots_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  col_id_elec <span class="op">=</span> <span class="st">"id_elec"</span>,</span>
-<span>  col_id_poll_station <span class="op">=</span> <span class="st">"id_INE_poll_station"</span>,</span>
-<span>  col_id_mun <span class="op">=</span> <span class="st">"id_INE_mun"</span>,</span>
-<span>  col_id_candidacies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>id_prov <span class="op">=</span> <span class="st">"id_candidacies"</span>, id_nat <span class="op">=</span> <span class="st">"id_candidacies_nat"</span><span class="op">)</span>,</span>
 <span>  prec_round <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  short_version <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  lazy_duckdb <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  con_duckdb <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  lazy_duckdb <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -101,44 +94,6 @@ numerical variable. Please, check in <code>dates_elections_spain</code>
 that elections of the specified type are available.</p></dd>
 
 
-<dt id="arg-election-data">election_data<a class="anchor" aria-label="anchor" href="#arg-election-data"></a></dt>
-<dd><p>A database containing general election data
-already provided (by other functions or by the user). Database
-should contain a <code>col_id_elec</code> column.
-Defaults to <code>NULL</code>.</p></dd>
-
-
-<dt id="arg-ballots-data">ballots_data<a class="anchor" aria-label="anchor" href="#arg-ballots-data"></a></dt>
-<dd><p>A database containing ballots data for
-the different candidacies, already provided (by other functions or
-by the user). Database should contain a
-<code>col_id_poll_station</code> column. Defaults to <code>NULL</code>.</p></dd>
-
-
-<dt id="arg-col-id-elec">col_id_elec<a class="anchor" aria-label="anchor" href="#arg-col-id-elec"></a></dt>
-<dd><p>Column name in <code>election_data</code> to uniquely
-identify the elections. Defaults to <code>"id_elec"</code>.</p></dd>
-
-
-<dt id="arg-col-id-poll-station">col_id_poll_station<a class="anchor" aria-label="anchor" href="#arg-col-id-poll-station"></a></dt>
-<dd><p>Column name in <code>ballots_data</code> to
-uniquely identify poll stations. Defaults to
-<code>"id_INE_poll_station"</code>.</p></dd>
-
-
-<dt id="arg-col-id-mun">col_id_mun<a class="anchor" aria-label="anchor" href="#arg-col-id-mun"></a></dt>
-<dd><p>Column name in <code>election_data</code> to
-uniquely identify municipalities. Defaults to
-<code>"id_INE_mun"</code>.</p></dd>
-
-
-<dt id="arg-col-id-candidacies">col_id_candidacies<a class="anchor" aria-label="anchor" href="#arg-col-id-candidacies"></a></dt>
-<dd><p>A named vector (with names "id_prov" and
-"id_nat") in which user provides the column names for the
-candidacies id at province level and national level. Defaults to
-c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").</p></dd>
-
-
 <dt id="arg-prec-round">prec_round<a class="anchor" aria-label="anchor" href="#arg-prec-round"></a></dt>
 <dd><p>Rounding accuracy. Defaults to
 <code>prec_round = 3</code>.</p></dd>
@@ -160,16 +115,10 @@ be printed during execution. Defaults to <code>TRUE</code>.</p></dd>
 should be provided (<code>TRUE</code>) or a tibble (<code>FALSE</code>).
 Defaults to <code>FALSE</code>.</p></dd>
 
-
-<dt id="arg-con-duckdb">con_duckdb<a class="anchor" aria-label="anchor" href="#arg-con-duckdb"></a></dt>
-<dd><p>Active connection between R and a specific
-database, allowing you to send queries, import data, or
-write tables to and from R. Defaults to <code>NULL</code>.</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble with rows corresponding to municipalities for
+    <p>A tibble with rows corresponding to poll-stations for
 each election, including the following variables:</p>
 <dl><dt>id_elec</dt>
 <dd><p>election's id constructed from the election code
@@ -182,6 +131,9 @@ each election, including the following variables:</p>
 <code>"06"</code> (cabildo - Canarian council - elections), <code>"07"</code>
 (European Parliament elections). Variable available only for
 long version.</p></dd>
+
+<dt>type_election</dt>
+<dd><p>type of the election.</p></dd>
 
 <dt>date_elec</dt>
 <dd><p>date of the election. Variable available only for
@@ -245,13 +197,13 @@ values of <code>valid_ballots</code>, <code>invalid_ballots</code>,
 <dd><p>number of polling stations. It is only
 available for long version.</p></dd>
 
-<dt>census_counting_mun</dt>
-<dd><p>population eligible to vote after claims
-at municipality level.</p></dd>
-
 <dt>pop_res_mun</dt>
 <dd><p>population census of residents (CER + CERA) at
 municipality level.</p></dd>
+
+<dt>census_counting_mun</dt>
+<dd><p>population eligible to vote after claims
+at municipality level.</p></dd>
 
 <dt>id_candidacies</dt>
 <dd><p>id for candidacies at province level.</p></dd>
@@ -322,24 +274,6 @@ users, but rather as an intermediate step for the
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># ----</span></span></span>
-<span class="r-in"><span><span class="co"># Correct examples</span></span></span>
-<span class="r-in"><span><span class="co"># ----</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example usage providing external tables</span></span></span>
-<span class="r-in"><span><span class="va">election_data</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="import_poll_station_data.html">import_poll_station_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>invent_1 <span class="op">=</span> <span class="va">id_elec</span>, invent_2 <span class="op">=</span> <span class="va">id_INE_poll_station</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ballots_data</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="import_candidacies_data.html">import_candidacies_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>invent_1 <span class="op">=</span> <span class="va">id_elec</span>, invent_2 <span class="op">=</span> <span class="va">id_INE_poll_station</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">join_data</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">get_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>,</span></span>
-<span class="r-in"><span>                    election_data <span class="op">=</span> <span class="va">election_data</span>,</span></span>
-<span class="r-in"><span>                    ballots_data <span class="op">=</span> <span class="va">ballots_data</span>,</span></span>
-<span class="r-in"><span>                    col_id_elec <span class="op">=</span> <span class="st">"invent_1"</span>,</span></span>
-<span class="r-in"><span>                    col_id_poll_station <span class="op">=</span> <span class="st">"invent_2"</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># ----</span></span></span>
 <span class="r-in"><span><span class="co"># Incorrect examples</span></span></span>
 <span class="r-in"><span><span class="co"># ----</span></span></span>
 <span class="r-in"><span></span></span>
@@ -354,17 +288,6 @@ users, but rather as an intermediate step for the
 <span class="r-in"><span><span class="fu">get_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2019</span>,</span></span>
 <span class="r-in"><span>                  short_version <span class="op">=</span> <span class="st">"yes"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Invalid key columns: col_id_elec and col_id_poll should be</span></span></span>
-<span class="r-in"><span><span class="co"># columns included in datasets election_data and ballots_data</span></span></span>
-<span class="r-in"><span><span class="va">election_data</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="import_poll_station_data.html">import_poll_station_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ballots_data</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="import_candidacies_data.html">import_candidacies_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">get_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2019</span>,</span></span>
-<span class="r-in"><span>                   election_data <span class="op">=</span> <span class="va">election_data</span>,</span></span>
-<span class="r-in"><span>                   ballots_data <span class="op">=</span> <span class="va">ballots_data</span>,</span></span>
-<span class="r-in"><span>                   col_id_elec <span class="op">=</span> <span class="st">"invent_1"</span>,</span></span>
-<span class="r-in"><span>                   col_id_poll_station <span class="op">=</span> <span class="st">"invent_2"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

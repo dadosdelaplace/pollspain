@@ -11,7 +11,7 @@ total ballots, number of polling stations and contextual sums."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,16 +54,10 @@ total ballots, number of polling stations and contextual sums.</p>
 <span>  <span class="va">election_data</span>,</span>
 <span>  level <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  by_parties <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  col_id_elec <span class="op">=</span> <span class="st">"id_elec"</span>,</span>
-<span>  col_id_poll_station <span class="op">=</span> <span class="st">"id_INE_poll_station"</span>,</span>
-<span>  col_id_mun <span class="op">=</span> <span class="st">"id_INE_mun"</span>,</span>
-<span>  cols_mun_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pop_res_mun"</span>, <span class="st">"census_counting_mun"</span><span class="op">)</span>,</span>
-<span>  col_id_candidacies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>id_prov <span class="op">=</span> <span class="st">"id_candidacies"</span>, id_nat <span class="op">=</span> <span class="st">"id_candidacies_nat"</span><span class="op">)</span>,</span>
 <span>  prec_round <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  short_version <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  lazy_duckdb <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  con_duckdb <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  lazy_duckdb <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -92,36 +86,6 @@ candidacies/parties or just global results at given <code>level</code>.
 Defaults to <code>TRUE</code>.</p></dd>
 
 
-<dt id="arg-col-id-elec">col_id_elec<a class="anchor" aria-label="anchor" href="#arg-col-id-elec"></a></dt>
-<dd><p>Column name in <code>election_data</code> to uniquely
-identify the elections. Defaults to <code>"id_elec"</code>.</p></dd>
-
-
-<dt id="arg-col-id-poll-station">col_id_poll_station<a class="anchor" aria-label="anchor" href="#arg-col-id-poll-station"></a></dt>
-<dd><p>Column name in <code>ballots_data</code> to
-uniquely identify poll stations. Defaults to
-<code>"id_INE_poll_station"</code>.</p></dd>
-
-
-<dt id="arg-col-id-mun">col_id_mun<a class="anchor" aria-label="anchor" href="#arg-col-id-mun"></a></dt>
-<dd><p>Column name in <code>election_data</code> to
-uniquely identify municipalities. Defaults to
-<code>"id_INE_mun"</code>.</p></dd>
-
-
-<dt id="arg-cols-mun-var">cols_mun_var<a class="anchor" aria-label="anchor" href="#arg-cols-mun-var"></a></dt>
-<dd><p>A vector of variable names that, in their raw
-version, are only available at the municipal level (or higher).
-Defaults to <code>c("pop_res_mun", "census_counting_mun")</code>.</p></dd>
-
-
-<dt id="arg-col-id-candidacies">col_id_candidacies<a class="anchor" aria-label="anchor" href="#arg-col-id-candidacies"></a></dt>
-<dd><p>A named vector (with names "id_prov" and
-"id_nat") in which user provides the column names for the
-candidacies id at province level and national level. Defaults to
-c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").</p></dd>
-
-
 <dt id="arg-prec-round">prec_round<a class="anchor" aria-label="anchor" href="#arg-prec-round"></a></dt>
 <dd><p>Rounding accuracy. Defaults to
 <code>prec_round = 3</code>.</p></dd>
@@ -142,12 +106,6 @@ Defaults to <code>TRUE</code>.</p></dd>
 <dd><p>Flag to indicate whether a lazy duckDB database
 should be provided (<code>TRUE</code>) or a tibble (<code>FALSE</code>).
 Defaults to <code>FALSE</code>.</p></dd>
-
-
-<dt id="arg-con-duckdb">con_duckdb<a class="anchor" aria-label="anchor" href="#arg-con-duckdb"></a></dt>
-<dd><p>Active connection between R and a specific
-database, allowing you to send queries, import data, or
-write tables to and from R. Defaults to <code>NULL</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -185,17 +143,6 @@ candidacies/parties, valid ballots (sum of <code>blank_ballots</code> and
 <dt>n_poll_stations</dt>
 <dd><p>number of polling stations.</p></dd>
 
-<dt>pop_res_xxx</dt>
-<dd><p>population census of residents (CER + CERA) at
-xxx level (if level is below municipality level, it is provided at
-municipality level). It is only available for long version.</p></dd>
-
-<dt>census_counting_mun</dt>
-<dd><p>population eligible to vote after
-claims at xxx level (if level is below municipality level, it is
-provided at municipality level). It is only available for
-long version.</p></dd>
-
 <dt>id_candidacies</dt>
 <dd><p>id for candidacies (at province level).</p></dd>
 
@@ -230,7 +177,7 @@ function.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Correct examples</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Election date from 2023 and 1989 dates</span></span></span>
+<span class="r-in"><span><span class="co"># Election data from 2023 and 1989</span></span></span>
 <span class="r-in"><span><span class="va">election_data</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>   <span class="fu"><a href="get_election_data.html">get_election_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
 <span class="r-in"><span>                     date <span class="op">=</span> <span class="st">"1989-10-29"</span><span class="op">)</span></span></span>
@@ -246,12 +193,15 @@ function.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">A short version was asked (if you want all variables, run with `short_version = FALSE`)</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># National level results (without parties)</span></span></span>
-<span class="r-in"><span><span class="va">nat_agg</span> <span class="op">&lt;-</span> <span class="fu">aggregate_election_data</span><span class="op">(</span><span class="va">election_data</span>, level <span class="op">=</span> <span class="st">"all"</span>,</span></span>
-<span class="r-in"><span>                                   by_parties <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nat_agg</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>   <span class="va">election_data</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>   <span class="fu">aggregate_election_data</span><span class="op">(</span>level <span class="op">=</span> <span class="st">"all"</span>, by_parties <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   ... check if aggregation parameters are allowed...</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Province level results (with parties)</span></span></span>
-<span class="r-in"><span><span class="va">prov_agg</span> <span class="op">&lt;-</span> <span class="fu">aggregate_election_data</span><span class="op">(</span><span class="va">election_data</span>, level <span class="op">=</span> <span class="st">"prov"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">prov_agg</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>   <span class="va">election_data</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>   <span class="fu">aggregate_election_data</span><span class="op">(</span>level <span class="op">=</span> <span class="st">"prov"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   ... check if aggregation parameters are allowed...</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>

@@ -11,7 +11,7 @@ vote share threshold."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,25 +54,17 @@ vote share threshold.</p>
 <span>  <span class="va">type_elec</span>,</span>
 <span>  year <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  date <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  election_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  ballots_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  candidacies_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  col_id_elec <span class="op">=</span> <span class="st">"id_elec"</span>,</span>
-<span>  col_id_poll_station <span class="op">=</span> <span class="st">"id_INE_poll_station"</span>,</span>
-<span>  col_id_mun <span class="op">=</span> <span class="st">"id_INE_mun"</span>,</span>
-<span>  prec_round <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  short_version <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  CERA_remove <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  level <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  by_parties <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  short_version <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  CERA_remove <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  filter_porc_ballots <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  filter_candidacies <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  cols_mun_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pop_res_mun"</span>, <span class="st">"census_counting_mun"</span><span class="op">)</span>,</span>
-<span>  col_id_candidacies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>id_prov <span class="op">=</span> <span class="st">"id_candidacies"</span>, id_nat <span class="op">=</span> <span class="st">"id_candidacies_nat"</span><span class="op">)</span>,</span>
+<span>  prec_round <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  candidacies_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  col_abbrev_candidacies <span class="op">=</span> <span class="st">"abbrev_candidacies"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  lazy_duckdb <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  con_duckdb <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  lazy_duckdb <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -103,46 +95,17 @@ numerical variable. Please, check in <code>dates_elections_spain</code>
 that elections of the specified type are available.</p></dd>
 
 
-<dt id="arg-election-data">election_data<a class="anchor" aria-label="anchor" href="#arg-election-data"></a></dt>
-<dd><p>A database containing general election data
-already provided (by other functions or by the user). Database
-should contain a <code>col_id_elec</code> column.
-Defaults to <code>NULL</code>.</p></dd>
+<dt id="arg-level">level<a class="anchor" aria-label="anchor" href="#arg-level"></a></dt>
+<dd><p>A string providing the level of aggregation at which
+the data is to be provided. The allowed values are the following:
+'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec' or
+'poll_station'. Defaults to <code>"all"</code>.</p></dd>
 
 
-<dt id="arg-ballots-data">ballots_data<a class="anchor" aria-label="anchor" href="#arg-ballots-data"></a></dt>
-<dd><p>A database containing ballots data for
-the different candidacies, already provided (by other functions or
-by the user). Database should contain a
-<code>col_id_poll_station</code> column. Defaults to <code>NULL</code>.</p></dd>
-
-
-<dt id="arg-candidacies-data">candidacies_data<a class="anchor" aria-label="anchor" href="#arg-candidacies-data"></a></dt>
-<dd><p>A database containing the information of
-candidacies. Database should contain <code>col_abbrev_candidacies</code>
-and <code>col_id_candidacies</code> columns. Defaults to <code>NULL</code>.</p></dd>
-
-
-<dt id="arg-col-id-elec">col_id_elec<a class="anchor" aria-label="anchor" href="#arg-col-id-elec"></a></dt>
-<dd><p>Column name in <code>election_data</code> to uniquely
-identify the elections. Defaults to <code>"id_elec"</code>.</p></dd>
-
-
-<dt id="arg-col-id-poll-station">col_id_poll_station<a class="anchor" aria-label="anchor" href="#arg-col-id-poll-station"></a></dt>
-<dd><p>Column name in <code>ballots_data</code> to
-uniquely identify poll stations. Defaults to
-<code>"id_INE_poll_station"</code>.</p></dd>
-
-
-<dt id="arg-col-id-mun">col_id_mun<a class="anchor" aria-label="anchor" href="#arg-col-id-mun"></a></dt>
-<dd><p>Column name in <code>election_data</code> to
-uniquely identify municipalities. Defaults to
-<code>"id_INE_mun"</code>.</p></dd>
-
-
-<dt id="arg-prec-round">prec_round<a class="anchor" aria-label="anchor" href="#arg-prec-round"></a></dt>
-<dd><p>Rounding accuracy. Defaults to
-<code>prec_round = 3</code>.</p></dd>
+<dt id="arg-by-parties">by_parties<a class="anchor" aria-label="anchor" href="#arg-by-parties"></a></dt>
+<dd><p>A flag indicates whether user wants a summary by
+candidacies/parties or just global results at given <code>level</code>.
+Defaults to <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-short-version">short_version<a class="anchor" aria-label="anchor" href="#arg-short-version"></a></dt>
@@ -157,19 +120,6 @@ the ballots related to CERA constituencies. Defaults to
 <code>FALSE</code>.</p></dd>
 
 
-<dt id="arg-level">level<a class="anchor" aria-label="anchor" href="#arg-level"></a></dt>
-<dd><p>A string providing the level of aggregation at which
-the data is to be provided. The allowed values are the following:
-'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec' or
-'poll_station'. Defaults to <code>"all"</code>.</p></dd>
-
-
-<dt id="arg-by-parties">by_parties<a class="anchor" aria-label="anchor" href="#arg-by-parties"></a></dt>
-<dd><p>A flag indicates whether user wants a summary by
-candidacies/parties or just global results at given <code>level</code>.
-Defaults to <code>TRUE</code>.</p></dd>
-
-
 <dt id="arg-filter-porc-ballots">filter_porc_ballots<a class="anchor" aria-label="anchor" href="#arg-filter-porc-ballots"></a></dt>
 <dd><p>A numerical argument representing the
 vote percentage threshold (out of 100) that the user wants to use
@@ -178,22 +128,20 @@ Defaults to <code>NA</code>.</p></dd>
 
 
 <dt id="arg-filter-candidacies">filter_candidacies<a class="anchor" aria-label="anchor" href="#arg-filter-candidacies"></a></dt>
-<dd><p>A string of characters containing
-party abbreviations which ballots will be filtered (as long as
-<code>by_parties = TRUE</code>). Defaults to <code>NA</code>.</p></dd>
+<dd><p>A string of characters (or vector of
+them) containing party abbreviations which ballots will be filtered
+(as long as <code>by_parties = TRUE</code>). Defaults to <code>NA</code>.</p></dd>
 
 
-<dt id="arg-cols-mun-var">cols_mun_var<a class="anchor" aria-label="anchor" href="#arg-cols-mun-var"></a></dt>
-<dd><p>A vector of variable names that, in their raw
-version, are only available at the municipal level (or higher).
-Defaults to <code>c("pop_res_mun", "census_counting_mun")</code>.</p></dd>
+<dt id="arg-prec-round">prec_round<a class="anchor" aria-label="anchor" href="#arg-prec-round"></a></dt>
+<dd><p>Rounding accuracy. Defaults to
+<code>prec_round = 3</code>.</p></dd>
 
 
-<dt id="arg-col-id-candidacies">col_id_candidacies<a class="anchor" aria-label="anchor" href="#arg-col-id-candidacies"></a></dt>
-<dd><p>A named vector (with names "id_prov" and
-"id_nat") in which user provides the column names for the
-candidacies id at province level and national level. Defaults to
-c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").</p></dd>
+<dt id="arg-candidacies-data">candidacies_data<a class="anchor" aria-label="anchor" href="#arg-candidacies-data"></a></dt>
+<dd><p>A database containing the information of
+candidacies. Database should contain <code>col_abbrev_candidacies</code>
+and <code>col_id_candidacies</code> columns. Defaults to <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-col-abbrev-candidacies">col_abbrev_candidacies<a class="anchor" aria-label="anchor" href="#arg-col-abbrev-candidacies"></a></dt>
@@ -210,12 +158,6 @@ be printed during execution. Defaults to <code>TRUE</code>.</p></dd>
 <dd><p>Flag to indicate whether a lazy duckDB database
 should be provided (<code>TRUE</code>) or a tibble (<code>FALSE</code>).
 Defaults to <code>FALSE</code>.</p></dd>
-
-
-<dt id="arg-con-duckdb">con_duckdb<a class="anchor" aria-label="anchor" href="#arg-con-duckdb"></a></dt>
-<dd><p>Active connection between R and a specific
-database, allowing you to send queries, import data, or
-write tables to and from R. Defaults to <code>NULL</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -282,7 +224,12 @@ each level section.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>pending...</p>
+    <p>This function chains the two lower-level helpers <code><a href="get_election_data.html">get_election_data()</a></code>,
+which imports and cleans polling-station and candidacy ballots, and
+<code><a href="aggregate_election_data.html">aggregate_election_data()</a></code>, which rolls those data up to the requested
+territorial level. Then, this function performs a final round of post-processing
+so that the user obtains, in a single call, a tidy table with information of the
+chosen date and aggregation level that is ready for analysis or visualisation.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -308,23 +255,29 @@ each level section.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB00BB;">   ... please wait, volume of data downloaded and internet connection may take a few seconds</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">[x] Aggregate data at prov level ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   ... check if aggregation parameters are allowed...</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in db_copy_to(dest$con, name, df, overwrite = overwrite, types = types,     temporary = temporary, unique_indexes = unique_indexes, indexes = indexes,     analyze = analyze, in_transaction = in_transaction, ...):</span> Can't copy data to table <span style="color: #00BB00;">aux</span>.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `dplyr::db_write_table()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Can't write table table <span style="color: #00BB00;">aux</span>.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `duckdb_result()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> rapi_execute: Failed to run query</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> Error: Invalid Error: std::exception</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in db_copy_to(dest$con, name, df, overwrite = overwrite, types = types,     temporary = temporary, unique_indexes = unique_indexes, indexes = indexes,     analyze = analyze, in_transaction = in_transaction, ...):</span> Can't copy data to table <span style="color: #00BB00;">aux</span>.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `dplyr::db_write_table()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Can't write table table <span style="color: #00BB00;">aux</span>.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `.local()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> TransactionContext Error: Current transaction is aborted (please ROLLBACK)</span>
-<span class="r-in"><span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBBBB; background-color: #000000;">[x] Join information sources and last summaries ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># ----</span></span></span>
-<span class="r-in"><span><span class="co"># Correct examples</span></span></span>
-<span class="r-in"><span><span class="co"># ----</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Summary 2023 and April 2019 election data at mun_district level,</span></span></span>
+<span class="r-in"><span><span class="co"># aggregating the candidacies ballots, in a long version</span></span></span>
+<span class="r-in"><span><span class="va">summary_mun_district</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>,</span></span>
+<span class="r-in"><span>                         year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                         date <span class="op">=</span> <span class="st">"2019-11-10"</span>,</span></span>
+<span class="r-in"><span>                         level <span class="op">=</span> <span class="st">"mun_district"</span>,</span></span>
+<span class="r-in"><span>                         short_version <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Summary 2023 election data at prov level,</span></span></span>
+<span class="r-in"><span><span class="co"># aggregating the candidacies ballots, in a short version, and</span></span></span>
+<span class="r-in"><span><span class="co"># removing the CERA votes</span></span></span>
+<span class="r-in"><span><span class="va">summary_prov</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>,</span></span>
+<span class="r-in"><span>                         year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                         level <span class="op">=</span> <span class="st">"prov"</span>,</span></span>
+<span class="r-in"><span>                         short_version <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                         CERA_remove <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Summary 2023 election data at mun level, aggregating the</span></span></span>
 <span class="r-in"><span><span class="co"># candidacies ballots, in a long version, and filtering ballots</span></span></span>
@@ -354,6 +307,11 @@ each level section.</p></dd>
 <span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>,</span></span>
 <span class="r-in"><span>                      by_parties <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                      filter_porc_ballots <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># filter_candidacies  supplied while by_parties = FALSE</span></span></span>
+<span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>,</span></span>
+<span class="r-in"><span>                      by_parties <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                      filter_candidacies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PP"</span>, <span class="st">"PSOE"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Wrong election type</span></span></span>
 <span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span><span class="st">"national"</span>, <span class="fl">2019</span><span class="op">)</span></span></span>
