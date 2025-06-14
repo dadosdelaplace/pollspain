@@ -1,29 +1,91 @@
 
 #' @title Function to calculate the allocated seats according to the D'Hont method in a given
-#' electoral district
+#' electoral district.
 #'
-#' @description Calculate seat allocation for a specofoc electoral district following the D'Hont
-#'  method that distributes seats proportionally to the votes received by each party.
-#'
-#'
-#' @param parties A vector containing the names or code of the parties that participated in the election.
+#' @description This function allocates seats to political parties in a given electoral district
+#' using the D'Hondt method, a highest averages method for proportional representation.
+#' Each party's vote total is divided by a series of divisors (1, 2, 3, ..., up to the number of seats),
+#' generating a list of quotients. Seats are assigned one by one to the highest quotients until all
+#' seats have been distributed. Only parties that surpass a specified vote threshold
+#' (expressed as a proportion of total votes, including blank votes) are eligible for seat allocation.
+#
+#' @param parties A vector containing the names or code of the parties
+#' that participated in the election.
 #' @param votes A vector containing the votes received by each party.
-#' @param blank_votes A vector or number with the blank votes.
+#' @param blank_votes A vector or number indicating the number of blank votes.
 #' @param nseats A number indicating the number of seats that are going to distributed.
-#' @param threshold A number indicating the minimal percentage of votes needed to obtain representation.
+#' @param threshold A number indicating the minimal percentage of votes
+#' needed to obtain representation.
 #' @param short_version Flag to indicate whether it should be returned
 #' a short version of the data (just key variables) or not.
 #' Defaults to \code{TRUE}.
 #'
-#' @returns A tibble
-#' @export
+#' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
+#' variables:
+#' \item{party}{acronym of the candidacies}
+#' \item{seats}{number of seats distributed to each party}
+#' \item{quotient}{quotients that did not receive a seat}
+#'
+#' @details The purpose of this helper function is to be used in a general
+#' function, \code{seats_allocation()}, to calculate the seats distribution of every
+#' electoral district of a given election according to the D'Hont method.
+#'
+#' @author Javier Alvarez-Liebana, Irene Bosque-Gala and David Pereiro-Pol
+#' @keywords seat_allocation
+#' @name dhondt_seats
+#' @import crayon
 #'
 #' @examples
 #'
+#' ## Correct examples
 #'
+#' ## Seats distribution with D'Hont Method for given vectors of parties and votes
+#' ## without the remainder quotients
 #'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100, 200)
+#'
+#' seats <- dhont_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' \dontrun
+#'
+#' # Incorrect examples
+#'
+#' # Different length of parties and votes
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100)
+#'
+#' seats <- dhont_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' @export
 dhondt_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
 
+  if(length(parties) != length(votes)){
+    stop(red("Ups! `parties` and `votes` should have the same length."))
+  }
+
+  if(any(!is.numeric(votes) | is.na(votes))){
+    stop(red("Ups! `votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(blank_votes))){
+    stop(red("Ups! `blank_votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(nseats) | is.na(nseats))){
+    stop(red("Ups! `nseats` should be a number"))
+  }
+
+  if(any(!is.numeric(threshold)) | !between(threshold, 0, 1) | is.na(threshold)){
+    stop(red("Ups! `threshold` should be a number between 0 and 1"))
+  }
+
+  if (!is.logical(short_version) | is.na(short_version)) {
+
+    stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
+
+  }
 
   total_votes <- sum(votes) + first(blank_votes)
 
@@ -52,7 +114,6 @@ dhondt_seats <- function(parties, votes, blank_votes, nseats, threshold, short_v
   if (short_version) {
     return(seats)
   } else {
-    # Cocientes no utilizados (restos) usando anti_join
     unused_quotients <- quotients |>
       anti_join(top_quotients, by = c("party", "quotient")) |>
       select(party, quotient) |>
@@ -65,11 +126,90 @@ dhondt_seats <- function(parties, votes, blank_votes, nseats, threshold, short_v
   }
 }
 
-
-
 #HAMILTON
 
-hamilton_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
+#' @title Function to calculate the allocated seats according to the Hamilton method in a given
+#' electoral district.
+#'
+#' @description This function allocates seats to political parties in a given electoral district
+#' using the Hamilton method (also known as the method of largest remainders).
+#' The method first calculates an electoral quota by dividing the total number
+#' of votes (including blank votes) by the number of seats to be filled.
+#' Each party's vote count is divided by this quota to determine an initial seat
+#' allocation (using the floor of the result). Remaining seats are then assigned
+#' to parties with the largest fractional remainders until all seats are distributed.
+#' Only parties that surpass a given vote threshold (expressed as a proportion of
+#' total votes) are considered for seat allocation.
+#'
+#' @inheritParams dhont_seats
+#'
+#' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
+#' variables:
+#' \item{party}{acronym of the candidacies}
+#' \item{seats}{number of seats distributed to each party}
+#' \item{remainder}{remainders of the initial division that were not selected for a seat}
+#'
+#' @details The purpose of this helper function is to be used in a general
+#' function, \code{seats_allocation()}, to calculate the seats distribution of every
+#' electoral district of a given election according to the Hamilton method.
+#'
+#' @author Javier Alvarez-Liebana, Irene Bosque-Gala and David Pereiro-Pol
+#' @keywords seat_allocation
+#' @name hamilton_seats
+#' @import crayon
+#'
+#' @examples
+#'
+#' ## Correct examples
+#'
+#' ## Seats distribution with Hamilton method for given vectors of parties and votes
+#' ## without the remainder quotients
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100, 200)
+#'
+#' seats <- hamilton_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' \dontrun
+#'
+#' # Incorrect examples
+#'
+#' # Different length of parties and votes
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100)
+#'
+#' seats <- hamilton_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' @export
+hamilton_seats <- function(parties, votes, blank_votes, nseats, threshold = 0, short_version = TRUE) {
+
+  if(length(parties) != length(votes)){
+    stop(red("Ups! `parties` and `votes` should have the same length."))
+  }
+
+  if(any(!is.numeric(votes) | is.na(votes))){
+    stop(red("Ups! `votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(blank_votes))){
+    stop(red("Ups! `blank_votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(nseats) | is.na(nseats))){
+    stop(red("Ups! `nseats` should be a number"))
+  }
+
+  if(any(!is.numeric(threshold)) | !between(threshold, 0, 1) | is.na(threshold)){
+    stop(red("Ups! `threshold` should be a number between 0 and 1"))
+  }
+
+  if (!is.logical(short_version) | is.na(short_version)) {
+
+    stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
+
+  }
+
   total_votes <- sum(votes) + first(blank_votes)
   threshold_votes <- threshold * total_votes
 
@@ -113,7 +253,87 @@ hamilton_seats <- function(parties, votes, blank_votes, nseats, threshold, short
 
 #WEBSTER
 
+#' @title Function to calculate the allocated seats according to the Webster method in a given
+#' electoral district.
+#'
+#' @description This function allocates seats to political parties in a given electoral district
+#' using the Webster method (also known as the Sainte-Laguë method), a highest averages
+#' method for proportional representation. Each party's total number of votes is divided
+#' by a series of odd-numbered divisors (1, 3, 5, ...), generating a list of quotients.
+#' The highest quotients are selected sequentially to assign the available seats.
+#' Only parties that receive a number of votes exceeding a specified threshold
+#' (expressed as a proportion of the total votes, including blank votes) are eligible
+#' for seat allocation.
+#'
+#' @inheritParams dhont_seats
+#'
+#' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
+#' variables:
+#' \item{party}{acronym of the candidacies}
+#' \item{seats}{number of seats distributed to each party}
+#' \item{remainder}{remainders of the initial division that were not selected for a seat}
+#'
+#' @details The purpose of this helper function is to be used in a general
+#' function, \code{seats_allocation()}, to calculate the seats distribution of every
+#' electoral district of a given election according to the Webster method.
+#'
+#' @author Javier Alvarez-Liebana, Irene Bosque-Gala and David Pereiro-Pol
+#' @keywords seat_allocation
+#' @name webster_seats
+#' @import crayon
+#'
+#' @examples
+#'
+#' ## Correct examples
+#'
+#' ## Seats distribution with Hamilton method for given vectors of parties and votes
+#' ## without the remainder quotients
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100, 200)
+#'
+#' seats <- webster_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' \dontrun
+#'
+#' # Incorrect examples
+#'
+#' # Different length of parties and votes
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100)
+#'
+#' seats <- webster_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' @export
 webster_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
+
+  if(length(parties) != length(votes)){
+    stop(red("Ups! `parties` and `votes` should have the same length."))
+  }
+
+  if(any(!is.numeric(votes) | is.na(votes))){
+    stop(red("Ups! `votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(blank_votes))){
+    stop(red("Ups! `blank_votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(nseats) | is.na(nseats))){
+    stop(red("Ups! `nseats` should be a number"))
+  }
+
+  if(any(!is.numeric(threshold)) | !between(threshold, 0, 1) | is.na(threshold)){
+    stop(red("Ups! `threshold` should be a number between 0 and 1"))
+  }
+
+  if (!is.logical(short_version) | is.na(short_version)) {
+
+    stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
+
+  }
+
   total_votes <- sum(votes) + first(blank_votes)
   threshold_votes <- threshold * total_votes
 
@@ -155,7 +375,87 @@ webster_seats <- function(parties, votes, blank_votes, nseats, threshold, short_
 
 #HILL
 
+#' @title Function to calculate the allocated seats according to the Hill method in a given
+#' electoral district.
+#'
+#' @description This function allocates seats to political parties in a given electoral district
+#' using the Hill method (also known as the Equal Proportions method), a highest averages
+#' approach for proportional representation. Each party's total number of votes is divided
+#' by the square root of the product of the number of seats already allocated plus one and
+#' that number itself (i.e., √[n(n+1)]), producing a list of quotients. Seats are assigned
+#' one at a time to the party with the highest quotient, repeating until all seats are allocated.
+#' Only parties surpassing a specified threshold (as a proportion of total votes including blank votes)
+#' are considered for allocation.
+#'
+#' @inheritParams dhont_seats
+#'
+#' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
+#' variables:
+#' \item{party}{acronym of the candidacies}
+#' \item{seats}{number of seats distributed to each party}
+#' \item{remainder}{remainders of the initial division that were not selected for a seat}
+#'
+#' @details The purpose of this helper function is to be used in a general
+#' function, \code{seats_allocation()}, to calculate the seats distribution of every
+#' electoral district of a given election according to the Hill method.
+#'
+#' @author Javier Alvarez-Liebana, Irene Bosque-Gala and David Pereiro-Pol
+#' @keywords seat_allocation
+#' @name hills_seats
+#' @import crayon
+#'
+#' @examples
+#'
+#' ## Correct examples
+#'
+#' ## Seats distribution with Hill method for given vectors of parties and votes
+#' ## without the remainder quotients
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100, 200)
+#'
+#' seats <- hills_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' \dontrun
+#'
+#' # Incorrect examples
+#'
+#' # Different length of parties and votes
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100)
+#'
+#' seats <- hills_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' @export
 hills_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
+
+  if(length(parties) != length(votes)){
+    stop(red("Ups! `parties` and `votes` should have the same length."))
+  }
+
+  if(any(!is.numeric(votes) | is.na(votes))){
+    stop(red("Ups! `votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(blank_votes))){
+    stop(red("Ups! `blank_votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(nseats) | is.na(nseats))){
+    stop(red("Ups! `nseats` should be a number"))
+  }
+
+  if(any(!is.numeric(threshold)) | !between(threshold, 0, 1) | is.na(threshold)){
+    stop(red("Ups! `threshold` should be a number between 0 and 1"))
+  }
+
+  if (!is.logical(short_version) | is.na(short_version)) {
+
+    stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
+
+  }
+
   total_votes <- sum(votes) + first(blank_votes)
   threshold_votes <- threshold * total_votes
 
@@ -166,8 +466,8 @@ hills_seats <- function(parties, votes, blank_votes, nseats, threshold, short_ve
     1:nseats,
     function (x) {tibble(
       party    = data |> pull(party),
-      divisor  = x,
-      quotient = data |> pull(votes) / (x + 1))
+      divisor  = sqrt(x * (x + 1)),
+      quotient = data |> pull(votes) / divisor)
     }
   )
 
@@ -198,7 +498,88 @@ hills_seats <- function(parties, votes, blank_votes, nseats, threshold, short_ve
 
 #DEANS
 
+#' @title Function to calculate the allocated seats according to the Dean method in a given
+#' electoral district.
+#'
+#' @description This function allocates seats to political parties in a given electoral district
+#' using the Dean method (also known as the Harmonic Mean method), a highest averages
+#' method for proportional representation. The method uses divisors based on the harmonic mean
+#' of consecutive integers: for each party, its vote total is divided by
+#' \eqn{(2s(s+1))/(2s+1)}, where \eqn{s} is the current number of seats allocated to the party.
+#' Seats are assigned one at a time to the party with the highest resulting quotient
+#' until all seats are distributed. Only parties that exceed a vote threshold
+#' (expressed as a proportion of the total votes, including blank votes) are considered eligible.
+#'
+#' @inheritParams dhont_seats
+#'
+#' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
+#' variables:
+#' \item{party}{acronym of the candidacies}
+#' \item{seats}{number of seats distributed to each party}
+#' \item{divisor}{divisor used to calculate each quotient}
+#' \item{quotient}{quotient calculated for each party and divisor}
+#'
+#' @details The purpose of this helper function is to be used in a general
+#' function, \code{seats_allocation()}, to calculate the seats distribution of every
+#' electoral district of a given election according to the Dean method.
+#'
+#' @author Javier Alvarez-Liebana, Irene Bosque-Gala and David Pereiro-Pol
+#' @keywords seat_allocation
+#' @name deans_seats
+#' @import crayon
+#'
+#' @examples
+#'
+#' ## Correct examples
+#'
+#' ## Seats distribution with Dean method for given vectors of parties and votes
+#' ## without the remainder quotients
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100, 200)
+#'
+#' seats <- deans_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' \dontrun
+#'
+#' # Incorrect examples
+#'
+#' # Different length of parties and votes
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100)
+#'
+#' seats <- deans_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' @export
 deans_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
+
+  if(length(parties) != length(votes)){
+    stop(red("Ups! `parties` and `votes` should have the same length."))
+  }
+
+  if(any(!is.numeric(votes) | is.na(votes))){
+    stop(red("Ups! `votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(blank_votes))){
+    stop(red("Ups! `blank_votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(nseats) | is.na(nseats))){
+    stop(red("Ups! `nseats` should be a number"))
+  }
+
+  if(any(!is.numeric(threshold)) | !between(threshold, 0, 1) | is.na(threshold)){
+    stop(red("Ups! `threshold` should be a number between 0 and 1"))
+  }
+
+  if (!is.logical(short_version) | is.na(short_version)) {
+
+    stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
+
+  }
+
   total_votes <- sum(votes) + first(blank_votes)
   threshold_votes <- threshold * total_votes
 
@@ -242,18 +623,104 @@ deans_seats <- function(parties, votes, blank_votes, nseats, threshold, short_ve
   }
 }
 
-
 #ADAMS
 
+#' @title Function to calculate the allocated seats according to the Adams method in a given
+#' electoral district.
+#'
+#' @description This function allocates seats to political parties in a given electoral district
+#' using the Adams method, a highest averages method for proportional representation
+#' that favors smaller parties. In this method, each party’s vote total is divided
+#' by a sequence of integers starting from 1 (i.e., 1, 2, 3, ...), generating a series
+#' of quotients. Seats are allocated one at a time to the highest quotients until all
+#' seats are distributed. Only parties that surpass a specified vote threshold
+#' (expressed as a proportion of total votes, including blank votes) are eligible
+#' for seat allocation.
+#'
+#' @inheritParams dhont_seats
+#'
+#' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
+#' variables:
+#' \item{party}{acronym of the candidacies}
+#' \item{seats}{number of seats distributed to each party}
+#' \item{divisor}{divisor used to calculate each quotient}
+#' \item{quotient}{quotient calculated for each party and divisor}
+#'
+#' @details The purpose of this helper function is to be used in a general
+#' function, \code{seats_allocation()}, to calculate the seats distribution of every
+#' electoral district of a given election according to the Adam method.
+#'
+#' @author Javier Alvarez-Liebana, Irene Bosque-Gala and David Pereiro-Pol
+#' @keywords seat_allocation
+#' @name adams_seats
+#' @import crayon
+#'
+#' @examples
+#'
+#' ## Correct examples
+#'
+#' ## Seats distribution with Adams method for given vectors of parties and votes
+#' ## without the remainder quotients
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100, 200)
+#'
+#' seats <- adams_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' \dontrun
+#'
+#' # Incorrect examples
+#'
+#' # Different length of parties and votes
+#'
+#' parties <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' votes <- c(200, 350, 100)
+#'
+#' seats <- adams_seats(parties = parties, votes = votes, blank_votes = 50, threshold = 0.03)
+#'
+#' @export
 adams_seats <- function(parties, votes, blank_votes, nseats, threshold, short_version = TRUE) {
+
+  if(length(parties) != length(votes)){
+    stop(red("Ups! `parties` and `votes` should have the same length."))
+  }
+
+  if(any(!is.numeric(votes) | is.na(votes))){
+    stop(red("Ups! `votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(blank_votes))){
+    stop(red("Ups! `blank_votes` should be a numeric vector."))
+  }
+
+  if(any(!is.numeric(nseats) | is.na(nseats))){
+    stop(red("Ups! `nseats` should be a number"))
+  }
+
+  if(any(!is.numeric(threshold)) | !between(threshold, 0, 1) | is.na(threshold)){
+    stop(red("Ups! `threshold` should be a number between 0 and 1"))
+  }
+
+  if (!is.logical(short_version) | is.na(short_version)) {
+
+    stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
+
+  }
+
   total_votes <- sum(votes) + first(blank_votes)
   threshold_votes <- threshold * total_votes
 
   data <- tibble(party = parties, votes = votes) |>
-    filter(party != "blank", votes > threshold_votes) |>
-    mutate(seats = 0)
+    filter(party != "blank", votes > threshold_votes)
 
-  divisors <- 1:nseats
+  initial_seats <- tibble(party = data$party, seats = 1)
+
+  remaining_seats <- nseats - nrow(initial_seats)
+  if (remaining_seats < 0) {
+    stop("More parties than seats. Adams method cannot allocate at least one seat per party.")
+  }
+
+  divisors <- 1:remaining_seats
 
   quotients <- pmap_dfr(
     list(party = data$party, v = data$votes),
@@ -261,18 +728,24 @@ adams_seats <- function(parties, votes, blank_votes, nseats, threshold, short_ve
       tibble(
         party    = party,
         divisor  = divisors,
-        quotient = v / divisors
+        quotient = v / divisor
       )
     }
   )
 
-  allocations <- quotients %>%
-    arrange(desc(quotient), party) %>%
-    slice_head(n = nseats)
+  allocations <- quotients |>
+    arrange(desc(quotient), party) |>
+    slice_head(n = remaining_seats)
 
-  seats <- allocations %>%
-    count(party, name = "seats") %>%
-    arrange(desc(seats), party)
+  extra_seats <- allocations |>
+    count(party, name = "extra")
+
+  seats <- initial_seats |>
+    left_join(extra_seats, by = "party") |>
+    mutate(extra = replace_na(extra, 0),
+           seats = seats + extra) |>
+    select(party, seats) |>
+    arrange(desc(seats))
 
   if (short_version) {
     return(seats)
@@ -288,6 +761,118 @@ adams_seats <- function(parties, votes, blank_votes, nseats, threshold, short_ve
     ))
   }
 }
+
+
+#' @title Function to calculate the allocated seats according to the chosen method in a given
+#' vector of electoral districts.
+#'
+#' @param election_data A database containing general election data
+#' already provided (by other functions or by the user). Database
+#' should contain \code{col_id_elec}, \code{col_id_electoral_district},
+#' \code{col_abbrev_candidacies}, \code{col_votes} and \code{col_blank_votes} columns.
+#' @param method A string providing the method of apportionment that is going
+#' to be used. The allowed values are the following:
+#' 'D'Hondt, 'Hamilton', 'Webster', 'Hill' and 'Dean'.
+#'  Defaults to \code{"D'Hondt"}.
+#' @param threshold A number indicating the minimal percentage of votes
+#' needed to obtain representation.
+#' @param nseats A number indicating the number of seats that are going to distributed.
+#' @param col_id_elec A string proving the column name for the election id.
+#' @param col_id_electoral_district A string providing the column name for the
+#' electoral district.
+#' @param col_abbrev_candidacies A string providing the column name for
+#' the name or abbreviation of the candidacies.
+#' @param col_votes A string providing the column name for the
+#' number of votes of each candidacy.
+#' @param col_blank_votes A string providing the column name for the
+#' number of blank votes.
+#'
+#' @returns A tibble with rows corresponding to each party including the following
+#' variables:
+#' \item{xxx}{name or id  of the electoral district}
+#' \item{party}{acronym of the candidacies}
+#' \item{seats}{number of seats distributed to each party}
+#'
+#' @details This function uses the individual method functions to allocate seats
+#' in a given set of electoral districts.
+#'
+#' @author Javier Alvarez-Liebana, Irene Bosque-Gala and David Pereiro-Pol
+#' @keywords seat_allocation
+#' @name seat_allocation
+#' @import crayon
+#'
+#' @examples
+#'
+#' ##Correct examples
+#'
+#' # Allocation according to the D'Hondt method in 2016 taking the province as
+#' the electoral district with a threshold of 3%.
+#'
+#' election_data <-
+#' summary_election_data(type_election = "congress", year = 2016, level = "prov")
+#'
+#' prov_seats <- seat_allocation(election_data = election_data,
+#'                               method = "D'Hondt",
+#'                               threshold = 0.03)
+#'
+#' \dontrun
+#'
+#' ## Wrong examples
+#'
+#' # Invalid 'method' argument,"invent_method" is not allowed
+#' seat_allocation(lection_data = election_data,
+#'                               method = "invent_method",
+#'                               threshold = 0.03)
+#'
+#' @export
+seat_allocation <- function(election_data, method = "D'Hondt", threshold, nseats = NULL,
+                            col_id_elec= "id_elec",
+                            col_id_electoral_district = "id_INE_prov",
+                            col_abbrev_candidacies = "abbrev_candidacies",
+                            col_votes = "ballots",
+                            col_blank_votes = "blank_ballots"){
+  if(!is.null(nseats)){
+
+    election_data <- election_data |>
+      mutate(nseats = nseats)
+
+  } else {
+
+    id_election <- election_data |>
+      pull(.data[[col_id_elec]]) |>
+      first()
+
+    nseats_year <- total_seats_spain |>
+      filter(.data[[col_id_elec]] == id_election) |>
+      select(.data[[col_id_electoral_district]], nseats, prov)
+
+    election_data <- election_data |>
+      left_join(nseats_year, by = col_id_electoral_district)
+
+  }
+
+  apportion_fun <- switch(method,
+                          "D'Hondt"  = dhondt_seats,
+                          "Hamilton" = hamilton_seats,
+                          "Webster"  = webster_seats,
+                          "Hill"     = hills_seats,
+                          "Dean"     = deans_seats,
+                          "Adams"    = adams_seats)
+
+    seats_results <- election_data |>
+      group_by(.data[[col_id_electoral_district]]) |>
+      summarise(apportion_fun(parties = .data[[col_abbrev_candidacies]],
+                                             votes = .data[[col_votes]],
+                                             blank_votes = .data[[col_blank_votes]],
+                                             nseats = first(nseats),
+                                             threshold = threshold)) |>
+      ungroup()
+
+
+  return(seats_results)
+
+}
+
 
 
 #SEATS BY PROVINCES

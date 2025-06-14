@@ -41,7 +41,7 @@
 #' \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
 #' (European Parliament elections). Variable available only for
 #' long version.}
-#' \itme{type_election}{type of the election.}
+#' \item{type_election}{type of the election.}
 #' \item{date_elec}{date of the election. Variable available only for
 #' long version.}
 #' \item{id_INE_poll_station}{poll station's id constructed from the
@@ -893,7 +893,7 @@ aggregate_election_data <-
 #' @param CERA_remove Flag to indicate whether it should be removed
 #' the ballots related to CERA constituencies. Defaults to
 #' \code{FALSE}.
-#' @param filter_candidacies A string of characters containing
+#' @param filter_candidacies A string of characters (or  vector of them) containing
 #' party abbreviations which ballots will be filtered (as long as
 #' \code{by_parties = TRUE}). Defaults to \code{NA}.
 #' @param candidacies_data A database containing the information of
@@ -1023,14 +1023,14 @@ aggregate_election_data <-
 #' @export
 summary_election_data <-
   function(type_elec, year = NULL, date = NULL,
+           level = "all", by_parties = TRUE, filter_porc_ballots = NA,
+           filter_candidacies = NA,
            election_data = NULL, ballots_data = NULL,
            candidacies_data = NULL,
            col_id_elec = "id_elec",
            col_id_poll_station = "id_INE_poll_station",
            col_id_mun = "id_INE_mun",
            prec_round = 3, short_version = TRUE, CERA_remove = FALSE,
-           level = "all", by_parties = TRUE, filter_porc_ballots = NA,
-           filter_candidacies = NA,
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
            col_id_candidacies = c("id_prov" = "id_candidacies",
                                   "id_nat" = "id_candidacies_nat"),
@@ -1249,7 +1249,6 @@ summary_election_data <-
       summary_data <-
         summary_data |>
         select(-contains("census_counting"), -contains("pop_res"),
-               -contains("id_INE"),
                -any_of(c("ballots_1", "ballots_2", "n_poll_stations")))
 
     }
@@ -1307,6 +1306,7 @@ summary_election_data <-
 
     # output
     return(summary_data)
+
 
 }
 

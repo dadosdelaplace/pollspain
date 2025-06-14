@@ -95,7 +95,7 @@ each election, including the following variables:
 \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
 (European Parliament elections). Variable available only for
 long version.}
-\itme{type_election}{type of the election.}
+\item{type_election}{type of the election.}
 \item{date_elec}{date of the election. Variable available only for
 long version.}
 \item{id_INE_poll_station}{poll station's id constructed from the
