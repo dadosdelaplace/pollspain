@@ -34,9 +34,19 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/dadosdelaplace/pollspain/blob/v0.2.5/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/dadosdelaplace/pollspain/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.5" id="pollspain-025">pollspain 0.2.5<a class="anchor" aria-label="anchor" href="#pollspain-025"></a></h2>
+<ul><li>Fixed parties with NA id’s</li>
+<li>Fixed documentation of <code>get_elections_data()</code>, <code><a href="../reference/aggregate_election_data.html">aggregate_election_data()</a></code>, <code><a href="../reference/summary_election_data.html">summary_election_data()</a></code>
+</li>
+<li>Fixed errors in 2015 files: there exist ballots asigned to parties in the raw MIR files that they are not in the candidacie files.</li>
+<li>Fixed 2019 elections (user has to choose between two dates) also in <code>import_...()</code> functions</li>
+<li>Check values for <code>level</code> argument directly in <code><a href="../reference/summary_election_data.html">summary_election_data()</a></code>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.2" id="pollspain-022">pollspain 0.2.2<a class="anchor" aria-label="anchor" href="#pollspain-022"></a></h2>
 <ul><li>Lazy duckDB system of files was implemented: similar speed as before but between 6 and 10 times lower RAM consumption.</li>
