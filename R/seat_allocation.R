@@ -141,7 +141,7 @@ dhondt_seats <- function(parties, votes, blank_votes, nseats, threshold, short_v
 #' Only parties that surpass a given vote threshold (expressed as a proportion of
 #' total votes) are considered for seat allocation.
 #'
-#' @inheritParams dhont_seats
+#' @inheritParams dhondt_seats
 #'
 #' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
 #' variables:
@@ -265,7 +265,7 @@ hamilton_seats <- function(parties, votes, blank_votes, nseats, threshold = 0, s
 #' (expressed as a proportion of the total votes, including blank votes) are eligible
 #' for seat allocation.
 #'
-#' @inheritParams dhont_seats
+#' @inheritParams dhondt_seats
 #'
 #' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
 #' variables:
@@ -510,7 +510,7 @@ hills_seats <- function(parties, votes, blank_votes, nseats, threshold, short_ve
 #' until all seats are distributed. Only parties that exceed a vote threshold
 #' (expressed as a proportion of the total votes, including blank votes) are considered eligible.
 #'
-#' @inheritParams dhont_seats
+#' @inheritParams dhondt_seats
 #'
 #' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
 #' variables:
@@ -637,7 +637,7 @@ deans_seats <- function(parties, votes, blank_votes, nseats, threshold, short_ve
 #' (expressed as a proportion of total votes, including blank votes) are eligible
 #' for seat allocation.
 #'
-#' @inheritParams dhont_seats
+#' @inheritParams dhondt_seats
 #'
 #' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
 #' variables:
