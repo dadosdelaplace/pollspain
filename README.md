@@ -13,11 +13,9 @@ release](https://img.shields.io/github/v/release/dadosdelaplace/pollspain)](http
 <!-- badges: end -->
 
 The main objective of the R package `{pollspain}` is to provide social
-scientists, political analysts and citizens with easy and
-straightforward <span class="hl">**access to electoral data from
+scientists and citizens an easy <span class="hl">**access to electoral data from
 Spain**</span>. This includes both **aggregated election results**
-extracted from polling stations and **survey data** (including housing
-effects). It also offers tools for seat allocation, vote simulation, and
+extracted from polling stations and **survey data**. It also offers tools for seat allocation and
 dataviz. The package is designed under
 <span class="hl">**tidyverse-style**</span> specially tailored for
 beginners.
