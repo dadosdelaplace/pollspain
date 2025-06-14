@@ -11,8 +11,7 @@ import_poll_station_data(
   prec_round = 3,
   short_version = TRUE,
   verbose = TRUE,
-  lazy_duckdb = FALSE,
-  con_duckdb = NULL
+  lazy_duckdb = FALSE
 )
 }
 \arguments{
@@ -46,10 +45,6 @@ be printed during execution. Defaults to \code{TRUE}.}
 \item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
 should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
 Defaults to \code{FALSE}.}
-
-\item{con_duckdb}{Active connection between R and a specific
-database, allowing you to send queries, import data, or
-write tables to and from R. Defaults to \code{NULL}.}
 }
 \value{
 A tibble with rows corresponding to municipalities for

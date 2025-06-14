@@ -24,9 +24,6 @@
 #' @param lazy_duckdb Flag to indicate whether a lazy duckDB database
 #' should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
 #' Defaults to \code{FALSE}.
-#' @param con_duckdb Active connection between R and a specific
-#' database, allowing you to send queries, import data, or
-#' write tables to and from R. Defaults to \code{NULL}.
 #'
 #' @return A tibble with rows corresponding to municipalities for
 #' each election, including the following variables:
@@ -104,9 +101,9 @@
 #' @export
 import_mun_census_data <-
   function(type_elec, year = NULL, date = NULL, verbose = TRUE,
-           lazy_duckdb = FALSE, con_duckdb = NULL) {
+           lazy_duckdb = FALSE) {
 
-    options(warn=-1)
+    options(warn = -1)
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
@@ -197,12 +194,6 @@ import_mun_census_data <-
           bind_rows(allowed_elections_date) |>
           distinct(cod_elec, type_elec, date, .keep_all = TRUE)
       }
-
-      wrong_elections <-
-        asked_elections |>
-        anti_join(dates_elections_spain,
-                  by = c("cod_elec", "type_elec", "year"))
-
     } else {
 
       allowed_elections <- allowed_elections_date
@@ -214,13 +205,53 @@ import_mun_census_data <-
           bind_rows(allowed_elections) |>
           distinct(cod_elec, type_elec, date, .keep_all = TRUE)
       }
+    }
 
-      wrong_elections <-
-        asked_elections_date |>
-        anti_join(dates_elections_spain,
-                  by = c("cod_elec", "type_elec", "year"))
+    ambiguous_years <- intersect(allowed_elections$year, 2019)
+    chosen_dates <- NULL
+
+    if (length(ambiguous_years) > 0 & is.null(date)) {
+
+      normal_years <- setdiff(year, 2019)
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec & year %in% normal_years) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+
+      if (interactive()) {
+
+        sel <- menu(c("April (2019-04-28)",
+                      "November (2019-11-10)",
+                      "Both dates"),
+                    title = paste0("What 2019 election do you want?"))
+
+        chosen_dates <- c(
+          chosen_dates,
+          switch(sel,
+                 "2019-04-28",
+                 "2019-11-10",
+                 c("2019-04-28", "2019-11-10"))
+        )
+      } else {
+
+        chosen_dates <- c(chosen_dates, c("2019-04-28", "2019-11-10"))
+      }
+
+      dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))
+
+    } else {
+
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec &
+                 year %in% allowed_elections$year) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+      dates_ok <- as_date(unique(c(date, normal_dates)))
 
     }
+    allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
 
     if (allowed_elections |> nrow() == 0) {
 
@@ -236,26 +267,10 @@ import_mun_census_data <-
 
     }
 
-    if (verbose) {
-      if ((wrong_elections |> nrow() > 0) &
-          (allowed_elections |> nrow() == 0)) {
+    # Create conection in duckdb
+    con <- .get_duckdb_con()
 
-        message(yellow(glue("Be careful! No data is available for {wrong_elections$type_elec} elections in {paste0(wrong_elections$month, '-', wrong_elections$year, '\n')}")))
-
-      }
-    }
-
-    # Import the data
-    if (is.null(con_duckdb)) {
-
-      con <- .get_duckdb_con()
-
-    } else {
-
-      con <- con_duckdb
-
-    }
-
+    # Import files
     files <- glue("raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
     paths <- system.file("extdata", files, package = "pollspaindata")
     mun_data <-
@@ -421,10 +436,10 @@ import_mun_census_data <-
 import_poll_station_data <-
   function(type_elec, year = NULL, date = NULL,
            prec_round = 3, short_version = TRUE,
-           verbose = TRUE, lazy_duckdb = FALSE,
-           con_duckdb = NULL) {
+           verbose = TRUE, lazy_duckdb = FALSE) {
 
-    options(warn=-1)
+    options(warn = -1)
+
     # Check if prec_round is a positive number
     if (prec_round != as.integer(prec_round) | prec_round < 1) {
 
@@ -528,10 +543,6 @@ import_poll_station_data <-
           bind_rows(allowed_elections_date) |>
           distinct(cod_elec, type_elec, date, .keep_all = TRUE)
       }
-      wrong_elections <-
-        asked_elections |>
-        anti_join(dates_elections_spain,
-                  by = c("cod_elec", "type_elec", "year"))
     } else {
 
       allowed_elections <- allowed_elections_date
@@ -543,11 +554,53 @@ import_poll_station_data <-
           bind_rows(allowed_elections) |>
           distinct(cod_elec, type_elec, date, .keep_all = TRUE)
       }
-      wrong_elections <-
-        asked_elections_date |>
-        anti_join(dates_elections_spain,
-                  by = c("cod_elec", "type_elec", "year"))
     }
+
+    ambiguous_years <- intersect(allowed_elections$year, 2019)
+    chosen_dates <- NULL
+
+    if (length(ambiguous_years) > 0 & is.null(date)) {
+
+      normal_years <- setdiff(year, 2019)
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec & year %in% normal_years) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+
+      if (interactive()) {
+
+        sel <- menu(c("April (2019-04-28)",
+                      "November (2019-11-10)",
+                      "Both dates"),
+                    title = paste0("What 2019 election do you want?"))
+
+        chosen_dates <- c(
+          chosen_dates,
+          switch(sel,
+                 "2019-04-28",
+                 "2019-11-10",
+                 c("2019-04-28", "2019-11-10"))
+        )
+      } else {
+
+        chosen_dates <- c(chosen_dates, c("2019-04-28", "2019-11-10"))
+      }
+
+      dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))
+
+    } else {
+
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec &
+                 year %in% allowed_elections$year) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+      dates_ok <- as_date(unique(c(date, normal_dates)))
+
+    }
+    allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
 
     if (allowed_elections |> nrow() == 0) {
 
@@ -564,27 +617,10 @@ import_poll_station_data <-
 
     }
 
-
-    if (verbose) {
-      if ((wrong_elections |> nrow() > 0) &
-          (allowed_elections |> nrow() == 0)) {
-
-        message(yellow(glue("Be careful! No data is available for {wrong_elections$type_elec} elections in {paste0(wrong_elections$month, '-', wrong_elections$year, '\n')}")))
-
-      }
-    }
+    # Create connection in duckdb
+    con <- .get_duckdb_con()
 
     # Import the data
-    if (is.null(con_duckdb)) {
-
-      con <- .get_duckdb_con()
-
-    } else {
-
-      con <- con_duckdb
-
-    }
-
     files <- glue("raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
     paths <- system.file("extdata", files, package = "pollspaindata")
     poll_station_raw_data <-
@@ -631,15 +667,16 @@ import_poll_station_data <-
       mutate("valid_ballots" = blank_ballots + party_ballots,
              "total_ballots" = valid_ballots + invalid_ballots)
 
+    mun_data <-
+      import_mun_census_data(type_elec, year, date,
+                             verbose = FALSE, lazy_duckdb = TRUE)
+
     poll_station_data <-
       poll_station_data |>
       dplyr::filter(cod_INE_mun != "999") |>
-      left_join(
-        import_mun_census_data(type_elec, year, date,
-                               verbose = FALSE, lazy_duckdb = TRUE,
-                               con_duckdb = con),
+      left_join(mun_data,
                 by = c("cod_elec", "type_elec", "date_elec", "id_INE_mun"),
-                suffix = c("", ".y")) |>
+                suffix = c("", ".y"), copy = TRUE) |>
       select(-contains(".y"))
 
 
@@ -868,9 +905,9 @@ import_poll_station_data <-
 import_candidacies_data <-
   function(type_elec, year = NULL, date = NULL,
            short_version = TRUE, verbose = TRUE,
-           lazy_duckdb = FALSE, con_duckdb = NULL) {
+           lazy_duckdb = FALSE) {
 
-    options(warn=-1)
+    options(warn = -1)
     # check if short_version is a logical variable
     if (is.na(short_version) | !is.logical(short_version)) {
 
@@ -965,12 +1002,6 @@ import_candidacies_data <-
           bind_rows(allowed_elections_date) |>
           distinct(cod_elec, type_elec, date, .keep_all = TRUE)
       }
-
-      wrong_elections <-
-        asked_elections |>
-        anti_join(dates_elections_spain,
-                  by = c("cod_elec", "type_elec", "year"))
-
     } else {
 
       allowed_elections <- allowed_elections_date
@@ -982,11 +1013,57 @@ import_candidacies_data <-
           bind_rows(allowed_elections) |>
           distinct(cod_elec, type_elec, date, .keep_all = TRUE)
       }
+    }
 
-      wrong_elections <-
-        asked_elections_date |>
-        anti_join(dates_elections_spain,
-                  by = c("cod_elec", "type_elec", "year"))
+    ambiguous_years <- intersect(allowed_elections$year, 2019)
+    chosen_dates <- NULL
+
+    if (length(ambiguous_years) > 0 & is.null(date)) {
+
+      normal_years <- setdiff(year, 2019)
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec & year %in% normal_years) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+
+      if (interactive()) {
+
+        sel <- menu(c("April (2019-04-28)",
+                      "November (2019-11-10)",
+                      "Both dates"),
+                    title = paste0("What 2019 election do you want?"))
+
+        chosen_dates <- c(
+          chosen_dates,
+          switch(sel,
+                 "2019-04-28",
+                 "2019-11-10",
+                 c("2019-04-28", "2019-11-10"))
+        )
+      } else {
+
+        chosen_dates <- c(chosen_dates, c("2019-04-28", "2019-11-10"))
+      }
+
+      dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))
+
+    } else {
+
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec &
+                 year %in% allowed_elections$year) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+      dates_ok <- as_date(unique(c(date, normal_dates)))
+
+    }
+    allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
+
+    if (allowed_elections |> nrow() == 0) {
+
+      stop(red(glue("Ups! No {type_elec} elections are available. Please, be sure that arguments and dates are right")))
 
     }
 
@@ -1005,27 +1082,15 @@ import_candidacies_data <-
     }
 
     if (verbose) {
-      if ((wrong_elections |> nrow() > 0) &
-          (allowed_elections |> nrow() == 0)) {
-
-        message(yellow(glue("Be careful! No data is available for {wrong_elections$type_elec} elections in {paste0(wrong_elections$month, '-', wrong_elections$year, '\n')}")))
-
-      }
 
       message(magenta("   ... Please wait, the volume of data downloaded and the internet connection may take a few seconds"))
+
     }
+
+    # Create connection in duckdb
+    con <- .get_duckdb_con()
 
     # Import the data
-    if (is.null(con_duckdb)) {
-
-      con <- .get_duckdb_con()
-
-    } else {
-
-      con <- con_duckdb
-
-    }
-
     files <- glue("raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
     paths <- system.file("extdata", files, package = "pollspaindata")
     candidacies_raw_data <-
@@ -1034,7 +1099,6 @@ import_candidacies_data <-
     candidacies_raw_data <-
       Reduce(union_all, candidacies_raw_data) |>
       mutate("id_candidacies" = as.character(id_candidacies))
-
 
     # Recode mun data
     candidacies_raw_data <-

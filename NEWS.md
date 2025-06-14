@@ -12,12 +12,18 @@
 
 - surveys
 
-# pollspain 0.2.1
+# pollspain 0.2.5
 
-- vignettes
-- pending: Fixed documentation of get_elections_data(), aggregate_election_data(), summary_election_data()
-- menu 2019 en los import
-- check valores de level en summary sin esperar a agregar otras funciones dentro
+- pending: vignettes
+
+- Fixed parties with NA id's
+- Fixed documentation of `get_elections_data()`, `aggregate_election_data()`, `summary_election_data()`
+- Fixed errors in 2015 files: there exist ballots asigned to parties
+in the raw MIR files that they are not in the candidacie files.
+- Fixed 2019 elections (user has to choose between two dates) also in
+`import_...()` functions
+- Check values for `level` argument directly in `summary_election_data()`
+
 -->
 
 # pollspain 0.2.2

@@ -24,10 +24,10 @@ test_that("import poll station data", {
                         "total_compute" = blank_ballots + invalid_ballots + party_ballots) |>
                  filter(valid_compute != valid_ballots | total_compute != total_ballots) |>
                  nrow(), 0)
-  expect_error(import_poll_station_data(type_elec = "national", year = 2019))
-  expect_error(import_poll_station_data(type_elec = "congress", year = 2018))
-  expect_error(import_poll_station_data(type_elec = "congress", year = 2023, prec_round = -1))
+  expect_error(import_poll_station_data(type_elec = "national", year = 2019, verbose = FALSE))
+  expect_error(import_poll_station_data(type_elec = "congress", year = 2018, verbose = FALSE))
+  expect_error(import_poll_station_data(type_elec = "congress", year = 2023, prec_round = -1, verbose = FALSE))
   expect_error(import_poll_station_data(type_elec = "congress", year = 2019,
-                                        short_version = "yes"))
+                                        short_version = "yes", verbose = FALSE))
 })
 

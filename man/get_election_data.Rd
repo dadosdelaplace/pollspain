@@ -9,17 +9,10 @@ get_election_data(
   type_elec,
   year = NULL,
   date = NULL,
-  election_data = NULL,
-  ballots_data = NULL,
-  col_id_elec = "id_elec",
-  col_id_poll_station = "id_INE_poll_station",
-  col_id_mun = "id_INE_mun",
-  col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat"),
   prec_round = 3,
   short_version = TRUE,
   verbose = TRUE,
-  lazy_duckdb = FALSE,
-  con_duckdb = NULL
+  lazy_duckdb = FALSE
 )
 }
 \arguments{
@@ -40,32 +33,6 @@ If no date was provided, \code{year} should be provided as
 numerical variable. Please, check in \code{dates_elections_spain}
 that elections of the specified type are available.}
 
-\item{election_data}{A database containing general election data
-already provided (by other functions or by the user). Database
-should contain a \code{col_id_elec} column.
-Defaults to \code{NULL}.}
-
-\item{ballots_data}{A database containing ballots data for
-the different candidacies, already provided (by other functions or
-by the user). Database should contain a
-\code{col_id_poll_station} column. Defaults to \code{NULL}.}
-
-\item{col_id_elec}{Column name in \code{election_data} to uniquely
-identify the elections. Defaults to \code{"id_elec"}.}
-
-\item{col_id_poll_station}{Column name in \code{ballots_data} to
-uniquely identify poll stations. Defaults to
-\code{"id_INE_poll_station"}.}
-
-\item{col_id_mun}{Column name in \code{election_data} to
-uniquely identify municipalities. Defaults to
-\code{"id_INE_mun"}.}
-
-\item{col_id_candidacies}{A named vector (with names "id_prov" and
-"id_nat") in which user provides the column names for the
-candidacies id at province level and national level. Defaults to
-c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").}
-
 \item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
 
@@ -79,13 +46,9 @@ be printed during execution. Defaults to \code{TRUE}.}
 \item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
 should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
 Defaults to \code{FALSE}.}
-
-\item{con_duckdb}{Active connection between R and a specific
-database, allowing you to send queries, import data, or
-write tables to and from R. Defaults to \code{NULL}.}
 }
 \value{
-A tibble with rows corresponding to municipalities for
+A tibble with rows corresponding to poll-stations for
 each election, including the following variables:
 \item{id_elec}{election's id constructed from the election code
 \code{cod_elec} and date \code{date_elec}.}
@@ -95,6 +58,7 @@ each election, including the following variables:
 \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
 (European Parliament elections). Variable available only for
 long version.}
+\item{type_election}{type of the election.}
 \item{date_elec}{date of the election. Variable available only for
 long version.}
 \item{id_INE_poll_station}{poll station's id constructed from the
@@ -129,10 +93,10 @@ values of \code{valid_ballots}, \code{invalid_ballots},
 \code{party_ballots} and \code{blank_ballots}.}
 \item{n_poll_stations}{number of polling stations. It is only
 available for long version.}
-\item{census_counting_mun}{population eligible to vote after claims
-at municipality level.}
 \item{pop_res_mun}{population census of residents (CER + CERA) at
 municipality level.}
+\item{census_counting_mun}{population eligible to vote after claims
+at municipality level.}
 \item{id_candidacies}{id for candidacies at province level.}
 \item{id_candidacies_ccaa, id_candidacies_nat}{id for candidacies
 at ccaa level (only provided for long version) and at national
@@ -178,24 +142,6 @@ elections_data <-
 
 \dontrun{
 # ----
-# Correct examples
-# ----
-
-# Example usage providing external tables
-election_data <-
-  import_poll_station_data(type_elec = "congress", year = 2016) |>
-  dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
-ballots_data <-
-  import_candidacies_data(type_elec = "congress", year = 2016) |>
-  dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
-join_data <-
-  get_election_data(type_elec = "congress",
-                    election_data = election_data,
-                    ballots_data = ballots_data,
-                    col_id_elec = "invent_1",
-                    col_id_poll_station = "invent_2")
-
-# ----
 # Incorrect examples
 # ----
 
@@ -210,17 +156,6 @@ get_election_data(type_elec = "congress", date = "26-06-2016")
 get_election_data(type_elec = "congress", year = 2019,
                   short_version = "yes")
 
-# Invalid key columns: col_id_elec and col_id_poll should be
-# columns included in datasets election_data and ballots_data
-election_data <-
-  import_poll_station_data(type_elec = "congress", year = 2019)
-ballots_data <-
-  import_candidacies_data(type_elec = "congress", year = 2019)
-get_election_data(type_elec = "congress", year = 2019,
-                   election_data = election_data,
-                   ballots_data = ballots_data,
-                   col_id_elec = "invent_1",
-                   col_id_poll_station = "invent_2")
 }
 
 }

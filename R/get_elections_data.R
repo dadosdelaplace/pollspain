@@ -10,28 +10,8 @@
 #'
 #' @inheritParams import_poll_station_data
 #' @inheritParams import_candidacies_data
-#' @param election_data A database containing general election data
-#' already provided (by other functions or by the user). Database
-#' should contain a \code{col_id_elec} column.
-#' Defaults to \code{NULL}.
-#' @param ballots_data A database containing ballots data for
-#' the different candidacies, already provided (by other functions or
-#' by the user). Database should contain a
-#' \code{col_id_poll_station} column. Defaults to \code{NULL}.
-#' @param col_id_elec Column name in \code{election_data} to uniquely
-#' identify the elections. Defaults to \code{"id_elec"}.
-#' @param col_id_poll_station Column name in \code{ballots_data} to
-#' uniquely identify poll stations. Defaults to
-#' \code{"id_INE_poll_station"}.
-#' @param col_id_mun Column name in \code{election_data} to
-#' uniquely identify municipalities. Defaults to
-#' \code{"id_INE_mun"}.
-#' @param col_id_candidacies A named vector (with names "id_prov" and
-#' "id_nat") in which user provides the column names for the
-#' candidacies id at province level and national level. Defaults to
-#' c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").
 #'
-#' @return A tibble with rows corresponding to municipalities for
+#' @return A tibble with rows corresponding to poll-stations for
 #' each election, including the following variables:
 #' \item{id_elec}{election's id constructed from the election code
 #' \code{cod_elec} and date \code{date_elec}.}
@@ -41,6 +21,7 @@
 #' \code{"06"} (cabildo - Canarian council - elections), \code{"07"}
 #' (European Parliament elections). Variable available only for
 #' long version.}
+#' \item{type_election}{type of the election.}
 #' \item{date_elec}{date of the election. Variable available only for
 #' long version.}
 #' \item{id_INE_poll_station}{poll station's id constructed from the
@@ -75,10 +56,10 @@
 #' \code{party_ballots} and \code{blank_ballots}.}
 #' \item{n_poll_stations}{number of polling stations. It is only
 #' available for long version.}
-#' \item{census_counting_mun}{population eligible to vote after claims
-#' at municipality level.}
 #' \item{pop_res_mun}{population census of residents (CER + CERA) at
 #' municipality level.}
+#' \item{census_counting_mun}{population eligible to vote after claims
+#' at municipality level.}
 #' \item{id_candidacies}{id for candidacies at province level.}
 #' \item{id_candidacies_ccaa, id_candidacies_nat}{id for candidacies
 #' at ccaa level (only provided for long version) and at national
@@ -120,24 +101,6 @@
 #'
 #' \dontrun{
 #' # ----
-#' # Correct examples
-#' # ----
-#'
-#' # Example usage providing external tables
-#' election_data <-
-#'   import_poll_station_data(type_elec = "congress", year = 2016) |>
-#'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
-#' ballots_data <-
-#'   import_candidacies_data(type_elec = "congress", year = 2016) |>
-#'   dplyr::rename(invent_1 = id_elec, invent_2 = id_INE_poll_station)
-#' join_data <-
-#'   get_election_data(type_elec = "congress",
-#'                     election_data = election_data,
-#'                     ballots_data = ballots_data,
-#'                     col_id_elec = "invent_1",
-#'                     col_id_poll_station = "invent_2")
-#'
-#' # ----
 #' # Incorrect examples
 #' # ----
 #'
@@ -152,30 +115,21 @@
 #' get_election_data(type_elec = "congress", year = 2019,
 #'                   short_version = "yes")
 #'
-#' # Invalid key columns: col_id_elec and col_id_poll should be
-#' # columns included in datasets election_data and ballots_data
-#' election_data <-
-#'   import_poll_station_data(type_elec = "congress", year = 2019)
-#' ballots_data <-
-#'   import_candidacies_data(type_elec = "congress", year = 2019)
-#' get_election_data(type_elec = "congress", year = 2019,
-#'                    election_data = election_data,
-#'                    ballots_data = ballots_data,
-#'                    col_id_elec = "invent_1",
-#'                    col_id_poll_station = "invent_2")
 #' }
 #'
 #' @export
 get_election_data <-
   function(type_elec, year = NULL, date = NULL,
-           election_data = NULL, ballots_data = NULL,
-           col_id_elec = "id_elec",
-           col_id_poll_station = "id_INE_poll_station",
-           col_id_mun = "id_INE_mun",
-           col_id_candidacies = c("id_prov" = "id_candidacies",
-                                  "id_nat" = "id_candidacies_nat"),
            prec_round = 3, short_version = TRUE, verbose = TRUE,
-           lazy_duckdb = FALSE, con_duckdb = NULL) {
+           lazy_duckdb = FALSE) {
+
+    # colnames
+    col_id_elec <- "id_elec"
+    col_id_poll_station <- "id_INE_poll_station"
+    col_id_mun <- "id_INE_mun"
+    col_id_candidacies <-
+      c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat")
+
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
@@ -205,175 +159,158 @@ get_election_data <-
 
     }
 
-    if (!is.null(election_data)) {
-      if (!all(col_id_candidacies %in% names(ballots_data))) {
-
-        stop(red("Ups! Variables names in `col_id_candidacies` should be matched with column names in ballots_data"))
-
-      }
-    }
     # Check date
-    if (is.null(election_data)) {
-      if (!is.null(date)) {
+    if (!is.null(date)) {
 
-        if (!all(str_detect(date, "^\\d{4}-\\d{2}-\\d{2}$")) | any(is.na(date))) {
+      if (!all(str_detect(date, "^\\d{4}-\\d{2}-\\d{2}$")) | any(is.na(date))) {
 
-          stop(red("Ups! If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
+        stop(red("Ups! If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
 
-        } else {
-          date <- as_date(date)
-        }
       } else {
-        if (!is.numeric(year)) {
-          stop(red("Ups! If no date was provided, `year` should be a numerical variable."))
-        }
+        date <- as_date(date)
+      }
+    } else {
+      if (!is.numeric(year)) {
+        stop(red("Ups! If no date was provided, `year` should be a numerical variable."))
       }
     }
 
     # Design a tibble with all elections asked by user
     # Ensure input parameters are vectors
-    if (is.null(election_data)) {
-      if (!is.null(year)) {
+    if (!is.null(year)) {
 
-        asked_elections <-
-          expand_grid(as.vector(type_elec), as.vector(year))
-        names(asked_elections) <- c("type_elec", "year")
-        asked_elections <-
-          asked_elections |>
-          distinct(type_elec, year) |>
-          mutate("cod_elec" = type_to_code_election(as.vector(type_elec)),
-                 .before = everything())
+      asked_elections <-
+        expand_grid(as.vector(type_elec), as.vector(year))
+      names(asked_elections) <- c("type_elec", "year")
+      asked_elections <-
+        asked_elections |>
+        distinct(type_elec, year) |>
+        mutate("cod_elec" = type_to_code_election(as.vector(type_elec)),
+               .before = everything())
+
+      allowed_elections <-
+        dates_elections_spain |>
+        inner_join(asked_elections,
+                   by = c("cod_elec", "type_elec", "year"),
+                   suffix = c("", ".rm")) |>
+        select(-contains("rm")) |>
+        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+
+    }
+
+    if (!is.null(date)) {
+
+      asked_elections_date <-
+        expand_grid(as.vector(type_elec), as_date(date)) |>
+        mutate("year" = year(date))
+      names(asked_elections_date) <- c("type_elec", "date", "year")
+      asked_elections_date <-
+        asked_elections_date |>
+        distinct(type_elec, date, year) |>
+        mutate("cod_elec" = type_to_code_election(as.vector(type_elec)),
+               .before = everything())
+
+      allowed_elections_date <-
+        dates_elections_spain |>
+        inner_join(asked_elections_date,
+                   by = c("cod_elec", "type_elec", "date"),
+                   suffix = c("", ".rm")) |>
+        select(-contains("rm")) |>
+        distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+    }
+
+    if (!is.null(year)) {
+      if (!is.null(date)) {
 
         allowed_elections <-
-          dates_elections_spain |>
-          inner_join(asked_elections,
-                     by = c("cod_elec", "type_elec", "year"),
-                     suffix = c("", ".rm")) |>
-          select(-contains("rm")) |>
+          allowed_elections |>
+          bind_rows(allowed_elections_date) |>
           distinct(cod_elec, type_elec, date, .keep_all = TRUE)
-
       }
+    } else {
+
+      allowed_elections <- allowed_elections_date
 
       if (!is.null(date)) {
 
-        asked_elections_date <-
-          expand_grid(as.vector(type_elec), as_date(date)) |>
-          mutate("year" = year(date))
-        names(asked_elections_date) <- c("type_elec", "date", "year")
-        asked_elections_date <-
-          asked_elections_date |>
-          distinct(type_elec, date, year) |>
-          mutate("cod_elec" = type_to_code_election(as.vector(type_elec)),
-                 .before = everything())
-
-        allowed_elections_date <-
-          dates_elections_spain |>
-          inner_join(asked_elections_date,
-                     by = c("cod_elec", "type_elec", "date"),
-                     suffix = c("", ".rm")) |>
-          select(-contains("rm")) |>
+        allowed_elections <-
+          allowed_elections_date |>
+          bind_rows(allowed_elections) |>
           distinct(cod_elec, type_elec, date, .keep_all = TRUE)
-      }
-
-      if (!is.null(year)) {
-        if (!is.null(date)) {
-
-          allowed_elections <-
-            allowed_elections |>
-            bind_rows(allowed_elections_date) |>
-            distinct(cod_elec, type_elec, date, .keep_all = TRUE)
-        }
-      } else {
-
-        allowed_elections <- allowed_elections_date
-
-        if (!is.null(date)) {
-
-          allowed_elections <-
-            allowed_elections_date |>
-            bind_rows(allowed_elections) |>
-            distinct(cod_elec, type_elec, date, .keep_all = TRUE)
-        }
-      }
-
-
-      ambiguous_years <- intersect(allowed_elections$year, 2019)
-      chosen_dates <- NULL
-
-      if (length(ambiguous_years) > 0 & is.null(date)) {
-
-        normal_years <- setdiff(year, 2019)
-        normal_dates <- dates_elections_spain |>
-          filter(type_elec %in% !!type_elec & year %in% normal_years) |>
-          pull(date)
-
-        normal_dates <- as.character(normal_dates)
-
-        if (interactive()) {
-
-          sel <- menu(c("April (2019-04-28)",
-                        "November (2019-11-10)",
-                        "Both dates"),
-                      title = paste0("What 2019 election do you want?"))
-
-          chosen_dates <- c(
-            chosen_dates,
-            switch(sel,
-                   "2019-04-28",
-                   "2019-11-10",
-                   c("2019-04-28", "2019-11-10"))
-          )
-        } else {
-
-          chosen_dates <- c(chosen_dates, c("2019-04-28", "2019-11-10"))
-        }
-
-        dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))
-
-      } else {
-
-        normal_dates <- dates_elections_spain |>
-          filter(type_elec %in% !!type_elec &
-                   year %in% allowed_elections$year) |>
-          pull(date)
-
-        normal_dates <- as.character(normal_dates)
-        dates_ok <- as_date(unique(c(date, normal_dates)))
-
-      }
-      allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
-
-      if (verbose) {
-
-        # Print the file URL for debugging purposes
-        message(blue("[x] Import poll station data ..."))
-        Sys.sleep(1/20)
-        message(green(paste0("   ... ", allowed_elections$type_elec, " elections on ", allowed_elections$date, "\n")))
-
       }
     }
 
-   # Import the data
-    if (is.null(con_duckdb)) {
+    ambiguous_years <- intersect(allowed_elections$year, 2019)
+    chosen_dates <- NULL
 
-      con <- .get_duckdb_con()
+    if (length(ambiguous_years) > 0 & is.null(date)) {
+
+      normal_years <- setdiff(year, 2019)
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec & year %in% normal_years) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+
+      if (interactive()) {
+
+        sel <- menu(c("April (2019-04-28)",
+                      "November (2019-11-10)",
+                      "Both dates"),
+                    title = paste0("What 2019 election do you want?"))
+
+        chosen_dates <- c(
+          chosen_dates,
+          switch(sel,
+                 "2019-04-28",
+                 "2019-11-10",
+                 c("2019-04-28", "2019-11-10"))
+        )
+      } else {
+
+        chosen_dates <- c(chosen_dates, c("2019-04-28", "2019-11-10"))
+      }
+
+      dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))
 
     } else {
 
-      con <- con_duckdb
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec &
+                 year %in% allowed_elections$year) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+      dates_ok <- as_date(unique(c(date, normal_dates)))
+
+    }
+    allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
+
+    if (allowed_elections |> nrow() == 0) {
+
+      stop(red(glue("Ups! No {type_elec} elections are available. Please, be sure that arguments and dates are right")))
 
     }
 
-    if (is.null(election_data)) {
+    if (verbose) {
 
-      election_data <-
-        import_poll_station_data(type_elec = type_elec, year = NULL,
-                                 date = allowed_elections$date, prec_round = prec_round,
-                                 short_version = FALSE,
-                                 verbose = FALSE, lazy_duckdb = TRUE,
-                                 con_duckdb = con)
+      # Print the file URL for debugging purposes
+      message(blue("[x] Import poll station data ..."))
+      Sys.sleep(1/20)
+      message(green(paste0("   ... ", allowed_elections$type_elec, " elections on ", allowed_elections$date, "\n")))
 
     }
+
+    # Create connectio in duckdb
+    con <- .get_duckdb_con()
+
+    # Import the data
+    election_data <-
+      import_poll_station_data(type_elec = type_elec, year = NULL,
+                               date = allowed_elections$date,
+                               prec_round = prec_round,
+                               short_version = FALSE,
+                               verbose = FALSE, lazy_duckdb = TRUE)
 
     if (verbose) {
 
@@ -384,16 +321,11 @@ get_election_data <-
 
     }
 
-    if (is.null(ballots_data)) {
-
-      ballots_data <-
-        import_candidacies_data(type_elec = type_elec, year = NULL,
-                                date = allowed_elections$date,
-                                short_version = FALSE,
-                                verbose = FALSE, lazy_duckdb = TRUE,
-                                con_duckdb = con)
-
-    }
+    ballots_data <-
+      import_candidacies_data(type_elec = type_elec, year = NULL,
+                              date = allowed_elections$date,
+                              short_version = FALSE,
+                              verbose = FALSE, lazy_duckdb = TRUE)
 
     if (!any(dbListTables(con) == "election_data")) {
 
@@ -411,7 +343,7 @@ get_election_data <-
     if (!all(c(col_id_elec, col_id_poll_station) %in% colnames(election_data)) |
         !all(c(col_id_elec, col_id_poll_station) %in% colnames(ballots_data))) {
 
-      stop(red("Ups! Columns provided in `col_id_elec`and `col_id_poll_station_station` should be available in both tables."))
+      stop(red("Ups! Columns provided in `col_id_elec`and `col_id_poll_station_station` should be available in raw files."))
 
     }
 
@@ -428,6 +360,11 @@ get_election_data <-
     # remove memory
     rm(list = c("election_data", "ballots_data"))
     gc()
+
+    # Filter NA parties (just appear in 2015)
+    join_data <-
+      join_data |>
+      filter(!is.na(id_candidacies_nat) & !is.na(id_candidacies))
 
     # Check summaries
     check_totals <-
@@ -482,13 +419,15 @@ get_election_data <-
     if (!lazy_duckdb) {
 
       join_data <- join_data |> collect()
-      DBI::dbDisconnect(con, shutdown = TRUE)
+      if (exists("con")) {
+        DBI::dbDisconnect(con, shutdown = TRUE)
+      }
     }
 
     # output
     return(join_data)
 
- }
+  }
 
 #' @title Aggregate elections data at provided level (ccaa, prov, etc)
 #'
@@ -511,13 +450,6 @@ get_election_data <-
 #' @param by_parties A flag indicates whether user wants a summary by
 #' candidacies/parties or just global results at given \code{level}.
 #' Defaults to \code{TRUE}.
-#' @param cols_mun_var A vector of variable names that, in their raw
-#' version, are only available at the municipal level (or higher).
-#' Defaults to \code{c("pop_res_mun", "census_counting_mun")}.
-#' @param col_id_candidacies A named vector (with names "id_prov" and
-#' "id_nat") in which user provides the column names for the
-#' candidacies id at province level and national level. Defaults to
-#' c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").
 #'
 #' @return A tibble with rows corresponding to the level of aggregation for
 #' each election, including the following variables:
@@ -538,13 +470,6 @@ get_election_data <-
 #' \code{party_ballots}) and total ballots (sum of
 #' \code{valid_ballots} and \code{invalid_ballots}).}
 #' \item{n_poll_stations}{number of polling stations.}
-#' \item{pop_res_xxx}{population census of residents (CER + CERA) at
-#' xxx level (if level is below municipality level, it is provided at
-#' municipality level). It is only available for long version.}
-#' \item{census_counting_mun}{population eligible to vote after
-#' claims at xxx level (if level is below municipality level, it is
-#' provided at municipality level). It is only available for
-#' long version.}
 #' \item{id_candidacies}{id for candidacies (at province level).}
 #' \item{id_candidacies_nat}{id for candidacies at region national
 #' level.}
@@ -569,17 +494,20 @@ get_election_data <-
 #' @examples
 #' ## Correct examples
 #'
-#' # Election date from 2023 and 1989 dates
+#' # Election data from 2023 and 1989
 #' election_data <-
 #'    get_election_data(type_elec = "congress", year = 2023,
 #'                      date = "1989-10-29")
 #'
 #' # National level results (without parties)
-#' nat_agg <- aggregate_election_data(election_data, level = "all",
-#'                                    by_parties = FALSE)
+#' nat_agg <-
+#'    election_data |>
+#'    aggregate_election_data(level = "all", by_parties = FALSE)
 #'
 #' # Province level results (with parties)
-#' prov_agg <- aggregate_election_data(election_data, level = "prov")
+#' prov_agg <-
+#'    election_data |>
+#'    aggregate_election_data(level = "prov")
 #'
 #' \dontrun{
 #'
@@ -606,14 +534,16 @@ get_election_data <-
 #' @export
 aggregate_election_data <-
   function(election_data, level = "all", by_parties = TRUE,
-           col_id_elec = "id_elec",
-           col_id_poll_station = "id_INE_poll_station",
-           col_id_mun = "id_INE_mun",
-           cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-           col_id_candidacies = c("id_prov" = "id_candidacies",
-                                  "id_nat" = "id_candidacies_nat"),
            prec_round = 3, verbose = TRUE, short_version = TRUE,
-           lazy_duckdb = FALSE, con_duckdb = NULL) {
+           lazy_duckdb = FALSE) {
+
+    # colnames
+    col_id_elec <- "id_elec"
+    col_id_poll_station <- "id_INE_poll_station"
+    col_id_mun <- "id_INE_mun"
+    cols_mun_var <- c("pop_res_mun", "census_counting_mun")
+    col_id_candidacies <-
+      c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat")
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
@@ -736,15 +666,8 @@ aggregate_election_data <-
       }
     }
 
-    if (is.null(con_duckdb)) {
-
-      con <- .get_duckdb_con()
-
-    } else {
-
-      con <- con_duckdb
-
-    }
+    # create connection in duck db
+    con <- .get_duckdb_con()
     copy_to(con, election_data, name = "election_data", overwrite = TRUE)
     rm(election_data)
     election_data <- tbl(con, "election_data")
@@ -878,12 +801,15 @@ aggregate_election_data <-
     if (!lazy_duckdb) {
 
       agg_data <- agg_data |> collect()
-      DBI::dbDisconnect(con, shutdown = TRUE)
+
+      if (exists("con")) {
+        DBI::dbDisconnect(con, shutdown = TRUE)
+      }
     }
 
     # output
     return(agg_data)
-}
+  }
 
 #' @title Summaries of the electoral and candidacies ballots data for
 #' a given aggregation level (ccaa, prov, etc)
@@ -899,9 +825,9 @@ aggregate_election_data <-
 #' @param CERA_remove Flag to indicate whether it should be removed
 #' the ballots related to CERA constituencies. Defaults to
 #' \code{FALSE}.
-#' @param filter_candidacies A string of characters containing
-#' party abbreviations which ballots will be filtered (as long as
-#' \code{by_parties = TRUE}). Defaults to \code{NA}.
+#' @param filter_candidacies A string of characters (or vector of
+#' them) containing party abbreviations which ballots will be filtered
+#' (as long as \code{by_parties = TRUE}). Defaults to \code{NA}.
 #' @param candidacies_data A database containing the information of
 #' candidacies. Database should contain \code{col_abbrev_candidacies}
 #' and \code{col_id_candidacies} columns. Defaults to \code{NULL}.
@@ -946,7 +872,12 @@ aggregate_election_data <-
 #' \item{ballots}{number of ballots obtained for each candidacy at
 #' each level section.}
 #'
-#' @details pending...
+#' @details This function chains the two lower-level helpers \code{get_election_data()},
+#' which imports and cleans polling-station and candidacy ballots, and
+#' \code{aggregate_election_data()}, which rolls those data up to the requested
+#' territorial level. Then, this function performs a final round of post-processing
+#' so that the user obtains, in a single call, a tidy table with information of the
+#' chosen date and aggregation level that is ready for analysis or visualisation.
 #'
 #' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #' @keywords get_elections_data
@@ -962,11 +893,26 @@ aggregate_election_data <-
 #'   summary_election_data(type_elec = "congress", year = 2023,
 #'                         level = "prov")
 #'
-#'
 #' \dontrun{
-#' # ----
-#' # Correct examples
-#' # ----
+#'
+#' # Summary 2023 and April 2019 election data at mun_district level,
+#' # aggregating the candidacies ballots, in a long version
+#' summary_mun_district <-
+#'   summary_election_data(type_elec = "congress",
+#'                          year = 2023,
+#'                          date = "2019-11-10",
+#'                          level = "mun_district",
+#'                          short_version = FALSE)
+#'
+#' # Summary 2023 election data at prov level,
+#' # aggregating the candidacies ballots, in a short version, and
+#' # removing the CERA votes
+#' summary_prov <-
+#'   summary_election_data(type_elec = "congress",
+#'                          year = 2023,
+#'                          level = "prov",
+#'                          short_version = FALSE,
+#'                          CERA_remove = TRUE)
 #'
 #' # Summary 2023 election data at mun level, aggregating the
 #' # candidacies ballots, in a long version, and filtering ballots
@@ -997,6 +943,11 @@ aggregate_election_data <-
 #'                       by_parties = FALSE,
 #'                       filter_porc_ballots = 5)
 #'
+#' # filter_candidacies  supplied while by_parties = FALSE
+#' summary_election_data("congress", 2019,
+#'                       by_parties = FALSE,
+#'                       filter_candidacies = c("PP", "PSOE"))
+#'
 #' # Wrong election type
 #' summary_election_data("national", 2019)
 #' }
@@ -1004,24 +955,34 @@ aggregate_election_data <-
 #' @export
 summary_election_data <-
   function(type_elec, year = NULL, date = NULL,
-           election_data = NULL, ballots_data = NULL,
+           level = "all", by_parties = TRUE,
+           short_version = TRUE, CERA_remove = FALSE,
+           filter_porc_ballots = NA, filter_candidacies = NA,
+           prec_round = 3,
            candidacies_data = NULL,
-           col_id_elec = "id_elec",
-           col_id_poll_station = "id_INE_poll_station",
-           col_id_mun = "id_INE_mun",
-           prec_round = 3, short_version = TRUE, CERA_remove = FALSE,
-           level = "all", by_parties = TRUE, filter_porc_ballots = NA,
-           filter_candidacies = NA,
-           cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-           col_id_candidacies = c("id_prov" = "id_candidacies",
-                                  "id_nat" = "id_candidacies_nat"),
            col_abbrev_candidacies = "abbrev_candidacies",
-           verbose = TRUE, lazy_duckdb = FALSE, con_duckdb = NULL) {
+           verbose = TRUE, lazy_duckdb = FALSE) {
+
+    # Colnames
+    col_id_elec <- "id_elec"
+    col_id_poll_station <- "id_INE_poll_station"
+    col_id_mun <- "id_INE_mun"
+    col_id_candidacies <-
+      c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat")
+    cols_mun_var <- c("pop_res_mun", "census_counting_mun")
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
       stop(red("Ups! `verbose` argument should be a TRUE/FALSE logical flag."))
+
+    }
+
+    # Check if level takes allowed values
+    if (!(level %in% c("all", "ccaa", "prov", "mun",
+                       "mun_district", "sec", "poll_station"))) {
+
+      stop(red("Ups! Aggregation level provided by 'level' parameter should be taken from the following values: 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec', 'poll_station'"))
 
     }
 
@@ -1061,29 +1022,14 @@ summary_election_data <-
 
     }
 
-    # check cols_mun_var
-    if (!is.null(election_data) & !all(cols_mun_var %in% names(election_data))) {
-
-      stop(red("Ups! Variables names in `cols_mun_var` should be matched if election_data is provided."))
-
-    }
-
     # check abbrev_candidacies
-    # Check id_candidacies
     if (!is.null(candidacies_data) &
-        !all(c(col_abbrev_candidacies, col_id_candidacies) %in% names(candidacies_data))) {
+        !all(c(col_abbrev_candidacies, col_id_candidacies) %in% colnames(candidacies_data))) {
 
-      stop(red("Ups! Variables names in `col_abbrev_candidacies` and `col_id_candidacies` should be matched with column names in candidacies_data"))
-
-    }
-
-    # check id_candidacies
-    if (!is.null(election_data) &
-        !all(col_id_candidacies %in% names(election_data))) {
-
-      stop(red("Ups! Variables names in `col_id_candidacies` should be matched if election_data is provided."))
+      stop(red("Ups! Variables names in `col_abbrev_candidacies` and `(id_candidacies, id_candidacies_nat)` should be matched with column names in candidacies_data"))
 
     }
+
 
     if (verbose) {
 
@@ -1093,15 +1039,17 @@ summary_election_data <-
 
     election_data <-
       get_election_data(type_elec = type_elec, year = year, date = date,
-                        election_data = election_data, ballots_data = ballots_data,
-                        col_id_elec = col_id_elec, col_id_poll_station = col_id_poll_station,
                         prec_round = prec_round, short_version = FALSE,
                         verbose = verbose, lazy_duckdb = TRUE) |>
       rename_with(
         ~ c("pop_res_mun", "census_counting_mun")[match(.x, cols_mun_var)],
         .cols = cols_mun_var)
-    # names(election_data)[names(election_data) %in% cols_mun_var] <-
-    #   c("pop_res_mun", "census_counting_mun")
+
+    if (!is.null(election_data) & !all(cols_mun_var %in% colnames(election_data))) {
+
+      stop(red("Ups! Variables names in `cols_mun_var` should be matched if election_data is provided."))
+
+    }
 
     if (verbose) {
 
@@ -1122,11 +1070,6 @@ summary_election_data <-
     summary_data <-
       election_data |>
       aggregate_election_data(level = level, by_parties = by_parties,
-                              col_id_elec = col_id_elec,
-                              col_id_poll_station = col_id_poll_station,
-                              col_id_mun = col_id_mun,
-                              cols_mun_var = cols_mun_var,
-                              col_id_candidacies = col_id_candidacies,
                               prec_round = prec_round,
                               verbose = verbose, short_version = FALSE,
                               lazy_duckdb = TRUE)
@@ -1171,16 +1114,9 @@ summary_election_data <-
       id_party <- if_else(level == "all", col_id_candidacies[["id_nat"]],
                           col_id_candidacies[["id_prov"]])
 
-      if (is.null(con_duckdb)) {
 
-        con <- .get_duckdb_con()
-
-      } else {
-
-        con <- con_duckdb
-
-      }
-
+      # create connection in duckdb
+      con <- .get_duckdb_con()
 
       dict_parties <-
         global_dict_parties |>
@@ -1202,7 +1138,7 @@ summary_election_data <-
         tbl(con, "summary_data") |>
         left_join(tbl(con, "dict_parties"),
                   by = c("id_elec" = col_id_elec, id_party),
-                  suffix = c("", ".rm")) |>
+                  suffix = c("", ".rm"), copy = TRUE) |>
         select(-contains(".rm")) |>
         relocate(col_abbrev_candidacies, .after = id_party)
 
@@ -1230,7 +1166,6 @@ summary_election_data <-
       summary_data <-
         summary_data |>
         select(-contains("census_counting"), -contains("pop_res"),
-               -contains("id_INE"),
                -any_of(c("ballots_1", "ballots_2", "n_poll_stations")))
 
     }
@@ -1261,9 +1196,8 @@ summary_election_data <-
         filter_candidacies <-
           filter_candidacies[!is.na(filter_candidacies)]
         aux <-
-          summary_data  |>
-          filter(str_detect(.data[[col_abbrev_candidacies]],
-                            str_flatten(filter_candidacies, collapse = "|")))
+          summary_data |>
+          filter(.data[[col_abbrev_candidacies]] %in% filter_candidacies)
 
         if (nrow(aux |> collect()) == 0) {
 
@@ -1283,12 +1217,13 @@ summary_election_data <-
     if (!lazy_duckdb) {
 
       summary_data <- summary_data |> collect()
-      # DBI::dbDisconnect(con, shutdown = TRUE)
+      if (exists("con")) {
+        DBI::dbDisconnect(con, shutdown = TRUE)
+      }
     }
 
     # output
     return(summary_data)
 
-}
-
+  }
 

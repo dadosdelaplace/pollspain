@@ -1,7 +1,7 @@
 Package: pollspain
 Title: A grammar for the analysis of electoral and poll data
-Date: 2025-05-30
-Version: 0.2.2
+Date: 2025-06-14
+Version: 0.2.5
 Authors@R: c(
     person("Javier", "Álvarez-Liébana",
            email = "javalv09@ucm.es",

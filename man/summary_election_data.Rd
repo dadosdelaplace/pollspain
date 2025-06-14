@@ -9,25 +9,17 @@ summary_election_data(
   type_elec,
   year = NULL,
   date = NULL,
-  election_data = NULL,
-  ballots_data = NULL,
-  candidacies_data = NULL,
-  col_id_elec = "id_elec",
-  col_id_poll_station = "id_INE_poll_station",
-  col_id_mun = "id_INE_mun",
-  prec_round = 3,
-  short_version = TRUE,
-  CERA_remove = FALSE,
   level = "all",
   by_parties = TRUE,
+  short_version = TRUE,
+  CERA_remove = FALSE,
   filter_porc_ballots = NA,
   filter_candidacies = NA,
-  cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-  col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat"),
+  prec_round = 3,
+  candidacies_data = NULL,
   col_abbrev_candidacies = "abbrev_candidacies",
   verbose = TRUE,
-  lazy_duckdb = FALSE,
-  con_duckdb = NULL
+  lazy_duckdb = FALSE
 )
 }
 \arguments{
@@ -48,42 +40,6 @@ If no date was provided, \code{year} should be provided as
 numerical variable. Please, check in \code{dates_elections_spain}
 that elections of the specified type are available.}
 
-\item{election_data}{A database containing general election data
-already provided (by other functions or by the user). Database
-should contain a \code{col_id_elec} column.
-Defaults to \code{NULL}.}
-
-\item{ballots_data}{A database containing ballots data for
-the different candidacies, already provided (by other functions or
-by the user). Database should contain a
-\code{col_id_poll_station} column. Defaults to \code{NULL}.}
-
-\item{candidacies_data}{A database containing the information of
-candidacies. Database should contain \code{col_abbrev_candidacies}
-and \code{col_id_candidacies} columns. Defaults to \code{NULL}.}
-
-\item{col_id_elec}{Column name in \code{election_data} to uniquely
-identify the elections. Defaults to \code{"id_elec"}.}
-
-\item{col_id_poll_station}{Column name in \code{ballots_data} to
-uniquely identify poll stations. Defaults to
-\code{"id_INE_poll_station"}.}
-
-\item{col_id_mun}{Column name in \code{election_data} to
-uniquely identify municipalities. Defaults to
-\code{"id_INE_mun"}.}
-
-\item{prec_round}{Rounding accuracy. Defaults to
-\code{prec_round = 3}.}
-
-\item{short_version}{Flag to indicate whether it should be returned
-a short version of the data (just key variables) or not.
-Defaults to \code{TRUE}.}
-
-\item{CERA_remove}{Flag to indicate whether it should be removed
-the ballots related to CERA constituencies. Defaults to
-\code{FALSE}.}
-
 \item{level}{A string providing the level of aggregation at which
 the data is to be provided. The allowed values are the following:
 'all', 'ccaa', 'prov', 'mun', 'mun_district', 'sec' or
@@ -93,23 +49,29 @@ the data is to be provided. The allowed values are the following:
 candidacies/parties or just global results at given \code{level}.
 Defaults to \code{TRUE}.}
 
+\item{short_version}{Flag to indicate whether it should be returned
+a short version of the data (just key variables) or not.
+Defaults to \code{TRUE}.}
+
+\item{CERA_remove}{Flag to indicate whether it should be removed
+the ballots related to CERA constituencies. Defaults to
+\code{FALSE}.}
+
 \item{filter_porc_ballots}{A numerical argument representing the
 vote percentage threshold (out of 100) that the user wants to use
 to filter the parties (as long as \code{by_parties = TRUE}).
 Defaults to \code{NA}.}
 
-\item{filter_candidacies}{A string of characters containing
-party abbreviations which ballots will be filtered (as long as
-\code{by_parties = TRUE}). Defaults to \code{NA}.}
+\item{filter_candidacies}{A string of characters (or vector of
+them) containing party abbreviations which ballots will be filtered
+(as long as \code{by_parties = TRUE}). Defaults to \code{NA}.}
 
-\item{cols_mun_var}{A vector of variable names that, in their raw
-version, are only available at the municipal level (or higher).
-Defaults to \code{c("pop_res_mun", "census_counting_mun")}.}
+\item{prec_round}{Rounding accuracy. Defaults to
+\code{prec_round = 3}.}
 
-\item{col_id_candidacies}{A named vector (with names "id_prov" and
-"id_nat") in which user provides the column names for the
-candidacies id at province level and national level. Defaults to
-c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").}
+\item{candidacies_data}{A database containing the information of
+candidacies. Database should contain \code{col_abbrev_candidacies}
+and \code{col_id_candidacies} columns. Defaults to \code{NULL}.}
 
 \item{col_abbrev_candidacies}{Column name to uniquely identify the
 party abbreviations. Defaults to \code{"abbrev_candidacies"}.}
@@ -120,10 +82,6 @@ be printed during execution. Defaults to \code{TRUE}.}
 \item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
 should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
 Defaults to \code{FALSE}.}
-
-\item{con_duckdb}{Active connection between R and a specific
-database, allowing you to send queries, import data, or
-write tables to and from R. Defaults to \code{NULL}.}
 }
 \value{
 A tibble with rows corresponding to the level of aggregation for
@@ -166,7 +124,12 @@ a given election and aggregation level. This function also lets remove parties b
 vote share threshold.
 }
 \details{
-pending...
+This function chains the two lower-level helpers \code{get_election_data()},
+which imports and cleans polling-station and candidacy ballots, and
+\code{aggregate_election_data()}, which rolls those data up to the requested
+territorial level. Then, this function performs a final round of post-processing
+so that the user obtains, in a single call, a tidy table with information of the
+chosen date and aggregation level that is ready for analysis or visualisation.
 }
 \examples{
 
@@ -178,11 +141,26 @@ summary_prov <-
   summary_election_data(type_elec = "congress", year = 2023,
                         level = "prov")
 
-
 \dontrun{
-# ----
-# Correct examples
-# ----
+
+# Summary 2023 and April 2019 election data at mun_district level,
+# aggregating the candidacies ballots, in a long version
+summary_mun_district <-
+  summary_election_data(type_elec = "congress",
+                         year = 2023,
+                         date = "2019-11-10",
+                         level = "mun_district",
+                         short_version = FALSE)
+
+# Summary 2023 election data at prov level,
+# aggregating the candidacies ballots, in a short version, and
+# removing the CERA votes
+summary_prov <-
+  summary_election_data(type_elec = "congress",
+                         year = 2023,
+                         level = "prov",
+                         short_version = FALSE,
+                         CERA_remove = TRUE)
 
 # Summary 2023 election data at mun level, aggregating the
 # candidacies ballots, in a long version, and filtering ballots
@@ -212,6 +190,11 @@ summary_election_data("congress", 2019,
 summary_election_data("congress", 2019,
                       by_parties = FALSE,
                       filter_porc_ballots = 5)
+
+# filter_candidacies  supplied while by_parties = FALSE
+summary_election_data("congress", 2019,
+                      by_parties = FALSE,
+                      filter_candidacies = c("PP", "PSOE"))
 
 # Wrong election type
 summary_election_data("national", 2019)

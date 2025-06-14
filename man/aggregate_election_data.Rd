@@ -8,16 +8,10 @@ aggregate_election_data(
   election_data,
   level = "all",
   by_parties = TRUE,
-  col_id_elec = "id_elec",
-  col_id_poll_station = "id_INE_poll_station",
-  col_id_mun = "id_INE_mun",
-  cols_mun_var = c("pop_res_mun", "census_counting_mun"),
-  col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat"),
   prec_round = 3,
   verbose = TRUE,
   short_version = TRUE,
-  lazy_duckdb = FALSE,
-  con_duckdb = NULL
+  lazy_duckdb = FALSE
 )
 }
 \arguments{
@@ -36,26 +30,6 @@ the data is to be provided. The allowed values are the following:
 candidacies/parties or just global results at given \code{level}.
 Defaults to \code{TRUE}.}
 
-\item{col_id_elec}{Column name in \code{election_data} to uniquely
-identify the elections. Defaults to \code{"id_elec"}.}
-
-\item{col_id_poll_station}{Column name in \code{ballots_data} to
-uniquely identify poll stations. Defaults to
-\code{"id_INE_poll_station"}.}
-
-\item{col_id_mun}{Column name in \code{election_data} to
-uniquely identify municipalities. Defaults to
-\code{"id_INE_mun"}.}
-
-\item{cols_mun_var}{A vector of variable names that, in their raw
-version, are only available at the municipal level (or higher).
-Defaults to \code{c("pop_res_mun", "census_counting_mun")}.}
-
-\item{col_id_candidacies}{A named vector (with names "id_prov" and
-"id_nat") in which user provides the column names for the
-candidacies id at province level and national level. Defaults to
-c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat").}
-
 \item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
 
@@ -69,10 +43,6 @@ Defaults to \code{TRUE}.}
 \item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
 should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
 Defaults to \code{FALSE}.}
-
-\item{con_duckdb}{Active connection between R and a specific
-database, allowing you to send queries, import data, or
-write tables to and from R. Defaults to \code{NULL}.}
 }
 \value{
 A tibble with rows corresponding to the level of aggregation for
@@ -94,13 +64,6 @@ candidacies/parties, valid ballots (sum of \code{blank_ballots} and
 \code{party_ballots}) and total ballots (sum of
 \code{valid_ballots} and \code{invalid_ballots}).}
 \item{n_poll_stations}{number of polling stations.}
-\item{pop_res_xxx}{population census of residents (CER + CERA) at
-xxx level (if level is below municipality level, it is provided at
-municipality level). It is only available for long version.}
-\item{census_counting_mun}{population eligible to vote after
-claims at xxx level (if level is below municipality level, it is
-provided at municipality level). It is only available for
-long version.}
 \item{id_candidacies}{id for candidacies (at province level).}
 \item{id_candidacies_nat}{id for candidacies at region national
 level.}
@@ -127,17 +90,20 @@ function.
 \examples{
 ## Correct examples
 
-# Election date from 2023 and 1989 dates
+# Election data from 2023 and 1989
 election_data <-
    get_election_data(type_elec = "congress", year = 2023,
                      date = "1989-10-29")
 
 # National level results (without parties)
-nat_agg <- aggregate_election_data(election_data, level = "all",
-                                   by_parties = FALSE)
+nat_agg <-
+   election_data |>
+   aggregate_election_data(level = "all", by_parties = FALSE)
 
 # Province level results (with parties)
-prov_agg <- aggregate_election_data(election_data, level = "prov")
+prov_agg <-
+   election_data |>
+   aggregate_election_data(level = "prov")
 
 \dontrun{
 

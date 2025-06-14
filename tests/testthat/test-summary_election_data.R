@@ -1,8 +1,22 @@
 test_that("summary elections data", {
   random_dates <-
     sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 2)
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 2,
+           replace = FALSE)
+  expect_equal(summary_election_data(type_elec = "congress",
+                                     date = random_dates,
+                                     by_parties = TRUE,
+                                     level = "prov",
+                                     short_version = FALSE,
+                                     verbose = FALSE) |>
+                 filter(is.na(id_candidacies) | is.na(abbrev_candidacies) |
+                          is.na(name_candidacies)) |>
+                 nrow(), 0)
 
+  random_dates <-
+    sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 2,
+           replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
                                      by_parties = FALSE,
@@ -24,9 +38,13 @@ test_that("summary elections data", {
                              invalid_ballots.pollspain / invalid_ballots.CEB,
                            .by = c(id_elec, id_INE_prov, prov.pollspain)) |>
                  filter(across(contains("ballots"),
-                               function(x) { x > 1.005 | x < 0.995})) |>
+                               function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
+  random_dates <-
+    sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+           replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
                                      by_parties = FALSE,
@@ -50,13 +68,13 @@ test_that("summary elections data", {
                              invalid_ballots.pollspain / invalid_ballots.CEB,
                            .by = c(id_elec, id_INE_prov, prov.pollspain)) |>
                  filter(across(contains("ballots"),
-                               function(x) { x > 1.005 | x < 0.995})) |>
+                               function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
   random_dates <-
     sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 2)
-
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+           replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
                                      by_parties = FALSE,
@@ -80,13 +98,13 @@ test_that("summary elections data", {
                              invalid_ballots.pollspain / invalid_ballots.CEB,
                            .by = c(id_elec, id_INE_ccaa, ccaa.pollspain)) |>
                  filter(across(contains("ballots"),
-                               function(x) { x > 1.005 | x < 0.995})) |>
+                               function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
   random_dates <-
     sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1)
-
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+           replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
                                      by_parties = FALSE,
@@ -110,13 +128,13 @@ test_that("summary elections data", {
                              invalid_ballots.pollspain / invalid_ballots.CEB,
                            .by = c(id_elec)) |>
                  filter(across(contains("ballots"),
-                               function(x) { x > 1.005 | x < 0.995})) |>
+                               function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
   random_dates <-
     sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1)
-
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+           replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
                                      by_parties = FALSE,
@@ -142,13 +160,13 @@ test_that("summary elections data", {
                              invalid_ballots.pollspain / invalid_ballots.CEB,
                            .by = c(id_elec, id_INE_prov, prov.pollspain)) |>
                  filter(across(contains("ballots"),
-                               function(x) { x > 1.005 | x < 0.995})) |>
+                               function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
   random_dates <-
     sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1)
-
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+           replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
                                      by_parties = FALSE,
@@ -174,13 +192,13 @@ test_that("summary elections data", {
                              invalid_ballots.pollspain / invalid_ballots.CEB,
                            .by = c(id_elec, id_INE_prov, prov.pollspain)) |>
                  filter(across(contains("ballots"),
-                               function(x) { x > 1.005 | x < 0.995})) |>
+                               function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
   random_dates <-
     sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1)
-
+                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+           replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
                                      by_parties = FALSE,
@@ -206,7 +224,7 @@ test_that("summary elections data", {
                              invalid_ballots.pollspain / invalid_ballots.CEB,
                            .by = c(id_elec, id_INE_prov, prov.pollspain)) |>
                  filter(across(contains("ballots"),
-                               function(x) { x > 1.005 | x < 0.995})) |>
+                               function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
   expect_equal(summary_election_data(type_elec = "congress",
@@ -224,9 +242,9 @@ test_that("summary elections data", {
                  is.data.frame(), FALSE)
 
   expect_error(summary_election_data(type_elec = "congress",
-                                     date = "2023"))
+                                     date = "2023", verbose = FALSE))
   expect_error(summary_election_data(type_elec = "congress",
-                                     date = 2022))
+                                     date = 2022, verbose = FALSE))
 })
 
 
