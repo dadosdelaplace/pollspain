@@ -11,10 +11,11 @@
 # pollspain 0.3.0
 
 - surveys
+- - pending: vignettes
+
+-->
 
 # pollspain 0.2.5
-
-- pending: vignettes
 
 - Fixed parties with NA id's
 - Fixed documentation of `get_elections_data()`, `aggregate_election_data()`, `summary_election_data()`
@@ -23,8 +24,6 @@ in the raw MIR files that they are not in the candidacie files.
 - Fixed 2019 elections (user has to choose between two dates) also in
 `import_...()` functions
 - Check values for `level` argument directly in `summary_election_data()`
-
--->
 
 # pollspain 0.2.2
 
