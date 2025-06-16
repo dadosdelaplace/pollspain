@@ -14,6 +14,7 @@
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/cod_INE_prov.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/cod_INE_prov_ccaa.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/dates_elections_spain.html</loc></url>
+<url><loc>http://javieralvarezliebana.es/pollspain/reference/dhondt_seats.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/extract_code.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/get_election_data.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/global_dict_parties.html</loc></url>
@@ -23,7 +24,9 @@
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/index.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/pollspain-package.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/recod_mun.html</loc></url>
+<url><loc>http://javieralvarezliebana.es/pollspain/reference/seat_allocation.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/summary_election_data.html</loc></url>
+<url><loc>http://javieralvarezliebana.es/pollspain/reference/total_seats_spain.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/type_to_code_election.html</loc></url>
 </urlset>
 
