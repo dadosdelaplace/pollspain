@@ -230,24 +230,28 @@
 #' data(CEB_results)
 "CEB_results"
 
-#' @title Number of Parliament seats allocated to each province for
-#'  the general elections.
+#' @title Number of parliament seats allocated to each province for
+#' the general Spanish elections.
 #'
-#' @description A dataset containing the Parliament seats per
-#' electoral district (province)and election. It is used to calculate
-#'  seat allocation with the standard distribution of seats in Spain.
+#' @description A dataset containing the parliament seats for each
+#' electoral district (province) and election, just consdering
+#' congress seats.
 #'
-#' @format A tibble with 4 columns
+#' @format A tibble with 8 columns
 #' \itemize{
 #'   \item \code{id_elec}: id of elections (type of elections + date).
-#'   \item \code{id_INE_prov, prov}: codes and names
-#'   for provinces.
-#'   \item \code{seats}: number of seats allocated to each province.
+#'   \item \code{cod_INE_ccaa, cod_MIR_ccaa, ccaa}: codes and names
+#'   for ccaa.
+#'   \item \code{cod_INE_prov, prov}: codes and names for provinces.
+#'   \item \code{id_INE_prov}: id for prov (`cod_INE_ccaa` +
+#'   `cod_INE_prov`)
+#'   \item \code{nseats}: number of seats allocated to each province.
 #' }
 #'
 #' @author Javier Alvarez-Liebana and David Pereiro-Pol.
 #'
-#' @source pending...
+#' @source Data extracted from
+#' \url{https://www.juntaelectoralcentral.es/cs/jec/elecciones}
 #' @docType data
 #' @keywords datasets
 #' @name total_seats_spain

@@ -1,4 +1,12 @@
 
+# ----- required libraries -----
+
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(pollspain)
+
+# ----- seats ------
 seats_1982 <- tibble(
   prov = c(
     "Almería", "Cádiz", "Córdoba", "Granada", "Huelva", "Jaén",
@@ -91,7 +99,7 @@ seats_1993 <- tibble(
     7, 7, 7, 5, 4, 5, 3, 3, 5, 3, 4, 5,
     3, 4, 3, 3, 5, 3, 32, 5, 4, 6, 1, 10,
     5, 16, 6, 5, 9, 5, 4, 8, 4, 34, 1, 9,
-    5, 4, 6, 10
+    5, 4, 6, 9
   ),
   id_elec = "02-1993-06-06"
 )
@@ -234,8 +242,6 @@ seats_2015 <- tibble(
   ),
   id_elec = "02-2015-12-20")
 
-library(tibble)
-
 seats_2016 <- tibble(
   prov = c(
     "Álava/Araba", "Albacete", "Alicante/Alacant", "Almería", "Asturias", "Ávila",
@@ -255,8 +261,6 @@ seats_2016 <- tibble(
     5, 8, 3, 7
   ),
   id_elec = "02-2016-06-26")
-
-
 
 seats_2019a <- tibble(
   prov = c(
@@ -322,70 +326,17 @@ seats_2023 <- tibble(
   ),
   id_elec = "02-2023-07-24")
 
+# ----- join -----
+total_seats_spain <-
+  bind_rows(seats_1982, seats_1986, seats_1989, seats_1993,
+            seats_1996, seats_2000, seats_2004, seats_2008,
+            seats_2011, seats_2015, seats_2016, seats_2019a,
+            seats_2019n, seats_2023) |>
+  left_join(pollspain::cod_INE_prov_ccaa, by = "prov") |>
+  mutate("id_INE_prov" = paste0(cod_INE_ccaa, "-", cod_INE_prov))
 
-total_seats_spain <-  bind_rows(seats_1982, seats_1986, seats_1989, seats_1993, seats_1986,
-                                seats_2000, seats_2004, seats_2008,
-                                seats_2011, seats_2015, seats_2016, seats_2019a, seats_2019n, seats_2023)
-
-prov_codes <- tribble(
-  ~prov,                           ~id_INE_prov,
-  "Álava/Araba",                       "16-01",
-  "Albacete",                          "08-02",
-  "Alicante/Alacant",                  "10-03",
-  "Almería",                           "01-04",
-  "Ávila",                             "07-05",
-  "Badajoz",                           "11-06",
-  "Islas Baleares/Illes Balears",      "04-07",
-  "Barcelona",                         "09-08",
-  "Burgos",                            "07-09",
-  "Cáceres",                           "11-10",
-  "Cádiz",                             "01-11",
-  "Castellón/Castelló",                "10-12",
-  "Ciudad Real",                       "08-13",
-  "Córdoba",                           "01-14",
-  "La Coruña/A Coruña",                "12-15",
-  "Cuenca",                            "08-16",
-  "Girona",                            "09-17",
-  "Granada",                           "01-18",
-  "Guadalajara",                       "08-19",
-  "Guipúzcoa/Gipuzkoa",                "16-20",
-  "Huelva",                            "01-21",
-  "Huesca",                            "02-22",
-  "Jaén",                              "01-23",
-  "León",                              "07-24",
-  "Lleida",                            "09-25",
-  "La Rioja",                          "17-26",
-  "Lugo",                              "12-27",
-  "Madrid",                            "13-28",
-  "Málaga",                            "01-29",
-  "Murcia",                            "14-30",
-  "Navarra/Nafarroa",                  "15-31",
-  "Orense/Ourense",                    "12-32",
-  "Asturias",                          "03-33",
-  "Palencia",                          "07-34",
-  "Las Palmas",                        "05-35",
-  "Pontevedra",                        "12-36",
-  "Salamanca",                         "07-37",
-  "Santa Cruz de Tenerife",            "05-38",
-  "Cantabria",                         "06-39",
-  "Segovia",                           "07-40",
-  "Sevilla",                           "01-41",
-  "Soria",                             "07-42",
-  "Tarragona",                         "09-43",
-  "Teruel",                            "02-44",
-  "Toledo",                            "08-45",
-  "Valencia/València",                 "10-46",
-  "Valladolid",                        "07-47",
-  "Vizcaya/Bizkaia",                   "16-48",
-  "Zamora",                            "07-49",
-  "Zaragoza",                          "02-50",
-  "Ceuta",                             "18-51",
-  "Melilla",                           "19-52"
-)
-
-total_seats_spain <- total_seats_spain |>
-  left_join(prov_codes, by = "prov")
-
+# total_seats_spain |> summarise("total_seats" = sum(nseats), .by = id_elec) |> filter(total_seats != 350)
 # ----- use data -----
+
 usethis::use_data(total_seats_spain, overwrite = TRUE,
                   compress = "xz")
