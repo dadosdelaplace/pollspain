@@ -49,7 +49,7 @@
 #' function, \code{seats_allocation()}, to calculate the seats distribution of every
 #' electoral district of a given election according to the D'Hont method.
 #'
-#' @author Irene Bosque-Gala, David Pereiro-Pol and Javier
+#' @author David Pereiro-Pol, Irene Bosque-Gala and Javier
 #' Alvarez-Liebana.
 #' @keywords seat_allocation
 #' @name dhondt_seats
@@ -272,10 +272,10 @@ dhondt_seats <-
 #' allocation of seats for a given electoral district (and given a
 #' particular election) for a set of apportionment methods.
 #'
-#' @author Irene Bosque-Gala, David Pereiro-Pol and Javier
+#' @author David Pereiro-Pol, Irene Bosque-Gala and Javier
 #' Alvarez-Liebana.
-#' @keywords seats
-#' @name seats
+#' @keywords seat_allocation
+#' @name seat_allocation
 #' @import crayon
 #'
 #' @examples

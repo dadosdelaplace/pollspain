@@ -130,7 +130,7 @@ seats <- dhondt_seats(candidacies = candidacies, ballots = ballots,
 }
 }
 \author{
-Irene Bosque-Gala, David Pereiro-Pol and Javier
+David Pereiro-Pol, Irene Bosque-Gala and Javier
 Alvarez-Liebana.
 }
 \keyword{seat_allocation}

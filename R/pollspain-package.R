@@ -5,8 +5,8 @@
 #' grammar for preprocessing, debugging, filtering, accessing,
 #' downloading and analyzing election data and polls in Spain.
 #'
-#' @author Javier Álvarez-Liébana, David Pereiro-Pol,
-#' Mafalda González-González, Irene Bosque-Gala and Mikaela De Smedt.
+#' @author Javier Alvarez-Liebana, David Pereiro-Pol,
+#' Mafalda Gonzalez-Gonzalez, Irene Bosque-Gala and Mikaela De Smedt.
 #' @references
 #' ...
 #'
