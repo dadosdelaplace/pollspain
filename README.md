@@ -25,7 +25,7 @@ specially tailored for beginners.
 ## Installation
 
 You can <span class="hl">**install the development version**</span> from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/) with
 
 ``` r
 # install.packages("devtools") # only if not already installed
