@@ -49,10 +49,8 @@ test_that("summary elections data", {
                                      date = random_dates,
                                      by_parties = FALSE,
                                      level = "prov",
-                                     lazy_duckdb = TRUE,
                                      short_version = FALSE,
                                      verbose = FALSE) |>
-                 collect() |>
                  left_join(CEB_results,
                            by = c("id_elec", "id_INE_prov"),
                            suffix = c(".pollspain", ".CEB")) |>
@@ -232,14 +230,7 @@ test_that("summary elections data", {
                                      by_parties = FALSE,
                                      level = "prov",
                                      verbose = FALSE) |>
-                 is.data.frame(), TRUE)
-  expect_equal(summary_election_data(type_elec = "congress",
-                                     date = random_dates,
-                                     by_parties = FALSE,
-                                     lazy_duckdb = TRUE,
-                                     level = "prov",
-                                     verbose = FALSE) |>
-                 is.data.frame(), FALSE)
+                 is.tibble(), TRUE)
 
   expect_error(summary_election_data(type_elec = "congress",
                                      date = "2023", verbose = FALSE))

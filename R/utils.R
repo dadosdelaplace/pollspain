@@ -23,7 +23,7 @@
 #' @author Javier Alvarez-Liebana, David Pereiro-Pol, Mafalda
 #' Gonzalez-Gonzalez and Irene Bosque-Gala.
 #' @source Data extracted from
-#' \url{https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/}{Spanish Ministry of Interior}
+#' \url{https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/}
 #' @keywords utils
 #' @name type_to_code_election
 #'

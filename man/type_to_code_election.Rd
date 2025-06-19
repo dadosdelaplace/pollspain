@@ -5,7 +5,7 @@
 \title{Conversion type election to code}
 \source{
 Data extracted from
-\url{https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/}{Spanish Ministry of Interior}
+\url{https://infoelectoral.interior.gob.es/opencms/es/elecciones-celebradas/area-de-descargas/}
 }
 \usage{
 type_to_code_election(type_elec)
