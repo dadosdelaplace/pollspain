@@ -59,7 +59,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The main goal of the R package <a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> is to provide social scientists and citizens with <span class="hl"><strong>easy access to electoral data from Spain</strong></span>. This includes both <strong>aggregated election results</strong> from polling stations and <strong>survey data</strong>. The package also features <strong>tools for seat allocation and data visualization</strong>. It follows a <strong>tidyverse-style design</strong>, making it especially accessible to beginners.</p>
+<p>The main objective of the R package <a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> is to provide social scientists, political analysts and citizens with easy and straightforward <span class="hl"><strong>access to electoral data from Spain</strong></span>. This includes both aggregated election results extracted from polling stations and survey data (including housing effects). It also offers tools for seat allocation, vote simulation, and dataviz. The package is designed under <span class="hl"><strong>tidyverse-style</strong></span> specially tailored for beginners.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -68,7 +68,7 @@
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools") # only if not already installed</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"dadosdelaplace/pollspain"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a></span><span class="op">)</span> <span class="co"># after installing</span></span></code></pre></div>
-<p>An <strong>internet connection</strong> is just required for installing. Data is stored in the accompanying <code>pollspaindata</code> package. <strong>See more</strong> at <a href="https://github.com/dadosdelaplace/pollspaindata" class="external-link uri">https://github.com/dadosdelaplace/pollspaindata</a></p>
+<p>An <strong>internet connection</strong> is just required for installing. Data is stored in the accompanying <code>pollspaindata</code> package. See more at <a href="https://github.com/dadosdelaplace/pollspaindata" class="external-link uri">https://github.com/dadosdelaplace/pollspaindata</a></p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -82,60 +82,100 @@
 <li>a vector of <strong>election types</strong> (currently, it only works properly for <code>type_elec = "congress"</code>)</li>
 <li>a geographic <strong>level for aggregation</strong> (e.g., <code>level = "ccaa"</code> or <code>level = "prov"</code>)</li>
 </ul>
-<p>returns a <span class="hl"><strong>summary of election results aggregated at the administrative level</strong></span>. This includes both general data (blank votes, turnout, etc) and <strong>ballots by each candidacy</strong>. The available <span class="hl"><strong>levels</strong></span> (<code>level</code>) are: <code>"all"</code>, <code>"ccaa"</code> (autonomous communities), <code>"prov"</code> (province), <code>"mun"</code> (municipality), <code>"mun_district"</code> (district), <code>"sec"</code> (census tract), and <code>"poll_station"</code>.</p>
+<p>returns a <span class="hl"><strong>summary of election results aggregated at the administrative level</strong></span>. This includes both general data (blank votes, turnout, etc) and ballots by each candidacy. The available <span class="hl"><strong>levels</strong></span> (<code>level</code>) are: <code>"all"</code>, <code>"ccaa"</code> (autonomous communities), <code>"prov"</code> (province), <code>"mun"</code> (municipality), <code>"mun_district"</code> (district), <code>"sec"</code> (census tract), and <code>"poll_station"</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Summary election data at ccaa level for both elections in 2023 and 2016</span></span>
 <span><span class="va">summary_data_all</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="reference/summary_election_data.html">summary_election_data</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>, date <span class="op">=</span> <span class="st">"2016-06-26"</span><span class="op">)</span></span>
 <span><span class="va">summary_data_all</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 12</span></span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 13</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;   id_elec       blank_ballots invalid_ballots party_ballots valid_ballots</span></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;   &lt;glue&gt;                &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                 &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;</span></span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; 1 02-2016-06-26        179081          225504      23874674      24053755</span></span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; 2 02-2016-06-26        179081          225504      23874674      24053755</span></span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; 3 02-2016-06-26        179081          225504      23874674      24053755</span></span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; 4 02-2023-07-24        200682          264382      24487589      24688271</span></span>
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 5 02-2023-07-24        200682          264382      24487589      24688271</span></span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 6 02-2023-07-24        200682          264382      24487589      24688271</span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;   total_ballots abbrev_candidacies name_candidacies                  ballots</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt;           &lt;dbl&gt; &lt;chr&gt;              &lt;chr&gt;                               &lt;dbl&gt;</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 1      24279259 PP                 PARTIDO POPULAR                   7941236</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 2      24279259 PSOE               PARTIDO SOCIALISTA OBRERO ESPANOL 5443846</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 3      24279259 PODEMOS            PODEMOS                           3227123</span></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 4      24952653 PP                 PARTIDO POPULAR                   8161117</span></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; 5      24952653 PSOE               PARTIDO SOCIALISTA OBRERO ESPANOL 7821777</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 6      24952653 VOX                VOX                               3057068</span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt;   porc_candidacies_parties porc_candidacies_valid porc_candidacies_census</span></span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt;                      &lt;dbl&gt;                  &lt;dbl&gt;                   &lt;dbl&gt;</span></span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; 1                     33.3                   33.0                   23.0 </span></span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; 2                     22.8                   22.6                   15.7 </span></span>
-<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; 3                     13.5                   13.4                    9.33</span></span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; 4                     33.3                   33.1                   23.2 </span></span>
-<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; 5                     31.9                   31.7                   22.3 </span></span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; 6                     12.5                   12.4                    8.70</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Summary election data, aggregating candidacies ballots at prov level</span></span>
-<span><span class="va">summary_data_prov_parties</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="reference/summary_election_data.html">summary_election_data</a></span><span class="op">(</span><span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>, date <span class="op">=</span> <span class="st">"2016-06-26"</span>, level <span class="op">=</span> <span class="st">"prov"</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/summary_election_data.html">summary_election_data()</a></code> is a <strong>user-friendly combination</strong> of <code><a href="reference/get_election_data.html">get_election_data()</a></code> (merges different data sources at the polling station level) and <code><a href="reference/aggregate_election_data.html">aggregate_election_data()</a></code> (aggregates the data). See <a href="https://javieralvarezliebana.es/pollspain/#tutorials" class="external-link"><strong>some use cases and tutorials</strong></a>.</p>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;   total_ballots id_candidacies abbrev_candidacies</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt;           &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;             </span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 1      24279259 000068         PP                </span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 2      24279259 000077         PSOE              </span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 3      24279259 000059         PODEMOS           </span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 4      24952653 000005         PP                </span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; 5      24952653 000002         PSOE              </span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 6      24952653 000006         VOX               </span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt;   name_candidacies                  ballots porc_candidacies_parties</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                               &lt;dbl&gt;                    &lt;dbl&gt;</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; 1 PARTIDO POPULAR                   7941236                     33.3</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; 2 PARTIDO SOCIALISTA OBRERO ESPANOL 5443846                     22.8</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; 3 PODEMOS                           3227123                     13.5</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; 4 PARTIDO POPULAR                   8161117                     33.3</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; 5 PARTIDO SOCIALISTA OBRERO ESPANOL 7821777                     31.9</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; 6 VOX                               3057068                     12.5</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt;   porc_candidacies_valid porc_candidacies_census</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt;                    &lt;dbl&gt;                   &lt;dbl&gt;</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt; 1                   33.0                   23.0 </span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; 2                   22.6                   15.7 </span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt; 3                   13.4                    9.33</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt; 4                   33.1                   23.2 </span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt; 5                   31.7                   22.3 </span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt; 6                   12.4                    8.70</span></span></code></pre></div>
+<p>See <a href="https://javieralvarezliebana.es/pollspain/#tutorials" class="external-link"><strong>some use cases and tutorials</strong></a>.</p>
 <details><summary>
+⚠️ About data
+</summary><p>Details about data can be found in <a href="https://javieralvarezliebana.es/pollspain/articles/about-data.html" class="external-link uri">https://javieralvarezliebana.es/pollspain/articles/about-data.html</a>. It is important to note that in some polling stations, the <span class="hl"><strong>data from the Ministry of the Interior is corrupted or inconsistent</strong></span>, as the vote counts by party do not match the total vote counts per polling station when aggregated. In such cases, the data has been manually summarized using the disaggregated results by polling station and party. The <span class="hl"><strong>files from the 2015 general election are particularly problematic</strong></span>, as they sometimes include CERA votes linked to party id’s for which no further information is available in the Ministry’s own files. The authors of the package have contacted the Ministry to report these issues but have not received any response.</p>
+</details><details><summary>
 ⚠️ About municipalities
-</summary><p>The municipality data (names and codes) were <strong>extracted from the version published by the National Statistics Institute (INE) on February 6, 2025</strong>. Over the years, various municipal mergers have taken place in Spain, which means that not all elections feature the same set of municipalities or the same identifying codes. In order to unify and standardize the results provided to users, all output tables refer to the most recent municipality recoding by the Spanish National Statistics Institute (INE). The helper function <code><a href="reference/recod_mun.html">recod_mun()</a></code> transparently returns the updated code based on that recoding, reassigning codes for merged municipalities accordingly.</p>
+</summary><p>The <span class="hl"><strong>municipality data (names and codes) were extracted from the version published by the National Statistics Institute (INE)</strong></span> on February 6, 2025**. Over the years, various municipal mergers have taken place in Spain, which means that not all elections feature the same set of municipalities or the same identifying codes. In order to unify and standardize the results provided to users, all output tables refer to the most recent municipality recoding by the Spanish National Statistics Institute (INE). The helper function <code><a href="reference/recod_mun.html">recod_mun()</a></code> transparently returns the updated code based on that recoding, reassigning codes for merged municipalities accordingly.</p>
 Data extracted from <a href="https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx" class="external-link uri">https://www.ine.es/daco/daco42/codmun/codmun20/20codmun.xlsx</a>.
 </details><details><summary>
 ⚠️ About CERA
 </summary><p>According to the National Statistics Institute (INE) «the electoral roll contains the registration of those who meet the requirements to be voters and are not definitively or temporarily deprived of the right to vote. The electoral roll is composed of:</p>
 <ul>
 <li>The electoral roll of Spanish citizens residing in Spain (CER).</li>
-<li>The <strong>electoral roll of Spanish citizens residing abroad (CERA)</strong>.</li>
+<li>The electoral roll of Spanish citizens residing abroad (CERA).</li>
 </ul>
 <p>The electoral roll of residents in Spain who are nationals of countries with Agreements for municipal elections (CERE Agreements), and the electoral roll of citizens of the European Union residing in Spain for municipal and European Parliament elections (CERE EU)».</p>
-<p><strong>CERA-related data is provided at the provincial constituency level</strong>. These votes are aggregated with the rest when <code>level = "all"</code>, <code>level = "ccaa"</code>, or <code>level = "prov"</code>. At any lower level of aggregation, 52 additional rows—one for each province—are included (for example, when aggregating data at the municipal level, the result includes as many rows as there are municipalities plus 52 «CERA municipalities»).</p>
+<p><span class="hl"><strong>CERA-related data is provided at the provincial constituency level</strong></span>. These votes are aggregated with the rest when <code>level = "all"</code>, <code>level = "ccaa"</code>, or <code>level = "prov"</code>. At any lower level of aggregation, 52 additional rows—one for each province—are included (for example, when aggregating data at the municipal level, the result includes as many rows as there are municipalities plus 52 «CERA municipalities»).</p>
 </details>
 </div>
 <div class="section level3">
 <h3 id="seat-allocation">Seat allocation<a class="anchor" aria-label="anchor" href="#seat-allocation"></a>
 </h3>
+<p>Using <code>seat_allocation(candidacies = ..., ballots = ..., blank_ballots = ..., n_seats = ..., method = ..., threshold = ..., short_version = ...)</code> with</p>
+<ul>
+<li>a vector of <strong>abbreviations or id</strong> for candidacies (e.g., <code>candidacies = c("PP", "PSOE", "VOX")</code>) and vector of their <strong>ballots</strong> (e.g., <code>ballots = c(250, 400, 150)</code>)</li>
+<li>a number of <strong>blank ballots</strong> (e.g., <code>blank_ballots = 100</code>)</li>
+<li>a number of <strong>seats to be allocated</strong> (e.g., <code>n_seats = 5</code>)</li>
+<li>a set of <strong>apportionment methods</strong> (e.g., <code>method = c("hondt", "webster")</code>)</li>
+<li>a numerical threshold (e.g., <code>threshold = 0.03</code>)</li>
+</ul>
+<p>returns a <span class="hl"><strong>tibble with the number of seats for each candidacy and each apportionment method</strong></span>, or event the intermediate quotients of the allocation process for divisor methods.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Summary election data, aggregating candidacies ballots at prov level,</span></span>
+<span><span class="co"># and then allocation of seats for Sevilla with dhondt and x... method</span></span>
+<span><span class="fu"><a href="reference/summary_election_data.html">summary_election_data</a></span><span class="op">(</span><span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>, level <span class="op">=</span> <span class="st">"prov"</span>,</span>
+<span>                      verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">prov</span> <span class="op">==</span> <span class="st">"Sevilla"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">reframe</span><span class="op">(</span><span class="fu"><a href="reference/seat_allocation.html">seat_allocation</a></span><span class="op">(</span>candidacies <span class="op">=</span> <span class="va">abbrev_candidacies</span>,</span>
+<span>                          ballots <span class="op">=</span> <span class="va">ballots</span>, blank_ballots <span class="op">=</span> <span class="va">blank_ballots</span>,</span>
+<span>                          method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hondt"</span><span class="op">)</span>,</span>
+<span>                          n_seats <span class="op">=</span> <span class="fl">12</span>, threshold <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 11 × 3</span></span>
+<span><span class="co">#&gt;    candidacies   method seats</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;         &lt;chr&gt;  &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 PSOE          hondt      5</span></span>
+<span><span class="co">#&gt;  2 PP            hondt      4</span></span>
+<span><span class="co">#&gt;  3 SUMAR         hondt      2</span></span>
+<span><span class="co">#&gt;  4 VOX           hondt      1</span></span>
+<span><span class="co">#&gt;  5 PUMJ          hondt      0</span></span>
+<span><span class="co">#&gt;  6 PACMA         hondt      0</span></span>
+<span><span class="co">#&gt;  7 FO            hondt      0</span></span>
+<span><span class="co">#&gt;  8 PCTE          hondt      0</span></span>
+<span><span class="co">#&gt;  9 FE-JONS       hondt      0</span></span>
+<span><span class="co">#&gt; 10 CJ            hondt      0</span></span>
+<span><span class="co">#&gt; 11 RECORTES-CERO hondt      0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="surveys-summaries">Surveys summaries<a class="anchor" aria-label="anchor" href="#surveys-summaries"></a>
@@ -187,7 +227,7 @@ Data extracted from <a href="https://www.ine.es/daco/daco42/codmun/codmun20/20co
 <p><a href="https://github.com/dadosdelaplace/pollspain" class="external-link">pollspain</a> also provides <span class="hl"><strong>more advanced users with useful functions</strong></span> to preprocess and analyze electoral data—even their own data, as long as it is provided in a proper format.</p>
 <ul>
 <li>
-<span class="hl"><strong>Utils</strong></span>: functions contained in the <code>utils.R</code> script are intended to serve as <strong>helper functions for data preprocessing</strong>. See <a href="https://javieralvarezliebana.es/pollspain/articles/utils.html" class="external-link"><strong>more examples and use cases</strong></a> about how to use them.</li>
+<span class="hl"><strong>Utils</strong></span>: functions contained in the <code>utils.R</code> script are intended to serve as helper functions for data preprocessing. See <a href="https://javieralvarezliebana.es/pollspain/articles/utils.html" class="external-link"><strong>more examples and use cases</strong></a> about how to use them.</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/type_to_code_election.html">type_to_code_election</a></span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span><span class="op">)</span></span>
@@ -204,16 +244,18 @@ Data extracted from <a href="https://www.ine.es/daco/daco42/codmun/codmun20/20co
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
-<p>Any contribution is warmly welcome, whether as a <strong>developer or a beta tester</strong> of the package. Please feel free to propose any suggestions by <a href="https://github.com/dadosdelaplace/pollspain/issues" class="external-link"><strong>opening an issue for discussion</strong></a>.</p>
+<p>Any contribution is warmly welcome, whether as a developer or a beta tester of the package. Please feel free to propose any suggestions by <a href="https://github.com/dadosdelaplace/pollspain/issues" class="external-link"><strong>opening an issue for discussion</strong></a>.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>This package has been designed based on the <strong>following resources and references</strong></p>
+<p>This package has been designed based on the <span class="hl"><strong>following resources and references</strong></span></p>
 <ul>
 <li>ACE: The Electoral Knowledge Network. <a href="https://aceproject.org/" class="external-link uri">https://aceproject.org/</a>
 </li>
 <li>Albuja J. (2025). R pacakge <code>{electoral}</code>: allocating seats methods and party system scores (v0.1.4). <a href="https://cran.r-project.org/web/packages/electoral/index.html" class="external-link uri">https://cran.r-project.org/web/packages/electoral/index.html</a>
+</li>
+<li>CEB: Central Election Board (CEB). Some data was scraped from the PDF documents provided since 2004 by Central Election Board (CEB) in Spain. See <a href="https://www.juntaelectoralcentral.es/cs/jec/elecciones" class="external-link uri">https://www.juntaelectoralcentral.es/cs/jec/elecciones</a>
 </li>
 <li>García Guzmán P. (2025). WikiBarrio: Explore Spanish socio-demographic data at the neighborhood level. <a href="https://www.wikibarrio.es/" class="external-link uri">https://www.wikibarrio.es/</a>
 </li>
@@ -385,6 +427,7 @@ Contributor database
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://www.repostatus.org/#active" class="external-link"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project-Status:Active"></a></li>
 <li><a href="https://github.com/dadosdelaplace/pollspain/releases" class="external-link"><img src="https://img.shields.io/github/v/release/dadosdelaplace/pollspain" alt="GitHub release"></a></li>
+<li><a href="https://github.com/dadosdelaplace/pollspain/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/dadosdelaplace/pollspain/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
