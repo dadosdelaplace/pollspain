@@ -301,8 +301,6 @@ get_election_data <-
 
     }
 
-    # Create connectio in duckdb
-    con <- .get_duckdb_con()
 
     # Import the data
     election_data <-
@@ -310,7 +308,7 @@ get_election_data <-
                                date = allowed_elections$date,
                                prec_round = prec_round,
                                short_version = FALSE,
-                               verbose = FALSE, lazy_duckdb = TRUE)
+                               verbose = FALSE)
 
     if (verbose) {
 
@@ -326,6 +324,9 @@ get_election_data <-
                               date = allowed_elections$date,
                               short_version = FALSE,
                               verbose = FALSE)
+
+    # Create connection in duckdb
+    con <- .get_duckdb_con()
 
     if (!any(dbListTables(con) == "election_data")) {
 
@@ -668,7 +669,10 @@ aggregate_election_data <-
 
     # create connection in duck db
     con <- .get_duckdb_con()
-    copy_to(con, election_data, name = "election_data", overwrite = TRUE)
+
+    if (!any(dbListTables(con) == "election_data")) {
+      copy_to(con, election_data, name = "election_data", overwrite = TRUE)
+    }
     rm(election_data)
     election_data <- tbl(con, "election_data")
 
@@ -1071,12 +1075,18 @@ summary_election_data <-
       election_data |>
       aggregate_election_data(level = level, by_parties = by_parties,
                               prec_round = prec_round,
-                              verbose = verbose, short_version = FALSE,
-                              lazy_duckdb = TRUE)
+                              verbose = verbose, short_version = FALSE)
 
-    # remove memory
-    rm(list = c("election_data"))
+    # create connection in duckdb
+    con <- .get_duckdb_con()
+    if (!any(dbListTables(con) == "summary_data")) {
+      copy_to(con, summary_data, name = "summary_data", overwrite = TRUE)
+    }
+
+    rm(list = c("summary_data", "election_data"))
     gc()
+    # remove memory
+    summary_data <- tbl(con, "summary_data")
 
     if (verbose) {
 
@@ -1114,10 +1124,6 @@ summary_election_data <-
       id_party <- if_else(level == "all", col_id_candidacies[["id_nat"]],
                           col_id_candidacies[["id_prov"]])
 
-
-      # create connection in duckdb
-      con <- .get_duckdb_con()
-
       dict_parties <-
         global_dict_parties |>
         select(-color) |>
@@ -1129,13 +1135,8 @@ summary_election_data <-
 
       }
 
-      if (!dbExistsTable(con, "summary_data")) {
-
-        copy_to(con, summary_data, "summary_data", temporary = TRUE)
-
-      }
       summary_data <-
-        tbl(con, "summary_data") |>
+        summary_data |>
         left_join(tbl(con, "dict_parties"),
                   by = c("id_elec" = col_id_elec, id_party),
                   suffix = c("", ".rm"), copy = TRUE) |>

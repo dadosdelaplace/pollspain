@@ -671,7 +671,19 @@ import_poll_station_data <-
 
     mun_data <-
       import_mun_census_data(type_elec, year, date,
-                             verbose = FALSE, lazy_duckdb = TRUE)
+                             verbose = FALSE)
+
+    # Create connection in duckdb
+    con <- .get_duckdb_con()
+    if (!any(dbListTables(con) == "mun_data")) {
+      copy_to(con, mun_data, name = "mun_data", overwrite = TRUE)
+
+    }
+
+    # remove memory
+    rm(list = c("mun_data"))
+    gc()
+    mun_data <- tbl(con, "mun_data")
 
     poll_station_data <-
       poll_station_data |>
@@ -707,7 +719,7 @@ import_poll_station_data <-
                   filter(cod_INE_mun == "999")) |>
       left_join(tbl(con, "census_2"),
                 by = c("cod_MIR_ccaa", "cod_INE_prov"),
-                suffix = c("", ".y")) |>
+                suffix = c("", ".y"), copy = TRUE) |>
       # debugging codes
       # we need to create again id_elec for those records
       mutate("cod_INE_ccaa" =
