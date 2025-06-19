@@ -28,7 +28,8 @@ candidacies.
 }
 \source{
 Data was scraped from the PDF documents provided since
-2004 by Central Election Board (CEB) in Spain.
+2004 by Central Election Board (CEB) in Spain. See
+\url{https://www.juntaelectoralcentral.es/cs/jec/elecciones}
 }
 \usage{
 data(CEB_results)

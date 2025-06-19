@@ -24,6 +24,6 @@ Useful links:
 
 }
 \author{
-Javier Álvarez-Liébana, David Pereiro-Pol,
-Mafalda González-González, Irene Bosque-Gala and Mikaela De Smedt.
+Javier Alvarez-Liebana, David Pereiro-Pol,
+Mafalda Gonzalez-Gonzalez, Irene Bosque-Gala and Mikaela De Smedt.
 }
