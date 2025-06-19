@@ -21,9 +21,6 @@
 #' that elections of the specified type are available.
 #' @param verbose Flag to indicate whether detailed messages should
 #' be printed during execution. Defaults to \code{TRUE}.
-#' @param lazy_duckdb Flag to indicate whether a lazy duckDB database
-#' should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
-#' Defaults to \code{FALSE}.
 #'
 #' @return A tibble with rows corresponding to municipalities for
 #' each election, including the following variables:
@@ -100,8 +97,7 @@
 #' }
 #' @export
 import_mun_census_data <-
-  function(type_elec, year = NULL, date = NULL, verbose = TRUE,
-           lazy_duckdb = FALSE) {
+  function(type_elec, year = NULL, date = NULL, verbose = TRUE) {
 
     options(warn = -1)
     # Check if verbose is correct
@@ -268,7 +264,8 @@ import_mun_census_data <-
     }
 
     # Create conection in duckdb
-    con <- .get_duckdb_con()
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
 
     # Import files
     files <- glue("raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
@@ -309,13 +306,9 @@ import_mun_census_data <-
       relocate(ccaa, .after = cod_INE_ccaa) |>
       relocate(prov, .after = cod_INE_prov)
 
-    if (!lazy_duckdb) {
-
-      mun_data <- mun_data |> collect()
-      if (exists("con")) {
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-      }
-    }
+    # collect
+    mun_data <- mun_data |> collect()
+    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(mun_data)
@@ -438,7 +431,7 @@ import_mun_census_data <-
 import_poll_station_data <-
   function(type_elec, year = NULL, date = NULL,
            prec_round = 3, short_version = TRUE,
-           verbose = TRUE, lazy_duckdb = FALSE) {
+           verbose = TRUE) {
 
     options(warn = -1)
 
@@ -620,7 +613,8 @@ import_poll_station_data <-
     }
 
     # Create connection in duckdb
-    con <- .get_duckdb_con()
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
 
     # Import the data
     files <- glue("raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
@@ -674,7 +668,8 @@ import_poll_station_data <-
                              verbose = FALSE)
 
     # Create connection in duckdb
-    con <- .get_duckdb_con()
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     if (!any(dbListTables(con) == "mun_data")) {
       copy_to(con, mun_data, name = "mun_data", overwrite = TRUE)
 
@@ -808,14 +803,9 @@ import_poll_station_data <-
                porc_parties, porc_blank, pop_res_mun, census_counting_mun)
     }
 
-    if (!lazy_duckdb) {
-
-      poll_station_data <- poll_station_data |> collect()
-      if (exists("con")) {
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-      }
-
-    }
+    # collect
+    poll_station_data <- poll_station_data |> collect()
+    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(poll_station_data)
@@ -920,8 +910,7 @@ import_poll_station_data <-
 #' @export
 import_candidacies_data <-
   function(type_elec, year = NULL, date = NULL,
-           short_version = TRUE, verbose = TRUE,
-           lazy_duckdb = FALSE) {
+           short_version = TRUE, verbose = TRUE) {
 
     options(warn = -1)
     # check if short_version is a logical variable
@@ -1104,7 +1093,8 @@ import_candidacies_data <-
     }
 
     # Create connection in duckdb
-    con <- .get_duckdb_con()
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
 
     # Import the data
     files <- glue("raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
@@ -1220,14 +1210,9 @@ import_candidacies_data <-
                ballots)
     }
 
-    if (!lazy_duckdb) {
-
-      candidacies_data <- candidacies_data |> collect()
-      if (exists("con")) {
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-      }
-
-    }
+    # collect
+    candidacies_data <- candidacies_data |> collect()
+    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(candidacies_data)

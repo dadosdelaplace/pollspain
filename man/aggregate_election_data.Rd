@@ -10,8 +10,7 @@ aggregate_election_data(
   by_parties = TRUE,
   prec_round = 3,
   verbose = TRUE,
-  short_version = TRUE,
-  lazy_duckdb = FALSE
+  short_version = TRUE
 )
 }
 \arguments{
@@ -39,10 +38,6 @@ be printed during execution. Defaults to \code{TRUE}.}
 \item{short_version}{Flag to indicate whether it should be returned
 a short version of the data (just key variables) or not.
 Defaults to \code{TRUE}.}
-
-\item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
-should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
-Defaults to \code{FALSE}.}
 }
 \value{
 A tibble with rows corresponding to the level of aggregation for

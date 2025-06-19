@@ -9,8 +9,7 @@ import_candidacies_data(
   year = NULL,
   date = NULL,
   short_version = TRUE,
-  verbose = TRUE,
-  lazy_duckdb = FALSE
+  verbose = TRUE
 )
 }
 \arguments{
@@ -37,10 +36,6 @@ or not. Defaults to \code{TRUE}.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
-
-\item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
-should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
-Defaults to \code{FALSE}.}
 }
 \value{
 A tibble with candidacies data at poll station level

@@ -18,8 +18,7 @@ summary_election_data(
   prec_round = 3,
   candidacies_data = NULL,
   col_abbrev_candidacies = "abbrev_candidacies",
-  verbose = TRUE,
-  lazy_duckdb = FALSE
+  verbose = TRUE
 )
 }
 \arguments{
@@ -78,10 +77,6 @@ party abbreviations. Defaults to \code{"abbrev_candidacies"}.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
-
-\item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
-should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
-Defaults to \code{FALSE}.}
 }
 \value{
 A tibble with rows corresponding to the level of aggregation for

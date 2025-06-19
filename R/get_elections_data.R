@@ -120,8 +120,7 @@
 #' @export
 get_election_data <-
   function(type_elec, year = NULL, date = NULL,
-           prec_round = 3, short_version = TRUE, verbose = TRUE,
-           lazy_duckdb = FALSE) {
+           prec_round = 3, short_version = TRUE, verbose = TRUE) {
 
     # colnames
     col_id_elec <- "id_elec"
@@ -326,7 +325,8 @@ get_election_data <-
                               verbose = FALSE)
 
     # Create connection in duckdb
-    con <- .get_duckdb_con()
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
 
     if (!any(dbListTables(con) == "election_data")) {
 
@@ -339,6 +339,11 @@ get_election_data <-
       copy_to(con, ballots_data, name = "ballots_data", temporary = FALSE)
 
     }
+    # remove memory
+    rm(list = c("election_data", "ballots_data"))
+    gc()
+    election_data <- tbl(con, "election_data")
+    ballots_data <- tbl(con, "ballots_data")
 
     # Check if col_id_elec and col_id_elec_level exist within the data
     if (!all(c(col_id_elec, col_id_poll_station) %in% colnames(election_data)) |
@@ -353,14 +358,11 @@ get_election_data <-
 
     # join data (without aggregate, just at poll station level)
     join_data <-
-      tbl(con, "election_data") |>
-      left_join(tbl(con, "ballots_data"), by = group_vars,
+      election_data |>
+      left_join(ballots_data, by = group_vars,
                 suffix = c("", ".rm")) |>
       select(-contains("rm"))
 
-    # remove memory
-    rm(list = c("election_data", "ballots_data"))
-    gc()
 
     # Filter NA parties (just appear in 2015)
     join_data <-
@@ -417,13 +419,8 @@ get_election_data <-
                         col_id_candidacies[["id_nat"]])))
     }
 
-    if (!lazy_duckdb) {
-
-      join_data <- join_data |> collect()
-      if (exists("con")) {
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-      }
-    }
+    join_data <- join_data |> collect()
+    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(join_data)
@@ -535,8 +532,7 @@ get_election_data <-
 #' @export
 aggregate_election_data <-
   function(election_data, level = "all", by_parties = TRUE,
-           prec_round = 3, verbose = TRUE, short_version = TRUE,
-           lazy_duckdb = FALSE) {
+           prec_round = 3, verbose = TRUE, short_version = TRUE) {
 
     # colnames
     col_id_elec <- "id_elec"
@@ -667,8 +663,9 @@ aggregate_election_data <-
       }
     }
 
-    # create connection in duck db
-    con <- .get_duckdb_con()
+    # Create connection in duckdb
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
 
     if (!any(dbListTables(con) == "election_data")) {
       copy_to(con, election_data, name = "election_data", overwrite = TRUE)
@@ -723,6 +720,8 @@ aggregate_election_data <-
 
       copy_to(con, aux, name = "aux", overwrite = TRUE)
       rm(aux)
+      gc()
+
       agg_data <-
         poll_data |>
         left_join(tbl(con, "aux"),
@@ -765,6 +764,7 @@ aggregate_election_data <-
 
       copy_to(con, agg_data, name = "agg_data", overwrite = TRUE)
       rm(agg_data)
+      gc()
       agg_data <- tbl(con, "agg_data")
 
     }
@@ -802,14 +802,9 @@ aggregate_election_data <-
 
     }
 
-    if (!lazy_duckdb) {
-
-      agg_data <- agg_data |> collect()
-
-      if (exists("con")) {
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-      }
-    }
+    # collect
+    agg_data <- agg_data |> collect()
+    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(agg_data)
@@ -965,7 +960,7 @@ summary_election_data <-
            prec_round = 3,
            candidacies_data = NULL,
            col_abbrev_candidacies = "abbrev_candidacies",
-           verbose = TRUE, lazy_duckdb = FALSE) {
+           verbose = TRUE) {
 
     # Colnames
     col_id_elec <- "id_elec"
@@ -1077,8 +1072,10 @@ summary_election_data <-
                               prec_round = prec_round,
                               verbose = verbose, short_version = FALSE)
 
-    # create connection in duckdb
-    con <- .get_duckdb_con()
+    # Create connection in duckdb
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+
     if (!any(dbListTables(con) == "summary_data")) {
       copy_to(con, summary_data, name = "summary_data", overwrite = TRUE)
     }
@@ -1134,10 +1131,13 @@ summary_election_data <-
         copy_to(con, dict_parties, "dict_parties", temporary = TRUE)
 
       }
+      rm(dict_parties)
+      gc()
+      dict_parties <- tbl(con, "dict_parties")
 
       summary_data <-
         summary_data |>
-        left_join(tbl(con, "dict_parties"),
+        left_join(dict_parties,
                   by = c("id_elec" = col_id_elec, id_party),
                   suffix = c("", ".rm"), copy = TRUE) |>
         select(-contains(".rm")) |>
@@ -1215,13 +1215,9 @@ summary_election_data <-
       }
     }
 
-    if (!lazy_duckdb) {
-
-      summary_data <- summary_data |> collect()
-      if (exists("con")) {
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-      }
-    }
+    # collect
+    summary_data <- summary_data |> collect()
+    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(summary_data)

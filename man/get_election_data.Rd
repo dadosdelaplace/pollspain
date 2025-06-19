@@ -11,8 +11,7 @@ get_election_data(
   date = NULL,
   prec_round = 3,
   short_version = TRUE,
-  verbose = TRUE,
-  lazy_duckdb = FALSE
+  verbose = TRUE
 )
 }
 \arguments{
@@ -42,10 +41,6 @@ Defaults to \code{TRUE}.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
-
-\item{lazy_duckdb}{Flag to indicate whether a lazy duckDB database
-should be provided (\code{TRUE}) or a tibble (\code{FALSE}).
-Defaults to \code{FALSE}.}
 }
 \value{
 A tibble with rows corresponding to poll-stations for
