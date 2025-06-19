@@ -23,6 +23,7 @@ Remotes:
 Imports: 
     arrow (>= 16.0.0),
     crayon (>= 1.5.3),
+    dbplyr (>= 2.5.0),
     dplyr (>= 1.1.4),
     glue (>= 1.7.0),
     lubridate (>= 1.9.3),

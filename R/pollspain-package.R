@@ -22,6 +22,7 @@
 #' @importFrom DBI dbDisconnect
 #' @importFrom DBI dbExistsTable
 #' @importFrom DBI dbListTables
+#' @importFrom dbplyr sql
 #' @importFrom dplyr arrange
 #' @importFrom dplyr between
 #' @importFrom dplyr case_when
