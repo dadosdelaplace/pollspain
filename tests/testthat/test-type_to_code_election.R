@@ -6,3 +6,4 @@ test_that("type_to_code_election works", {
   expect_equal(type_to_code_election(type_elec = "cabildo"), "06")
   expect_equal(type_to_code_election(type_elec = "EU"), "07")
 })
+

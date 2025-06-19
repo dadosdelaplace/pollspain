@@ -312,7 +312,9 @@ import_mun_census_data <-
     if (!lazy_duckdb) {
 
       mun_data <- mun_data |> collect()
-      DBI::dbDisconnect(con, shutdown = TRUE)
+      if (exists("con")) {
+        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      }
     }
 
     # output
@@ -797,7 +799,9 @@ import_poll_station_data <-
     if (!lazy_duckdb) {
 
       poll_station_data <- poll_station_data |> collect()
-      DBI::dbDisconnect(con, shutdown = TRUE)
+      if (exists("con")) {
+        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      }
 
     }
 
@@ -1207,7 +1211,9 @@ import_candidacies_data <-
     if (!lazy_duckdb) {
 
       candidacies_data <- candidacies_data |> collect()
-      DBI::dbDisconnect(con, shutdown = TRUE)
+      if (exists("con")) {
+        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      }
 
     }
 

@@ -29,4 +29,3 @@ test_that("seat allocation", {
                                method = c("hondt", NA), threshold = 0.04))
 })
 
-

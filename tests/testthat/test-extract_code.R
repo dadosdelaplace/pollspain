@@ -17,3 +17,4 @@ test_that("extract INE code", {
   expect_error(extract_code(id_INE_poll_station, level = "poll", full_cod = TRUE))
   expect_error(extract_code(id_INE_poll_station, level = "district", full_cod = TRUE))
 })
+

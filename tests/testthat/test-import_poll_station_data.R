@@ -31,3 +31,4 @@ test_that("import poll station data", {
                                         short_version = "yes", verbose = FALSE))
 })
 
+

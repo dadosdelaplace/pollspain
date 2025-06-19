@@ -420,7 +420,7 @@ get_election_data <-
 
       join_data <- join_data |> collect()
       if (exists("con")) {
-        DBI::dbDisconnect(con, shutdown = TRUE)
+        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
       }
     }
 
@@ -803,7 +803,7 @@ aggregate_election_data <-
       agg_data <- agg_data |> collect()
 
       if (exists("con")) {
-        DBI::dbDisconnect(con, shutdown = TRUE)
+        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
       }
     }
 
@@ -1218,7 +1218,7 @@ summary_election_data <-
 
       summary_data <- summary_data |> collect()
       if (exists("con")) {
-        DBI::dbDisconnect(con, shutdown = TRUE)
+        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
       }
     }
 
