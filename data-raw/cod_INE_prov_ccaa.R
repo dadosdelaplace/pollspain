@@ -110,6 +110,25 @@ cod_INE_mun <-
   relocate(cod_MIR_ccaa, .after = cod_INE_ccaa) |>
   mutate("mun" = glue("{mun} ({prov})"))
 
+# ----- UTF-8 -----
+
+cod_INE_prov_ccaa <-
+  cod_INE_prov_ccaa |>
+  mutate(across(where(is.character), \(x) enc2utf8(x)))
+
+cod_INE_prov <-
+  cod_INE_prov |>
+  mutate(across(where(is.character), \(x) enc2utf8(x)))
+
+cod_INE_ccaa <-
+  cod_INE_ccaa |>
+  mutate(across(where(is.character), \(x) enc2utf8(x)))
+
+cod_INE_mun <-
+  cod_INE_mun |>
+  mutate(across(where(is.character), \(x) enc2utf8(x)))
+
+
 # ----- use data: rda -----
 
 usethis::use_data(cod_INE_prov_ccaa, overwrite = TRUE,

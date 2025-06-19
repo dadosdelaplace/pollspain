@@ -94,6 +94,13 @@ pdf_CEB <-
 dates_elections_spain <-
   dates_elections_spain |>
   left_join(pdf_CEB, by = c("cod_elec", "date"))
+
+# ----- UTF-8 -----
+
+dates_elections_spain <-
+  dates_elections_spain |>
+  mutate(across(where(is.character), \(x) enc2utf8(x)))
+
 # ----- use data -----
 usethis::use_data(dates_elections_spain, overwrite = TRUE,
                   compress = "xz")

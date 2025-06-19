@@ -14,13 +14,13 @@ for (i in 1:nrow(congress_dates)) {
   if (!is.na(congress_dates$pdf_CEB[i])) {
 
     paths <-
-      system.file("extdata", glue("CEB_{congress_dates$date[i]}.pdf"),
+      system.file("extdata", glue("CEB_pdf/CEB_{congress_dates$date[i]}.pdf"),
                   package = "pollspaindata")
      download.file(paths,
                    glue("./data/CEB_pdf/CEB_{congress_dates$date[i]}.pdf"),
                    mode = "wb")
 
-    text <- pdf_text(glue("./data/CEB_pdf/CEB_{congress_dates$date[i]}.pdf"))
+    text <- pdf_text(paths)
     lines <- str_split(text[2], "\n")[[1]] |> str_trim()
     lines <- str_squish(str_replace(str_remove_all(lines, "\\.|\\|"), " ", "-"))
     init_tb <- which(str_detect(lines, "^Albacete|^Álava|^Alava"))[1]
@@ -83,6 +83,12 @@ CEB_results <-
   CEB_results |>
   left_join(cod_INE_prov_ccaa, by = "prov") |>
   mutate("id_INE_prov" = glue("{cod_INE_ccaa}-{cod_INE_prov}"))
+
+# ----- UTF-8 -----
+
+CEB_results <-
+  CEB_results |>
+  mutate(across(where(is.character), \(x) enc2utf8(x)))
 
 # ----- use data -----
 usethis::use_data(CEB_results, overwrite = TRUE,

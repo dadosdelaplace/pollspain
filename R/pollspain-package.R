@@ -12,7 +12,6 @@
 #'
 #' @docType package
 #' @name pollspain-package
-#' @import dplyr
 #' @import purrr
 #' @import stringr
 #' @import tibble
@@ -23,20 +22,40 @@
 #' @importFrom DBI dbExistsTable
 #' @importFrom DBI dbListTables
 #' @importFrom dbplyr sql
+#' @importFrom dplyr across
+#' @importFrom dplyr anti_join
 #' @importFrom dplyr arrange
 #' @importFrom dplyr between
+#' @importFrom dplyr bind_rows
 #' @importFrom dplyr case_when
+#' @importFrom dplyr collect
 #' @importFrom dplyr contains
 #' @importFrom dplyr copy_to
+#' @importFrom dplyr count
+#' @importFrom dplyr distinct
 #' @importFrom dplyr filter
+#' @importFrom dplyr first
+#' @importFrom dplyr full_join
 #' @importFrom dplyr if_else
+#' @importFrom dplyr inner_join
+#' @importFrom dplyr last
+#' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
+#' @importFrom dplyr n
+#' @importFrom dplyr n_distinct
+#' @importFrom dplyr pull
+#' @importFrom dplyr relocate
+#' @importFrom dplyr rename
+#' @importFrom dplyr rename_with
+#' @importFrom dplyr right_join
 #' @importFrom dplyr select
 #' @importFrom dplyr slice
 #' @importFrom dplyr slice_max
 #' @importFrom dplyr slice_min
+#' @importFrom dplyr slice_sample
 #' @importFrom dplyr summarise
 #' @importFrom dplyr tbl
+#' @importFrom dplyr union_all
 #' @importFrom duckdb duckdb
 #' @importFrom glue glue
 #' @importFrom lubridate as_date

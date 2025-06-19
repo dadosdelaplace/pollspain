@@ -336,6 +336,15 @@ total_seats_spain <-
   mutate("id_INE_prov" = paste0(cod_INE_ccaa, "-", cod_INE_prov))
 
 # total_seats_spain |> summarise("total_seats" = sum(nseats), .by = id_elec) |> filter(total_seats != 350)
+
+
+# ----- UTF-8 -----
+
+total_seats_spain <-
+  total_seats_spain |>
+  mutate(across(where(is.character), \(x) enc2utf8(x)))
+
+
 # ----- use data -----
 
 usethis::use_data(total_seats_spain, overwrite = TRUE,
