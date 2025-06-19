@@ -84,7 +84,7 @@ CERA ballots will be included in the summaries (see
 \details{
 This function fetches municipal-level data for the
 specified elections by downloading the corresponding files from
-{pollspaindata} package and processing them into a tidy format.
+\code{{pollspaindata}} package and processing them into a tidy format.
 It automatically handles the download, loading, and merging
 of data across multiple election periods as specified by the user.
 }

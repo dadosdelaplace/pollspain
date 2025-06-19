@@ -102,7 +102,7 @@ data for multiple elections at once.
 \details{
 This function fetches poll station-level data for the
 specified elections by downloading the corresponding files from
-{pollspaindata} and processing them into a tidy format. It
+\code{{pollspaindata}} and processing them into a tidy format. It
 automatically handles the download, loading, and merging of data
 across multiple election periods as specified by the user.
 }

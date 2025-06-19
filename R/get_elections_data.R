@@ -325,7 +325,7 @@ get_election_data <-
       import_candidacies_data(type_elec = type_elec, year = NULL,
                               date = allowed_elections$date,
                               short_version = FALSE,
-                              verbose = FALSE, lazy_duckdb = TRUE)
+                              verbose = FALSE)
 
     if (!any(dbListTables(con) == "election_data")) {
 
@@ -1040,7 +1040,7 @@ summary_election_data <-
     election_data <-
       get_election_data(type_elec = type_elec, year = year, date = date,
                         prec_round = prec_round, short_version = FALSE,
-                        verbose = verbose, lazy_duckdb = TRUE) |>
+                        verbose = verbose) |>
       rename_with(
         ~ c("pop_res_mun", "census_counting_mun")[match(.x, cols_mun_var)],
         .cols = cols_mun_var)

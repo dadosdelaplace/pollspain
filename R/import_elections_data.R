@@ -57,7 +57,7 @@
 #'
 #' @details This function fetches municipal-level data for the
 #' specified elections by downloading the corresponding files from
-#' {pollspaindata} package and processing them into a tidy format.
+#' `{pollspaindata}` package and processing them into a tidy format.
 #' It automatically handles the download, loading, and merging
 #' of data across multiple election periods as specified by the user.
 #'
@@ -385,7 +385,7 @@ import_mun_census_data <-
 #'
 #' @details This function fetches poll station-level data for the
 #' specified elections by downloading the corresponding files from
-#' {pollspaindata} and processing them into a tidy format. It
+#' `{pollspaindata}` and processing them into a tidy format. It
 #' automatically handles the download, loading, and merging of data
 #' across multiple election periods as specified by the user.
 #'
@@ -860,7 +860,7 @@ import_poll_station_data <-
 #'
 #' @details This function fetches candidates data for the
 #' specified elections by downloading the corresponding files from
-#' {pollspaindata} package and processing them into a tidy format.
+#' `{pollspaindata}` package and processing them into a tidy format.
 #' It automatically handles the download, loading, and merging of
 #' data across multiple election periods as specified by the user.
 #'
