@@ -266,7 +266,7 @@ import_mun_census_data <-
     # Create connection in duckdb
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
 
@@ -288,7 +288,7 @@ import_mun_census_data <-
 
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
 
@@ -623,7 +623,7 @@ import_poll_station_data <-
     # Create connection in duckdb
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
 
@@ -652,7 +652,7 @@ import_poll_station_data <-
     # Join MIR and INE information
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
 
@@ -686,15 +686,10 @@ import_poll_station_data <-
     # Create connection in duckdb
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
 
-    if (!exists("con")) {
-      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-    }
     if (!any(dbListTables(con) == "mun_data")) {
       copy_to(con, mun_data, name = "mun_data", overwrite = TRUE)
 
@@ -725,7 +720,7 @@ import_poll_station_data <-
 
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
     # Include CERA data and their ccaa and prov
@@ -835,7 +830,6 @@ import_poll_station_data <-
 
     # collect
     poll_station_data <- poll_station_data |> collect()
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(poll_station_data)
@@ -1125,7 +1119,7 @@ import_candidacies_data <-
     # Create connection in duckdb
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
 
@@ -1170,7 +1164,7 @@ import_candidacies_data <-
 
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
 
@@ -1218,7 +1212,7 @@ import_candidacies_data <-
 
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
 
@@ -1256,7 +1250,6 @@ import_candidacies_data <-
 
     # collect
     candidacies_data <- candidacies_data |> collect()
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(candidacies_data)

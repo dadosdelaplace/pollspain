@@ -327,13 +327,7 @@ get_election_data <-
     # Create connection in duckdb
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-    }
-
-    if (!exists("con")) {
-      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
 
@@ -429,7 +423,6 @@ get_election_data <-
     }
 
     join_data <- join_data |> collect()
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(join_data)
@@ -675,13 +668,7 @@ aggregate_election_data <-
     # Create connection in duckdb
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-    }
-
-    if (!exists("con")) {
-      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
     if (!any(dbListTables(con) == "election_data")) {
@@ -737,7 +724,7 @@ aggregate_election_data <-
 
       if (!exists("con")) {
         con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+        on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
         DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
       }
       copy_to(con, aux, name = "aux", overwrite = TRUE)
@@ -786,7 +773,7 @@ aggregate_election_data <-
 
       if (!exists("con")) {
         con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+        on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
         DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
       }
       copy_to(con, agg_data, name = "agg_data", overwrite = TRUE)
@@ -831,7 +818,6 @@ aggregate_election_data <-
 
     # collect
     agg_data <- agg_data |> collect()
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(agg_data)
@@ -1102,13 +1088,7 @@ summary_election_data <-
     # Create connection in duckdb
     if (!exists("con")) {
       con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
-      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-    }
-
-    if (!exists("con")) {
-      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
       DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
     }
 
@@ -1165,7 +1145,7 @@ summary_election_data <-
 
       if (!exists("con")) {
         con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+        on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
         DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
       }
       if (!dbExistsTable(con, "dict_parties")) {
@@ -1259,7 +1239,6 @@ summary_election_data <-
 
     # collect
     summary_data <- summary_data |> collect()
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(summary_data)
