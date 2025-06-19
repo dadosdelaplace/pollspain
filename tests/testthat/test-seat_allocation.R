@@ -1,4 +1,4 @@
-test_that("seat allocation", {
+test_that("seat_allocation works", {
   candidacies <- c("PP", "PSOE", "VOX")
   ballots <- c(sample(200:400, size = 1), sample(250:500, size = 1),
                sample(50:200, size = 1))

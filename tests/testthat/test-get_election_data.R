@@ -1,14 +1,4 @@
-test_that("get elections data", {
-
-  setup({
-    con <<- DBI::dbConnect(duckdb::duckdb(), dbdir = ":memory:")
-  })
-
-  teardown({
-    DBI::dbDisconnect(con, shutdown = TRUE)
-  })
-
-
+test_that("get_elections_data works", {
   random_dates <-
     sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29",
                          "1993-06-06", "1996-03-03", "2000-03-12",

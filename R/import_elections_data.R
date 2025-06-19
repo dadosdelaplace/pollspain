@@ -263,9 +263,12 @@ import_mun_census_data <-
 
     }
 
-    # Create conection in duckdb
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    # Create connection in duckdb
+    if (!exists("con")) {
+      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    }
 
     # Import files
     files <- glue("raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
@@ -282,6 +285,12 @@ import_mun_census_data <-
       mutate(across(n_poll_stations:census_CERE_mun, sum),
                 .by = c(cod_elec, date_elec, cod_INE_prov, cod_INE_mun)) |>
       distinct(cod_elec, date_elec, cod_INE_prov, cod_INE_mun, .keep_all = TRUE)
+
+    if (!exists("con")) {
+      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    }
 
     # Join MIR and INE information
     if (!dbExistsTable(con, "cod_INE_mun")) {
@@ -308,7 +317,6 @@ import_mun_census_data <-
 
     # collect
     mun_data <- mun_data |> collect()
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
 
     # output
     return(mun_data)
@@ -613,8 +621,11 @@ import_poll_station_data <-
     }
 
     # Create connection in duckdb
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    if (!exists("con")) {
+      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    }
 
     # Import the data
     files <- glue("raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
@@ -639,6 +650,11 @@ import_poll_station_data <-
                cod_sec, cod_poll_station, .keep_all = TRUE)
 
     # Join MIR and INE information
+    if (!exists("con")) {
+      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    }
 
     if (!dbExistsTable(con, "cod_INE_mun")) {
 
@@ -668,8 +684,17 @@ import_poll_station_data <-
                              verbose = FALSE)
 
     # Create connection in duckdb
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    if (!exists("con")) {
+      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    }
+
+    if (!exists("con")) {
+      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    }
     if (!any(dbListTables(con) == "mun_data")) {
       copy_to(con, mun_data, name = "mun_data", overwrite = TRUE)
 
@@ -698,6 +723,11 @@ import_poll_station_data <-
       relocate(prov, .after = cod_INE_prov) |>
       relocate(mun, .after = cod_INE_mun)
 
+    if (!exists("con")) {
+      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    }
     # Include CERA data and their ccaa and prov
     if (!dbExistsTable(con, "census_2")) {
 
@@ -1093,8 +1123,11 @@ import_candidacies_data <-
     }
 
     # Create connection in duckdb
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    if (!exists("con")) {
+      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    }
 
     # Import the data
     files <- glue("raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
@@ -1135,7 +1168,12 @@ import_candidacies_data <-
                paste0(cod_MIR_ccaa, "-", cod_INE_prov, "-", cod_INE_mun),
              .before = everything())
 
-    # Join MIR and INE information
+    if (!exists("con")) {
+      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    }
+
     if (!dbExistsTable(con, "cod_INE_mun_CERA")) {
 
       copy_to(con, cod_INE_mun_CERA, "cod_INE_mun_CERA", temporary = TRUE)
@@ -1177,6 +1215,12 @@ import_candidacies_data <-
       mutate("id_candidacies" = as.character(id_candidacies),
              "id_candidacies_ccaa" = as.character(id_candidacies_ccaa),
              "id_candidacies_nat" = as.character(id_candidacies_nat))
+
+    if (!exists("con")) {
+      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+      on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    }
 
     # include candidacies info to candidacies ballots data
     if (!dbExistsTable(con, "candidacies_raw_info")) {

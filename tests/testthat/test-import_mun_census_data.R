@@ -1,11 +1,4 @@
-test_that("import mun census data", {
-  setup({
-    con <<- DBI::dbConnect(duckdb::duckdb(), dbdir = ":memory:")
-  })
-
-  teardown({
-    DBI::dbDisconnect(con, shutdown = TRUE)
-  })
+test_that("import_mun_census_data works", {
 
   random_dates <-
     sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29",

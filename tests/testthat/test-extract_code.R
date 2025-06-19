@@ -1,4 +1,4 @@
-test_that("extract INE code", {
+test_that("extract_INE_code works", {
   expect_equal(extract_code("01-04-003-01-004-B", level = "mun"), "003")
   expect_equal(extract_code("01-04-003-01-004-B", level = "mun_district",
                             full_cod = TRUE), "01-04-003-01")
