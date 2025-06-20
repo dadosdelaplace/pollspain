@@ -8,5 +8,5 @@ One NOTE due to a test skipped on Linux.
 
 ## Comments
 One test is conditionally skipped on Linux using `skip_on_os("linux")`
-due to a known transactional issue in `duckdb` under Linux-only environments.
+due to a known transactional issue in `duckdb` under Linux-only environments (only in release)
 This does not affect functionality or user experience. All other tests pass.
