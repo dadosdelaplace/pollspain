@@ -1,7 +1,9 @@
 test_that("summary_elections_data works", {
   random_dates <-
-    sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 2,
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
+                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
+                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -14,8 +16,10 @@ test_that("summary_elections_data works", {
                  nrow(), 0)
 
   random_dates <-
-    sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 2,
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
+                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
+                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -42,8 +46,10 @@ test_that("summary_elections_data works", {
                  nrow(), 0)
 
   random_dates <-
-    sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
+                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
+                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -70,8 +76,10 @@ test_that("summary_elections_data works", {
                  nrow(), 0)
 
   random_dates <-
-    sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
+                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
+                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -100,8 +108,10 @@ test_that("summary_elections_data works", {
                  nrow(), 0)
 
   random_dates <-
-    sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
+                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
+                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -130,8 +140,10 @@ test_that("summary_elections_data works", {
                  nrow(), 0)
 
   random_dates <-
-    sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
+                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
+                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -162,8 +174,10 @@ test_that("summary_elections_data works", {
                  nrow(), 0)
 
   random_dates <-
-    sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
+                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
+                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -194,8 +208,10 @@ test_that("summary_elections_data works", {
                  nrow(), 0)
 
   random_dates <-
-    sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
-                         "2015-12-20", "2016-06-26", "2023-07-24")), size = 1,
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
+                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
+                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,

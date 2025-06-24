@@ -742,15 +742,13 @@ aggregate_election_data <-
     }
 
 
-    copy_to(con,  agg_data, name = "agg_data", overwrite = TRUE)
-    agg_data <- tbl(con, "agg_data")
-
     # join info ccaa-prov-mun from INE
     if (level != "all") {
 
       agg_data <-
         agg_data |>
         left_join(election_data |>
+                    collect() |>
                     select(-matches("id|cd_INE|MIR")) |>
                     select(matches(str_flatten(as.character(hierarchy_levels[hierarchy_levels >= level]), collapse = "|"))) |>
                     select(-any_of(c("cod_mun_district", "cod_sec", "cod_poll_station",
@@ -796,8 +794,6 @@ aggregate_election_data <-
         rename_with(~ str_replace_all(.x, "_mun", paste0("_", level)))
 
     }
-
-    agg_data <- agg_data |> collect()
 
     # clean temp dir
     unlink(temp_db_dir, recursive = TRUE, force = TRUE)
