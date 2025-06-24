@@ -1,0 +1,30 @@
+name: DuckDB test (con caché real)
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-duckdb:
+    runs-on: ubuntu-latest
+    name: Test DuckDB on Linux
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: r-lib/actions/setup-r@v2
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            duckdb
+            DBI
+            dplyr
+            testthat
+
+      - name: Run duckdb test file
+        run: |
+          testthat::test_file("tests/testthat/test-duckdb.R")
+        shell: Rscript {0}
