@@ -26,5 +26,5 @@ jobs:
 
       - name: Run duckdb test file
         run: |
-          testthat::test_file("tests/testthat/test-duckdb-basic.R")
+          testthat::test_file("tests/testthat/test-duckdb.R")
         shell: Rscript {0}
