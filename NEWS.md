@@ -1,17 +1,21 @@
 <!-- 
 
-# pollspain 0.5.0
+# pollspain 0.4.0
 
 - dataviz
 
-# pollspain 0.4.0
+# pollspain 0.3.1
 
 - reparto de escaños
+- house effects
+- vignettes
 
 # pollspain 0.3.0
 
-- surveys
-- - pending: vignettes
+- Preprocessing raw surveys in pollstationdata package
+- Create allocation_method dataset
+- Fixed minor warnings related to UTF-8 issues
+- Create `import_surveys_data.R` and `get_surveys_data.R`
 
 -->
 

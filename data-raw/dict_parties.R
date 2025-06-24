@@ -210,8 +210,8 @@ global_dict_parties <-
            if_else(str_detect(abbrev_candidacies, "ARALAR"),
                    "ARALAR", abbrev_candidacies),
          "abbrev_candidacies" =
-           if_else(str_detect(name_candidacies, "ASTURIAS EXISTE-ESPANA VACIADA"),
-                   "AE-EV", abbrev_candidacies),
+           if_else(str_detect(name_candidacies, "ESPANA VACIADA"),
+                   "EV", abbrev_candidacies),
          "abbrev_candidacies" =
            if_else(str_detect(abbrev_candidacies, "BLOC"),
                    "BLOC-EV", abbrev_candidacies),
@@ -732,7 +732,8 @@ global_dict_parties <-
   global_dict_parties |>
   mutate(color =
            case_when(abbrev_candidacies == "UCD" ~ "#ff7f27",
-                     abbrev_candidacies %in% c("AP-PDP-PL", "PP") ~ "#1e4b8f",
+                     abbrev_candidacies %in% c("AP-PDP-PL", "PP") |
+                       str_detect(name_candidacies, "PARTIDO POPULAR") ~ "#1e4b8f",
                      abbrev_candidacies == "PSOE" ~ "#e30613",
                      abbrev_candidacies == "PCE" ~ "#be1622",
                      abbrev_candidacies %in% c("CIU", "PDECAT-E-CIU") ~ "#18307b",

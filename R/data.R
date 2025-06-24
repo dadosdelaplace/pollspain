@@ -263,3 +263,37 @@
 #' data(total_seats_spain)
 "total_seats_spain"
 
+#' @title Apportionment methods in the global democracy
+#'
+#' @description A dataset containing detailed information on the
+#' apportionment methods used in major democratic countries.
+#'
+#' @format A tibble with 11 columns
+#' \itemize{
+#'   \item \code{method, method_family }: name of method and method's
+#'   family.
+#'   \item \code{region}: region or country.
+#'   \item \code{type_elec}: type of elections.
+#'   \item \code{constituency, constituency_type}: constituency where
+#'   method is applied and type of constituency (multi or single
+#'   member).
+#'   \item \code{candidate_ranking}: method to chose the order of
+#'   candidates.
+#'   \item \code{threshold}: threshold to obtain seats.
+#'   \item \code{party_list}: closed, open or semi-open lists.
+#'   \item \code{notes}: explanatory notes.
+#'   \item \code{biblio}: link to bibliography.
+#' }
+#'
+#' @author Irene Bosque-Gala and Javier Alvarez-Liebana.
+#'
+#' @docType data
+#' @keywords datasets
+#' @name apportionment_methods
+#' @usage data(apportionment_methods)
+#'
+#' @examples
+#' # Load data
+#' data(apportionment_methods)
+"apportionment_methods"
+

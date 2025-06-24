@@ -325,24 +325,12 @@ get_election_data <-
                               verbose = FALSE)
 
     # Create connection in duckdb
-    if (!exists("con")) {
-      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-    }
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
 
-    if (!any(dbListTables(con) == "election_data")) {
-
-      copy_to(con, election_data, name = "election_data", temporary = FALSE)
-
-    }
-
-    if (!any(dbListTables(con) == "ballots_data")) {
-
-      copy_to(con, ballots_data, name = "ballots_data", temporary = FALSE)
-
-    }
-    # remove memory
+    copy_to(con, election_data, name = "election_data", temporary = FALSE)
+    copy_to(con, ballots_data, name = "ballots_data", temporary = FALSE)
     rm(list = c("election_data", "ballots_data"))
     gc()
     election_data <- tbl(con, "election_data")
@@ -666,14 +654,12 @@ aggregate_election_data <-
     }
 
     # Create connection in duckdb
-    if (!exists("con")) {
-      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-    }
-    if (!any(dbListTables(con) == "election_data")) {
-      copy_to(con, election_data, name = "election_data", overwrite = TRUE)
-    }
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+
+    copy_to(con, election_data, name = "election_data", overwrite = TRUE)
+    gc()
     rm(election_data)
     election_data <- tbl(con, "election_data")
 
@@ -722,19 +708,13 @@ aggregate_election_data <-
                   "id_candidacies_nat" = list(sort(unique(.data[[col_id_candidacies["id_nat"]]]))),
                   .by = c(group_var, as.character(group_candidacies)))
 
-      if (!exists("con")) {
-        con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-        DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-      }
       copy_to(con, aux, name = "aux", overwrite = TRUE)
       rm(aux)
       gc()
 
       agg_data <-
         poll_data |>
-        left_join(tbl(con, "aux"),
-                  by = group_var)
+        left_join(tbl(con, "aux"), by = group_var)
 
       if (!short_version) {
 
@@ -771,11 +751,6 @@ aggregate_election_data <-
                any_of(c("ccaa", "prov", "mun")),
                everything())
 
-      if (!exists("con")) {
-        con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-        DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-      }
       copy_to(con, agg_data, name = "agg_data", overwrite = TRUE)
       rm(agg_data)
       gc()
@@ -1086,19 +1061,13 @@ summary_election_data <-
                               verbose = verbose, short_version = FALSE)
 
     # Create connection in duckdb
-    if (!exists("con")) {
-      con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-      on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-      DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-    }
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
 
-    if (!any(dbListTables(con) == "summary_data")) {
-      copy_to(con, summary_data, name = "summary_data", overwrite = TRUE)
-    }
-
+    copy_to(con, summary_data, name = "summary_data", overwrite = TRUE)
     rm(list = c("summary_data", "election_data"))
     gc()
-    # remove memory
     summary_data <- tbl(con, "summary_data")
 
     if (verbose) {
@@ -1143,16 +1112,7 @@ summary_election_data <-
         filter(id_elec %in% unique(summary_data |> pull(col_id_elec))) |>
         distinct(.data[[col_id_elec]], .data[[id_party]], .keep_all = TRUE)
 
-      if (!exists("con")) {
-        con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
-        on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-        DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-      }
-      if (!dbExistsTable(con, "dict_parties")) {
-
-        copy_to(con, dict_parties, "dict_parties", temporary = TRUE)
-
-      }
+      copy_to(con, dict_parties, "dict_parties", temporary = TRUE)
       rm(dict_parties)
       gc()
       dict_parties <- tbl(con, "dict_parties")
