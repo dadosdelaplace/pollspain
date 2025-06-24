@@ -310,6 +310,9 @@ import_mun_census_data <-
     # collect
     mun_data <- mun_data |> collect()
 
+    # clean temp dir
+    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
+
     # output
     return(mun_data)
 
@@ -795,6 +798,9 @@ import_poll_station_data <-
     # collect
     poll_station_data <- poll_station_data |> collect()
 
+    # clean temp dir
+    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
+
     # output
     return(poll_station_data)
   }
@@ -1201,6 +1207,9 @@ import_candidacies_data <-
 
     # collect
     candidacies_data <- candidacies_data |> collect()
+
+    # clean temp dir
+    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
 
     # output
     return(candidacies_data)

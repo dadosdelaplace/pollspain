@@ -419,6 +419,9 @@ get_election_data <-
 
     join_data <- join_data |> collect()
 
+    # clean temp dir
+    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
+
     # output
     return(join_data)
 
@@ -805,8 +808,8 @@ aggregate_election_data <-
 
     }
 
-    # collect
-    # agg_data <- agg_data |> collect()
+    # clean temp dir
+    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
 
     # output
     return(agg_data)
@@ -1215,6 +1218,9 @@ summary_election_data <-
 
     # collect
     summary_data <- summary_data |> collect()
+
+    # clean temp dir
+    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
 
     # output
     return(summary_data)
