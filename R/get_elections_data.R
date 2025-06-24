@@ -717,7 +717,7 @@ aggregate_election_data <-
                   "id_candidacies_nat" = list(sort(unique(.data[[col_id_candidacies["id_nat"]]]))),
                   .by = c(group_var, as.character(group_candidacies)))
 
-      copy_to(con, aux, name = "aux", overwrite = TRUE)
+      copy_to(con, aux, name = "aux", temporary = TRUE, overwrite = TRUE)
       rm(aux)
       gc()
 
@@ -760,7 +760,7 @@ aggregate_election_data <-
                any_of(c("ccaa", "prov", "mun")),
                everything())
 
-      copy_to(con, agg_data, name = "agg_data", overwrite = TRUE)
+      copy_to(con, agg_data, name = "agg_data", temporary = TRUE, overwrite = TRUE)
       rm(agg_data)
       gc()
       agg_data <- tbl(con, "agg_data")
