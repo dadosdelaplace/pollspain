@@ -688,7 +688,8 @@ aggregate_election_data <-
                     summarise(across(cols_mun_var,
                                      function(x) { sum(x, na.rm = TRUE) }),
                               .by = group_var_mun),
-                  by = group_var_mun)
+                  by = group_var_mun) |>
+        collect()
 
     } else {
 
@@ -717,19 +718,22 @@ aggregate_election_data <-
                   "id_candidacies_nat" = list(sort(unique(.data[[col_id_candidacies["id_nat"]]]))),
                   .by = c(group_var, as.character(group_candidacies)))
 
-      copy_to(con, aux, name = "aux", temporary = TRUE, overwrite = TRUE)
-      rm(aux)
-      gc()
+      # copy_to(con, aux, name = "aux", temporary = TRUE, overwrite = TRUE)
+      # rm(aux)
+      # gc()
+      # aux <- tbl(con, "aux")
 
       agg_data <-
         poll_data |>
-        left_join(tbl(con, "aux"), by = group_var)
+        collect() |>
+        left_join(aux, by = group_var)
 
       if (!short_version) {
 
         agg_data <-
           agg_data |>
           left_join(election_data |>
+                      collect() |>
                       distinct(.data[[col_id_elec]], .data[[col_id_mun]],
                                .keep_all = TRUE) |>
                       summarise(across(cols_mun_var,
@@ -746,6 +750,7 @@ aggregate_election_data <-
       agg_data <-
         agg_data |>
         left_join(election_data |>
+                    collect() |>
                     select(-matches("id|cd_INE|MIR")) |>
                     select(matches(str_flatten(as.character(hierarchy_levels[hierarchy_levels >= level]), collapse = "|"))) |>
                     select(-any_of(c("cod_mun_district", "cod_sec", "cod_poll_station",
@@ -753,23 +758,23 @@ aggregate_election_data <-
                     distinct(.keep_all = TRUE),
                   by = c(group_var[group_var %in%
                                      c("cod_INE_ccaa", "cod_INE_prov", "cod_INE_mun")])) |>
-        collect() |>
+        # collect() |>
         unite(!!paste0("id_INE_", level), group_var[group_var != col_id_elec],
               sep = "-") |>
         select(col_id_elec, paste0("id_INE_", level),
                any_of(c("ccaa", "prov", "mun")),
                everything())
 
-      copy_to(con, agg_data, name = "agg_data", temporary = TRUE, overwrite = TRUE)
-      rm(agg_data)
-      gc()
-      agg_data <- tbl(con, "agg_data")
+      # copy_to(con, agg_data, name = "agg_data", temporary = TRUE, overwrite = TRUE)
+      # rm(agg_data)
+      # gc()
+      # agg_data <- tbl(con, "agg_data")
 
     }
 
-    # remove memory
-    rm(list = c("election_data"))
-    gc()
+    # # remove memory
+    # rm(list = c("election_data"))
+    # gc()
 
     if (by_parties) {
       if (all(lengths(agg_data |> pull(id_candidacies)) == 1)) {
@@ -801,7 +806,7 @@ aggregate_election_data <-
     }
 
     # collect
-    agg_data <- agg_data |> collect()
+    # agg_data <- agg_data |> collect()
 
     # output
     return(agg_data)
