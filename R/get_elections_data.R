@@ -325,12 +325,19 @@ get_election_data <-
                               verbose = FALSE)
 
     # Create connection in duckdb
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
+    dir.create(temp_db_dir, showWarnings = FALSE)
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
     on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
 
-    copy_to(con, election_data, name = "election_data", temporary = FALSE)
-    copy_to(con, ballots_data, name = "ballots_data", temporary = FALSE)
+    # con <- DBI::dbConnect(duckdb::duckdb(),
+    #                       dbdir = tempfile(fileext = ".duckdb"))
+    # on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+    # DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+
+    copy_to(con, election_data, name = "election_data", temporary = TRUE, overwrite = TRUE)
+    copy_to(con, ballots_data, name = "ballots_data", temporary = TRUE, overwrite = TRUE)
     rm(list = c("election_data", "ballots_data"))
     gc()
     election_data <- tbl(con, "election_data")

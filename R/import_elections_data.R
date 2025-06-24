@@ -264,9 +264,15 @@ import_mun_census_data <-
     }
 
     # Create connection in duckdb
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
+    dir.create(temp_db_dir, showWarnings = FALSE)
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
     on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
+
+    # con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    # on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+    # DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
 
     # Import files
     files <- glue("raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
@@ -284,7 +290,7 @@ import_mun_census_data <-
                 .by = c(cod_elec, date_elec, cod_INE_prov, cod_INE_mun)) |>
       distinct(cod_elec, date_elec, cod_INE_prov, cod_INE_mun, .keep_all = TRUE)
 
-    copy_to(con, cod_INE_mun, "cod_INE_mun", temporary = TRUE)
+    copy_to(con, cod_INE_mun, "cod_INE_mun", temporary = TRUE, overwrite = TRUE)
     mun_data <-
       mun_data |>
       left_join(tbl(con, "cod_INE_mun"), by = c("cod_INE_prov", "cod_INE_mun"),
@@ -607,9 +613,11 @@ import_poll_station_data <-
     }
 
     # Create connection in duckdb
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
+    dir.create(temp_db_dir, showWarnings = FALSE)
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
     on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
 
     # Import the data
     files <- glue("raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
@@ -634,7 +642,7 @@ import_poll_station_data <-
                cod_sec, cod_poll_station, .keep_all = TRUE)
 
     # Join MIR and INE information
-    copy_to(con, cod_INE_mun, "cod_INE_mun", temporary = TRUE)
+    copy_to(con, cod_INE_mun, "cod_INE_mun", temporary = TRUE, overwrite = TRUE)
     rm(list = c("cod_INE_mun"))
     gc()
     cod_INE_mun <- tbl(con, "cod_INE_mun")
@@ -687,7 +695,7 @@ import_poll_station_data <-
             cod_INE_mun |>
               distinct(cod_MIR_ccaa, cod_INE_prov, .keep_all = TRUE) |>
               select(contains("ccaa") | contains("prov")),
-            "census_2", temporary = TRUE)
+            "census_2", temporary = TRUE, overwrite = TRUE)
 
     poll_station_data <-
       union_all(poll_station_data,
@@ -1073,9 +1081,11 @@ import_candidacies_data <-
     }
 
     # Create connection in duckdb
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
+    dir.create(temp_db_dir, showWarnings = FALSE)
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
     on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
 
     # Import the data
     files <- glue("raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
@@ -1116,7 +1126,7 @@ import_candidacies_data <-
                paste0(cod_MIR_ccaa, "-", cod_INE_prov, "-", cod_INE_mun),
              .before = everything())
 
-    copy_to(con, cod_INE_mun_CERA, "cod_INE_mun_CERA", temporary = TRUE)
+    copy_to(con, cod_INE_mun_CERA, "cod_INE_mun_CERA", temporary = TRUE, overwrite = TRUE)
     rm(list = c("cod_INE_mun_CERA"))
     gc()
     cod_INE_mun_CERA <- tbl(con, "cod_INE_mun_CERA")
@@ -1158,7 +1168,7 @@ import_candidacies_data <-
              "id_candidacies_nat" = as.character(id_candidacies_nat))
 
     # include candidacies info to candidacies ballots data
-    copy_to(con, candidacies_raw_info, "candidacies_raw_info", temporary = TRUE)
+    copy_to(con, candidacies_raw_info, "candidacies_raw_info", temporary = TRUE, overwrite = TRUE)
     rm(list = c("candidacies_raw_info"))
     gc()
     candidacies_raw_info <- tbl(con, "candidacies_raw_info")
