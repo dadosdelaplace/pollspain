@@ -3,7 +3,21 @@
 on:
   push:
     branches: [main, master]
+    paths:
+      - R/**
+      - NAMESPACE
+      - DESCRIPTION
+      - tests/**
+      - vignettes/**
+      - inst/**
   pull_request:
+    paths:
+      - R/**
+      - NAMESPACE
+      - DESCRIPTION
+      - tests/**
+      - vignettes/**
+      - inst/**
 
 name: R-CMD-check.yaml
 
