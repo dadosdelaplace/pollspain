@@ -661,9 +661,11 @@ aggregate_election_data <-
     }
 
     # Create connection in duckdb
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
+    dir.create(temp_db_dir, showWarnings = FALSE)
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
     on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
 
     copy_to(con, election_data, name = "election_data", overwrite = TRUE)
     gc()
@@ -1068,9 +1070,11 @@ summary_election_data <-
                               verbose = verbose, short_version = FALSE)
 
     # Create connection in duckdb
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
+    dir.create(temp_db_dir, showWarnings = FALSE)
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
     on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
 
     copy_to(con, summary_data, name = "summary_data", overwrite = TRUE)
     rm(list = c("summary_data", "election_data"))

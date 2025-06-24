@@ -1,5 +1,4 @@
 test_that("summary_elections_data works", {
-  testthat::skip_on_os("linux")
   random_dates <-
     sample(x = as_date(c("2004-03-14", "2008-03-09", "2011-11-20",
                          "2015-12-20", "2016-06-26", "2023-07-24")), size = 2,
