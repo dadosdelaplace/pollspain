@@ -81,9 +81,7 @@ pdf_CEB <-
            filter(cod_elec == "02") |>
            pull(date),
          "pdf_CEB" =
-           c(NA, NA, NA, NA, NA, NA,
-             "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2004_Resultados.pdf",
-             "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2008_Resultados.pdf",
+           c(NA, NA, NA, NA, NA, NA, NA, NA,
              "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2011_Resultados.pdf",
              "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2015_Resultados.pdf",
              "https://www.juntaelectoralcentral.es/cs/jec/documentos/GENERALES_2016_Resultados.pdf",

@@ -16,7 +16,7 @@
 - Create allocation_method dataset
 - Fixed minor warnings related to UTF-8 issues
 - Create `import_surveys_data.R` and `get_surveys_data.R`
-
+- Fix errors with NACION ANDALUZA (abbrev was processed as missing data NA)
 -->
 
 # pollspain 0.2.5

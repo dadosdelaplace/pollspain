@@ -1,9 +1,11 @@
 test_that("summary_elections_data works", {
+
+  # no missing candidacies
   random_dates <-
     sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
                          "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
                          "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
-                         "2019-11-10", "2023-07-24")), size = 1,
+                         "2019-11-10", "2023-07-24")), size = 3,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -15,11 +17,10 @@ test_that("summary_elections_data works", {
                           is.na(name_candidacies)) |>
                  nrow(), 0)
 
+  # differences vs CEB: prov level
   random_dates <-
-    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
-                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
-                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
-                         "2019-11-10", "2023-07-24")), size = 1,
+    sample(x = as_date(c("2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 2,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -45,40 +46,9 @@ test_that("summary_elections_data works", {
                                function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
+  # differences vs CEB: ccaa level
   random_dates <-
-    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
-                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
-                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
-                         "2019-11-10", "2023-07-24")), size = 1,
-           replace = FALSE)
-  expect_equal(summary_election_data(type_elec = "congress",
-                                     date = random_dates,
-                                     by_parties = FALSE,
-                                     level = "prov",
-                                     short_version = FALSE,
-                                     verbose = FALSE) |>
-                 left_join(CEB_results,
-                           by = c("id_elec", "id_INE_prov"),
-                           suffix = c(".pollspain", ".CEB")) |>
-                 summarise("ratio_total_ballots" =
-                             total_ballots.pollspain / total_ballots.CEB,
-                           "ratio_valid_ballots" =
-                             valid_ballots.pollspain / valid_ballots.CEB,
-                           "ratio_party_ballots" =
-                             party_ballots.pollspain / party_ballots.CEB,
-                           "ratio_blank_ballots" =
-                             blank_ballots.pollspain / blank_ballots.CEB,
-                           "ratio_invalid_ballots" =
-                             invalid_ballots.pollspain / invalid_ballots.CEB,
-                           .by = c(id_elec, id_INE_prov, prov.pollspain)) |>
-                 filter(across(contains("ballots"),
-                               function(x) { x > 1.01 | x < 0.99})) |>
-                 nrow(), 0)
-
-  random_dates <-
-    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
-                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
-                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+    sample(x = as_date(c("2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
                          "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
@@ -107,11 +77,10 @@ test_that("summary_elections_data works", {
                                function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
+  # differences vs CEB: nat level
   random_dates <-
-    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
-                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
-                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
-                         "2019-11-10", "2023-07-24")), size = 1,
+    sample(x = as_date(c("2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 2,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -139,11 +108,10 @@ test_that("summary_elections_data works", {
                                function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
+  # differences vs CEB: mun level (and the aggregate by prov)
   random_dates <-
-    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
-                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
-                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
-                         "2019-11-10", "2023-07-24")), size = 1,
+    sample(x = as_date(c("2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 3,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
@@ -173,10 +141,9 @@ test_that("summary_elections_data works", {
                                function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
+  # differences vs CEB: mun district level (and the aggregate by prov)
   random_dates <-
-    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
-                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
-                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+    sample(x = as_date(c("2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
                          "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
@@ -207,10 +174,9 @@ test_that("summary_elections_data works", {
                                function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
+  # differences vs CEB: sec level (and the aggregate by prov)
   random_dates <-
-    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
-                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
-                         "2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
+    sample(x = as_date(c("2011-11-20", "2015-12-20", "2016-06-26", "2019-04-28",
                          "2019-11-10", "2023-07-24")), size = 1,
            replace = FALSE)
   expect_equal(summary_election_data(type_elec = "congress",
@@ -241,6 +207,7 @@ test_that("summary_elections_data works", {
                                function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
+  # is tibble?
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,
                                      by_parties = FALSE,

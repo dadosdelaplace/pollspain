@@ -1,6 +1,6 @@
 
 # ----- packages -----
-library(pdftools)
+library(tabulapdf)
 library(tidyverse)
 library(glue)
 library(lubridate)
@@ -16,67 +16,103 @@ for (i in 1:nrow(congress_dates)) {
     paths <-
       system.file("extdata", glue("CEB_pdf/CEB_{congress_dates$date[i]}.pdf"),
                   package = "pollspaindata")
-     download.file(paths,
-                   glue("./data/CEB_pdf/CEB_{congress_dates$date[i]}.pdf"),
-                   mode = "wb")
+    download.file(paths,
+                  glue("./data/CEB_pdf/CEB_{congress_dates$date[i]}.pdf"),
+                  mode = "wb")
 
-    text <- pdf_text(paths)
-    lines <- str_split(text[2], "\n")[[1]] |> str_trim()
-    lines <- str_squish(str_replace(str_remove_all(lines, "\\.|\\|"), " ", "-"))
-    init_tb <- which(str_detect(lines, "^Albacete|^Álava|^Alava"))[1]
-    table_raw <- lines[init_tb:length(lines)]
-    table <-
-      readr::read_table2(str_replace(paste(table_raw, collapse = "\n"),
-                                     "Santa-Cruz de Tenerife|Santa Cruz de Tenerife",
-                                     "Santa-Cruz-de-Tenerife"),
-                         col_names = FALSE) |>
-      mutate("X1" = str_trim(str_replace_all(X1, "-", " "))) |>
-      filter(!str_detect(str_to_upper(X1), "BOE|CVE|TOTAL ESTATAL") &
-               !str_detect(str_to_upper(X2), "BOE|CVE|TOTAL ESTATAL")) |>
-      rename(prov = X1, census_counting_prov = X2, total_ballots = X3,
-             valid_ballots = X4, party_ballots = X5, blank_ballots = X6,
-             invalid_ballots = X7) |>
+    # Extract from first pages
+    if (congress_dates$date[i] == "2019-04-28") { idx_pages <- 2:3 } else { idx_pages <- 2}
+    tables_pdf <-
+      extract_tables(paths, pages = idx_pages,
+                     guess = TRUE, output = "tibble") |>
+      bind_rows() |>
+      mutate(across(everything(), function(x) { str_replace_all(x, "\\.", "")})) |>
+      janitor::clean_names()
+
+    if (congress_dates$year[i] == 2023) {
+
+      tables_pdf <-
+        tables_pdf |>
+        separate(col = electores_votantes, into = c("electores", "votantes"))
+
+    }
+
+    if (congress_dates$year[i] == 2015) {
+
+      tables_pdf <-
+        tables_pdf |>
+        separate(col = 2, into = c("electores", "votantes")) |>
+        separate(col = "x3", into = c("validos", "partidos", "blanco", "invalido"))
+
+    }
+
+    if (congress_dates$year[i] == 2011) {
+
+      tables_pdf <-
+        tables_pdf |>
+        slice(-(1:3))
+    }
+
+    names(tables_pdf) <-
+      c("prov", "census_counting_prov", "total_ballots",
+        "valid_ballots", "party_ballots", "blank_ballots",
+        "invalid_ballots")
+
+    tables_pdf <-
+      tables_pdf |>
+      mutate(across(everything(), function(x) { str_squish(str_replace_all(x, "\\|", "")) })) |>
+      mutate(across(where(is.character), function(x) { str_replace_all(x, "\\s", "") })) |>
+      mutate("prov" = str_to_title(prov),
+             "prov" =
+               case_when(str_detect(str_to_lower(prov), "girona") ~
+                           "Girona",
+                         str_detect(str_to_lower(prov), "gipuz") ~
+                           "Guipúzcoa/Gipuzkoa",
+                         str_detect(str_to_lower(prov), "real") ~
+                           "Ciudad Real",
+                         str_detect(str_to_lower(prov), "baleares|balears") ~
+                           "Islas Baleares/Illes Balears",
+                         str_detect(str_to_lower(prov), "alicante|alacant") ~
+                           "Alicante/Alacant",
+                         str_detect(str_to_lower(prov), "castellón|castelló|castello") ~
+                           "Castellón/Castelló",
+                         str_detect(str_to_lower(prov), "valencia|valència") ~
+                           "Valencia/València",
+                         str_detect(str_to_lower(prov), "coruña|coruna") ~
+                           "La Coruña/A Coruña",
+                         str_detect(str_to_lower(prov), "orense|ourense|oure") ~
+                           "Orense/Ourense",
+                         str_detect(str_to_lower(prov), "navarra|nafarroa") ~
+                           "Navarra/Nafarroa",
+                         str_detect(str_to_lower(prov), "álava|alava|araba") ~
+                           "Álava/Araba",
+                         str_detect(str_to_lower(prov), "vizcaya|bizkaia") ~
+                           "Vizcaya/Bizkaia",
+                         str_detect(str_to_lower(prov), "rioja") ~
+                           "La Rioja",
+                         str_detect(str_to_lower(prov), "palmas|palbmlaes|picaalmbales") ~
+                           "Las Palmas",
+                         str_detect(str_to_lower(prov), "tenerife") ~
+                           "Santa Cruz de Tenerife",
+                         str_detect(str_to_lower(prov), "palencia|paoleen-caia|paoleen caia|pbaolenec-iaa") ~
+                           "Palencia",
+                         TRUE ~ prov),
+             "prov" = str_trim(str_replace_all(prov, "-", " "))) |>
+      filter(!str_detect(str_to_upper(prov),
+                         "BOE|CVE|ESTATAL|VERIFICABLE")) |>
       mutate("census_counting_prov" = as.numeric(census_counting_prov),
              "total_ballots" = as.numeric(total_ballots),
              "valid_ballots" = as.numeric(valid_ballots),
              "party_ballots" = as.numeric(party_ballots),
              "blank_ballots" = as.numeric(blank_ballots),
-             "invalid_ballots" = as.numeric(invalid_ballots)) |>
-      mutate("prov" = str_to_title(prov),
-             "prov" =
-               case_when(str_detect(prov, "Avila") ~ "Ávila",
-                         str_detect(prov, "Tenerife") ~
-                           "Santa Cruz de Tenerife",
-                         str_detect(prov, "Alava|Álava") ~ "Álava/Araba",
-                         str_detect(prov, "Guipozcoa|Guipúzcoa|Gipuzkoa") ~
-                           "Guipúzcoa/Gipuzkoa",
-                         str_detect(prov, "Vizcaya|Bizkaia") ~
-                           "Vizcaya/Bizkaia",
-                         str_detect(prov, "Navarra|Nafarroa") ~
-                           "Navarra/Nafarroa",
-                         str_detect(prov, "Orense|Ourense") ~
-                           "Orense/Ourense",
-                         str_detect(prov, "La Coruña|La Coruna|Coruna|Coruña") ~
-                           "La Coruña/A Coruña",
-                         str_detect(prov, "Palmas|Palmas (Las)") ~
-                           "Las Palmas",
-                         str_detect(prov, "Rioja") ~ "La Rioja",
-                         str_detect(prov, "Valencia|València") ~
-                           "Valencia/València",
-                         str_detect(prov, "Castellón|Castellon|Castelló") ~
-                           "Castellón/Castelló",
-                         str_detect(prov, "Alicante|Alacant") ~
-                           "Alicante/Alacant",
-                         str_detect(prov, "Baleares|Balears") ~
-                           "Islas Baleares/Illes Balears",
-                         TRUE ~ prov))
+             "invalid_ballots" = as.numeric(invalid_ballots))
 
     CEB_results <-
       CEB_results |>
       bind_rows(tibble("cod_elec" = "02",
                        "date" = congress_dates$date[i],
                        "id_elec" = glue("{cod_elec}-{date}"),
-                       table))
+                       tables_pdf))
   }
 }
 CEB_results <-

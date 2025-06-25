@@ -61,6 +61,11 @@ preproc_abbrev <- function(data) {
 
 raw_global_dict_parties <-
   map_dfr(data_list, preproc_abbrev) |>
+  # otherwise, Nación Andaluza --> NA as abbrev
+  mutate("abbrev_candidacies" =
+           if_else(str_detect(str_to_upper(name_candidacies),
+                              "NACIÓN ANDALUZA|NACION ANDALUZA"),
+                   "NAND", abbrev_candidacies)) |>
   drop_na() |>
   arrange(abbrev_candidacies)
 rm(data_list)
