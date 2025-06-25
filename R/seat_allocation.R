@@ -247,12 +247,13 @@ dhondt_seats <-
     }
   }
 
-#' @title Function to calculate the allocated seats according to the Hamilton method in a given
-#' electoral district.
+#' @title Function to calculate the allocated seats according to
+#' the Hamilton method in a given electoral district.
 #'
-#' @description This function allocates seats to political parties in a given electoral district
-#' using the Hamilton method (also known as the method of largest remainders).
-#' The method first calculates an electoral quota by dividing the total number
+#' @description This function allocates seats to political parties in a
+#' given electoral district using the Hamilton method (also
+#' known as the method of largest remainders).The method first
+#' calculates an electoral quota by dividing the total number
 #' of votes (including blank votes) by the number of seats to be filled.
 #' Each party's vote count is divided by this quota to determine an initial seat
 #' allocation (using the floor of the result). Remaining seats are then assigned
@@ -293,9 +294,10 @@ dhondt_seats <-
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100, 200)
 #'
-#' seats <- hamilton_seats(candidacies = candidacies, ballots = ballots, blank_ballots = 50, threshold = 0.03)
+#' seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
+#' blank_ballots = 50, n_seats = 15, threshold = 0.03)
 #'
-#' \dontrun
+#' \dontrun{
 #'
 #' # Incorrect examples
 #'
@@ -304,8 +306,9 @@ dhondt_seats <-
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100)
 #'
-#' seats <- hamilton_seats(candidacies = candidacies, ballots = ballots, blank_ballots = 50, threshold = 0.03)
-#'
+#' seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
+#' blank_ballots = 50, threshold = 0.03)
+#' }
 #' @export
 hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
                            threshold = 0, short_version = TRUE) {
@@ -388,7 +391,8 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 
   data_filtered <- data_filtered |>
     mutate(
-      exact_seats = ballots / ((sum(ballots) + first(blank_ballots)) / n_seats), # The dividend represents the quota
+      exact_seats = ballots / ((sum(ballots) + first(blank_ballots)) / n_seats),
+      # The dividend represents the quota
       initial_seats = floor(exact_seats),
       remainder = exact_seats - initial_seats
     )
@@ -435,8 +439,8 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #'
 #' @inheritParams dhondt_seats
 #'
-#' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
-#' variables:
+#' @returns A tibble or a list of tibbles  with rows corresponding to each
+#' party including the following variables:
 #' \item{party}{aabbrev or id of the candidacies}
 #' \item{seats}{number of seats}
 #' \item{ballots}{absolute number of ballots, just in long format}
@@ -465,9 +469,10 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100, 200)
 #'
-#' seats <- webster_seats(candidacies = candidacies, ballots = ballots, blank_ballots = 50, threshold = 0.03)
+#' seats <- webster_seats(candidacies = candidacies, ballots = ballots,
+#' blank_ballots = 50, n_seats = 15, threshold = 0.03)
 #'
-#' \dontrun
+#' \dontrun{
 #'
 #' # Incorrect examples
 #'
@@ -478,7 +483,7 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #'
 #' seats <- webster_seats(candidacies = candidacies,
 #' ballots = ballots, blank_ballots = 50, threshold = 0.03)
-#'
+#'}
 #' @export
 webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
                           threshold = 0.03, short_version = TRUE) {
@@ -607,23 +612,24 @@ webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
   }
 }
 
-#' @title Function to calculate the allocated seats according to the Hill method in a given
+#' @title Function to calculate the allocated seats according to the Hill
+#' method in a given
 #' electoral district.
 #'
 #' @description This function allocates seats to political parties in a given electoral district
 #' using the Hill method (also known as the Equal Proportions method), a highest averages
 #' approach for proportional representation. Each party's total number of votes is divided
 #' by the square root of the product of the number of seats already allocated plus one and
-#' that number itself (i.e., √[n(n+1)]), producing a list of quotients. Seats are assigned
+#' that number itself (i.e., √n(n+1)), producing a list of quotients. Seats are assigned
 #' one at a time to the party with the highest quotient, repeating until all seats are allocated.
 #' Only candidacies surpassing a specified threshold (as a proportion of total votes including blank votes)
 #' are considered for allocation.
 #'
-#' @inheritParams dhont_seats
+#' @inheritParams dhondt_seats
 #'
 #' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
 #' variables:
-#' \item{candidacies}abbrev or id of the candidacies}
+#' \item{candidacies}{abbrev or id of the candidacies}
 #' \item{seats}{number of seats}
 #' \item{ballots}{absolute number of ballots, just in long format}
 #' \item{porc_seats}{percentage of seats respect to the number of seats,
@@ -651,9 +657,10 @@ webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100, 200)
 #'
-#' seats <- hills_seats(candidacies = candidacies, ballots = ballots, blank_ballots = 50, threshold = 0.03)
+#' seats <- hills_seats(candidacies = candidacies, ballots = ballots,
+#'  blank_ballots = 50, n_seats = 15, threshold = 0.03)
 #'
-#' \dontrun
+#' \dontrun{
 #'
 #' # Incorrect examples
 #'
@@ -662,8 +669,9 @@ webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100)
 #'
-#' seats <- hills_seats(candidacies = candidacies, ballots = ballots, blank_ballots = 50, threshold = 0.03)
-#'
+#' seats <- hills_seats(candidacies = candidacies, ballots = ballots,
+#' blank_ballots = 50, threshold = 0.03)
+#' }
 #' @export
 hills_seats <- function(candidacies, ballots, blank_ballots, n_seats,
                         threshold = 0.03, short_version = TRUE) {
@@ -808,8 +816,8 @@ hills_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #'
 #' @inheritParams dhondt_seats
 #'
-#' @returns A tibble or a list of tibbles  with rows corresponding to each party including the following
-#' variables:
+#' @returns A tibble or a list of tibbles  with rows corresponding to each party
+#' including the following variables:
 #' \item{candidacies}{abbrev or id of the candidacies}
 #' \item{seats}{number of seats}
 #' \item{ballots}{absolute number of ballots, just in long format}
@@ -838,9 +846,10 @@ hills_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100, 200)
 #'
-#' seats <- deans_seats(candidacies = candidacies, ballots = ballots, blank_ballots = 50, threshold = 0.03)
+#' seats <- deans_seats(candidacies = candidacies, ballots = ballots,
+#' blank_ballots = 50, n_seats = 15, threshold = 0.03)
 #'
-#' \dontrun
+#' \dontrun{
 #'
 #' # Incorrect examples
 #'
@@ -849,8 +858,9 @@ hills_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100)
 #'
-#' seats <- deans_seats(candidacies = candidacies, ballots = ballots, blank_ballots = 50, threshold = 0.03)
-#'
+#' seats <- deans_seats(candidacies = candidacies, ballots = ballots,
+#' blank_ballots = 50, threshold = 0.03)
+#'}
 #' @export
 deans_seats <- function(candidacies, ballots, blank_ballots, n_seats,
                         threshold = 0.03, short_version = TRUE) {
@@ -1034,9 +1044,10 @@ deans_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100, 200)
 #'
-#' seats <- adams_seats(candidacies = candidacies, ballots = ballots, blank_ballots = 50, threshold = 0.03)
+#' seats <- adams_seats(candidacies = candidacies, ballots = ballots,
+#' blank_ballots = 50, n_seats = 15, threshold = 0.03)
 #'
-#' \dontrun
+#' \dontrun{
 #'
 #' # Incorrect examples
 #'
@@ -1045,8 +1056,9 @@ deans_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100)
 #'
-#' seats <- adams_seats(candidacies = candidacies, ballots = ballots, blank_ballots = 50, threshold = 0.03)
-#'
+#' seats <- adams_seats(candidacies = candidacies, ballots = ballots,
+#'  blank_ballots = 50, threshold = 0.03)
+#'}
 #' @export
 adams_seats <- function(candidacies, ballots, blank_ballots, n_seats,
                         threshold = 0.03, short_version = TRUE) {
