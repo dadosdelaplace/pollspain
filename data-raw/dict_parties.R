@@ -771,5 +771,10 @@ global_dict_parties <-
                      abbrev_candidacies == "SUMAR" ~ "#ec4771",
                      abbrev_candidacies == "UPN" ~ "#2a52be",
                      TRUE ~ NA_character_))
+
+global_dict_parties <-
+  global_dict_parties |>
+  mutate(across(where(is.character), \(x) enc2utf8(x)))
+
 usethis::use_data(global_dict_parties, overwrite = TRUE,
                   compress = "xz")
