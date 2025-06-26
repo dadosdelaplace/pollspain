@@ -36,8 +36,12 @@ apportionment to be used. The allowed values are the following:
 \code{"vinton"}), \code{"Webster"} (or \code{"webster"} or
 \code{"Sainte-Lague"} or \code{"sainte-lague"}), \code{"Hill"} (or
 \code{"hill"} or \code{"Huntington-Hill"} or
-\code{"huntington-hill"}), \code{"Dean"} (or \code{"dean"}) and
-\code{"Adams"} (or \code{"adams"}) . Defaults to \code{"Hondt"}.}
+\code{"huntington-hill"}), \code{"Dean"} (or \code{"dean"}) or
+\code{"Adams"} (or \code{"adams"}) or
+\code{"Hagenbach-Bischoff"} (or \code{"hagenbach"})
+(or \code{"bischoff"}) or
+\code{"First Past the Post"} (or \code{"first"}) (or \code{"fptp"}).
+Defaults to \code{"Hondt"}.}
 
 \item{threshold}{A numerical value (between 0 and 1) indicating the
 minimal percentage of votes needed to obtain representation for a

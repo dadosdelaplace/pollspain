@@ -48,6 +48,7 @@
 #' @importFrom dplyr rename
 #' @importFrom dplyr rename_with
 #' @importFrom dplyr right_join
+#' @importFrom dplyr row_number
 #' @importFrom dplyr select
 #' @importFrom dplyr slice
 #' @importFrom dplyr slice_max
