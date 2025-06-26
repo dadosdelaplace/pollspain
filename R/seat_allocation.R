@@ -1368,11 +1368,11 @@ adams_seats <- function(candidacies, ballots, blank_ballots, n_seats,
     select(candidacies, divisor, quotient)
 
   extra_seats <- top_quotients |>
-    count(candidacies, name = "extra")
+    count(candidacies, name = "extra_seats")
 
   seats <- initial_seats |>
     left_join(extra_seats, by = "candidacies") |>
-    mutate(extra_seats = replace_na(extra, 0),
+    mutate(extra_seats = replace_na(extra_seats, 0),
            seats = initial_seats + extra_seats) |>
     arrange(desc(seats)) |>
     full_join(tibble(candidacies), by = "candidacies") |>
@@ -1395,7 +1395,7 @@ adams_seats <- function(candidacies, ballots, blank_ballots, n_seats,
                   pivot_wider(names_from = divisor,
                               values_from = quotient),
                 by = "candidacies") |>
-      select(-c(extra, initial_seats, extra_seats)) |>
+      select(-c(initial_seats, extra_seats)) |>
       set_names(c("candidacies", "ballots",
                   "porc_ballots", "seats", paste0("quotient_", 1:remaining_seats))) |>
       mutate("porc_seats" = 100*seats/sum(seats),
@@ -1411,7 +1411,7 @@ adams_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #'
 #' @description This function allocates every seat in an electoral district to the
 #' candidacy that receives the largest number of ballots. In case of a tie in the number
-#' of votes the seats will be randomnly allocated between those candidacies.
+#' of votes the seats will be randomly allocated between those candidacies.
 #'
 #' @inheritParams dhondt_seats
 #'

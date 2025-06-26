@@ -48,7 +48,7 @@ just in long format}
 \description{
 This function allocates every seat in an electoral district to the
 candidacy that receives the largest number of ballots. In case of a tie in the number
-of votes the seats will be randomnly allocated between those candidacies.
+of votes the seats will be randomly allocated between those candidacies.
 }
 \details{
 The purpose of this helper function is to be used in a general
