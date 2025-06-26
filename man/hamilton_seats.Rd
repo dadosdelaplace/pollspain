@@ -37,7 +37,7 @@ a short version of the data (just key variables) or not. Defaults
 to \code{TRUE}.}
 }
 \value{
-A tibble or a list of tibbles with rows corresponding
+A tibble with rows corresponding
 to each party including the following variables:
 \item{candidacies}{abbrev or id of the candidacies}
 \item{seats}{number of seats}

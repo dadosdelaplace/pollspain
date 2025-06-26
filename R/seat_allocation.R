@@ -263,7 +263,7 @@ dhondt_seats <-
 #'
 #' @inheritParams dhondt_seats
 #'
-#' @returns A tibble or a list of tibbles with rows corresponding
+#' @returns A tibble with rows corresponding
 #' to each party including the following variables:
 #' \item{candidacies}{abbrev or id of the candidacies}
 #' \item{seats}{number of seats}
@@ -392,6 +392,183 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
   data_filtered <- data_filtered |>
     mutate(
       exact_seats = ballots / ((sum(ballots) + first(blank_ballots)) / n_seats),
+      # The dividend represents the quota
+      initial_seats = floor(exact_seats),
+      remainder = exact_seats - initial_seats
+    )
+
+  remaining_seats <- n_seats - sum(data_filtered$initial_seats)
+
+  data_filtered <- data_filtered |>
+    arrange(desc(remainder)) |>
+    mutate(extra_seat = if_else(row_number() <= remaining_seats, 1, 0)) |>
+    mutate(seats = initial_seats + extra_seat)
+
+  seats <- data_filtered |>
+    arrange(desc(seats)) |>
+    full_join(tibble(candidacies), by = "candidacies") |>
+    mutate("seats" = if_else(is.na(seats), 0, seats))
+
+  if (short_version) {
+
+    return(seats |> select(candidacies, seats))
+
+  } else {
+
+    seats <-
+      seats |>
+      mutate("porc_seats" = 100*seats/sum(seats),
+             "porc_ballots" = 100*porc_ballots,
+             .after = ballots)
+
+    return(seats)
+  }
+}
+
+#' @title Function to calculate the allocated seats according to
+#' the Hagenbach-Bischoff method in a given electoral district.
+#'
+#' @description This function allocates seats to political parties in a
+#' given electoral district using the Hagenbach-Bischoff method (also
+#' known as the Droop-Hamilton ot simple quota largest-remainders rule).The method first
+#' calculates an electoral quota by dividing the total number
+#' of votes (including blank votes) by the number of seats to be filled plus one.
+#' Each party's vote count is divided by this quota to determine an initial seat
+#' allocation (using the floor of the result). Remaining seats are then assigned
+#' to candidacies with the largest fractional remainders until all seats are distributed.
+#' Only parties that surpass a given vote threshold (expressed as a proportion of
+#' total votes) are considered for seat allocation.
+#'
+#' @inheritParams dhondt_seats
+#'
+#' @returns A tibble with rows corresponding
+#' to each party including the following variables:
+#' \item{candidacies}{abbrev or id of the candidacies}
+#' \item{seats}{number of seats}
+#' \item{ballots}{absolute number of ballots, just in long format}
+#' \item{porc_seats}{percentage of seats respect to the number of seats,
+#' just in long format}
+#' \item{porc_ballots}{percentage of ballots respect to party ballots
+#' (including blank ballots), just in long format}
+#' \item{remainder}{remainders of the initial division that were
+#' not selected for a seat, just in long format}
+#'
+#' @details The purpose of this helper function is to be used in a general
+#' function, \code{seats_allocation()}, to calculate the seats distribution of every
+#' electoral district of a given election according to the Hagenbach-Bischoff method.
+#'
+#' @author Javier Alvarez-Liebana, Irene Bosque-Gala and David Pereiro-Pol
+#' @keywords seat_allocation
+#' @name hagenbach_bischoff_seats
+#' @import crayon
+#'
+#' @examples
+#' ## Minimal example ----------------------------------------------------------
+#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' ballots     <- c(200, 350, 100, 200)
+#'
+#' hagenbach_bischoff_seats(
+#'   candidacies   = candidacies,
+#'   ballots       = ballots,
+#'   blank_ballots = 50,
+#'   n_seats       = 15,
+#'   threshold     = 0.03
+#' )
+#'
+#' \dontrun{
+#' ## Incorrect input: vectors of different length ----------------------------
+#' hagenbach_bischoff_seats(
+#'   candidacies   = c("PP", "PSOE", "PODEMOS", "VOX"),
+#'   ballots       = c(200, 350, 100),   # <- length mismatch
+#'   blank_ballots = 50,
+#'   n_seats       = 15
+#' )
+#' }
+#' @export
+
+
+hagenbach_bischoff_seats <- function(candidacies, ballots, blank_ballots, n_seats,
+                                     threshold = 0, short_version = TRUE) {
+
+  if (length(candidacies) != length(ballots)) {
+
+    stop(red("Ups! `candidacies` and `ballots` should have the same length"))
+
+  }
+
+  if (length(unique(candidacies)) != length(candidacies)) {
+
+    stop(red("Ups! `candidacies` should contain unique values"))
+
+  }
+
+  if (any(!is.numeric(ballots) | is.na(ballots))) {
+
+    stop(red("Ups! `ballots` should be a numeric vector without missing"))
+
+  }
+
+  if (any(ballots < 0) | any(floor(ballots) != ballots)) {
+
+    stop(red("Ups! `ballots` should be a numeric vector with positive integer values"))
+
+  }
+
+  if (any(!is.numeric(blank_ballots))) {
+
+    stop(red("Ups! `blank_ballots` should be a numeric varible"))
+
+  }
+
+  if (any(blank_ballots < 0) |
+      any(floor(blank_ballots) != blank_ballots)) {
+
+    stop(red("Ups! `blank_ballots` should be a numeric variable with positive integer values"))
+
+  }
+
+  if (length(unique(blank_ballots)) > 1) {
+
+    stop(red("Ups! `blank_ballots` should be just a numeric value or a repeated numerical vector"))
+
+  }
+
+  if (any(!is.numeric(n_seats) | is.na(n_seats) | (length(n_seats) > 1))) {
+
+    stop(red("Ups! `n_seats` should be a single numerical value"))
+
+  }
+
+  if (n_seats < 0 | (floor(n_seats) != n_seats)) {
+
+    stop(red("Ups! `n_seats` should be an integer positive value"))
+
+  }
+
+  if (!is.numeric(threshold) | !between(threshold, 0, 1) |
+      is.na(threshold) | (length(threshold) > 1)) {
+
+    stop(red("Ups! `threshold` should be a single number between 0 and 1"))
+
+  }
+
+  if (!is.logical(short_version) | is.na(short_version)) {
+
+    stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
+
+  }
+
+  data <-
+    tibble(candidacies, ballots) |>
+    mutate("porc_ballots" = ballots/(sum(ballots) + first(blank_ballots)))
+
+  data_filtered <-
+    data |>
+    filter(porc_ballots >= threshold)
+
+  data_filtered <- data_filtered |>
+    mutate(
+      exact_seats = ballots / ((sum(ballots) + first(blank_ballots)) / (n_seats + 1)),
       # The dividend represents the quota
       initial_seats = floor(exact_seats),
       remainder = exact_seats - initial_seats
@@ -613,8 +790,7 @@ webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 }
 
 #' @title Function to calculate the allocated seats according to the Hill
-#' method in a given
-#' electoral district.
+#' method in a given electoral district.
 #'
 #' @description This function allocates seats to political parties in a given electoral district
 #' using the Hill method (also known as the Equal Proportions method), a highest averages
@@ -1230,6 +1406,159 @@ adams_seats <- function(candidacies, ballots, blank_ballots, n_seats,
   }
 }
 
+#' @title Function to calculate the allocated seats according to the First Past
+#' the Post method in a given electoral district.
+#'
+#' @description This function allocates every seat in an electoral district to the
+#' candidacy that receives the largest number of ballots. In case of a tie in the number
+#' of votes the seats will be randomnly allocated between those candidacies.
+#'
+#' @inheritParams dhondt_seats
+#'
+#' @returns
+##' \item{candidacies}{abbrev or id of the candidacies}
+#' \item{seats}{number of seats distributed to each party}
+#' \item{ballots}{absolute number of ballots, just in long format}
+#' \item{porc_seats}{percentage of seats respect to the number of seats,
+#' just in long format}
+#' \item{porc_ballots}{percentage of ballots respect to party ballots
+#' (including blank ballots), just in long format}
+#'
+#' @details The purpose of this helper function is to be used in a general
+#' function, \code{seats_allocation()}, to calculate the seats distribution of every
+#' electoral district of a given election according to the plurality method.
+#'
+#' @author Javier Alvarez-Liebana, Irene Bosque-Gala and David Pereiro-Pol
+#' @keywords seat_allocation
+#' @name fptp_seats
+#' @import crayon
+#'
+#' @examples
+#' ## Correct usage ------------------------------------------------------------
+#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' ballots     <- c(200, 350, 100, 200)
+#'
+#' fptp_seats(
+#'   candidacies   = candidacies,
+#'   ballots       = ballots,
+#'   blank_ballots = 50,
+#'   n_seats       = 3,
+#'   threshold     = 0.03
+#' )
+#'
+#' \dontrun{
+#' ## Incorrect input: lengths differ -----------------------------------------
+#' fptp_seats(
+#'   candidacies   = c("PP", "PSOE"),
+#'   ballots       = c(300),
+#'   blank_ballots = 10,
+#'   n_seats       = 1
+#' )
+#' }
+#' @export
+
+fptp_seats <- function(candidacies, ballots, blank_ballots,
+                       n_seats, threshold = 0.03, short_version = TRUE) {
+
+  if (length(candidacies) != length(ballots)) {
+
+    stop(red("Ups! `candidacies` and `ballots` should have the same length"))
+
+  }
+
+  if (length(unique(candidacies)) != length(candidacies)) {
+
+    stop(red("Ups! `candidacies` should contain unique values"))
+
+  }
+
+  if (any(!is.numeric(ballots) | is.na(ballots))) {
+
+    stop(red("Ups! `ballots` should be a numeric vector without missing"))
+
+  }
+
+  if (any(ballots < 0) | any(floor(ballots) != ballots)) {
+
+    stop(red("Ups! `ballots` should be a numeric vector with positive integer values"))
+
+  }
+
+  if (any(!is.numeric(blank_ballots))) {
+
+    stop(red("Ups! `blank_ballots` should be a numeric varible"))
+
+  }
+
+  if (any(blank_ballots < 0) |
+      any(floor(blank_ballots) != blank_ballots)) {
+
+    stop(red("Ups! `blank_ballots` should be a numeric variable with positive integer values"))
+
+  }
+
+  if (length(unique(blank_ballots)) > 1) {
+
+    stop(red("Ups! `blank_ballots` should be just a numeric value or a repeated numerical vector"))
+
+  }
+
+  if (any(!is.numeric(n_seats) | is.na(n_seats) | (length(n_seats) > 1))) {
+
+    stop(red("Ups! `n_seats` should be a single numerical value"))
+
+  }
+
+  if (n_seats < 0 | (floor(n_seats) != n_seats)) {
+
+    stop(red("Ups! `n_seats` should be an integer positive value"))
+
+  }
+
+  if (!is.numeric(threshold) | !between(threshold, 0, 1) |
+      is.na(threshold) | (length(threshold) > 1)) {
+
+    stop(red("Ups! `threshold` should be a single number between 0 and 1"))
+
+  }
+
+  if (!is.logical(short_version) | is.na(short_version)) {
+
+    stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
+
+  }
+
+  data <-
+    tibble(candidacies, ballots) |>
+    mutate("porc_ballots" = ballots/(sum(ballots) + first(blank_ballots)))
+
+  data_filtered <-
+    data |>
+    filter(porc_ballots >= threshold)
+
+  top_votes <- max(data_filtered$ballots)
+  tied      <- data_filtered |> filter(ballots == top_votes)
+
+  winner <- tied |> slice_sample(n = 1) # In case of a tie result
+
+  seats <- data |>
+    mutate(seats = if_else(candidacies == winner$candidacies, n_seats, 0)) |>
+    arrange(desc(seats))
+
+  if (short_version) {
+
+    return(seats |>  select(candidacies, seats))
+
+  } else {
+
+    seats <- seats |>
+      mutate("porc_seat" = 100*seats/sum(seats), .after = seats)
+
+    return(seats)
+
+  }
+}
+
 #' @title Function to compute the allocated seats according to the
 #' chosen method for a given electoral districts.
 #'
@@ -1241,8 +1570,12 @@ adams_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' \code{"vinton"}), \code{"Webster"} (or \code{"webster"} or
 #' \code{"Sainte-Lague"} or \code{"sainte-lague"}), \code{"Hill"} (or
 #' \code{"hill"} or \code{"Huntington-Hill"} or
-#' \code{"huntington-hill"}), \code{"Dean"} (or \code{"dean"}) and
-#' \code{"Adams"} (or \code{"adams"}) . Defaults to \code{"Hondt"}.
+#' \code{"huntington-hill"}), \code{"Dean"} (or \code{"dean"}) or
+#' \code{"Adams"} (or \code{"adams"}) or
+#' \code{"Hagenbach-Bischoff"} (or \code{"hagenbach"})
+#' (or \code{"bischoff"}) or
+#' \code{"First Past the Post"} (or \code{"first"}) (or \code{"fptp"}).
+#' Defaults to \code{"Hondt"}.
 #'
 #' @returns A tibble with rows corresponding to each party including
 #' the following variables:
@@ -1361,7 +1694,9 @@ seat_allocation <-
                       if_else(method %in% c("webster", "sainte-lague"), "hamilton",
                               if_else(method %in% c("hill", "huntington-hill"), "hill",
                                       if_else(method %in% c("dean"), "dean",
-                                              if_else(method %in% c("adams"), "adams", method))))))
+                                              if_else(method %in% c("adams"), "adams",
+                                                      if_else(method %in% c("hagenbach", "bischoff"), "hagenbach",
+                                                              if_else(method %in% c("first, fptp"), "first", method))))))))
     method <- unique(method)
 
     apportion_fun <-
@@ -1370,11 +1705,12 @@ seat_allocation <-
         switch(x,
                "hondt" = dhondt_seats, "hamilton" = hamilton_seats,
                "webster" = webster_seats, "hill" = hill_seats,
-               "dean" = deans_seats, "adams" = adams_seats) })
+               "dean" = deans_seats, "adams" = adams_seats,
+               "hagenbach" = hagenbach_bischoff_seats, "first" = fptp_seats) })
 
     if (any(apportion_fun |> map_lgl(function(x) { is.null(x) }))) {
 
-      stop(red("Ups! `method` argument should be one of the following options: 'D'Hondt', 'd'hondt', 'Hondt', 'hondt', 'Hamilton', 'hamilton', 'Vinton', 'vinton', 'Webster', 'webster', 'sainte-lague', 'Sainte-Lague', 'Hill', 'hill', 'Huntington-Hill', 'huntington-hill', 'Dean', 'dean', 'Adams', 'adams'"))
+      stop(red("Ups! `method` argument should be one of the following options: 'D'Hondt', 'd'hondt', 'Hondt', 'hondt', 'Hamilton', 'hamilton', 'Vinton', 'vinton', 'Webster', 'webster', 'sainte-lague', 'Sainte-Lague', 'Hill', 'hill', 'Huntington-Hill', 'huntington-hill', 'Dean', 'dean', 'Adams', 'adams', 'hagenbach', 'bischoff', 'first', 'fptp'"))
 
     }
 
