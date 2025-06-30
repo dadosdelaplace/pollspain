@@ -42,6 +42,8 @@ the following variables:
 \item{candidacies}{abbrev or id of the candidacies}
 \item{seats}{number of seats}
 \item{ballots}{absolute number of ballots, just in long format}
+\item{porc_seats}{percentage of seats respect to the number of seats,
+just in long format}
 \item{porc_ballots}{percentage of ballots respect to party ballots
 (including blank ballots), just in long format}
 \item{quotient_x}{intermediate quotients of the allocation process}
@@ -75,7 +77,7 @@ electoral district of a given election according to the D'Hont method.
 # Correct examples
 
 # Seats distribution with D'Hondt method for given vectors of
-# parties and votes without the remainder quotients
+# parties and ballots without the remainder quotients
 # (threshold 0.03 by default) in a short version
 candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 ballots <- c(200, 350, 100, 200)
