@@ -8,6 +8,7 @@
 <url><loc>http://javieralvarezliebana.es/pollspain/index.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/news/index.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/CEB_results.html</loc></url>
+<url><loc>http://javieralvarezliebana.es/pollspain/reference/adams_seats.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/aggregate_election_data.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/apportionment_methods.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/cod_INE_ccaa.html</loc></url>
@@ -15,10 +16,15 @@
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/cod_INE_prov.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/cod_INE_prov_ccaa.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/dates_elections_spain.html</loc></url>
+<url><loc>http://javieralvarezliebana.es/pollspain/reference/deans_seats.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/dhondt_seats.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/extract_code.html</loc></url>
+<url><loc>http://javieralvarezliebana.es/pollspain/reference/fptp_seats.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/get_election_data.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/global_dict_parties.html</loc></url>
+<url><loc>http://javieralvarezliebana.es/pollspain/reference/hagenbach_bischoff_seats.html</loc></url>
+<url><loc>http://javieralvarezliebana.es/pollspain/reference/hamilton_seats.html</loc></url>
+<url><loc>http://javieralvarezliebana.es/pollspain/reference/hills_seats.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/import_candidacies_data.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/import_mun_census_data.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/import_poll_station_data.html</loc></url>
@@ -29,5 +35,6 @@
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/summary_election_data.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/total_seats_spain.html</loc></url>
 <url><loc>http://javieralvarezliebana.es/pollspain/reference/type_to_code_election.html</loc></url>
+<url><loc>http://javieralvarezliebana.es/pollspain/reference/webster_seats.html</loc></url>
 </urlset>
 
