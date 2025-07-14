@@ -242,7 +242,7 @@ get_election_data <-
     ambiguous_years <- intersect(allowed_elections$year, 2019)
     chosen_dates <- NULL
 
-    if (length(ambiguous_years) > 0 & is.null(date)) {
+    if (length(ambiguous_years) > 0) {
 
       normal_years <- setdiff(year, 2019)
       normal_dates <- dates_elections_spain |>
@@ -813,6 +813,22 @@ aggregate_election_data <-
 #' @inheritParams import_candidacies_data
 #' @inheritParams get_election_data
 #' @inheritParams aggregate_election_data
+#' @param method A string vector providing the methods of
+#' apportionment to be used. The allowed values are the following:
+#' \code{"D'Hondt"} (or \code{"Hondt"} or \code{"hondt"}),
+#' \code{"Hamilton"} (or \code{"hamilton"} or \code{"Vinton"} or
+#' \code{"vinton"}), \code{"Webster"} (or \code{"webster"} or
+#' \code{"Sainte-Lague"} or \code{"sainte-lague"}), \code{"Hill"} (or
+#' \code{"hill"} or \code{"Huntington-Hill"} or
+#' \code{"huntington-hill"}), \code{"Dean"} (or \code{"dean"}) or
+#' \code{"Adams"} (or \code{"adams"}) or
+#' \code{"Hagenbach-Bischoff"} (or \code{"hagenbach"})
+#' (or \code{"bischoff"}) or
+#' \code{"First Past the Post"} (or \code{"first"}) (or \code{"fptp"}).
+#' Defaults to \code{"Hondt"}.
+#' @param threshold A numerical value (between 0 and 1) indicating the
+#' minimal percentage of votes needed to obtain representation for a
+#' given electoral district. Defaults to \code{0.03}.
 #' @param CERA_remove Flag to indicate whether it should be removed
 #' the ballots related to CERA constituencies. Defaults to
 #' \code{FALSE}.
@@ -862,6 +878,7 @@ aggregate_election_data <-
 #' of the candidacies.}
 #' \item{ballots}{number of ballots obtained for each candidacy at
 #' each level section.}
+#' \item{seats}{number of seats}
 #'
 #' @details This function chains the two lower-level helpers \code{get_election_data()},
 #' which imports and cleans polling-station and candidacy ballots, and
@@ -946,7 +963,8 @@ aggregate_election_data <-
 #' @export
 summary_election_data <-
   function(type_elec, year = NULL, date = NULL,
-           level = "all", by_parties = TRUE,
+           level = "all", by_parties = TRUE, method = NULL,
+           threshold = 0.03,
            short_version = TRUE, CERA_remove = FALSE,
            filter_porc_ballots = NA, filter_candidacies = NA,
            prec_round = 3,
@@ -1144,7 +1162,7 @@ summary_election_data <-
 
         summary_data <-
           summary_data |>
-          select(-any_of(c("name_candidacies_nat", col_id_candidacies[["id_nat"]]))) |>
+          select(-any_of(c("name_candidacies_nat"))) |> # , col_id_candidacies[["id_nat"]] We want id_candidacies nat to appear at any level
           relocate(name_candidacies, .after = col_abbrev_candidacies)
 
       }
@@ -1205,6 +1223,41 @@ summary_election_data <-
 
     # collect
     summary_data <- summary_data |> collect()
+
+    if (!is.null(method)){
+
+      col_id_candidacies <- "id_candidacies_nat"
+      col_blank_ballots <- "blank_ballots"
+      col_id_electoral_district <- "id_INE_prov"
+      col_ballots <- "ballots"
+
+      id_election <- summary_data |>
+        pull(.data[[col_id_elec]]) |>
+        first()
+
+      nseats_year <- total_seats_spain |>
+        filter(.data[[col_id_elec]] == id_election) |>
+        select(.data[[col_id_electoral_district]], nseats)
+
+      summary_data <- summary_data |>
+        left_join(nseats_year, by = col_id_electoral_district)
+
+      seats_results <- summary_data |>
+        group_by(.data[[col_id_electoral_district]]) |>
+        reframe(seat_allocation(candidacies = .data[[col_id_candidacies]],
+                              ballots = .data[[col_ballots]],
+                              blank_ballots = .data[[col_blank_ballots]],
+                              n_seats = first(nseats),
+                              threshold = threshold)) |>
+        ungroup() |>
+        select(.data[[col_id_electoral_district]], candidacies, seats)
+
+      summary_data <- summary_data |>
+        left_join(seats_results, by = c(col_id_electoral_district,
+                                        "id_candidacies_nat" = "candidacies")) |>
+        select(-nseats)
+
+    }
 
     # clean temp dir
     unlink(temp_db_dir, recursive = TRUE, force = TRUE)

@@ -241,6 +241,12 @@ global_dict_parties <-
            if_else(str_detect(abbrev_candidacies, "SUMAR"),
                    "SUMAR", abbrev_candidacies),
          "abbrev_candidacies" =
+           if_else(str_detect(abbrev_candidacies, "MAREA|PODEMOS-EN"),
+                   "ENMAREA", abbrev_candidacies),
+         "abbrev_candidacies" =
+           if_else(str_detect(abbrev_candidacies, "PODEMOS-EU$|PODEMOS-EU-$"),
+                   "EN COMUN", abbrev_candidacies),
+         "abbrev_candidacies" =
            if_else(str_detect(abbrev_candidacies, "PODEMOS"),
                    "PODEMOS", abbrev_candidacies),
          "abbrev_candidacies" =
@@ -346,6 +352,9 @@ global_dict_parties <-
          "name_candidacies" =
            if_else(abbrev_candidacies == "UPN-PP",
                    "UNION DEL PUEBLO NAVARRO-PARTIDO POPULAR", name_candidacies),
+         "abbrev_candidacies" =
+           if_else(abbrev_candidacies == "UPN-PP",
+                   "PP", abbrev_candidacies),
          "abbrev_candidacies" =
            if_else(abbrev_candidacies == "UPEC-IU", "IU", abbrev_candidacies),
          "name_candidacies" =

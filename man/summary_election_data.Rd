@@ -11,6 +11,8 @@ summary_election_data(
   date = NULL,
   level = "all",
   by_parties = TRUE,
+  method = NULL,
+  threshold = 0.03,
   short_version = TRUE,
   CERA_remove = FALSE,
   filter_porc_ballots = NA,
@@ -47,6 +49,24 @@ the data is to be provided. The allowed values are the following:
 \item{by_parties}{A flag indicates whether user wants a summary by
 candidacies/parties or just global results at given \code{level}.
 Defaults to \code{TRUE}.}
+
+\item{method}{A string vector providing the methods of
+apportionment to be used. The allowed values are the following:
+\code{"D'Hondt"} (or \code{"Hondt"} or \code{"hondt"}),
+\code{"Hamilton"} (or \code{"hamilton"} or \code{"Vinton"} or
+\code{"vinton"}), \code{"Webster"} (or \code{"webster"} or
+\code{"Sainte-Lague"} or \code{"sainte-lague"}), \code{"Hill"} (or
+\code{"hill"} or \code{"Huntington-Hill"} or
+\code{"huntington-hill"}), \code{"Dean"} (or \code{"dean"}) or
+\code{"Adams"} (or \code{"adams"}) or
+\code{"Hagenbach-Bischoff"} (or \code{"hagenbach"})
+(or \code{"bischoff"}) or
+\code{"First Past the Post"} (or \code{"first"}) (or \code{"fptp"}).
+Defaults to \code{"Hondt"}.}
+
+\item{threshold}{A numerical value (between 0 and 1) indicating the
+minimal percentage of votes needed to obtain representation for a
+given electoral district. Defaults to \code{0.03}.}
 
 \item{short_version}{Flag to indicate whether it should be returned
 a short version of the data (just key variables) or not.
@@ -112,6 +132,7 @@ claims at xxx level. It is only provided for long version.}
 of the candidacies.}
 \item{ballots}{number of ballots obtained for each candidacy at
 each level section.}
+\item{seats}{number of seats}
 }
 \description{
 pending Import, preprocess and aggregate election data at the same time for

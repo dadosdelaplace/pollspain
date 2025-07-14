@@ -10,7 +10,6 @@ hagenbach_bischoff_seats(
   ballots,
   blank_ballots,
   n_seats,
-  threshold = 0,
   short_version = TRUE
 )
 }
@@ -27,10 +26,6 @@ blank ballots (integer positive values).}
 
 \item{n_seats}{An integer positive value indicating the number of
 seats that are going to distributed for a given electoral district.}
-
-\item{threshold}{A numerical value (between 0 and 1) indicating the
-minimal percentage of votes needed to obtain representation for a
-given electoral district. Defaults to \code{0.03}.}
 
 \item{short_version}{Flag to indicate whether it should be returned
 a short version of the data (just key variables) or not. Defaults
@@ -75,8 +70,7 @@ hagenbach_bischoff_seats(
   candidacies   = candidacies,
   ballots       = ballots,
   blank_ballots = 50,
-  n_seats       = 15,
-  threshold     = 0.03
+  n_seats       = 15
 )
 
 \dontrun{

@@ -51,12 +51,19 @@ just in long format}
 \description{
 This function allocates seats to political parties in a given electoral district
 using the Adams method, a highest averages method for proportional representation
-that favors smaller candidacies. In this method, each party’s vote total is divided
+that favors smaller candidacies. In this method, the first quotient for every eligible party
+is treated as "infinite", each party will receive a seat initially if possible, so a party
+cannot receive a second seat until all other eligible parties
+have had the chance at a first seat. After that, each party’s vote total is divided
 by a sequence of integers starting from 1 (i.e., 1, 2, 3, ...), generating a series
-of quotients. Seats are allocated one at a time to the highest quotients until all
-seats are distributed. Only parties that surpass a specified vote threshold
+of quotients. The remaining seats are allocated one at a time to the highest quotients
+until all seats are distributed. Only parties that surpass a specified vote threshold
 (expressed as a proportion of total votes, including blank votes) are eligible
 for seat allocation.
+
+If there are more eligible parties than seats, in this package, in
+order to ensure reproducibility, ties will be broken by ordering
+from highest to lowest number of absolute votes.
 }
 \details{
 The purpose of this helper function is to be used in a general

@@ -128,7 +128,12 @@ dhondt_seats <-
 
     if (length(unique(candidacies)) != length(candidacies)) {
 
-      stop(red("Ups! `candidacies` should contain unique values"))
+      data <-
+        tibble(candidacies, ballots) |>
+        summarise(ballots = sum(ballots, na.rm = TRUE), .by = candidacies)
+
+      candidacies <- data |> pull(candidacies)
+      ballots <- data |> pull(ballots)
 
     }
 
@@ -261,7 +266,18 @@ dhondt_seats <-
 #' Only parties that surpass a given vote threshold (expressed as a proportion of
 #' total votes) are considered for seat allocation.
 #'
-#' @inheritParams dhondt_seats
+#' @param candidacies A vector containing one of the following
+#' variable: unique codes or abbreviations of the candidacies
+#' that participated in the election.
+#' @param ballots A vector containing the absolute number of ballots
+#' (integer positive values) received by each candidacies
+#' @param blank_ballots A numerical value indicating the number of
+#' blank ballots (integer positive values).
+#' @param n_seats An integer positive value indicating the number of
+#' seats that are going to distributed for a given electoral district.
+#' @param short_version Flag to indicate whether it should be returned
+#' a short version of the data (just key variables) or not. Defaults
+#' to \code{TRUE}.
 #'
 #' @returns A tibble with rows corresponding
 #' to each party including the following variables:
@@ -295,7 +311,7 @@ dhondt_seats <-
 #' ballots <- c(200, 350, 100, 200)
 #'
 #' seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
-#' blank_ballots = 50, n_seats = 15, threshold = 0.03)
+#' blank_ballots = 50, n_seats = 15)
 #'
 #' \dontrun{
 #'
@@ -311,7 +327,7 @@ dhondt_seats <-
 #' }
 #' @export
 hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
-                           threshold = 0, short_version = TRUE) {
+                           short_version = TRUE) {
 
   if (length(candidacies) != length(ballots)) {
 
@@ -321,7 +337,12 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 
   if (length(unique(candidacies)) != length(candidacies)) {
 
-    stop(red("Ups! `candidacies` should contain unique values"))
+    data <-
+      tibble(candidacies, ballots) |>
+      summarise(ballots = sum(ballots, na.rm = TRUE), .by = candidacies)
+
+    candidacies <- data |> pull(candidacies)
+    ballots <- data |> pull(ballots)
 
   }
 
@@ -368,13 +389,6 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 
   }
 
-  if (!is.numeric(threshold) | !between(threshold, 0, 1) |
-      is.na(threshold) | (length(threshold) > 1)) {
-
-    stop(red("Ups! `threshold` should be a single number between 0 and 1"))
-
-  }
-
   if (!is.logical(short_version) | is.na(short_version)) {
 
     stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
@@ -386,8 +400,7 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
     mutate("porc_ballots" = ballots/(sum(ballots) + first(blank_ballots)))
 
   data_filtered <-
-    data |>
-    filter(porc_ballots >= threshold)
+    data
 
   data_filtered <- data_filtered |>
     mutate(
@@ -439,7 +452,7 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' Only parties that surpass a given vote threshold (expressed as a proportion of
 #' total votes) are considered for seat allocation.
 #'
-#' @inheritParams dhondt_seats
+#' @inheritParams hamilton_seats
 #'
 #' @returns A tibble with rows corresponding
 #' to each party including the following variables:
@@ -471,8 +484,7 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #'   candidacies   = candidacies,
 #'   ballots       = ballots,
 #'   blank_ballots = 50,
-#'   n_seats       = 15,
-#'   threshold     = 0.03
+#'   n_seats       = 15
 #' )
 #'
 #' \dontrun{
@@ -485,10 +497,8 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' )
 #' }
 #' @export
-
-
 hagenbach_bischoff_seats <- function(candidacies, ballots, blank_ballots, n_seats,
-                                     threshold = 0, short_version = TRUE) {
+                                     short_version = TRUE) {
 
   if (length(candidacies) != length(ballots)) {
 
@@ -498,7 +508,12 @@ hagenbach_bischoff_seats <- function(candidacies, ballots, blank_ballots, n_seat
 
   if (length(unique(candidacies)) != length(candidacies)) {
 
-    stop(red("Ups! `candidacies` should contain unique values"))
+    data <-
+      tibble(candidacies, ballots) |>
+      summarise(ballots = sum(ballots, na.rm = TRUE), .by = candidacies)
+
+    candidacies <- data |> pull(candidacies)
+    ballots <- data |> pull(ballots)
 
   }
 
@@ -545,13 +560,6 @@ hagenbach_bischoff_seats <- function(candidacies, ballots, blank_ballots, n_seat
 
   }
 
-  if (!is.numeric(threshold) | !between(threshold, 0, 1) |
-      is.na(threshold) | (length(threshold) > 1)) {
-
-    stop(red("Ups! `threshold` should be a single number between 0 and 1"))
-
-  }
-
   if (!is.logical(short_version) | is.na(short_version)) {
 
     stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
@@ -563,8 +571,7 @@ hagenbach_bischoff_seats <- function(candidacies, ballots, blank_ballots, n_seat
     mutate("porc_ballots" = ballots/(sum(ballots) + first(blank_ballots)))
 
   data_filtered <-
-    data |>
-    filter(porc_ballots >= threshold)
+    data
 
   data_filtered <- data_filtered |>
     mutate(
@@ -673,7 +680,12 @@ webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 
   if (length(unique(candidacies)) != length(candidacies)) {
 
-    stop(red("Ups! `candidacies` should contain unique values"))
+    data <-
+      tibble(candidacies, ballots) |>
+      summarise(ballots = sum(ballots, na.rm = TRUE), .by = candidacies)
+
+    candidacies <- data |> pull(candidacies)
+    ballots <- data |> pull(ballots)
 
   }
 
@@ -833,7 +845,7 @@ webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100, 200)
 #'
-#' seats <- hills_seats(candidacies = candidacies, ballots = ballots,
+#' seats <- hill_seats(candidacies = candidacies, ballots = ballots,
 #'  blank_ballots = 50, n_seats = 15, threshold = 0.03)
 #'
 #' \dontrun{
@@ -845,11 +857,11 @@ webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100)
 #'
-#' seats <- hills_seats(candidacies = candidacies, ballots = ballots,
+#' seats <- hill_seats(candidacies = candidacies, ballots = ballots,
 #' blank_ballots = 50, threshold = 0.03)
 #' }
 #' @export
-hills_seats <- function(candidacies, ballots, blank_ballots, n_seats,
+hill_seats <- function(candidacies, ballots, blank_ballots, n_seats,
                         threshold = 0.03, short_version = TRUE) {
 
   if (length(candidacies) != length(ballots)) {
@@ -860,7 +872,12 @@ hills_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 
   if (length(unique(candidacies)) != length(candidacies)) {
 
-    stop(red("Ups! `candidacies` should contain unique values"))
+    data <-
+      tibble(candidacies, ballots) |>
+      summarise(ballots = sum(ballots, na.rm = TRUE), .by = candidacies)
+
+    candidacies <- data |> pull(candidacies)
+    ballots <- data |> pull(ballots)
 
   }
 
@@ -1049,7 +1066,12 @@ deans_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 
   if (length(unique(candidacies)) != length(candidacies)) {
 
-    stop(red("Ups! `candidacies` should contain unique values"))
+    data <-
+      tibble(candidacies, ballots) |>
+      summarise(ballots = sum(ballots, na.rm = TRUE), .by = candidacies)
+
+    candidacies <- data |> pull(candidacies)
+    ballots <- data |> pull(ballots)
 
   }
 
@@ -1181,12 +1203,19 @@ deans_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #'
 #' @description This function allocates seats to political parties in a given electoral district
 #' using the Adams method, a highest averages method for proportional representation
-#' that favors smaller candidacies. In this method, each party’s vote total is divided
+#' that favors smaller candidacies. In this method, the first quotient for every eligible party
+#' is treated as "infinite", each party will receive a seat initially if possible, so a party
+#' cannot receive a second seat until all other eligible parties
+#' have had the chance at a first seat. After that, each party’s vote total is divided
 #' by a sequence of integers starting from 1 (i.e., 1, 2, 3, ...), generating a series
-#' of quotients. Seats are allocated one at a time to the highest quotients until all
-#' seats are distributed. Only parties that surpass a specified vote threshold
+#' of quotients. The remaining seats are allocated one at a time to the highest quotients
+#' until all seats are distributed. Only parties that surpass a specified vote threshold
 #' (expressed as a proportion of total votes, including blank votes) are eligible
 #' for seat allocation.
+#'
+#' If there are more eligible parties than seats, in this package, in
+#' order to ensure reproducibility, ties will be broken by ordering
+#' from highest to lowest number of absolute votes.
 #'
 #' @inheritParams dhondt_seats
 #'
@@ -1247,7 +1276,12 @@ adams_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 
   if (length(unique(candidacies)) != length(candidacies)) {
 
-    stop(red("Ups! `candidacies` should contain unique values"))
+    data <-
+      tibble(candidacies, ballots) |>
+      summarise(ballots = sum(ballots, na.rm = TRUE), .by = candidacies)
+
+    candidacies <- data |> pull(candidacies)
+    ballots <- data |> pull(ballots)
 
   }
 
@@ -1468,7 +1502,12 @@ fptp_seats <- function(candidacies, ballots, blank_ballots,
 
   if (length(unique(candidacies)) != length(candidacies)) {
 
-    stop(red("Ups! `candidacies` should contain unique values"))
+    data <-
+      tibble(candidacies, ballots) |>
+      summarise(ballots = sum(ballots, na.rm = TRUE), .by = candidacies)
+
+    candidacies <- data |> pull(candidacies)
+    ballots <- data |> pull(ballots)
 
   }
 
@@ -1619,12 +1658,6 @@ seat_allocation <-
 
     }
 
-    if (length(unique(candidacies)) != length(candidacies)) {
-
-      stop(red("Ups! `candidacies` should contain unique values"))
-
-    }
-
     if (any(!is.numeric(ballots) | is.na(ballots))) {
 
       stop(red("Ups! `ballots` should be a numeric vector without missing"))
@@ -1691,7 +1724,7 @@ seat_allocation <-
     method <-
       if_else(method %in% c("d'hondt", "hondt"), "hondt",
               if_else(method %in% c("hamilton", "vinton"), "hamilton",
-                      if_else(method %in% c("webster", "sainte-lague"), "hamilton",
+                      if_else(method %in% c("webster", "sainte-lague"), "webster",
                               if_else(method %in% c("hill", "huntington-hill"), "hill",
                                       if_else(method %in% c("dean"), "dean",
                                               if_else(method %in% c("adams"), "adams",
@@ -1714,14 +1747,29 @@ seat_allocation <-
 
     }
 
-    seats_results <-
-      apportion_fun |>
-      map2_dfr(method, function(x, y) {
-        x(candidacies = candidacies, ballots = ballots,
-          blank_ballots = blank_ballots, n_seats = n_seats,
-          threshold = threshold, short_version = short_version) |>
-          mutate("method" = y)}) |>
-      relocate(method, .after = candidacies)
+    if (method %in% c("hamilton", "hagenbach")){
+
+      seats_results <-
+        apportion_fun |>
+        map2_dfr(method, function(x, y) {
+          x(candidacies = candidacies, ballots = ballots,
+            blank_ballots = blank_ballots, n_seats = n_seats,
+            short_version = short_version) |>
+            mutate("method" = y)}) |>
+        relocate(method, .after = candidacies)
+
+    } else {
+
+      seats_results <-
+        apportion_fun |>
+        map2_dfr(method, function(x, y) {
+          x(candidacies = candidacies, ballots = ballots,
+            blank_ballots = blank_ballots, n_seats = n_seats,
+            threshold = threshold, short_version = short_version) |>
+            mutate("method" = y)}) |>
+        relocate(method, .after = candidacies)
+
+    }
 
     return(seats_results)
   }
