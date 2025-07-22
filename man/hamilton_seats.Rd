@@ -65,14 +65,18 @@ electoral district of a given election according to the Hamilton method.
 
 ## Correct examples
 
-## Seats distribution with Hamilton method for given vectors of candidacies and ballots
-## without the remainder quotients
+## Seats distribution with Hamilton method for given vectors of
+## candidacies and ballots without the remainder quotients
 
 candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 ballots <- c(200, 350, 100, 200)
 
 seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
-blank_ballots = 50, n_seats = 15)
+                       blank_ballots = 50, n_seats = 15)
+
+# Same results in a long version (providing quotients)
+seats <- hamilton_seats(candidacies, ballots, blank_ballots = 50,
+                      n_seats = 15, short_version = FALSE)
 
 \dontrun{
 
@@ -84,7 +88,27 @@ candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 ballots <- c(200, 350, 100)
 
 seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
-blank_ballots = 50, threshold = 0.03)
+blank_ballots = 50)
+
+# Ballots with missing values
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c(200, 350, NA)
+seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50,)
+
+# Ballots with char values
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c("200", "350", "100")
+seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50)
+
+# Invalid argument
+
+candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+ballots <- c(200, 350, 100, 200)
+seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50, threshold = 0.05)
+
 }
 }
 \author{

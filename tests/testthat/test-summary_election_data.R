@@ -207,6 +207,25 @@ test_that("summary_elections_data works", {
                                function(x) { x > 1.01 | x < 0.99})) |>
                  nrow(), 0)
 
+  # Correct seats
+
+  random_dates <-
+    sample(x = as_date(c("1982-10-28", "1986-06-22", "1989-10-29", "1993-06-06",
+                         "1996-03-03", "2000-03-12", "2004-03-14", "2008-03-09",
+                         "2011-11-20", "2016-06-26", "2019-04-28",
+                         "2019-11-10", "2023-07-24")), size = 1, # "2015-12-20" solve and add 2015
+           replace = FALSE)
+  expect_equal(summary_election_data(type_elec = "congress",
+                                     date = random_dates,
+                                     by_parties = TRUE,
+                                     level = "prov",
+                                     method = sample(x = c("hondt", "hamilton", "vinton", "webster",
+                                                           "sainte-lague", "hill", "huntington-hill",
+                                                           "dean", "adams", "hagenbach", "fptp"), size = 1),
+                                     verbose = FALSE) |>
+                 summarise("total_seats" = sum(seats), .by = id_elec) |>
+                filter(total_seats != 350) |>  nrow(), 0)
+
   # is tibble?
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,

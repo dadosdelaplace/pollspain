@@ -75,11 +75,60 @@ particular election) for a set of apportionment methods.
 
 ##Correct examples
 
+## Seats distribution with Hill method for given vectors of candidacies and ballots
+## without the remainder quotients
+
+candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+ballots <- c(200, 350, 100, 200)
+
+seats <- seat_allocation(method = "hill", candidacies = candidacies,
+                        ballots = ballots, blank_ballots = 50,
+                        n_seats = 15, threshold = 0.03)
+
+# Same results in a long version (providing quotients)
+seats <- seat_allocation(method = "hill", candidacies = candidacies,
+                        ballots = ballots, blank_ballots = 50,
+                        n_seats = 15, threshold = 0.03, short_version = FALSE)
+
+# Adams with threshold 0.05
+seats <- seat_allocation(method = "adams",candidacies, ballots,
+                        blank_ballots = 50, n_seats = 5, threshold = 0.05)
+
+# A very high threshold that only one party meets in Dean method
+seats <- seat_allocation(method = "dean",candidacies, ballots,
+                        blank_ballots = 50, n_seats = 5, threshold = 0.3)
+
 \dontrun{
 
 # ----
 # Incorrect examples
 # ----
+
+# Different length of candidacies and ballots
+
+candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+ballots <- c(200, 350, 100)
+
+seats <- seat_allocation(method = "hill", candidacies = candidacies,
+ballots = ballots, blank_ballots = 50, threshold = 0.03)
+
+ # Ballots with missing values
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c(200, 350, NA)
+seats <- seat_allocation(method = "hagenbach", candidacies = candidacies,
+ballots = ballots, blank_ballots = 50)
+
+# Ballots with char values
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c("200", "350", "100")
+seats <- seat_allocation(method = "hamilton", candidacies = candidacies,
+ballots = ballots, blank_ballots = 50)
+
+# Threshold should be a numerical value between 0 and 1
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c(200, 350, 100)
+seats <- seat_allocation(method = "webster", candidacies = candidacies,
+ballots = ballots, blank_ballots = 50, threshold = 3)
 
 }
 }

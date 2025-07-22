@@ -178,6 +178,18 @@ summary_prov <-
                          short_version = FALSE,
                          CERA_remove = TRUE)
 
+# Summary 2023 election  data at prov level, aggregating the
+# candidacies ballots, in a long version, calculating the number
+# of seats for each party in each province and filtering ballots
+# above 45\% (percentage between 0 and 100)
+
+summary_prov <-
+  summary_election_data(type_elec = "congress", year = 2023,
+                        date = "2016-06-26", level = "prov",
+                        short_version = FALSE,
+                        method = "d'hondt",
+                        filter_porc_ballots = 45)
+
 # Summary 2023 election data at mun level, aggregating the
 # candidacies ballots, in a long version, and filtering ballots
 # above 45\% (percentage between 0 and 100) and just PP and PSOE
@@ -195,8 +207,26 @@ summary_mun <-
 
 # Wrong examples
 
+# Invalid election type: "national" is not a valid election type
+summary_election_data(type_elec = "national", year = 2019)
+
+# Invalid date format: date should be in \%Y-\%m-\%d format
+summary_election_data(type_elec = "congress", date = "26-06-2016")
+
+# Invalid short version flag: short_version should be a
+# logical variable
+summary_election_data(type_elec = "congress", year = 2019,
+                  short_version = "yes")
+
 # Invalid aggregation level
 summary_election_data("congress", 2019, level = "district")
+
+# Invalid method
+summary_election_data("congress", 2019, method = "don")
+
+# threshold falls outside the valid range of 0 to 1
+summary_election_data("congress", 2019, method = "dhondt",
+                       threshold = 1.3)
 
 # filter_porc_ballots outside range 0 from 100
 summary_election_data("congress", 2019,
@@ -212,8 +242,6 @@ summary_election_data("congress", 2019,
                       by_parties = FALSE,
                       filter_candidacies = c("PP", "PSOE"))
 
-# Wrong election type
-summary_election_data("national", 2019)
 }
 
 }

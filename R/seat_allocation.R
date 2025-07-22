@@ -87,7 +87,7 @@
 #' # Incorrect examples
 #' # ----
 #'
-#' # Different length of candidacies
+#' # Different length of candidacies and ballots vectors
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100)
 #' seats <- dhondt_seats(candidacies = candidacies, ballots = ballots,
@@ -304,14 +304,18 @@ dhondt_seats <-
 #'
 #' ## Correct examples
 #'
-#' ## Seats distribution with Hamilton method for given vectors of candidacies and ballots
-#' ## without the remainder quotients
+#' ## Seats distribution with Hamilton method for given vectors of
+#' ## candidacies and ballots without the remainder quotients
 #'
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 #' ballots <- c(200, 350, 100, 200)
 #'
 #' seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
-#' blank_ballots = 50, n_seats = 15)
+#'                        blank_ballots = 50, n_seats = 15)
+#'
+#' # Same results in a long version (providing quotients)
+#' seats <- hamilton_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 15, short_version = FALSE)
 #'
 #' \dontrun{
 #'
@@ -323,7 +327,27 @@ dhondt_seats <-
 #' ballots <- c(200, 350, 100)
 #'
 #' seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
-#' blank_ballots = 50, threshold = 0.03)
+#' blank_ballots = 50)
+#'
+#' # Ballots with missing values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, NA)
+#' seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,)
+#'
+#' # Ballots with char values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c("200", "350", "100")
+#' seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50)
+#'
+#' # Invalid argument
+#'
+#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' ballots <- c(200, 350, 100, 200)
+#' seats <- hamilton_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50, threshold = 0.05)
+#'
 #' }
 #' @export
 hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
@@ -476,25 +500,53 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' @import crayon
 #'
 #' @examples
-#' ## Minimal example ----------------------------------------------------------
-#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
-#' ballots     <- c(200, 350, 100, 200)
+#' ## Correct examples
 #'
-#' hagenbach_bischoff_seats(
-#'   candidacies   = candidacies,
-#'   ballots       = ballots,
-#'   blank_ballots = 50,
-#'   n_seats       = 15
-#' )
+#' ## Seats distribution with Hamilton method for given vectors of
+#' ## candidacies and ballots without the remainder quotients
+#'
+#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' ballots <- c(200, 350, 100, 200)
+#'
+#' seats <- hagenbach_bischoff_seats(candidacies = candidacies,
+#'                                 ballots = ballots, blank_ballots = 50,
+#'                                 n_seats = 15)
+#'
+#' # Same results in a long version (providing quotients)
+#' seats <- hagenbach_bischoff_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 15, short_version = FALSE)
 #'
 #' \dontrun{
-#' ## Incorrect input: vectors of different length ----------------------------
-#' hagenbach_bischoff_seats(
-#'   candidacies   = c("PP", "PSOE", "PODEMOS", "VOX"),
-#'   ballots       = c(200, 350, 100),   # <- length mismatch
-#'   blank_ballots = 50,
-#'   n_seats       = 15
-#' )
+#'
+#' # Incorrect examples
+#'
+#' # Different length of candidacies and ballots
+#'
+#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' ballots <- c(200, 350, 100)
+#'
+#' seats <- hagenbach_bischoff_seats(candidacies = candidacies, ballots = ballots,
+#' blank_ballots = 50)
+#'
+#' # Ballots with missing values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, NA)
+#' seats <- hagenbach_bischoff_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,)
+#'
+#' # Ballots with char values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c("200", "350", "100")
+#' seats <- hagenbach_bischoff_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50)
+#'
+#' # Invalid argument
+#'
+#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' ballots <- c(200, 350, 100, 200)
+#' seats <- hagenbach_bischoff_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50, threshold = 0.05)
+#'
 #' }
 #' @export
 hagenbach_bischoff_seats <- function(candidacies, ballots, blank_ballots, n_seats,
@@ -647,7 +699,7 @@ hagenbach_bischoff_seats <- function(candidacies, ballots, blank_ballots, n_seat
 #'
 #' ## Correct examples
 #'
-#' ## Seats distribution with Hamilton method for given vectors of candidacies and ballots
+#' ## Seats distribution with Webster method for given vectors of candidacies and ballots
 #' ## without the remainder quotients
 #'
 #' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
@@ -655,6 +707,18 @@ hagenbach_bischoff_seats <- function(candidacies, ballots, blank_ballots, n_seat
 #'
 #' seats <- webster_seats(candidacies = candidacies, ballots = ballots,
 #' blank_ballots = 50, n_seats = 15, threshold = 0.03)
+#'
+#' # Same results in a long version (providing quotients)
+#' seats <- webster_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 15, short_version = FALSE)
+#'
+#' # Webster with threshold 0.05
+#' seats <- webster_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 5, threshold = 0.05)
+#'
+#' # A very high threshold that only one party meets
+#' seats <- webster_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 5, threshold = 0.3)
 #'
 #' \dontrun{
 #'
@@ -667,6 +731,27 @@ hagenbach_bischoff_seats <- function(candidacies, ballots, blank_ballots, n_seat
 #'
 #' seats <- webster_seats(candidacies = candidacies,
 #' ballots = ballots, blank_ballots = 50, threshold = 0.03)
+#'
+#' # Ballots with missing values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, NA)
+#' seats <- webster_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 0.03)
+#'
+#' # Ballots with char values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c("200", "350", "100")
+#' seats <- webster_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 0.03)
+#'
+#' # Threshold should be a numerical value between 0 and 1
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, 100)
+#' seats <- webster_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 3)
 #'}
 #' @export
 webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
@@ -848,6 +933,18 @@ webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' seats <- hill_seats(candidacies = candidacies, ballots = ballots,
 #'  blank_ballots = 50, n_seats = 15, threshold = 0.03)
 #'
+#' # Same results in a long version (providing quotients)
+#' seats <- hill_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 15, short_version = FALSE)
+#'
+#' # Hill with threshold 0.05
+#' seats <- hill_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 5, threshold = 0.05)
+#'
+#' # A very high threshold that only one party meets
+#' seats <- hill_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 5, threshold = 0.3)
+#'
 #' \dontrun{
 #'
 #' # Incorrect examples
@@ -858,7 +955,28 @@ webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' ballots <- c(200, 350, 100)
 #'
 #' seats <- hill_seats(candidacies = candidacies, ballots = ballots,
-#' blank_ballots = 50, threshold = 0.03)
+#'                     blank_ballots = 50, threshold = 0.03)
+#'
+#' # Ballots with missing values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, NA)
+#' seats <- hill_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 0.03)
+#'
+#' # Ballots with char values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c("200", "350", "100")
+#' seats <- hill_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 0.03)
+#'
+#' # Threshold should be a numerical value between 0 and 1
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, 100)
+#' seats <- hill_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 3)
 #' }
 #' @export
 hill_seats <- function(candidacies, ballots, blank_ballots, n_seats,
@@ -1042,6 +1160,18 @@ hill_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' seats <- deans_seats(candidacies = candidacies, ballots = ballots,
 #' blank_ballots = 50, n_seats = 15, threshold = 0.03)
 #'
+#' # Same results in a long version (providing quotients)
+#' seats <- deans_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 15, short_version = FALSE)
+#'
+#' # Deans with threshold 0.05
+#' seats <- deans_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 5, threshold = 0.05)
+#'
+#' # A very high threshold that only one party meets
+#' seats <- deans_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 5, threshold = 0.3)
+#'
 #' \dontrun{
 #'
 #' # Incorrect examples
@@ -1053,6 +1183,27 @@ hill_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #'
 #' seats <- deans_seats(candidacies = candidacies, ballots = ballots,
 #' blank_ballots = 50, threshold = 0.03)
+#'
+#' # Ballots with missing values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, NA)
+#' seats <- deans_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 0.03)
+#'
+#' # Ballots with char values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c("200", "350", "100")
+#' seats <- deans_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 0.03)
+#'
+#' # Threshold should be a numerical value between 0 and 1
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, 100)
+#' seats <- deans_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 3)
 #'}
 #' @export
 deans_seats <- function(candidacies, ballots, blank_ballots, n_seats,
@@ -1252,6 +1403,18 @@ deans_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' seats <- adams_seats(candidacies = candidacies, ballots = ballots,
 #' blank_ballots = 50, n_seats = 15, threshold = 0.03)
 #'
+#'# Same results in a long version (providing quotients)
+#' seats <- adams_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 15, short_version = FALSE)
+#'
+#' # Adams with threshold 0.05
+#' seats <- adams_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 5, threshold = 0.05)
+#'
+#' # A very high threshold that only one party meets
+#' seats <- adams_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 5, threshold = 0.3)
+#'
 #' \dontrun{
 #'
 #' # Incorrect examples
@@ -1263,6 +1426,27 @@ deans_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #'
 #' seats <- adams_seats(candidacies = candidacies, ballots = ballots,
 #'  blank_ballots = 50, threshold = 0.03)
+#'
+#'  # Ballots with missing values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, NA)
+#' seats <- adams_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 0.03)
+#'
+#' # Ballots with char values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c("200", "350", "100")
+#' seats <- adams_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 0.03)
+#'
+#' # Threshold should be a numerical value between 0 and 1
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, 100)
+#' seats <- adams_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 3)
 #'}
 #' @export
 adams_seats <- function(candidacies, ballots, blank_ballots, n_seats,
@@ -1468,26 +1652,60 @@ adams_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' @import crayon
 #'
 #' @examples
-#' ## Correct usage ------------------------------------------------------------
-#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
-#' ballots     <- c(200, 350, 100, 200)
+#' ## Correct examples
 #'
-#' fptp_seats(
-#'   candidacies   = candidacies,
-#'   ballots       = ballots,
-#'   blank_ballots = 50,
-#'   n_seats       = 3,
-#'   threshold     = 0.03
-#' )
+#' ## Seats distribution with First Past the Post method for given vectors
+#' ## of candidacies and ballots without the remainder quotients
+#'
+#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' ballots <- c(200, 350, 100, 200)
+#'
+#' seats <- fptp_seats(candidacies = candidacies, ballots = ballots,
+#' blank_ballots = 50, n_seats = 15, threshold = 0.03)
+#'
+#'# Same results in a long version (providing quotients)
+#' seats <- fptp_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 15, short_version = FALSE)
+#'
+#' # Adams with threshold 0.05
+#' seats <- fptp_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 5, threshold = 0.05)
+#'
+#' # A very high threshold that only one party meets
+#' seats <- fptp_seats(candidacies, ballots, blank_ballots = 50,
+#'                       n_seats = 5, threshold = 0.3)
 #'
 #' \dontrun{
-#' ## Incorrect input: lengths differ -----------------------------------------
-#' fptp_seats(
-#'   candidacies   = c("PP", "PSOE"),
-#'   ballots       = c(300),
-#'   blank_ballots = 10,
-#'   n_seats       = 1
-#' )
+#' # Incorrect examples
+#'
+#' # Different length of candidacies and ballots
+#'
+#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' ballots <- c(200, 350, 100)
+#'
+#' seats <- fptp_seats(candidacies = candidacies, ballots = ballots,
+#'  blank_ballots = 50, threshold = 0.03)
+#'
+#'  # Ballots with missing values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, NA)
+#' seats <- fptp_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 0.03)
+#'
+#' # Ballots with char values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c("200", "350", "100")
+#' seats <- fptp_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 0.03)
+#'
+#' # Threshold should be a numerical value between 0 and 1
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, 100)
+#' seats <- fptp_seats(candidacies = candidacies, ballots = ballots,
+#'                       n_seats = 5, blank_ballots = 50,
+#'                       threshold = 3)
 #' }
 #' @export
 
@@ -1640,11 +1858,60 @@ fptp_seats <- function(candidacies, ballots, blank_ballots,
 #'
 #' ##Correct examples
 #'
+#' ## Seats distribution with Hill method for given vectors of candidacies and ballots
+#' ## without the remainder quotients
+#'
+#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' ballots <- c(200, 350, 100, 200)
+#'
+#' seats <- seat_allocation(method = "hill", candidacies = candidacies,
+#'                         ballots = ballots, blank_ballots = 50,
+#'                         n_seats = 15, threshold = 0.03)
+#'
+#'# Same results in a long version (providing quotients)
+#' seats <- seat_allocation(method = "hill", candidacies = candidacies,
+#'                         ballots = ballots, blank_ballots = 50,
+#'                         n_seats = 15, threshold = 0.03, short_version = FALSE)
+#'
+#' # Adams with threshold 0.05
+#' seats <- seat_allocation(method = "adams",candidacies, ballots,
+#'                         blank_ballots = 50, n_seats = 5, threshold = 0.05)
+#'
+#' # A very high threshold that only one party meets in Dean method
+#' seats <- seat_allocation(method = "dean",candidacies, ballots,
+#'                         blank_ballots = 50, n_seats = 5, threshold = 0.3)
+#'
 #' \dontrun{
 #'
 #' # ----
 #' # Incorrect examples
 #' # ----
+#'
+#' # Different length of candidacies and ballots
+#'
+#' candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+#' ballots <- c(200, 350, 100)
+#'
+#' seats <- seat_allocation(method = "hill", candidacies = candidacies,
+#' ballots = ballots, blank_ballots = 50, threshold = 0.03)
+#'
+#'  # Ballots with missing values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, NA)
+#' seats <- seat_allocation(method = "hagenbach", candidacies = candidacies,
+#' ballots = ballots, blank_ballots = 50)
+#'
+#' # Ballots with char values
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c("200", "350", "100")
+#' seats <- seat_allocation(method = "hamilton", candidacies = candidacies,
+#' ballots = ballots, blank_ballots = 50)
+#'
+#' # Threshold should be a numerical value between 0 and 1
+#' candidacies <- c("PP", "PSOE", "PODEMOS")
+#' ballots <- c(200, 350, 100)
+#' seats <- seat_allocation(method = "webster", candidacies = candidacies,
+#' ballots = ballots, blank_ballots = 50, threshold = 3)
 #'
 #' }
 #' @export

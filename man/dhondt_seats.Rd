@@ -102,7 +102,7 @@ seats <- dhondt_seats(candidacies, ballots, blank_ballots = 50,
 # Incorrect examples
 # ----
 
-# Different length of candidacies
+# Different length of candidacies and ballots vectors
 candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 ballots <- c(200, 350, 100)
 seats <- dhondt_seats(candidacies = candidacies, ballots = ballots,

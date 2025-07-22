@@ -62,25 +62,53 @@ function, \code{seats_allocation()}, to calculate the seats distribution of ever
 electoral district of a given election according to the Hagenbach-Bischoff method.
 }
 \examples{
-## Minimal example ----------------------------------------------------------
-candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
-ballots     <- c(200, 350, 100, 200)
+## Correct examples
 
-hagenbach_bischoff_seats(
-  candidacies   = candidacies,
-  ballots       = ballots,
-  blank_ballots = 50,
-  n_seats       = 15
-)
+## Seats distribution with Hamilton method for given vectors of
+## candidacies and ballots without the remainder quotients
+
+candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+ballots <- c(200, 350, 100, 200)
+
+seats <- hagenbach_bischoff_seats(candidacies = candidacies,
+                                ballots = ballots, blank_ballots = 50,
+                                n_seats = 15)
+
+# Same results in a long version (providing quotients)
+seats <- hagenbach_bischoff_seats(candidacies, ballots, blank_ballots = 50,
+                      n_seats = 15, short_version = FALSE)
 
 \dontrun{
-## Incorrect input: vectors of different length ----------------------------
-hagenbach_bischoff_seats(
-  candidacies   = c("PP", "PSOE", "PODEMOS", "VOX"),
-  ballots       = c(200, 350, 100),   # <- length mismatch
-  blank_ballots = 50,
-  n_seats       = 15
-)
+
+# Incorrect examples
+
+# Different length of candidacies and ballots
+
+candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+ballots <- c(200, 350, 100)
+
+seats <- hagenbach_bischoff_seats(candidacies = candidacies, ballots = ballots,
+blank_ballots = 50)
+
+# Ballots with missing values
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c(200, 350, NA)
+seats <- hagenbach_bischoff_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50,)
+
+# Ballots with char values
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c("200", "350", "100")
+seats <- hagenbach_bischoff_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50)
+
+# Invalid argument
+
+candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
+ballots <- c(200, 350, 100, 200)
+seats <- hagenbach_bischoff_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50, threshold = 0.05)
+
 }
 }
 \author{

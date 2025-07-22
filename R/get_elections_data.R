@@ -922,6 +922,18 @@ aggregate_election_data <-
 #'                          short_version = FALSE,
 #'                          CERA_remove = TRUE)
 #'
+#' # Summary 2023 election  data at prov level, aggregating the
+#' # candidacies ballots, in a long version, calculating the number
+#' # of seats for each party in each province and filtering ballots
+#' # above 45% (percentage between 0 and 100)
+#'
+#' summary_prov <-
+#'   summary_election_data(type_elec = "congress", year = 2023,
+#'                         date = "2016-06-26", level = "prov",
+#'                         short_version = FALSE,
+#'                         method = "d'hondt",
+#'                         filter_porc_ballots = 45)
+#'
 #' # Summary 2023 election data at mun level, aggregating the
 #' # candidacies ballots, in a long version, and filtering ballots
 #' # above 45% (percentage between 0 and 100) and just PP and PSOE
@@ -939,8 +951,26 @@ aggregate_election_data <-
 #'
 #' # Wrong examples
 #'
+#' # Invalid election type: "national" is not a valid election type
+#' summary_election_data(type_elec = "national", year = 2019)
+#'
+#' # Invalid date format: date should be in %Y-%m-%d format
+#' summary_election_data(type_elec = "congress", date = "26-06-2016")
+#'
+#' # Invalid short version flag: short_version should be a
+#' # logical variable
+#' summary_election_data(type_elec = "congress", year = 2019,
+#'                   short_version = "yes")
+#'
 #' # Invalid aggregation level
 #' summary_election_data("congress", 2019, level = "district")
+#'
+#' # Invalid method
+#' summary_election_data("congress", 2019, method = "don")
+#'
+#' # threshold falls outside the valid range of 0 to 1
+#' summary_election_data("congress", 2019, method = "dhondt",
+#'                        threshold = 1.3)
 #'
 #' # filter_porc_ballots outside range 0 from 100
 #' summary_election_data("congress", 2019,
@@ -956,8 +986,6 @@ aggregate_election_data <-
 #'                       by_parties = FALSE,
 #'                       filter_candidacies = c("PP", "PSOE"))
 #'
-#' # Wrong election type
-#' summary_election_data("national", 2019)
 #' }
 #'
 #' @export
@@ -1177,6 +1205,60 @@ summary_election_data <-
 
     }
 
+
+    if (!is.null(method)){
+
+      col_id_candidacies <- "id_candidacies_nat"
+      col_blank_ballots <- "blank_ballots"
+      col_id_electoral_district <- "id_INE_prov"
+      col_ballots <- "ballots"
+
+      id_election <- summary_data |>
+        pull(.data[[col_id_elec]]) |>
+        unique()
+
+      nseats_year <- total_seats_spain |>
+        filter(.data[[col_id_elec]] %in% id_election) |>
+        select(.data[[col_id_electoral_district]], .data[[col_id_elec]], nseats)
+
+      copy_to(con, nseats_year, "nseats_year", temporary = TRUE, overwrite = TRUE)
+      nseats_year <- tbl(con, "nseats_year")
+
+      summary_data <- summary_data |>
+        left_join(nseats_year, by = c(col_id_elec, col_id_electoral_district))
+
+      seats_results <- summary_data |>
+        select(.data[[col_id_elec]],
+               .data[[col_id_electoral_district]],
+               .data[[col_id_candidacies]],
+               .data[[col_ballots]],
+               .data[[col_blank_ballots]], nseats) %>%
+        collect() %>%
+        group_by(.data[[col_id_electoral_district]], .data[[col_id_elec]]) |>
+        reframe(seat_allocation(candidacies = .data[[col_id_candidacies]],
+                                ballots = .data[[col_ballots]],
+                                blank_ballots = .data[[col_blank_ballots]],
+                                n_seats = first(nseats),
+                                threshold = threshold)) |>
+        ungroup() |>
+        select(.data[[col_id_elec]], .data[[col_id_electoral_district]], candidacies, seats)
+
+      copy_to(con, seats_results, "seats_results", temporary = TRUE, overwrite = TRUE)
+      seats_results <- tbl(con, "seats_results")
+
+      summary_data <- summary_data |>
+        distinct(
+          .data[[col_id_elec]],
+          .data[[col_id_electoral_district]],
+          .data[[col_id_candidacies]],
+          .keep_all = TRUE) |>
+        left_join(seats_results, by = c(col_id_elec,
+                                        col_id_electoral_district,
+                                        "id_candidacies_nat" = "candidacies")) |>
+        select(-nseats)
+
+    }
+
     if (!is.na(filter_porc_ballots)) {
 
       if (!by_parties) {
@@ -1223,41 +1305,6 @@ summary_election_data <-
 
     # collect
     summary_data <- summary_data |> collect()
-
-    if (!is.null(method)){
-
-      col_id_candidacies <- "id_candidacies_nat"
-      col_blank_ballots <- "blank_ballots"
-      col_id_electoral_district <- "id_INE_prov"
-      col_ballots <- "ballots"
-
-      id_election <- summary_data |>
-        pull(.data[[col_id_elec]]) |>
-        first()
-
-      nseats_year <- total_seats_spain |>
-        filter(.data[[col_id_elec]] == id_election) |>
-        select(.data[[col_id_electoral_district]], nseats)
-
-      summary_data <- summary_data |>
-        left_join(nseats_year, by = col_id_electoral_district)
-
-      seats_results <- summary_data |>
-        group_by(.data[[col_id_electoral_district]]) |>
-        reframe(seat_allocation(candidacies = .data[[col_id_candidacies]],
-                              ballots = .data[[col_ballots]],
-                              blank_ballots = .data[[col_blank_ballots]],
-                              n_seats = first(nseats),
-                              threshold = threshold)) |>
-        ungroup() |>
-        select(.data[[col_id_electoral_district]], candidacies, seats)
-
-      summary_data <- summary_data |>
-        left_join(seats_results, by = c(col_id_electoral_district,
-                                        "id_candidacies_nat" = "candidacies")) |>
-        select(-nseats)
-
-    }
 
     # clean temp dir
     unlink(temp_db_dir, recursive = TRUE, force = TRUE)
