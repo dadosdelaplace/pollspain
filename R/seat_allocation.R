@@ -428,7 +428,7 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 
   data_filtered <- data_filtered |>
     mutate(
-      exact_seats = ballots / ((sum(ballots) + first(blank_ballots)) / n_seats),
+      exact_seats = ballots / (sum(ballots) / n_seats),
       # The dividend represents the quota
       initial_seats = floor(exact_seats),
       remainder = exact_seats - initial_seats
