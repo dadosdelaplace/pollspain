@@ -65,7 +65,7 @@ are considered for allocation.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hills_seats</span><span class="op">(</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hill_seats</span><span class="op">(</span></span>
 <span>  <span class="va">candidacies</span>,</span>
 <span>  <span class="va">ballots</span>,</span>
 <span>  <span class="va">blank_ballots</span>,</span>
@@ -159,8 +159,20 @@ electoral district of a given election according to the Hill method.</p>
 <span class="r-in"><span><span class="va">candidacies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PP"</span>, <span class="st">"PSOE"</span>, <span class="st">"PODEMOS"</span>, <span class="st">"VOX"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ballots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">350</span>, <span class="fl">100</span>, <span class="fl">200</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">seats</span> <span class="op">&lt;-</span> <span class="fu">hills_seats</span><span class="op">(</span>candidacies <span class="op">=</span> <span class="va">candidacies</span>, ballots <span class="op">=</span> <span class="va">ballots</span>,</span></span>
+<span class="r-in"><span><span class="va">seats</span> <span class="op">&lt;-</span> <span class="fu">hill_seats</span><span class="op">(</span>candidacies <span class="op">=</span> <span class="va">candidacies</span>, ballots <span class="op">=</span> <span class="va">ballots</span>,</span></span>
 <span class="r-in"><span> blank_ballots <span class="op">=</span> <span class="fl">50</span>, n_seats <span class="op">=</span> <span class="fl">15</span>, threshold <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Same results in a long version (providing quotients)</span></span></span>
+<span class="r-in"><span><span class="va">seats</span> <span class="op">&lt;-</span> <span class="fu">hill_seats</span><span class="op">(</span><span class="va">candidacies</span>, <span class="va">ballots</span>, blank_ballots <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>                      n_seats <span class="op">=</span> <span class="fl">15</span>, short_version <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Hill with threshold 0.05</span></span></span>
+<span class="r-in"><span><span class="va">seats</span> <span class="op">&lt;-</span> <span class="fu">hill_seats</span><span class="op">(</span><span class="va">candidacies</span>, <span class="va">ballots</span>, blank_ballots <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>                      n_seats <span class="op">=</span> <span class="fl">5</span>, threshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># A very high threshold that only one party meets</span></span></span>
+<span class="r-in"><span><span class="va">seats</span> <span class="op">&lt;-</span> <span class="fu">hill_seats</span><span class="op">(</span><span class="va">candidacies</span>, <span class="va">ballots</span>, blank_ballots <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>                      n_seats <span class="op">=</span> <span class="fl">5</span>, threshold <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span></span></span>
@@ -171,8 +183,29 @@ electoral district of a given election according to the Hill method.</p>
 <span class="r-in"><span><span class="va">candidacies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PP"</span>, <span class="st">"PSOE"</span>, <span class="st">"PODEMOS"</span>, <span class="st">"VOX"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ballots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">350</span>, <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">seats</span> <span class="op">&lt;-</span> <span class="fu">hills_seats</span><span class="op">(</span>candidacies <span class="op">=</span> <span class="va">candidacies</span>, ballots <span class="op">=</span> <span class="va">ballots</span>,</span></span>
-<span class="r-in"><span>blank_ballots <span class="op">=</span> <span class="fl">50</span>, threshold <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">seats</span> <span class="op">&lt;-</span> <span class="fu">hill_seats</span><span class="op">(</span>candidacies <span class="op">=</span> <span class="va">candidacies</span>, ballots <span class="op">=</span> <span class="va">ballots</span>,</span></span>
+<span class="r-in"><span>                    blank_ballots <span class="op">=</span> <span class="fl">50</span>, threshold <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Ballots with missing values</span></span></span>
+<span class="r-in"><span><span class="va">candidacies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PP"</span>, <span class="st">"PSOE"</span>, <span class="st">"PODEMOS"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ballots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">350</span>, <span class="cn">NA</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">seats</span> <span class="op">&lt;-</span> <span class="fu">hill_seats</span><span class="op">(</span>candidacies <span class="op">=</span> <span class="va">candidacies</span>, ballots <span class="op">=</span> <span class="va">ballots</span>,</span></span>
+<span class="r-in"><span>                      n_seats <span class="op">=</span> <span class="fl">5</span>, blank_ballots <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>                      threshold <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Ballots with char values</span></span></span>
+<span class="r-in"><span><span class="va">candidacies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PP"</span>, <span class="st">"PSOE"</span>, <span class="st">"PODEMOS"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ballots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"200"</span>, <span class="st">"350"</span>, <span class="st">"100"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">seats</span> <span class="op">&lt;-</span> <span class="fu">hill_seats</span><span class="op">(</span>candidacies <span class="op">=</span> <span class="va">candidacies</span>, ballots <span class="op">=</span> <span class="va">ballots</span>,</span></span>
+<span class="r-in"><span>                      n_seats <span class="op">=</span> <span class="fl">5</span>, blank_ballots <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>                      threshold <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Threshold should be a numerical value between 0 and 1</span></span></span>
+<span class="r-in"><span><span class="va">candidacies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PP"</span>, <span class="st">"PSOE"</span>, <span class="st">"PODEMOS"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ballots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">350</span>, <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">seats</span> <span class="op">&lt;-</span> <span class="fu">hill_seats</span><span class="op">(</span>candidacies <span class="op">=</span> <span class="va">candidacies</span>, ballots <span class="op">=</span> <span class="va">ballots</span>,</span></span>
+<span class="r-in"><span>                      n_seats <span class="op">=</span> <span class="fl">5</span>, blank_ballots <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>                      threshold <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

@@ -56,6 +56,8 @@ vote share threshold.</p>
 <span>  date <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  level <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  by_parties <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  method <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="fl">0.03</span>,</span>
 <span>  short_version <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  CERA_remove <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  filter_porc_ballots <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -105,6 +107,28 @@ the data is to be provided. The allowed values are the following:
 <dd><p>A flag indicates whether user wants a summary by
 candidacies/parties or just global results at given <code>level</code>.
 Defaults to <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
+<dd><p>A string vector providing the methods of
+apportionment to be used. The allowed values are the following:
+<code>"D'Hondt"</code> (or <code>"Hondt"</code> or <code>"hondt"</code>),
+<code>"Hamilton"</code> (or <code>"hamilton"</code> or <code>"Vinton"</code> or
+<code>"vinton"</code>), <code>"Webster"</code> (or <code>"webster"</code> or
+<code>"Sainte-Lague"</code> or <code>"sainte-lague"</code>), <code>"Hill"</code> (or
+<code>"hill"</code> or <code>"Huntington-Hill"</code> or
+<code>"huntington-hill"</code>), <code>"Dean"</code> (or <code>"dean"</code>) or
+<code>"Adams"</code> (or <code>"adams"</code>) or
+<code>"Hagenbach-Bischoff"</code> (or <code>"hagenbach"</code>)
+(or <code>"bischoff"</code>) or
+<code>"First Past the Post"</code> (or <code>"first"</code>) (or <code>"fptp"</code>).
+Defaults to <code>"Hondt"</code>.</p></dd>
+
+
+<dt id="arg-threshold">threshold<a class="anchor" aria-label="anchor" href="#arg-threshold"></a></dt>
+<dd><p>A numerical value (between 0 and 1) indicating the
+minimal percentage of votes needed to obtain representation for a
+given electoral district. Defaults to <code>0.03</code>.</p></dd>
 
 
 <dt id="arg-short-version">short_version<a class="anchor" aria-label="anchor" href="#arg-short-version"></a></dt>
@@ -214,6 +238,9 @@ of the candidacies.</p></dd>
 <dd><p>number of ballots obtained for each candidacy at
 each level section.</p></dd>
 
+<dt>seats</dt>
+<dd><p>number of seats</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -272,6 +299,18 @@ chosen date and aggregation level that is ready for analysis or visualisation.</
 <span class="r-in"><span>                         short_version <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                         CERA_remove <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Summary 2023 election  data at prov level, aggregating the</span></span></span>
+<span class="r-in"><span><span class="co"># candidacies ballots, in a long version, calculating the number</span></span></span>
+<span class="r-in"><span><span class="co"># of seats for each party in each province and filtering ballots</span></span></span>
+<span class="r-in"><span><span class="co"># above 45% (percentage between 0 and 100)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">summary_prov</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                        date <span class="op">=</span> <span class="st">"2016-06-26"</span>, level <span class="op">=</span> <span class="st">"prov"</span>,</span></span>
+<span class="r-in"><span>                        short_version <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                        method <span class="op">=</span> <span class="st">"d'hondt"</span>,</span></span>
+<span class="r-in"><span>                        filter_porc_ballots <span class="op">=</span> <span class="fl">45</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Summary 2023 election data at mun level, aggregating the</span></span></span>
 <span class="r-in"><span><span class="co"># candidacies ballots, in a long version, and filtering ballots</span></span></span>
 <span class="r-in"><span><span class="co"># above 45% (percentage between 0 and 100) and just PP and PSOE</span></span></span>
@@ -289,8 +328,26 @@ chosen date and aggregation level that is ready for analysis or visualisation.</
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Wrong examples</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Invalid election type: "national" is not a valid election type</span></span></span>
+<span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"national"</span>, year <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Invalid date format: date should be in %Y-%m-%d format</span></span></span>
+<span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, date <span class="op">=</span> <span class="st">"26-06-2016"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Invalid short version flag: short_version should be a</span></span></span>
+<span class="r-in"><span><span class="co"># logical variable</span></span></span>
+<span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2019</span>,</span></span>
+<span class="r-in"><span>                  short_version <span class="op">=</span> <span class="st">"yes"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Invalid aggregation level</span></span></span>
 <span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, level <span class="op">=</span> <span class="st">"district"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Invalid method</span></span></span>
+<span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, method <span class="op">=</span> <span class="st">"don"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># threshold falls outside the valid range of 0 to 1</span></span></span>
+<span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>, method <span class="op">=</span> <span class="st">"dhondt"</span>,</span></span>
+<span class="r-in"><span>                       threshold <span class="op">=</span> <span class="fl">1.3</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># filter_porc_ballots outside range 0 from 100</span></span></span>
 <span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span><span class="st">"congress"</span>, <span class="fl">2019</span>,</span></span>
@@ -306,8 +363,6 @@ chosen date and aggregation level that is ready for analysis or visualisation.</
 <span class="r-in"><span>                      by_parties <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                      filter_candidacies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PP"</span>, <span class="st">"PSOE"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Wrong election type</span></span></span>
-<span class="r-in"><span><span class="fu">summary_election_data</span><span class="op">(</span><span class="st">"national"</span>, <span class="fl">2019</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
