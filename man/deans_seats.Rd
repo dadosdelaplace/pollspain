@@ -76,6 +76,18 @@ ballots <- c(200, 350, 100, 200)
 seats <- deans_seats(candidacies = candidacies, ballots = ballots,
 blank_ballots = 50, n_seats = 15, threshold = 0.03)
 
+# Same results in a long version (providing quotients)
+seats <- deans_seats(candidacies, ballots, blank_ballots = 50,
+                      n_seats = 15, short_version = FALSE)
+
+# Deans with threshold 0.05
+seats <- deans_seats(candidacies, ballots, blank_ballots = 50,
+                      n_seats = 5, threshold = 0.05)
+
+# A very high threshold that only one party meets
+seats <- deans_seats(candidacies, ballots, blank_ballots = 50,
+                      n_seats = 5, threshold = 0.3)
+
 \dontrun{
 
 # Incorrect examples
@@ -87,6 +99,27 @@ ballots <- c(200, 350, 100)
 
 seats <- deans_seats(candidacies = candidacies, ballots = ballots,
 blank_ballots = 50, threshold = 0.03)
+
+# Ballots with missing values
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c(200, 350, NA)
+seats <- deans_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50,
+                      threshold = 0.03)
+
+# Ballots with char values
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c("200", "350", "100")
+seats <- deans_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50,
+                      threshold = 0.03)
+
+# Threshold should be a numerical value between 0 and 1
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c(200, 350, 100)
+seats <- deans_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50,
+                      threshold = 3)
 }
 }
 \author{

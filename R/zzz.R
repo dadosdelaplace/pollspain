@@ -15,5 +15,7 @@ utils::globalVariables(c(
   "webster_seats", "hill_seats", "deans_seats", "adams_seats", "global_dict_parties", "color",
   "name_candidacies_nat", "porc_candidacies_valid", "all_of", "'voters_cere'", "voters_cere",
   "extra_seat", "extra_seats", "initial_seats", "exact_seats", "remainder","quotient","divisor",
-  "ballots.x",  "porc_ballots.x", "ballots.y",  "porc_ballots.y", "con"
+  "ballots.x",  "porc_ballots.x", "ballots.y",  "porc_ballots.y", "con", "estimated_porc_ballots",
+  "fieldwork_start", "id_survey", "media", "n_field_days", "polling_firm", "candidacies", "nseats",
+  "seats", "total_seats_spain"
 ))

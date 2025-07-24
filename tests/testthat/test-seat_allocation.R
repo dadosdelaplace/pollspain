@@ -6,9 +6,9 @@ test_that("seat_allocation works", {
   threshold <- sample(1:10, size = 1)/100
   blank_ballots <- sample(20:250, size = 1)
   method <-
-    sample(x = c("hondt"), size = 1) #"hamilton", "vinton", "webster",
-                 #"sainte-lague", "hill", "huntington-hill",
-                 #"dean", "adams"), size = 3)
+    sample(x = c("hondt", "hamilton", "vinton", "webster",
+                 "sainte-lague", "hill", "huntington-hill",
+                 "dean", "adams"), size = 1)
   expect_equal(seat_allocation(candidacies, ballots,
                                blank_ballots, n_seats,
                                method, threshold,

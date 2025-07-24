@@ -2,10 +2,11 @@
 % Please edit documentation in R/seat_allocation.R
 \name{hills_seats}
 \alias{hills_seats}
+\alias{hill_seats}
 \title{Function to calculate the allocated seats according to the Hill
 method in a given electoral district.}
 \usage{
-hills_seats(
+hill_seats(
   candidacies,
   ballots,
   blank_ballots,
@@ -73,8 +74,20 @@ electoral district of a given election according to the Hill method.
 candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 ballots <- c(200, 350, 100, 200)
 
-seats <- hills_seats(candidacies = candidacies, ballots = ballots,
+seats <- hill_seats(candidacies = candidacies, ballots = ballots,
  blank_ballots = 50, n_seats = 15, threshold = 0.03)
+
+# Same results in a long version (providing quotients)
+seats <- hill_seats(candidacies, ballots, blank_ballots = 50,
+                      n_seats = 15, short_version = FALSE)
+
+# Hill with threshold 0.05
+seats <- hill_seats(candidacies, ballots, blank_ballots = 50,
+                      n_seats = 5, threshold = 0.05)
+
+# A very high threshold that only one party meets
+seats <- hill_seats(candidacies, ballots, blank_ballots = 50,
+                      n_seats = 5, threshold = 0.3)
 
 \dontrun{
 
@@ -85,8 +98,29 @@ seats <- hills_seats(candidacies = candidacies, ballots = ballots,
 candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 ballots <- c(200, 350, 100)
 
-seats <- hills_seats(candidacies = candidacies, ballots = ballots,
-blank_ballots = 50, threshold = 0.03)
+seats <- hill_seats(candidacies = candidacies, ballots = ballots,
+                    blank_ballots = 50, threshold = 0.03)
+
+# Ballots with missing values
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c(200, 350, NA)
+seats <- hill_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50,
+                      threshold = 0.03)
+
+# Ballots with char values
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c("200", "350", "100")
+seats <- hill_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50,
+                      threshold = 0.03)
+
+# Threshold should be a numerical value between 0 and 1
+candidacies <- c("PP", "PSOE", "PODEMOS")
+ballots <- c(200, 350, 100)
+seats <- hill_seats(candidacies = candidacies, ballots = ballots,
+                      n_seats = 5, blank_ballots = 50,
+                      threshold = 3)
 }
 }
 \author{

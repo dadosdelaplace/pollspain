@@ -242,7 +242,7 @@ get_election_data <-
     ambiguous_years <- intersect(allowed_elections$year, 2019)
     chosen_dates <- NULL
 
-    if (length(ambiguous_years) > 0 & is.null(date)) {
+    if (length(ambiguous_years) > 0) {
 
       normal_years <- setdiff(year, 2019)
       normal_dates <- dates_elections_spain |>
@@ -813,6 +813,22 @@ aggregate_election_data <-
 #' @inheritParams import_candidacies_data
 #' @inheritParams get_election_data
 #' @inheritParams aggregate_election_data
+#' @param method A string vector providing the methods of
+#' apportionment to be used. The allowed values are the following:
+#' \code{"D'Hondt"} (or \code{"Hondt"} or \code{"hondt"}),
+#' \code{"Hamilton"} (or \code{"hamilton"} or \code{"Vinton"} or
+#' \code{"vinton"}), \code{"Webster"} (or \code{"webster"} or
+#' \code{"Sainte-Lague"} or \code{"sainte-lague"}), \code{"Hill"} (or
+#' \code{"hill"} or \code{"Huntington-Hill"} or
+#' \code{"huntington-hill"}), \code{"Dean"} (or \code{"dean"}) or
+#' \code{"Adams"} (or \code{"adams"}) or
+#' \code{"Hagenbach-Bischoff"} (or \code{"hagenbach"})
+#' (or \code{"bischoff"}) or
+#' \code{"First Past the Post"} (or \code{"first"}) (or \code{"fptp"}).
+#' Defaults to \code{"Hondt"}.
+#' @param threshold A numerical value (between 0 and 1) indicating the
+#' minimal percentage of votes needed to obtain representation for a
+#' given electoral district. Defaults to \code{0.03}.
 #' @param CERA_remove Flag to indicate whether it should be removed
 #' the ballots related to CERA constituencies. Defaults to
 #' \code{FALSE}.
@@ -862,6 +878,7 @@ aggregate_election_data <-
 #' of the candidacies.}
 #' \item{ballots}{number of ballots obtained for each candidacy at
 #' each level section.}
+#' \item{seats}{number of seats}
 #'
 #' @details This function chains the two lower-level helpers \code{get_election_data()},
 #' which imports and cleans polling-station and candidacy ballots, and
@@ -905,6 +922,18 @@ aggregate_election_data <-
 #'                          short_version = FALSE,
 #'                          CERA_remove = TRUE)
 #'
+#' # Summary 2023 election  data at prov level, aggregating the
+#' # candidacies ballots, in a long version, calculating the number
+#' # of seats for each party in each province and filtering ballots
+#' # above 45% (percentage between 0 and 100)
+#'
+#' summary_prov <-
+#'   summary_election_data(type_elec = "congress", year = 2023,
+#'                         date = "2016-06-26", level = "prov",
+#'                         short_version = FALSE,
+#'                         method = "d'hondt",
+#'                         filter_porc_ballots = 45)
+#'
 #' # Summary 2023 election data at mun level, aggregating the
 #' # candidacies ballots, in a long version, and filtering ballots
 #' # above 45% (percentage between 0 and 100) and just PP and PSOE
@@ -922,8 +951,26 @@ aggregate_election_data <-
 #'
 #' # Wrong examples
 #'
+#' # Invalid election type: "national" is not a valid election type
+#' summary_election_data(type_elec = "national", year = 2019)
+#'
+#' # Invalid date format: date should be in %Y-%m-%d format
+#' summary_election_data(type_elec = "congress", date = "26-06-2016")
+#'
+#' # Invalid short version flag: short_version should be a
+#' # logical variable
+#' summary_election_data(type_elec = "congress", year = 2019,
+#'                   short_version = "yes")
+#'
 #' # Invalid aggregation level
 #' summary_election_data("congress", 2019, level = "district")
+#'
+#' # Invalid method
+#' summary_election_data("congress", 2019, method = "don")
+#'
+#' # threshold falls outside the valid range of 0 to 1
+#' summary_election_data("congress", 2019, method = "dhondt",
+#'                        threshold = 1.3)
 #'
 #' # filter_porc_ballots outside range 0 from 100
 #' summary_election_data("congress", 2019,
@@ -939,14 +986,13 @@ aggregate_election_data <-
 #'                       by_parties = FALSE,
 #'                       filter_candidacies = c("PP", "PSOE"))
 #'
-#' # Wrong election type
-#' summary_election_data("national", 2019)
 #' }
 #'
 #' @export
 summary_election_data <-
   function(type_elec, year = NULL, date = NULL,
-           level = "all", by_parties = TRUE,
+           level = "all", by_parties = TRUE, method = NULL,
+           threshold = 0.03,
            short_version = TRUE, CERA_remove = FALSE,
            filter_porc_ballots = NA, filter_candidacies = NA,
            prec_round = 3,
@@ -1144,7 +1190,7 @@ summary_election_data <-
 
         summary_data <-
           summary_data |>
-          select(-any_of(c("name_candidacies_nat", col_id_candidacies[["id_nat"]]))) |>
+          select(-any_of(c("name_candidacies_nat"))) |> # , col_id_candidacies[["id_nat"]] We want id_candidacies nat to appear at any level
           relocate(name_candidacies, .after = col_abbrev_candidacies)
 
       }
@@ -1156,6 +1202,60 @@ summary_election_data <-
         summary_data |>
         select(-contains("census_counting"), -contains("pop_res"),
                -any_of(c("ballots_1", "ballots_2", "n_poll_stations")))
+
+    }
+
+
+    if (!is.null(method)){
+
+      col_id_candidacies <- "id_candidacies_nat"
+      col_blank_ballots <- "blank_ballots"
+      col_id_electoral_district <- "id_INE_prov"
+      col_ballots <- "ballots"
+
+      id_election <- summary_data |>
+        pull(.data[[col_id_elec]]) |>
+        unique()
+
+      nseats_year <- total_seats_spain |>
+        filter(.data[[col_id_elec]] %in% id_election) |>
+        select(.data[[col_id_electoral_district]], .data[[col_id_elec]], nseats)
+
+      copy_to(con, nseats_year, "nseats_year", temporary = TRUE, overwrite = TRUE)
+      nseats_year <- tbl(con, "nseats_year")
+
+      summary_data <- summary_data |>
+        left_join(nseats_year, by = c(col_id_elec, col_id_electoral_district))
+
+      seats_results <- summary_data |>
+        select(.data[[col_id_elec]],
+               .data[[col_id_electoral_district]],
+               .data[[col_id_candidacies]],
+               .data[[col_ballots]],
+               .data[[col_blank_ballots]], nseats) %>%
+        collect() %>%
+        group_by(.data[[col_id_electoral_district]], .data[[col_id_elec]]) |>
+        reframe(seat_allocation(candidacies = .data[[col_id_candidacies]],
+                                ballots = .data[[col_ballots]],
+                                blank_ballots = .data[[col_blank_ballots]],
+                                n_seats = first(nseats),
+                                threshold = threshold)) |>
+        ungroup() |>
+        select(.data[[col_id_elec]], .data[[col_id_electoral_district]], candidacies, seats)
+
+      copy_to(con, seats_results, "seats_results", temporary = TRUE, overwrite = TRUE)
+      seats_results <- tbl(con, "seats_results")
+
+      summary_data <- summary_data |>
+        distinct(
+          .data[[col_id_elec]],
+          .data[[col_id_electoral_district]],
+          .data[[col_id_candidacies]],
+          .keep_all = TRUE) |>
+        left_join(seats_results, by = c(col_id_elec,
+                                        col_id_electoral_district,
+                                        "id_candidacies_nat" = "candidacies")) |>
+        select(-nseats)
 
     }
 
