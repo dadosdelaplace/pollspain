@@ -20,7 +20,12 @@ summary_election_data(
   prec_round = 3,
   candidacies_data = NULL,
   col_abbrev_candidacies = "abbrev_candidacies",
-  verbose = TRUE
+  verbose = TRUE,
+  col_id_elec = "id_elec",
+  col_id_poll_station = "id_INE_poll_station",
+  col_id_mun = "id_INE_mun",
+  cols_mun_var = c("pop_res_mun", "census_counting_mun"),
+  col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat")
 )
 }
 \arguments{
@@ -97,6 +102,10 @@ party abbreviations. Defaults to \code{"abbrev_candidacies"}.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
+
+\item{col_id_elec, col_id_poll_station, col_id_mun, col_id_candidacies, cols_mun_var}{(Optional) Column names for election's id, poll station's id,
+municipalities' id, candidacies' id and column names for the
+variables just available at mun level or greater.}
 }
 \value{
 A tibble with rows corresponding to the level of aggregation for

@@ -99,7 +99,6 @@
 import_mun_census_data <-
   function(type_elec, year = NULL, date = NULL, verbose = TRUE) {
 
-    options(warn = -1)
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
@@ -109,8 +108,8 @@ import_mun_census_data <-
 
     if (verbose) {
 
-      message(yellow("... Check if parameters are allowed..."))
-      Sys.sleep(1/20)
+      message(green("Import census data"))
+      message(yellow("   [x] Checking if parameters are allowed..."))
 
     }
 
@@ -258,29 +257,23 @@ import_mun_census_data <-
     if (verbose) {
 
       # Print the file URL for debugging purposes
-      message(blue("[x] Import census mun data from ..."))
-      Sys.sleep(1/20)
+      message(blue("   [x] Importing census mun data ..."))
 
     }
 
     # Create connection in duckdb
-    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
-    dir.create(temp_db_dir, showWarnings = FALSE)
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
-
-    # con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(fileext = ".duckdb"))
+    # temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
+    # dir.create(temp_db_dir, showWarnings = FALSE)
+    # con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
     # on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    # DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
+    # DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
 
     # Import files
     files <- glue("raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
     paths <- system.file("extdata", files, package = "pollspaindata")
     mun_data <-
       paths |>
-      map(function(x) { suppressMessages(tbl(con, x)) })
-    mun_data <- Reduce(union_all, mun_data)
+      map_dfr(function(x) { suppressMessages(read_parquet(file = x)) })
 
     # Recode mun data
     mun_data <-
@@ -290,10 +283,9 @@ import_mun_census_data <-
                 .by = c(cod_elec, date_elec, cod_INE_prov, cod_INE_mun)) |>
       distinct(cod_elec, date_elec, cod_INE_prov, cod_INE_mun, .keep_all = TRUE)
 
-    copy_to(con, cod_INE_mun, "cod_INE_mun", temporary = TRUE, overwrite = TRUE)
     mun_data <-
       mun_data |>
-      left_join(tbl(con, "cod_INE_mun"), by = c("cod_INE_prov", "cod_INE_mun"),
+      left_join(cod_INE_mun, by = c("cod_INE_prov", "cod_INE_mun"),
                 suffix = c(".x", "")) |>
       # Keep names from cod INE files instead of MIR files
       dplyr::select(-contains("x"), -month, -cd_INE_mun, -contains("MIR")) |>
@@ -306,12 +298,6 @@ import_mun_census_data <-
       relocate(mun, .after = cod_INE_mun) |>
       relocate(ccaa, .after = cod_INE_ccaa) |>
       relocate(prov, .after = cod_INE_prov)
-
-    # collect
-    mun_data <- mun_data |> collect()
-
-    # clean temp dir
-    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
 
     # output
     return(mun_data)
@@ -432,11 +418,8 @@ import_mun_census_data <-
 #'
 #' @export
 import_poll_station_data <-
-  function(type_elec, year = NULL, date = NULL,
-           prec_round = 3, short_version = TRUE,
-           verbose = TRUE) {
-
-    options(warn = -1)
+  function(type_elec, year = NULL, date = NULL, prec_round = 3,
+           short_version = TRUE, verbose = TRUE) {
 
     # Check if prec_round is a positive number
     if (prec_round != as.integer(prec_round) | prec_round < 1) {
@@ -460,8 +443,8 @@ import_poll_station_data <-
 
     if (verbose) {
 
-      message(yellow("... Check if parameters are allowed..."))
-      Sys.sleep(1/20)
+      message(green("Import poll station data"))
+      message(yellow("   [x] Checking if parameters are allowed..."))
 
     }
 
@@ -609,27 +592,17 @@ import_poll_station_data <-
     if (verbose) {
 
       # Print the file URL for debugging purposes
-      message(blue("[x] Import poll station data .."))
-      Sys.sleep(1/20)
-      message(green(paste0("  - ", allowed_elections$type_elec, " elections on ", allowed_elections$date, "\n")))
+      message(blue("   [x] Importing the following poll station data ..."))
+      message(blue(paste0("       - ", allowed_elections$type_elec, " elections on ", allowed_elections$date, "\n")))
 
     }
-
-    # Create connection in duckdb
-    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
-    dir.create(temp_db_dir, showWarnings = FALSE)
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
 
     # Import the data
     files <- glue("raw_poll_stations_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
     paths <- system.file("extdata", files, package = "pollspaindata")
     poll_station_raw_data <-
       paths |>
-      map(function(x) { suppressMessages(tbl(con, x)) })
-    poll_station_raw_data <-
-      Reduce(union_all, poll_station_raw_data) |>
+      map_dfr(function(x) { suppressMessages(read_parquet(file = x)) }) |>
       # census variable will be extracted from the mun census
       select(-contains("census"))
 
@@ -645,11 +618,6 @@ import_poll_station_data <-
                cod_sec, cod_poll_station, .keep_all = TRUE)
 
     # Join MIR and INE information
-    copy_to(con, cod_INE_mun, "cod_INE_mun", temporary = TRUE, overwrite = TRUE)
-    rm(list = c("cod_INE_mun"))
-    gc()
-    cod_INE_mun <- tbl(con, "cod_INE_mun")
-
     poll_station_data <-
       poll_station_raw_data |>
       left_join(cod_INE_mun,
@@ -668,13 +636,7 @@ import_poll_station_data <-
              "total_ballots" = valid_ballots + invalid_ballots)
 
     mun_data <-
-      import_mun_census_data(type_elec, year, date,
-                             verbose = FALSE)
-    copy_to(con, mun_data, name = "mun_data", overwrite = TRUE)
-    rm(list = c("mun_data"))
-    gc()
-    mun_data <- tbl(con, "mun_data")
-
+      import_mun_census_data(type_elec, year, date, verbose = FALSE)
     poll_station_data <-
       poll_station_data |>
       dplyr::filter(cod_INE_mun != "999") |>
@@ -694,17 +656,16 @@ import_poll_station_data <-
       relocate(mun, .after = cod_INE_mun)
 
     # Include CERA data and their ccaa and prov
-    copy_to(con,
-            cod_INE_mun |>
-              distinct(cod_MIR_ccaa, cod_INE_prov, .keep_all = TRUE) |>
-              select(contains("ccaa") | contains("prov")),
-            "census_2", temporary = TRUE, overwrite = TRUE)
+    census_2 <-
+      cod_INE_mun |>
+      distinct(cod_MIR_ccaa, cod_INE_prov, .keep_all = TRUE) |>
+      select(contains("ccaa") | contains("prov"))
 
     poll_station_data <-
-      union_all(poll_station_data,
+      bind_rows(poll_station_data,
                 poll_station_raw_data |>
                   filter(cod_INE_mun == "999")) |>
-      left_join(tbl(con, "census_2"),
+      left_join(census_2,
                 by = c("cod_MIR_ccaa", "cod_INE_prov"),
                 suffix = c("", ".y"), copy = TRUE) |>
       # debugging codes
@@ -781,7 +742,7 @@ import_poll_station_data <-
 
       if (verbose) {
 
-        message(yellow("A short version was asked (if you want all variables, run with `short_version = FALSE`)"))
+        message(yellow("! A short version was asked (if you want all variables, run with `short_version = FALSE`)"))
 
       }
 
@@ -794,12 +755,6 @@ import_poll_station_data <-
                total_ballots, turnout, porc_valid, porc_invalid,
                porc_parties, porc_blank, pop_res_mun, census_counting_mun)
     }
-
-    # collect
-    poll_station_data <- poll_station_data |> collect()
-
-    # clean temp dir
-    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
 
     # output
     return(poll_station_data)
@@ -906,7 +861,6 @@ import_candidacies_data <-
   function(type_elec, year = NULL, date = NULL,
            short_version = TRUE, verbose = TRUE) {
 
-    options(warn = -1)
     # check if short_version is a logical variable
     if (is.na(short_version) | !is.logical(short_version)) {
 
@@ -922,8 +876,8 @@ import_candidacies_data <-
 
     if (verbose) {
 
-      message(yellow("... Check if parameters are allowed..."))
-      Sys.sleep(1/20)
+      message(green("Import candidacies data"))
+      message(yellow("   [x] Checking if parameters are allowed..."))
 
     }
 
@@ -1075,32 +1029,17 @@ import_candidacies_data <-
     if (verbose) {
 
       # Print the file URL for debugging purposes
-      message(blue("[x] Import candidacies data at poll station level from ..."))
-      Sys.sleep(1/20)
+      message(blue("   [x] Importing candidacies data at poll station level ..."))
+      message(magenta("... Please be patient, the volume of data downloaded, your memory size and the internet connection may take a few seconds"))
 
     }
-
-    if (verbose) {
-
-      message(magenta("   ... Please wait, the volume of data downloaded and the internet connection may take a few seconds"))
-
-    }
-
-    # Create connection in duckdb
-    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
-    dir.create(temp_db_dir, showWarnings = FALSE)
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
 
     # Import the data
     files <- glue("raw_candidacies_poll_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")
     paths <- system.file("extdata", files, package = "pollspaindata")
     candidacies_raw_data <-
       paths |>
-      map(function(x) { suppressMessages(tbl(con, x)) })
-    candidacies_raw_data <-
-      Reduce(union_all, candidacies_raw_data) |>
+      map_dfr(function(x) { suppressMessages(read_parquet(file = x)) }) |>
       mutate("id_candidacies" = as.character(id_candidacies))
 
     # Recode mun data
@@ -1132,11 +1071,6 @@ import_candidacies_data <-
                paste0(cod_MIR_ccaa, "-", cod_INE_prov, "-", cod_INE_mun),
              .before = everything())
 
-    copy_to(con, cod_INE_mun_CERA, "cod_INE_mun_CERA", temporary = TRUE, overwrite = TRUE)
-    rm(list = c("cod_INE_mun_CERA"))
-    gc()
-    cod_INE_mun_CERA <- tbl(con, "cod_INE_mun_CERA")
-
     candidacies_data <-
       candidacies_raw_data  |>
       left_join(cod_INE_mun_CERA, by = "id_MIR_mun",
@@ -1166,18 +1100,14 @@ import_candidacies_data <-
 
     candidacies_raw_info <-
       paths |>
-      map(function(x) { suppressMessages(tbl(con, x)) })
-    candidacies_raw_info <-
-      Reduce(union_all, candidacies_raw_info)  |>
-      mutate("id_candidacies" = as.character(id_candidacies),
-             "id_candidacies_ccaa" = as.character(id_candidacies_ccaa),
-             "id_candidacies_nat" = as.character(id_candidacies_nat))
-
-    # include candidacies info to candidacies ballots data
-    copy_to(con, candidacies_raw_info, "candidacies_raw_info", temporary = TRUE, overwrite = TRUE)
-    rm(list = c("candidacies_raw_info"))
-    gc()
-    candidacies_raw_info <- tbl(con, "candidacies_raw_info")
+      map_dfr(function(x) {
+        suppressMessages(read_parquet(file = x) |>
+                           mutate("id_candidacies" =
+                                    as.character(id_candidacies),
+                                  "id_candidacies_ccaa" =
+                                    as.character(id_candidacies_ccaa),
+                                  "id_candidacies_nat" =
+                                    as.character(id_candidacies_nat))) })
 
     candidacies_data <-
       candidacies_data |>
@@ -1193,7 +1123,7 @@ import_candidacies_data <-
 
       if (verbose) {
 
-        message(yellow("A short version was asked (if you want all variables, run with `short_version = FALSE`)"))
+        message(yellow("! A short version was asked (if you want all variables, run with `short_version = FALSE`)"))
       }
 
       # Select just few variables
@@ -1205,24 +1135,6 @@ import_candidacies_data <-
                ballots)
     }
 
-    # collect
-    candidacies_data <- candidacies_data |> collect()
-
-    # clean temp dir
-    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
-
     # output
     return(candidacies_data)
   }
-
-
-
-
-
-
-
-
-
-
-
-

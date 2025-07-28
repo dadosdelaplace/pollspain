@@ -10,6 +10,9 @@
 #'
 #' @inheritParams import_poll_station_data
 #' @inheritParams import_candidacies_data
+#' @param col_id_elec,col_id_poll_station,col_id_mun,col_id_candidacies
+#' (Optional) Column names for election's id, poll station's id,
+#' municipalities' id and candidacies' id
 #'
 #' @return A tibble with rows corresponding to poll-stations for
 #' each election, including the following variables:
@@ -120,15 +123,11 @@
 #' @export
 get_election_data <-
   function(type_elec, year = NULL, date = NULL,
-           prec_round = 3, short_version = TRUE, verbose = TRUE) {
-
-    # colnames
-    col_id_elec <- "id_elec"
-    col_id_poll_station <- "id_INE_poll_station"
-    col_id_mun <- "id_INE_mun"
-    col_id_candidacies <-
-      c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat")
-
+           prec_round = 3, short_version = TRUE, verbose = TRUE,
+           col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
+           col_id_mun = "id_INE_mun",
+           col_id_candidacies =
+             c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat")) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
@@ -139,8 +138,8 @@ get_election_data <-
 
     if (verbose) {
 
-      message(yellow("... Check if parameters are allowed..."))
-      Sys.sleep(1/20)
+      message(green("Get and join election data"))
+      message(yellow("   [x] Checking if parameters are allowed..."))
 
     }
 
@@ -242,7 +241,7 @@ get_election_data <-
     ambiguous_years <- intersect(allowed_elections$year, 2019)
     chosen_dates <- NULL
 
-    if (length(ambiguous_years) > 0) {
+    if (length(ambiguous_years) > 0 & is.null(date)) {
 
       normal_years <- setdiff(year, 2019)
       normal_dates <- dates_elections_spain |>
@@ -294,9 +293,8 @@ get_election_data <-
     if (verbose) {
 
       # Print the file URL for debugging purposes
-      message(blue("[x] Import poll station data ..."))
-      Sys.sleep(1/20)
-      message(green(paste0("   ... ", allowed_elections$type_elec, " elections on ", allowed_elections$date, "\n")))
+      message(blue("   [x] Importing the following poll station data ..."))
+      message(blue(paste0("       - ", allowed_elections$type_elec, " elections on ", allowed_elections$date, "\n")))
 
     }
 
@@ -312,9 +310,8 @@ get_election_data <-
     if (verbose) {
 
       # Print the file URL for debugging purposes
-      message(blue("[x] Import candidacies and ballots data (at poll station level) ..."))
-      Sys.sleep(1/20)
-      message(magenta("   ... please wait, volume of data downloaded and internet connection may take a few seconds"))
+      message(blue("   [x] Importing candidacies and ballots data (at poll station level) ..."))
+      message(magenta("... Please be patient, volume of data downloaded and internet connection may take a few seconds"))
 
     }
 
@@ -323,25 +320,6 @@ get_election_data <-
                               date = allowed_elections$date,
                               short_version = FALSE,
                               verbose = FALSE)
-
-    # Create connection in duckdb
-    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
-    dir.create(temp_db_dir, showWarnings = FALSE)
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
-
-    # con <- DBI::dbConnect(duckdb::duckdb(),
-    #                       dbdir = tempfile(fileext = ".duckdb"))
-    # on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    # DBI::dbExecute(con, glue::glue("SET temp_directory = '{tempdir()}'"))
-
-    copy_to(con, election_data, name = "election_data", temporary = TRUE, overwrite = TRUE)
-    copy_to(con, ballots_data, name = "ballots_data", temporary = TRUE, overwrite = TRUE)
-    rm(list = c("election_data", "ballots_data"))
-    gc()
-    election_data <- tbl(con, "election_data")
-    ballots_data <- tbl(con, "ballots_data")
 
     # Check if col_id_elec and col_id_elec_level exist within the data
     if (!all(c(col_id_elec, col_id_poll_station) %in% colnames(election_data)) |
@@ -376,10 +354,10 @@ get_election_data <-
                 .by = all_of(group_vars)) |>
       filter(sum_party_ballots != party_ballots)
 
-    if (nrow(check_totals |> collect()) > 0) {
+    if (nrow(check_totals) > 0) {
       if (verbose) {
 
-        message(yellow(glue("Be careful! Some poll stations does not match individual ballots with summaries provided by MIR. The discrepancies were resolved by using votes by candidacies.")))
+        message(yellow("Be careful! Some poll stations does not match individual ballots with summaries provided by MIR. The discrepancies were resolved by using votes by candidacies."))
 
       }
 
@@ -400,7 +378,9 @@ get_election_data <-
     if (short_version) {
 
       if (verbose) {
-        message(yellow("\nA short version was asked (if you want all variables, run with `short_version = FALSE`)"))
+
+        message(yellow("! A short version was asked (if you want all variables, run with `short_version = FALSE`)"))
+
       }
 
       join_data <-
@@ -416,11 +396,6 @@ get_election_data <-
                all_of(c(col_id_candidacies[["id_prov"]],
                         col_id_candidacies[["id_nat"]])))
     }
-
-    join_data <- join_data |> collect()
-
-    # clean temp dir
-    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
 
     # output
     return(join_data)
@@ -448,6 +423,10 @@ get_election_data <-
 #' @param by_parties A flag indicates whether user wants a summary by
 #' candidacies/parties or just global results at given \code{level}.
 #' Defaults to \code{TRUE}.
+#' @param col_id_elec,col_id_poll_station,col_id_mun,col_id_candidacies,cols_mun_var
+#' (Optional) Column names for election's id, poll station's id,
+#' municipalities' id, candidacies' id and column names for the
+#' variables just available at mun level or greater.
 #'
 #' @return A tibble with rows corresponding to the level of aggregation for
 #' each election, including the following variables:
@@ -532,15 +511,12 @@ get_election_data <-
 #' @export
 aggregate_election_data <-
   function(election_data, level = "all", by_parties = TRUE,
-           prec_round = 3, verbose = TRUE, short_version = TRUE) {
-
-    # colnames
-    col_id_elec <- "id_elec"
-    col_id_poll_station <- "id_INE_poll_station"
-    col_id_mun <- "id_INE_mun"
-    cols_mun_var <- c("pop_res_mun", "census_counting_mun")
-    col_id_candidacies <-
-      c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat")
+           prec_round = 3, verbose = TRUE, short_version = TRUE,
+           col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
+           col_id_mun = "id_INE_mun",
+           cols_mun_var = c("pop_res_mun", "census_counting_mun"),
+           col_id_candidacies =
+             c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat")) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
@@ -551,11 +527,10 @@ aggregate_election_data <-
 
     if (verbose) {
 
-      message(yellow("   ... check if aggregation parameters are allowed..."))
-      Sys.sleep(1/20)
+      message(green("Aggregate election data"))
+      message(yellow("   [x] Checking if parameters are allowed..."))
 
     }
-
 
     # check short_version
     if (!is.logical(short_version) | is.na(short_version)) {
@@ -627,6 +602,12 @@ aggregate_election_data <-
                         "mun", "prov", "ccaa"),
              ordered = TRUE)
 
+    if (verbose) {
+
+      message(blue(glue("   [x] Aggregating data at {ifelse(level == 'all', 'national', level)} level ...")))
+
+    }
+
     if (!(col_id_mun %in% colnames(election_data))) {
 
       election_data <-
@@ -663,36 +644,23 @@ aggregate_election_data <-
       }
     }
 
-    # Create connection in duckdb
-    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
-    dir.create(temp_db_dir, showWarnings = FALSE)
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
-
-    copy_to(con, election_data, name = "election_data", overwrite = TRUE)
-    gc()
-    rm(election_data)
-    election_data <- tbl(con, "election_data")
-
     if (!by_parties) {
 
       agg_data <-
         election_data |>
         distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
                  .keep_all = TRUE) |>
-        summarise(across(c(contains("ballots"), -ballots),
+        summarise(across(c(all_of(contains("ballots")), -ballots),
                          function(x) { sum(x, na.rm = TRUE) }),
                   n_poll_stations = n_distinct(.data[[col_id_poll_station]]),
-                  .by = group_var) |>
+                  .by = all_of(group_var)) |>
         left_join(election_data |>
                     distinct(.data[[col_id_elec]], .data[[col_id_mun]],
                              .keep_all = TRUE) |>
-                    summarise(across(cols_mun_var,
+                    summarise(across(all_of(cols_mun_var),
                                      function(x) { sum(x, na.rm = TRUE) }),
-                              .by = group_var_mun),
-                  by = group_var_mun) |>
-        collect()
+                              .by = all_of(group_var_mun)),
+                  by = group_var_mun)
 
     } else {
 
@@ -700,10 +668,10 @@ aggregate_election_data <-
         election_data |>
         distinct(.data[[col_id_elec]], .data[[col_id_poll_station]],
                  .keep_all = TRUE) |>
-        summarise(across(c(contains("ballots"), -ballots),
+        summarise(across(c(all_of(contains("ballots")), -ballots),
                          function(x) { sum(x, na.rm = TRUE) }),
                   n_poll_stations = n_distinct(.data[[col_id_poll_station]]),
-                  .by = group_var)
+                  .by = all_of(group_var))
 
       group_candidacies <-
         if_else(level == "all", col_id_candidacies["id_nat"],
@@ -715,15 +683,13 @@ aggregate_election_data <-
                  .data[[col_id_candidacies[["id_prov"]]]],
                  .data[[col_id_candidacies[["id_nat"]]]],
                  .keep_all = TRUE) |>
-        collect() |>
         summarise("ballots" = sum(ballots, na.rm = TRUE),
                   "id_candidacies" = list(sort(unique(.data[[col_id_candidacies["id_prov"]]]))),
                   "id_candidacies_nat" = list(sort(unique(.data[[col_id_candidacies["id_nat"]]]))),
-                  .by = c(group_var, as.character(group_candidacies)))
+                  .by = all_of(c(group_var, as.character(group_candidacies))))
 
       agg_data <-
         poll_data |>
-        collect() |>
         left_join(aux, by = group_var)
 
       if (!short_version) {
@@ -731,12 +697,11 @@ aggregate_election_data <-
         agg_data <-
           agg_data |>
           left_join(election_data |>
-                      collect() |>
                       distinct(.data[[col_id_elec]], .data[[col_id_mun]],
                                .keep_all = TRUE) |>
-                      summarise(across(cols_mun_var,
+                      summarise(across(all_of(cols_mun_var),
                                        function(x) { sum(x, na.rm = TRUE) }),
-                                .by = group_var_mun),
+                                .by = all_of(group_var_mun)),
                     by = group_var_mun)
       }
     }
@@ -748,7 +713,6 @@ aggregate_election_data <-
       agg_data <-
         agg_data |>
         left_join(election_data |>
-                    collect() |>
                     select(-matches("id|cd_INE|MIR")) |>
                     select(matches(str_flatten(as.character(hierarchy_levels[hierarchy_levels >= level]), collapse = "|"))) |>
                     select(-any_of(c("cod_mun_district", "cod_sec", "cod_poll_station",
@@ -759,7 +723,7 @@ aggregate_election_data <-
         # collect() |>
         unite(!!paste0("id_INE_", level), group_var[group_var != col_id_elec],
               sep = "-") |>
-        select(col_id_elec, paste0("id_INE_", level),
+        select(all_of(c(col_id_elec, paste0("id_INE_", level))),
                any_of(c("ccaa", "prov", "mun")),
                everything())
     }
@@ -794,9 +758,6 @@ aggregate_election_data <-
         rename_with(~ str_replace_all(.x, "_mun", paste0("_", level)))
 
     }
-
-    # clean temp dir
-    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
 
     # output
     return(agg_data)
@@ -844,6 +805,10 @@ aggregate_election_data <-
 #' vote percentage threshold (out of 100) that the user wants to use
 #' to filter the parties (as long as \code{by_parties = TRUE}).
 #' Defaults to \code{NA}.
+#' @param col_id_elec,col_id_poll_station,col_id_mun,col_id_candidacies,cols_mun_var
+#' (Optional) Column names for election's id, poll station's id,
+#' municipalities' id, candidacies' id and column names for the
+#' variables just available at mun level or greater.
 #'
 #' @return A tibble with rows corresponding to the level of aggregation for
 #' each election, including the following variables:
@@ -998,20 +963,24 @@ summary_election_data <-
            prec_round = 3,
            candidacies_data = NULL,
            col_abbrev_candidacies = "abbrev_candidacies",
-           verbose = TRUE) {
-
-    # Colnames
-    col_id_elec <- "id_elec"
-    col_id_poll_station <- "id_INE_poll_station"
-    col_id_mun <- "id_INE_mun"
-    col_id_candidacies <-
-      c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat")
-    cols_mun_var <- c("pop_res_mun", "census_counting_mun")
+           verbose = TRUE,
+           col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
+           col_id_mun = "id_INE_mun",
+           cols_mun_var = c("pop_res_mun", "census_counting_mun"),
+           col_id_candidacies =
+             c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat")) {
 
     # Check if verbose is correct
     if (!is.logical(verbose) | is.na(verbose)) {
 
       stop(red("Ups! `verbose` argument should be a TRUE/FALSE logical flag."))
+
+    }
+
+    if (verbose) {
+
+      message(green("Summary election data"))
+      message(yellow("   [x] Checking if parameters are allowed...\n"))
 
     }
 
@@ -1068,30 +1037,20 @@ summary_election_data <-
     }
 
 
-    if (verbose) {
-
-      message(magenta("   ... please wait, the volume of data to be aggregated may take a few seconds"))
-
-    }
-
     election_data <-
       get_election_data(type_elec = type_elec, year = year, date = date,
                         prec_round = prec_round, short_version = FALSE,
-                        verbose = verbose) |>
+                        verbose = verbose, col_id_elec = col_id_elec,
+                        col_id_poll_station = col_id_poll_station,
+                        col_id_mun = col_id_mun,
+                        col_id_candidacies = col_id_candidacies) |>
       rename_with(
-        ~ c("pop_res_mun", "census_counting_mun")[match(.x, cols_mun_var)],
-        .cols = cols_mun_var)
+        ~c("pop_res_mun", "census_counting_mun")[match(.x, cols_mun_var)],
+        .cols = all_of(cols_mun_var))
 
     if (!is.null(election_data) & !all(cols_mun_var %in% colnames(election_data))) {
 
       stop(red("Ups! Variables names in `cols_mun_var` should be matched if election_data is provided."))
-
-    }
-
-    if (verbose) {
-
-      message(blue(glue("[x] Aggregate data at {ifelse(level == 'all', 'national', level)} level ...")))
-      Sys.sleep(1/20)
 
     }
 
@@ -1104,28 +1063,19 @@ summary_election_data <-
         filter(!str_detect(id_INE_poll_station, "-999-"))
     }
 
+
     summary_data <-
       election_data |>
       aggregate_election_data(level = level, by_parties = by_parties,
                               prec_round = prec_round,
-                              verbose = verbose, short_version = FALSE)
-
-    # Create connection in duckdb
-    temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
-    dir.create(temp_db_dir, showWarnings = FALSE)
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
-    on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
-
-    copy_to(con, summary_data, name = "summary_data", overwrite = TRUE)
-    rm(list = c("summary_data", "election_data"))
-    gc()
-    summary_data <- tbl(con, "summary_data")
+                              verbose = verbose, short_version = FALSE,
+                              col_id_poll_station = col_id_poll_station,
+                              col_id_mun = col_id_mun, cols_mun_var = cols_mun_var,
+                              col_id_candidacies = col_id_candidacies)
 
     if (verbose) {
 
-      message(bgBlack(white("[x] Join information sources and last summaries ...\n")))
-      Sys.sleep(1/20)
+      message(bgBlack(white("\n[x] Join information sources and last summaries ...\n")))
 
     }
 
@@ -1155,43 +1105,43 @@ summary_election_data <-
 
     if (by_parties) {
 
+      if (verbose) {
+
+        message(green("   [x] Including candidacies info ..."))
+
+      }
+
       id_party <- if_else(level == "all", col_id_candidacies[["id_nat"]],
                           col_id_candidacies[["id_prov"]])
-
       dict_parties <-
         global_dict_parties |>
         select(-color) |>
         filter(id_elec %in% unique(summary_data |> pull(col_id_elec))) |>
         distinct(.data[[col_id_elec]], .data[[id_party]], .keep_all = TRUE)
 
-      copy_to(con, dict_parties, "dict_parties", temporary = TRUE)
-      rm(dict_parties)
-      gc()
-      dict_parties <- tbl(con, "dict_parties")
-
-      summary_data <-
+      suppressWarnings(summary_data <-
         summary_data |>
         left_join(dict_parties,
                   by = c("id_elec" = col_id_elec, id_party),
                   suffix = c("", ".rm"), copy = TRUE) |>
         select(-contains(".rm")) |>
-        relocate(col_abbrev_candidacies, .after = id_party)
+        relocate(col_abbrev_candidacies, .after = id_party))
 
       if (level == "all") {
 
-        summary_data <-
+        suppressWarnings(summary_data <-
           summary_data |>
           select(-any_of(c("name_candidacies", col_id_candidacies[["id_prov"]]))) |>
           rename(id_candidacies = col_id_candidacies[["id_nat"]],
                  name_candidacies = name_candidacies_nat) |>
-          relocate(name_candidacies, .after = col_abbrev_candidacies)
+          relocate(name_candidacies, .after = col_abbrev_candidacies))
 
       } else {
 
-        summary_data <-
+        suppressWarnings(summary_data <-
           summary_data |>
           select(-any_of(c("name_candidacies_nat"))) |> # , col_id_candidacies[["id_nat"]] We want id_candidacies nat to appear at any level
-          relocate(name_candidacies, .after = col_abbrev_candidacies)
+          relocate(name_candidacies, .after = col_abbrev_candidacies))
 
       }
     }
@@ -1205,8 +1155,13 @@ summary_election_data <-
 
     }
 
+    if (!is.null(method)) {
 
-    if (!is.null(method)){
+      if (verbose) {
+
+        message(green(paste0("   [x] Obtaining the number of seats allocated to each party at ", level, " level and according to the allocation method ", method)))
+
+      }
 
       col_id_candidacies <- "id_candidacies_nat"
       col_blank_ballots <- "blank_ballots"
@@ -1221,32 +1176,29 @@ summary_election_data <-
         filter(.data[[col_id_elec]] %in% id_election) |>
         select(.data[[col_id_electoral_district]], .data[[col_id_elec]], nseats)
 
-      copy_to(con, nseats_year, "nseats_year", temporary = TRUE, overwrite = TRUE)
-      nseats_year <- tbl(con, "nseats_year")
-
-      summary_data <- summary_data |>
+      summary_data <-
+        summary_data |>
         left_join(nseats_year, by = c(col_id_elec, col_id_electoral_district))
 
-      seats_results <- summary_data |>
-        select(.data[[col_id_elec]],
-               .data[[col_id_electoral_district]],
-               .data[[col_id_candidacies]],
-               .data[[col_ballots]],
-               .data[[col_blank_ballots]], nseats) %>%
-        collect() %>%
-        group_by(.data[[col_id_electoral_district]], .data[[col_id_elec]]) |>
-        reframe(seat_allocation(candidacies = .data[[col_id_candidacies]],
-                                ballots = .data[[col_ballots]],
-                                blank_ballots = .data[[col_blank_ballots]],
+      cand_arg <- summary_data[[col_id_candidacies]]
+      ballots_arg <- summary_data[[col_ballots]]
+      blank_ballots_arg <- summary_data[[col_blank_ballots]]
+      seats_results <-
+        summary_data |>
+        select(all_of(c(col_id_elec, col_id_electoral_district,
+                        col_id_candidacies, col_ballots,
+                        col_blank_ballots, "nseats"))) |>
+        reframe(seat_allocation(candidacies = cand_arg,
+                                ballots = ballots_arg,
+                                blank_ballots = blank_ballots_arg,
                                 n_seats = first(nseats),
-                                threshold = threshold)) |>
-        ungroup() |>
-        select(.data[[col_id_elec]], .data[[col_id_electoral_district]], candidacies, seats)
+                                threshold = threshold),
+                .by = c(.data[[col_id_electoral_district]], .data[[col_id_elec]])) |>
+        select(all_of(c(col_id_elec, col_id_electoral_district,
+                        "candidacies", "seats")))
 
-      copy_to(con, seats_results, "seats_results", temporary = TRUE, overwrite = TRUE)
-      seats_results <- tbl(con, "seats_results")
-
-      summary_data <- summary_data |>
+      summary_data <-
+        summary_data |>
         distinct(
           .data[[col_id_elec]],
           .data[[col_id_electoral_district]],
@@ -1263,10 +1215,15 @@ summary_election_data <-
 
       if (!by_parties) {
 
-        message(yellow("Be careful! If `by_parties` is FALSE, a filtering by percentage of party ballots cannot be achieved"))
+        message(yellow("Be careful! Since `by_parties` is FALSE, a filtering by percentage of party ballots cannot be achieved"))
 
       } else {
 
+        if (verbose) {
+
+          message(green("   [x] Filtering candidacies by the provided percentage of ballots ..."))
+
+        }
         summary_data  <-
           summary_data  |>
           filter(porc_candidacies_valid >= filter_porc_ballots)
@@ -1278,17 +1235,22 @@ summary_election_data <-
 
       if (!by_parties) {
 
-        message(yellow("Be careful! If `by_parties` is FALSE, a filtering by candidacies cannot be achieved"))
+        message(yellow("Be careful! Since `by_parties` is FALSE, a filtering by candidacies cannot be achieved"))
 
       } else {
 
+        if (verbose) {
+
+          message(green("   [x] Filtering candidacies by the provided abbrev ..."))
+
+        }
         filter_candidacies <-
           filter_candidacies[!is.na(filter_candidacies)]
         aux <-
           summary_data |>
           filter(.data[[col_abbrev_candidacies]] %in% filter_candidacies)
 
-        if (nrow(aux |> collect()) == 0) {
+        if (nrow(aux) == 0) {
 
           message(yellow("Be careful! Candidacies filter achieved by `filter_candidacies` provides a empty table so `filter_candidacies` was ignored."))
 
@@ -1302,12 +1264,6 @@ summary_election_data <-
         gc()
       }
     }
-
-    # collect
-    summary_data <- summary_data |> collect()
-
-    # clean temp dir
-    unlink(temp_db_dir, recursive = TRUE, force = TRUE)
 
     # output
     return(summary_data)

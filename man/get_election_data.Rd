@@ -11,7 +11,11 @@ get_election_data(
   date = NULL,
   prec_round = 3,
   short_version = TRUE,
-  verbose = TRUE
+  verbose = TRUE,
+  col_id_elec = "id_elec",
+  col_id_poll_station = "id_INE_poll_station",
+  col_id_mun = "id_INE_mun",
+  col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat")
 )
 }
 \arguments{
@@ -41,6 +45,9 @@ Defaults to \code{TRUE}.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
+
+\item{col_id_elec, col_id_poll_station, col_id_mun, col_id_candidacies}{(Optional) Column names for election's id, poll station's id,
+municipalities' id and candidacies' id}
 }
 \value{
 A tibble with rows corresponding to poll-stations for

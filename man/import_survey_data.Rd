@@ -8,7 +8,9 @@ import_survey_data(
   type_elec = "congress",
   year = NULL,
   date = NULL,
-  verbose = TRUE
+  verbose = TRUE,
+  format = "long",
+  forthcoming = TRUE
 )
 }
 \arguments{
@@ -31,6 +33,14 @@ that elections of the specified type are available.}
 
 \item{verbose}{Flag to indicate whether detailed messages should
 be printed during execution. Defaults to \code{TRUE}.}
+
+\item{format}{Do you want the output in long or wide format?
+Defaults to \code{"long"}}
+
+\item{forthcoming}{A flag indicates whether user wants to include
+surveys for the forthcoming elections. Defaults to \code{TRUE}. If
+\code{TRUE}, no date neither year are required (in that case, just
+surveys for the next elections are provided).}
 }
 \value{
 A tibble with rows corresponding to the estimated results
@@ -54,9 +64,9 @@ for each party.}
 }
 \description{
 Import and preprocess surveys data for given election
-types and dates. This function supports
-both single values and vector inputs for fetching and combining
-data for multiple elections' dates at once.
+types and dates. This function supports both single values and
+vector inputs for fetching and combining data for multiple
+elections at once.
 }
 \details{
 This function fetches survey data for the
@@ -70,8 +80,7 @@ of the different political parties.
 
 # Fetch survey data for congress elections in multiple dates
 poll_station_data <-
-  import_survey_data(year = 2023,
-                           date = "2019-04-28")
+  import_survey_data(year = 2023, date = "2019-04-28")
 
 # ----
 # Incorrect examples
@@ -88,7 +97,7 @@ import_survey_data(type_elec = "national", year = 2019)
 import_survey_data(type_elec = "congress", year = 2018)
 
 # Invalid date format: date should be in \%Y-\%m-\%d format
-import_survey_data(tdate = "26-06-2016")
+import_survey_data(date = "26-06-2016")
 
 }
 

@@ -10,7 +10,12 @@ aggregate_election_data(
   by_parties = TRUE,
   prec_round = 3,
   verbose = TRUE,
-  short_version = TRUE
+  short_version = TRUE,
+  col_id_elec = "id_elec",
+  col_id_poll_station = "id_INE_poll_station",
+  col_id_mun = "id_INE_mun",
+  cols_mun_var = c("pop_res_mun", "census_counting_mun"),
+  col_id_candidacies = c(id_prov = "id_candidacies", id_nat = "id_candidacies_nat")
 )
 }
 \arguments{
@@ -38,6 +43,10 @@ be printed during execution. Defaults to \code{TRUE}.}
 \item{short_version}{Flag to indicate whether it should be returned
 a short version of the data (just key variables) or not.
 Defaults to \code{TRUE}.}
+
+\item{col_id_elec, col_id_poll_station, col_id_mun, col_id_candidacies, cols_mun_var}{(Optional) Column names for election's id, poll station's id,
+municipalities' id, candidacies' id and column names for the
+variables just available at mun level or greater.}
 }
 \value{
 A tibble with rows corresponding to the level of aggregation for

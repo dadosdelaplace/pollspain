@@ -73,14 +73,12 @@ particular election) for a set of apportionment methods.
 }
 \examples{
 
-##Correct examples
+## Correct examples
 
-## Seats distribution with Hill method for given vectors of candidacies and ballots
-## without the remainder quotients
-
+# Seats distribution with Hill method for given vectors of
+# candidacies and ballots without the remainder quotients
 candidacies <- c("PP", "PSOE", "PODEMOS", "VOX")
 ballots <- c(200, 350, 100, 200)
-
 seats <- seat_allocation(method = "hill", candidacies = candidacies,
                         ballots = ballots, blank_ballots = 50,
                         n_seats = 15, threshold = 0.03)
