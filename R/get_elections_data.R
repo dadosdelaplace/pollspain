@@ -1075,7 +1075,7 @@ summary_election_data <-
 
     if (verbose) {
 
-      message(bgBlack(white("\n[x] Join information sources and last summaries ...\n")))
+      message(bgBlack(white("\n[x] Join information sources and last summaries ...")))
 
     }
 
@@ -1107,7 +1107,7 @@ summary_election_data <-
 
       if (verbose) {
 
-        message(green("   [x] Including candidacies info ..."))
+        message(green("[x] Including candidacies info ..."))
 
       }
 
@@ -1159,7 +1159,7 @@ summary_election_data <-
 
       if (verbose) {
 
-        message(green(paste0("   [x] Obtaining the number of seats allocated to each party at ", level, " level and according to the allocation method ", method)))
+        message(green(paste0("[x] Obtaining the number of seats allocated to each party at ", level, " level and according to the allocation method ", method)))
 
       }
 
@@ -1172,25 +1172,24 @@ summary_election_data <-
         pull(.data[[col_id_elec]]) |>
         unique()
 
-      nseats_year <- total_seats_spain |>
+      nseats_year <-
+        total_seats_spain |>
         filter(.data[[col_id_elec]] %in% id_election) |>
         select(.data[[col_id_electoral_district]], .data[[col_id_elec]], nseats)
+
 
       summary_data <-
         summary_data |>
         left_join(nseats_year, by = c(col_id_elec, col_id_electoral_district))
 
-      cand_arg <- summary_data[[col_id_candidacies]]
-      ballots_arg <- summary_data[[col_ballots]]
-      blank_ballots_arg <- summary_data[[col_blank_ballots]]
       seats_results <-
         summary_data |>
         select(all_of(c(col_id_elec, col_id_electoral_district,
                         col_id_candidacies, col_ballots,
                         col_blank_ballots, "nseats"))) |>
-        reframe(seat_allocation(candidacies = cand_arg,
-                                ballots = ballots_arg,
-                                blank_ballots = blank_ballots_arg,
+        reframe(seat_allocation(candidacies = .data[[col_id_candidacies]],
+                                ballots = .data[[col_ballots]],
+                                blank_ballots = .data[[col_blank_ballots]],
                                 n_seats = first(nseats),
                                 threshold = threshold),
                 .by = c(.data[[col_id_electoral_district]], .data[[col_id_elec]])) |>
@@ -1221,7 +1220,7 @@ summary_election_data <-
 
         if (verbose) {
 
-          message(green("   [x] Filtering candidacies by the provided percentage of ballots ..."))
+          message(green("[x] Filtering candidacies by the provided percentage of ballots ..."))
 
         }
         summary_data  <-
@@ -1241,7 +1240,7 @@ summary_election_data <-
 
         if (verbose) {
 
-          message(green("   [x] Filtering candidacies by the provided abbrev ..."))
+          message(green("[x] Filtering candidacies by the provided abbrev ..."))
 
         }
         filter_candidacies <-

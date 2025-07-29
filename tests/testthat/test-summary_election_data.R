@@ -215,17 +215,17 @@ test_that("summary_elections_data works", {
                          "2011-11-20", "2016-06-26", "2019-04-28",
                          "2019-11-10", "2023-07-24")), size = 1, # "2015-12-20" solve and add 2015
            replace = FALSE)
-  # expect_equal(summary_election_data(type_elec = "congress",
-  #                                    date = random_dates,
-  #                                    by_parties = TRUE,
-  #                                    level = "prov",
-  #                                    method =
-  #                                      sample(x = c("hondt", "hamilton", "vinton", "webster",
-  #                                                          "sainte-lague", "hill", "huntington-hill",
-  #                                                          "dean", "adams", "hagenbach", "fptp"), size = 1),
-  #                                    verbose = FALSE) |>
-  #                summarise("total_seats" = sum(seats), .by = id_elec) |>
-  #               filter(total_seats != 350) |>  nrow(), 0)
+  expect_equal(summary_election_data(type_elec = "congress",
+                                     date = random_dates,
+                                     by_parties = TRUE,
+                                     level = "prov",
+                                     method =
+                                       sample(x = c("hondt", "hamilton", "vinton", "webster",
+                                                           "sainte-lague", "hill", "huntington-hill",
+                                                           "dean", "adams", "hagenbach", "fptp"), size = 1),
+                                     verbose = FALSE) |>
+                 summarise("total_seats" = sum(seats), .by = id_elec) |>
+                 filter(total_seats != 350) |>  nrow(), 0)
 
   # is tibble?
   expect_equal(summary_election_data(type_elec = "congress",
