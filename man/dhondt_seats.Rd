@@ -29,7 +29,7 @@ blank ballots (integer positive values).}
 seats that are going to distributed for a given electoral district.}
 
 \item{threshold}{A numerical value (between 0 and 1) indicating the
-minimal percentage of votes needed to obtain representation for a
+minimal percentage of ballots needed to obtain representation for a
 given electoral district. Defaults to \code{0.03}.}
 
 \item{short_version}{Flag to indicate whether it should be returned
@@ -52,20 +52,20 @@ just in long format}
 This function allocates seats to political parties
 within a given electoral district using the D'Hondt method, a highest
 averages method for proportional representation.
-Each party's total vote (total number of ballots) is divided by a
+Each party's total ballots (total number of ballots) is divided by a
 series of divisors (1, 2, 3, ..., to the number of available seats),
 generating a list of quotients. Seats are then allocated one by one
 to the highest quotients until all seats have been distributed.
-Only parties that surpass a specified vote threshold (expressed as
-a proportion of total votes for a given electoral district,
-including blank votes) are eligible for seat allocation.
+Only parties that surpass a specified ballots threshold (expressed as
+a proportion of total ballots for a given electoral district,
+including blank ballots) are eligible for seat allocation.
 
 According to Spain's Organic Law of the General Electoral Regime
 (LOREG, Article 163.1), if there is a tie in the quotients between
 candidacies, the first tie is resolved by drawing lots, and
 subsequent ties are resolved alternately. In this package, in
 order to ensure reproducibility, ties will be broken by ordering
-from highest to lowest number of absolute votes.
+from highest to lowest number of absolute ballots.
 }
 \details{
 The purpose of this helper function is to be used in a general

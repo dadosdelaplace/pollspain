@@ -11,7 +11,7 @@ summary_survey_data(
   verbose = TRUE,
   short_version = TRUE,
   format = "long",
-  forthcoming = TRUE,
+  forthcoming = FALSE,
   filter_polling_firm = NULL,
   filter_media = NULL,
   filter_n_field_days = NULL,
@@ -124,11 +124,19 @@ summary_survey_data(year = c(2019, 2023), short_version = FALSE,
                     lower_sample_size =  500)
 
 # Summary for surveys for the forthcoming elections in, filtering
-# by parties ("PP" and "PSOE") and with a sample size at least
-# than 500 people
+# by parties ("PP" and "PSOE") and with a sample size of at least
+# 500 people
 summary_survey_data(forthcoming = TRUE,
                     filter_abbrev_candidacies = c("PP", "PSOE"),
                     lower_sample_size =  500)
+
+# Summary for 2023 surveys in a full version, filtering
+# just 40DB and GAD3 polling firms, surveys that go from the
+# first of March of 2020 to the first of August of the same year
+summary_survey_data(year = 2023, short_version = FALSE,
+                    filter_polling_firm = c("GAD3", "40DB"),
+                    lower_fieldwork_date = "2020-03-01",
+                    upper_fieldwork_date = "2020-08-01")
 \dontrun{
 # ----
 # Incorrect examples
@@ -143,8 +151,27 @@ summary_survey_data(year = 2018, short_version = FALSE)
 # logical variable
 summary_survey_data(type_elec = "congress", year = 2019,
                   short_version = "yes")
-}
 
+# upper_fieldworkday prior to lower_fieldworkday
+summary_survey_data(year = 2023,
+                    lower_fieldwork_day = "2020-08-01",
+                    upper_fieldwork_day = "2020-03-01")
+
+# upper_sample_size smaller than lower_sample-size
+summary_survey_data(year = 2023,
+                    lower_fieldwork_day = 500,
+                    upper_fieldwork_day = 200)
+
+# Invalid class for argument filter_polling_firm
+summary_survey_data(year = 2023,
+                    filter_polling_firm = 700)
+
+# Invalid class for argument filter_media
+summary_survey_data(year = 2023,
+                    filter_media = 700)
+
+
+}
 }
 \author{
 Javier Alvarez-Liebana and David Pereiro-Pol.

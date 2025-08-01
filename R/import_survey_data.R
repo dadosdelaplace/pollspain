@@ -117,7 +117,11 @@ import_survey_data <-
 
       if (forthcoming) {
 
-        message(yellow("Be careful! No date neither year was provided: just surveys for the forthcoming elections were provided"))
+        if (verbose) {
+
+          message(yellow("Be careful! No date neither year was provided: just surveys for the forthcoming elections were provided"))
+
+        }
 
       } else {
 
@@ -126,6 +130,21 @@ import_survey_data <-
       }
     }
 
+    explicit_2019 <- !is.null(date) && any(year(date) == 2019)
+
+    if (explicit_2019 & (2019 %in% year)) {
+
+      if (length(year) == 1){
+
+        year <- NULL
+
+      } else {
+
+        year <- year[year != 2019]
+
+      }
+
+    }
 
     # Design a tibble with all elections asked by user
     # Ensure input parameters are vectors
@@ -171,27 +190,79 @@ import_survey_data <-
         distinct(cod_elec, type_elec, date, .keep_all = TRUE)
     }
 
-    if (!is.null(year) | !is.null(year)) {
-      if (!is.null(year)) {
-        if (!is.null(date)) {
+    if (!is.null(year)) {
+      if (!is.null(date)) {
 
-          allowed_elections <-
-            allowed_elections |>
-            bind_rows(allowed_elections_date) |>
-            distinct(cod_elec, type_elec, date, .keep_all = TRUE)
-        }
-      } else {
+        allowed_elections <-
+          allowed_elections |>
+          bind_rows(allowed_elections_date) |>
+          distinct(cod_elec, type_elec, date, .keep_all = TRUE)
+      }
+    } else {
+
+      if (!is.null(date)) {
 
         allowed_elections <- allowed_elections_date
 
-        if (!is.null(date)) {
-
-          allowed_elections <-
-            allowed_elections_date |>
-            bind_rows(allowed_elections) |>
-            distinct(cod_elec, type_elec, date, .keep_all = TRUE)
-        }
+        allowed_elections <-
+          allowed_elections_date |>
+          bind_rows(allowed_elections) |>
+          distinct(cod_elec, type_elec, date, .keep_all = TRUE)
       }
+    }
+
+    if (!is.null(year) | !is.null(date)){
+
+      ambiguous_years <- intersect(allowed_elections$year, 2019)
+
+      chosen_dates <- NULL
+
+    } else {
+
+      ambiguous_years <- NULL
+
+    }
+
+    if (length(ambiguous_years) > 0 & !explicit_2019) {
+
+      normal_years <- setdiff(year, 2019)
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec & year %in% normal_years) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+
+      if (interactive()) {
+
+        sel <- menu(c("April (2019-04-28)",
+                      "November (2019-11-10)",
+                      "Both dates"),
+                    title = paste0("What 2019 election do you want?"))
+
+        chosen_dates <- c(
+          chosen_dates,
+          switch(sel,
+                 "2019-04-28",
+                 "2019-11-10",
+                 c("2019-04-28", "2019-11-10"))
+        )
+      }
+
+      dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))
+
+      allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
+
+    } else if (!is.null(year) | !is.null(date)) {
+
+      normal_dates <- dates_elections_spain |>
+        filter(type_elec %in% !!type_elec &
+                 year %in% allowed_elections$year) |>
+        pull(date)
+
+      normal_dates <- as.character(normal_dates)
+      dates_ok <- as_date(unique(c(date, normal_dates)))
+
+      allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
 
     }
 
@@ -202,64 +273,18 @@ import_survey_data <-
 
     }
 
-    if (!is.null(date) | !is.null(year)) {
-
-      ambiguous_years <- intersect(allowed_elections$year, 2019)
-      chosen_dates <- NULL
-
-      if (length(ambiguous_years) > 0) {
-
-        normal_years <- setdiff(year, 2019)
-        normal_dates <- dates_elections_spain |>
-          filter(type_elec %in% !!type_elec & year %in% normal_years) |>
-          pull(date)
-
-        normal_dates <- as.character(normal_dates)
-
-        if (interactive()) {
-
-          sel <- menu(c("April (2019-04-28)",
-                        "November (2019-11-10)",
-                        "Both dates"),
-                      title = paste0("What 2019 election polling data do you want?"))
-
-          chosen_dates <- c(
-            chosen_dates,
-            switch(sel,
-                   "2019-04-28",
-                   "2019-11-10",
-                   c("2019-04-28", "2019-11-10"))
-          )
-        } else {
-
-          chosen_dates <- c(chosen_dates, c("2019-04-28", "2019-11-10"))
-        }
-
-        dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))
-
-      } else {
-
-        normal_dates <- dates_elections_spain |>
-          filter(type_elec %in% !!type_elec &
-                   year %in% allowed_elections$year) |>
-          pull(date)
-
-        normal_dates <- as.character(normal_dates)
-        dates_ok <- as_date(unique(c(date, normal_dates)))
-
-      }
-      allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
-
+    if (!is.null(year) | !is.null(date)) {
       if (allowed_elections |> nrow() == 0) {
 
         stop(red(glue("Ups! No {type_elec} surveys are available. Please, be sure that arguments and dates are right")))
 
+      } else {
+
+        survey_data <-
+          pollspaindata::historical_surveys |>
+          filter(id_elec %in% glue("{allowed_elections$cod_elec}-{allowed_elections$date}"))
+
       }
-
-      survey_data <-
-        pollspaindata::historical_surveys |>
-        filter(id_elec %in% glue("{allowed_elections$cod_elec}-{allowed_elections$date}"))
-
     }
 
     # forthcoming surveys

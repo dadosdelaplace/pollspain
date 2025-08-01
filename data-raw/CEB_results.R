@@ -126,6 +126,8 @@ CEB_results <-
   CEB_results |>
   mutate(across(where(is.character), \(x) enc2utf8(x)))
 
+
+
 # ----- use data -----
 usethis::use_data(CEB_results, overwrite = TRUE,
                   compress = "xz")

@@ -29,7 +29,7 @@ blank ballots (integer positive values).}
 seats that are going to distributed for a given electoral district.}
 
 \item{threshold}{A numerical value (between 0 and 1) indicating the
-minimal percentage of votes needed to obtain representation for a
+minimal percentage of ballots needed to obtain representation for a
 given electoral district. Defaults to \code{0.03}.}
 
 \item{short_version}{Flag to indicate whether it should be returned
