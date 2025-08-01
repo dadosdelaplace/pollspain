@@ -70,6 +70,11 @@
 #'
 #' ## Correct examples
 #'
+#' # Fetch municipal census for congress elections in a single date
+#' mun_census <-
+#'   import_mun_census_data(type_elec = "congress",
+#'                          year = 2023)
+#'
 #' # Fetch municipal census for congress elections in multiple dates
 #' mun_census <-
 #'   import_mun_census_data(type_elec = "congress",
@@ -260,13 +265,6 @@ import_mun_census_data <-
       message(blue("   [x] Importing census mun data ..."))
 
     }
-
-    # Create connection in duckdb
-    # temp_db_dir <- file.path(tempdir(), "duckdb_scratch")
-    # dir.create(temp_db_dir, showWarnings = FALSE)
-    # con <- DBI::dbConnect(duckdb::duckdb(), dbdir = tempfile(tmpdir = temp_db_dir, fileext = ".duckdb"))
-    # on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-    # DBI::dbExecute(con, glue::glue("SET temp_directory = '{temp_db_dir}'"))
 
     # Import files
     files <- glue("raw_mun_data_{allowed_elections$type_elec}_{allowed_elections$year}_{sprintf('%02d', allowed_elections$month)}.parquet")

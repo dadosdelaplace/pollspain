@@ -29,7 +29,7 @@ blank ballots (integer positive values).}
 seats that are going to distributed for a given electoral district.}
 
 \item{threshold}{A numerical value (between 0 and 1) indicating the
-minimal percentage of votes needed to obtain representation for a
+minimal percentage of ballots needed to obtain representation for a
 given electoral district. Defaults to \code{0.03}.}
 
 \item{short_version}{Flag to indicate whether it should be returned
@@ -54,16 +54,16 @@ using the Adams method, a highest averages method for proportional representatio
 that favors smaller candidacies. In this method, the first quotient for every eligible party
 is treated as "infinite", each party will receive a seat initially if possible, so a party
 cannot receive a second seat until all other eligible parties
-have had the chance at a first seat. After that, each party’s vote total is divided
+have had the chance at a first seat. After that, each party’s ballots total is divided
 by a sequence of integers starting from 1 (i.e., 1, 2, 3, ...), generating a series
 of quotients. The remaining seats are allocated one at a time to the highest quotients
-until all seats are distributed. Only parties that surpass a specified vote threshold
-(expressed as a proportion of total votes, including blank votes) are eligible
+until all seats are distributed. Only parties that surpass a specified ballots threshold
+(expressed as a proportion of total ballots, including blank ballots) are eligible
 for seat allocation.
 
 If there are more eligible parties than seats, in this package, in
 order to ensure reproducibility, ties will be broken by ordering
-from highest to lowest number of absolute votes.
+from highest to lowest number of absolute ballots.
 }
 \details{
 The purpose of this helper function is to be used in a general

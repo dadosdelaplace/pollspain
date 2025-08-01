@@ -82,6 +82,11 @@ of data across multiple election periods as specified by the user.
 
 ## Correct examples
 
+# Fetch municipal census for congress elections in a single date
+mun_census <-
+  import_mun_census_data(type_elec = "congress",
+                         year = 2023)
+
 # Fetch municipal census for congress elections in multiple dates
 mun_census <-
   import_mun_census_data(type_elec = "congress",

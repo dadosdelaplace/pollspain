@@ -5,20 +5,20 @@
 #' @description This function allocates seats to political parties
 #' within a given electoral district using the D'Hondt method, a highest
 #' averages method for proportional representation.
-#' Each party's total vote (total number of ballots) is divided by a
+#' Each party's total ballots (total number of ballots) is divided by a
 #' series of divisors (1, 2, 3, ..., to the number of available seats),
 #' generating a list of quotients. Seats are then allocated one by one
 #' to the highest quotients until all seats have been distributed.
-#' Only parties that surpass a specified vote threshold (expressed as
-#' a proportion of total votes for a given electoral district,
-#' including blank votes) are eligible for seat allocation.
+#' Only parties that surpass a specified ballots threshold (expressed as
+#' a proportion of total ballots for a given electoral district,
+#' including blank ballots) are eligible for seat allocation.
 #'
 #' According to Spain's Organic Law of the General Electoral Regime
 #' (LOREG, Article 163.1), if there is a tie in the quotients between
 #' candidacies, the first tie is resolved by drawing lots, and
 #' subsequent ties are resolved alternately. In this package, in
 #' order to ensure reproducibility, ties will be broken by ordering
-#' from highest to lowest number of absolute votes.
+#' from highest to lowest number of absolute ballots.
 #
 #' @param candidacies A vector containing one of the following
 #' variable: unique codes or abbreviations of the candidacies
@@ -30,7 +30,7 @@
 #' @param n_seats An integer positive value indicating the number of
 #' seats that are going to distributed for a given electoral district.
 #' @param threshold A numerical value (between 0 and 1) indicating the
-#' minimal percentage of votes needed to obtain representation for a
+#' minimal percentage of ballots needed to obtain representation for a
 #' given electoral district. Defaults to \code{0.03}.
 #' @param short_version Flag to indicate whether it should be returned
 #' a short version of the data (just key variables) or not. Defaults
@@ -259,12 +259,12 @@ dhondt_seats <-
 #' given electoral district using the Hamilton method (also
 #' known as the method of largest remainders).The method first
 #' calculates an electoral quota by dividing the total number
-#' of votes (including blank votes) by the number of seats to be filled.
-#' Each party's vote count is divided by this quota to determine an initial seat
+#' of ballots (including blank ballots) by the number of seats to be filled.
+#' Each party's ballots count is divided by this quota to determine an initial seat
 #' allocation (using the floor of the result). Remaining seats are then assigned
 #' to candidacies with the largest fractional remainders until all seats are distributed.
-#' Only parties that surpass a given vote threshold (expressed as a proportion of
-#' total votes) are considered for seat allocation.
+#' Only parties that surpass a given ballots threshold (expressed as a proportion of
+#' total ballots) are considered for seat allocation.
 #'
 #' @param candidacies A vector containing one of the following
 #' variable: unique codes or abbreviations of the candidacies
@@ -469,12 +469,12 @@ hamilton_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' given electoral district using the Hagenbach-Bischoff method (also
 #' known as the Droop-Hamilton ot simple quota largest-remainders rule).The method first
 #' calculates an electoral quota by dividing the total number
-#' of votes (including blank votes) by the number of seats to be filled plus one.
-#' Each party's vote count is divided by this quota to determine an initial seat
+#' of ballots (including blank ballots) by the number of seats to be filled plus one.
+#' Each party's ballots count is divided by this quota to determine an initial seat
 #' allocation (using the floor of the result). Remaining seats are then assigned
 #' to candidacies with the largest fractional remainders until all seats are distributed.
-#' Only parties that surpass a given vote threshold (expressed as a proportion of
-#' total votes) are considered for seat allocation.
+#' Only parties that surpass a given ballots threshold (expressed as a proportion of
+#' total ballots) are considered for seat allocation.
 #'
 #' @inheritParams hamilton_seats
 #'
@@ -891,11 +891,11 @@ webster_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #'
 #' @description This function allocates seats to political parties in a given electoral district
 #' using the Hill method (also known as the Equal Proportions method), a highest averages
-#' approach for proportional representation. Each party's total number of votes is divided
+#' approach for proportional representation. Each party's total number of ballots is divided
 #' by the square root of the product of the number of seats already allocated plus one and
 #' that number itself (i.e., √n(n+1)), producing a list of quotients. Seats are assigned
 #' one at a time to the party with the highest quotient, repeating until all seats are allocated.
-#' Only candidacies surpassing a specified threshold (as a proportion of total votes including blank votes)
+#' Only candidacies surpassing a specified threshold (as a proportion of total ballots including blank ballots)
 #' are considered for allocation.
 #'
 #' @inheritParams dhondt_seats
@@ -1119,11 +1119,11 @@ hill_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' @description This function allocates seats to political parties in a given electoral district
 #' using the Dean method (also known as the Harmonic Mean method), a highest averages
 #' method for proportional representation. The method uses divisors based on the harmonic mean
-#' of consecutive integers: for each party, its vote total is divided by
+#' of consecutive integers: for each party, its ballots total is divided by
 #' \eqn{(2s(s+1))/(2s+1)}, where \eqn{s} is the current number of seats allocated to the party.
 #' Seats are assigned one at a time to the party with the highest resulting quotient
-#' until all seats are distributed. Only parties that exceed a vote threshold
-#' (expressed as a proportion of the total votes, including blank votes) are considered eligible.
+#' until all seats are distributed. Only parties that exceed a ballots threshold
+#' (expressed as a proportion of the total ballots, including blank ballots) are considered eligible.
 #'
 #' @inheritParams dhondt_seats
 #'
@@ -1357,16 +1357,16 @@ deans_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #' that favors smaller candidacies. In this method, the first quotient for every eligible party
 #' is treated as "infinite", each party will receive a seat initially if possible, so a party
 #' cannot receive a second seat until all other eligible parties
-#' have had the chance at a first seat. After that, each party’s vote total is divided
+#' have had the chance at a first seat. After that, each party’s ballots total is divided
 #' by a sequence of integers starting from 1 (i.e., 1, 2, 3, ...), generating a series
 #' of quotients. The remaining seats are allocated one at a time to the highest quotients
-#' until all seats are distributed. Only parties that surpass a specified vote threshold
-#' (expressed as a proportion of total votes, including blank votes) are eligible
+#' until all seats are distributed. Only parties that surpass a specified ballots threshold
+#' (expressed as a proportion of total ballots, including blank ballots) are eligible
 #' for seat allocation.
 #'
 #' If there are more eligible parties than seats, in this package, in
 #' order to ensure reproducibility, ties will be broken by ordering
-#' from highest to lowest number of absolute votes.
+#' from highest to lowest number of absolute ballots.
 #'
 #' @inheritParams dhondt_seats
 #'
@@ -1629,7 +1629,7 @@ adams_seats <- function(candidacies, ballots, blank_ballots, n_seats,
 #'
 #' @description This function allocates every seat in an electoral district to the
 #' candidacy that receives the largest number of ballots. In case of a tie in the number
-#' of votes the seats will be randomly allocated between those candidacies.
+#' of ballots the seats will be randomly allocated between those candidacies.
 #'
 #' @inheritParams dhondt_seats
 #'
@@ -1793,8 +1793,8 @@ fptp_seats <- function(candidacies, ballots, blank_ballots,
     data |>
     filter(porc_ballots >= threshold)
 
-  top_votes <- max(data_filtered$ballots)
-  tied      <- data_filtered |> filter(ballots == top_votes)
+  top_ballots <- max(data_filtered$ballots)
+  tied      <- data_filtered |> filter(ballots == top_ballots)
 
   winner <- tied |> slice_sample(n = 1) # In case of a tie result
 

@@ -71,11 +71,19 @@
 #'                     lower_sample_size =  500)
 #'
 #' # Summary for surveys for the forthcoming elections in, filtering
-#' # by parties ("PP" and "PSOE") and with a sample size at least
-#' # than 500 people
+#' # by parties ("PP" and "PSOE") and with a sample size of at least
+#' # 500 people
 #' summary_survey_data(forthcoming = TRUE,
 #'                     filter_abbrev_candidacies = c("PP", "PSOE"),
 #'                     lower_sample_size =  500)
+#'
+#' # Summary for 2023 surveys in a full version, filtering
+#' # just 40DB and GAD3 polling firms, surveys that go from the
+#' # first of March of 2020 to the first of August of the same year
+#' summary_survey_data(year = 2023, short_version = FALSE,
+#'                     filter_polling_firm = c("GAD3", "40DB"),
+#'                     lower_fieldwork_date = "2020-03-01",
+#'                     upper_fieldwork_date = "2020-08-01")
 #' \dontrun{
 #' # ----
 #' # Incorrect examples
@@ -90,20 +98,39 @@
 #' # logical variable
 #' summary_survey_data(type_elec = "congress", year = 2019,
 #'                   short_version = "yes")
-#' }
 #'
+#' # upper_fieldworkday prior to lower_fieldworkday
+#' summary_survey_data(year = 2023,
+#'                     lower_fieldwork_day = "2020-08-01",
+#'                     upper_fieldwork_day = "2020-03-01")
+#'
+#' # upper_sample_size smaller than lower_sample-size
+#' summary_survey_data(year = 2023,
+#'                     lower_fieldwork_day = 500,
+#'                     upper_fieldwork_day = 200)
+#'
+#' # Invalid class for argument filter_polling_firm
+#' summary_survey_data(year = 2023,
+#'                     filter_polling_firm = 700)
+#'
+#' # Invalid class for argument filter_media
+#' summary_survey_data(year = 2023,
+#'                     filter_media = 700)
+#'
+#'
+#' }
 #' @export
 summary_survey_data <-
   function(type_elec = "congress", year = NULL, date = NULL,
            verbose = TRUE, short_version = TRUE, format = "long",
-           forthcoming = TRUE,
+           forthcoming = FALSE,
            filter_polling_firm = NULL, filter_media = NULL,
            filter_n_field_days = NULL, filter_days_until_elec = NULL,
            lower_sample_size = NULL, upper_sample_size = NULL,
            lower_fieldwork_date = NULL, upper_fieldwork_date = NULL,
            filter_abbrev_candidacies = NULL) {
 
-    # check by_parties
+    # check if short_version is correct
     if (!is.logical(short_version) | is.na(short_version)) {
 
       stop(red("Ups! `short_version` argument should be a TRUE/FALSE variable."))
@@ -124,6 +151,37 @@ summary_survey_data <-
 
     }
 
+    if (!is.logical(forthcoming) | is.na(forthcoming)) {
+
+      stop(red("Ups! `forthcoming` argument should be a TRUE/FALSE variable."))
+
+    }
+
+    # Check date
+    if (!is.null(date)) {
+      if (!all(str_detect(date, "^\\d{4}-\\d{2}-\\d{2}$")) | any(is.na(date))) {
+
+        stop(red("Ups! If date was provided, `date` should be in format '2000-01-01' (%Y-%m-%d)"))
+
+      } else {
+
+        date <- as_date(date)
+
+      }
+
+    } else if (!is.numeric(year)) {
+
+      if (forthcoming) {
+
+        message(yellow("Be careful! No date neither year was provided: just surveys for the forthcoming elections were provided"))
+
+      } else {
+
+        stop(red("Ups! If no date was provided, `year` should be a numerical variable or `forthcoming` shoulb be set as TRUE."))
+
+      }
+    }
+
     # Check format
     if (!(format %in% c("long", "wide"))) {
 
@@ -131,9 +189,73 @@ summary_survey_data <-
 
     }
 
+    # check filter_polling_firm
+    if (!all(is.na(filter_polling_firm)) & !all(is.character(filter_polling_firm))) {
+
+      stop(red("Ups! `filter_polling_firm` argument should be NA or a string of characters."))
+
+    }
+
+    # check filter_media
+    if (!all(is.na(filter_media)) & !all(is.character(filter_media))) {
+
+      stop(red("Ups! `filter_media` argument should be NA or a string of characters."))
+
+    }
+
+    # check filter_abbrev_candidacies
+    if (!all(is.na(filter_abbrev_candidacies)) & !all(is.character(filter_abbrev_candidacies))) {
+
+      stop(red("Ups! `filter_abbrev_candidacies` argument should be NA or a string of characters."))
+
+    }
+
+    # check filter_n_field_days
+    if (!all(is.na(filter_n_field_days)) & !all(is.numeric(filter_n_field_days))) {
+
+      stop(red("Ups! `filter_n_field_days` argument should be a single numeric value"))
+
+    }
+
+    # check filter_n_field_days
+    if (!all(is.na(filter_days_until_elec)) & !all(is.numeric(filter_days_until_elec))) {
+
+      stop(red("Ups! `filter_days_until_elec` argument should be a single numeric value"))
+
+    }
+
+    # check filter_n_field_days
+    if (!all(is.na(c(lower_sample_size, upper_sample_size))) & !all(is.numeric(c(lower_sample_size, upper_sample_size)))) {
+
+      stop(red("Ups! `lower_sample_size` and `upper_sample_size` arguments should be a single numeric value"))
+
+    } else if (!is.null(lower_sample_size) & !is.null(upper_sample_size)) {
+
+      if (lower_sample_size > upper_sample_size) {
+
+        stop(red("Ups! `lower_sample_size` should be smaller or equal than `upper_sample_size`"))
+
+      }
+
+    }
+
+    if (!all(str_detect(c(lower_fieldwork_date, upper_fieldwork_date), "^\\d{4}-\\d{2}-\\d{2}$")) & !all(is.na(c(lower_sample_size, upper_fieldwork_date)))) {
+
+      stop(red("Ups! `lower_fieldwork_day` and `upper_fieldwork_day` arguments should be should be in format '2000-01-01' (%Y-%m-%d)"))
+
+    } else if (!is.null(lower_fieldwork_date) & !is.null(upper_fieldwork_date)) {
+
+      if (as_date(lower_fieldwork_date) > as_date(upper_fieldwork_date)) {
+
+        stop(red("Ups! `lower_fieldwork_day` should be prior to `upper_fieldwork_day`"))
+
+      }
+
+    }
+
     survey_data <-
       import_survey_data(type_elec = "congress", year = year,
-                         date = date, verbose = verbose, format = "long",
+                         date = date, verbose = FALSE, format = "long",
                          forthcoming = forthcoming)
 
     # Computing some statistics
@@ -270,7 +392,7 @@ summary_survey_data <-
 
       aux <-
         survey_data |>
-        filter(between(fieldwork_start, lower_fieldwork_date, upper_fieldwork_date))
+        filter(between(fieldwork_start, as_date(lower_fieldwork_date), as_date(upper_fieldwork_date)))
 
       if (nrow(aux) == 0) {
 
@@ -315,8 +437,6 @@ summary_survey_data <-
         select(id_survey, id_elec, polling_firm, n_field_days, sample_size,
                fieldwork_start, fieldwork_end, abbrev_candidacies,
                estimated_porc_ballots)
-
-
 
     }
 

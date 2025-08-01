@@ -49,12 +49,12 @@ This function allocates seats to political parties in a
 given electoral district using the Hamilton method (also
 known as the method of largest remainders).The method first
 calculates an electoral quota by dividing the total number
-of votes (including blank votes) by the number of seats to be filled.
-Each party's vote count is divided by this quota to determine an initial seat
+of ballots (including blank ballots) by the number of seats to be filled.
+Each party's ballots count is divided by this quota to determine an initial seat
 allocation (using the floor of the result). Remaining seats are then assigned
 to candidacies with the largest fractional remainders until all seats are distributed.
-Only parties that surpass a given vote threshold (expressed as a proportion of
-total votes) are considered for seat allocation.
+Only parties that surpass a given ballots threshold (expressed as a proportion of
+total ballots) are considered for seat allocation.
 }
 \details{
 The purpose of this helper function is to be used in a general
