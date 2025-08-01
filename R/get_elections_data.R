@@ -1227,8 +1227,8 @@ summary_election_data <-
       nseats_year <-
         total_seats_spain |>
         filter(.data[[col_id_elec]] %in% id_election) |>
-        select(.data[[col_id_electoral_district]], .data[[col_id_elec]], nsea
-              
+        select(.data[[col_id_electoral_district]], .data[[col_id_elec]], nseats)
+
       aux <-
         aux |>
         left_join(nseats_year, by = c(col_id_elec, col_id_electoral_district))
