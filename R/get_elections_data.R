@@ -1089,7 +1089,7 @@ summary_election_data <-
 
     if (verbose) {
 
-      message(bgBlack(white("\n[x] Join information sources and last summaries ...\n")))
+      message(bgBlack(white("\n[x] Join information sources and last summaries ...")))
 
     }
 
@@ -1121,7 +1121,7 @@ summary_election_data <-
 
       if (verbose) {
 
-        message(green("   [x] Including candidacies info ..."))
+        message(green("[x] Including candidacies info ..."))
 
       }
 
@@ -1211,7 +1211,7 @@ summary_election_data <-
 
       if (verbose) {
 
-        message(green(paste0("   [x] Obtaining the number of seats allocated to each party at ", level, " level and according to the allocation method ", method)))
+        message(green(paste0("[x] Obtaining the number of seats allocated to each party at ", level, " level and according to the allocation method ", method)))
 
       }
 
@@ -1224,10 +1224,11 @@ summary_election_data <-
         pull(.data[[col_id_elec]]) |>
         unique()
 
-      nseats_year <- total_seats_spain |>
+      nseats_year <-
+        total_seats_spain |>
         filter(.data[[col_id_elec]] %in% id_election) |>
-        select(.data[[col_id_electoral_district]], .data[[col_id_elec]], nseats)
-
+        select(.data[[col_id_electoral_district]], .data[[col_id_elec]], nsea
+              
       aux <-
         aux |>
         left_join(nseats_year, by = c(col_id_elec, col_id_electoral_district))
@@ -1302,7 +1303,7 @@ summary_election_data <-
 
         if (verbose) {
 
-          message(green("   [x] Filtering candidacies by the provided percentage of ballots ..."))
+          message(green("[x] Filtering candidacies by the provided percentage of ballots ..."))
 
         }
         summary_data  <-
@@ -1322,7 +1323,7 @@ summary_election_data <-
 
         if (verbose) {
 
-          message(green("   [x] Filtering candidacies by the provided abbrev ..."))
+          message(green("[x] Filtering candidacies by the provided abbrev ..."))
 
         }
         filter_candidacies <-
