@@ -746,7 +746,7 @@ global_dict_parties <-
   global_dict_parties |>
   mutate(color =
            case_when(abbrev_candidacies == "UCD" ~ "#ff7f27",
-                     abbrev_candidacies %in% c("AP-PDP-PL", "PP") |
+                     abbrev_candidacies %in% c("AP-PDP-PL", "PP","PP-UPM") |
                        str_detect(name_candidacies, "PARTIDO POPULAR") ~ "#1e4b8f",
                      abbrev_candidacies == "PSOE" ~ "#e30613",
                      abbrev_candidacies == "PCE" ~ "#be1622",
@@ -759,7 +759,7 @@ global_dict_parties <-
                      abbrev_candidacies == "CDS" ~ "#b1c444",
                      abbrev_candidacies == "IU" ~ "#a9272f",
                      abbrev_candidacies == "EA-EUE" ~ "#69ab60",
-                     abbrev_candidacies %in% c("CC", "CC-NC-PNC", "CC-PNC", "NC-CCN") ~ "#fbd44c",
+                     abbrev_candidacies %in% c("CC", "CC-NC-PNC", "CC-PNC", "NC-CCN", "CC-NC") ~ "#fbd44c",
                      abbrev_candidacies == "BNG" ~ "#8dd6ff",
                      abbrev_candidacies %in% c("NA-BAI", "GBAI") ~ "#e68271",
                      abbrev_candidacies == "UPYD" ~ "#da1d79",
@@ -781,9 +781,30 @@ global_dict_parties <-
                      abbrev_candidacies == "UPN" ~ "#2a52be",
                      TRUE ~ NA_character_))
 
+global_dict_parties <- global_dict_parties |>
+  mutate(abbrev_candidacies_unified = case_when(
+    str_detect(abbrev_candidacies, "^PP$|^PP-") ~ "PP",
+    str_detect(abbrev_candidacies, "^CC$|CC-NC|CC-PNC") ~ "CC",
+    str_detect(abbrev_candidacies, "CCD") ~ "CCD",
+    str_detect(abbrev_candidacies, "CCS") ~ "CCS",
+    str_detect(abbrev_candidacies, "CSD") ~ "CSD",
+    str_detect(abbrev_candidacies, "^EI|EI-ADD") ~ "EI",
+    str_detect(abbrev_candidacies, "EKA|PARTIDOCARLISTA|^PC$|^PCA$|^PCAC") ~ "PARTIDOCARLISTA",
+    str_detect(abbrev_candidacies, "CNB|CENB") ~ "CENB",
+    str_detect(abbrev_candidacies, "^ERC$|ERC-CATSI") ~ "ERC",
+    str_detect(name_candidacies_nat, "LA FALANGE|FALANGE ESPA") ~ "FE",
+    str_detect(name_candidacies_nat, "PODEMOS") ~ "PODEMOS",
+    str_detect(name_candidacies_nat, "PARTIDO SOCIAL DEMOCRATA") ~ "PSD",
+    TRUE ~ abbrev_candidacies
+  )) |>
+  arrange(abbrev_candidacies_unified)
+
 global_dict_parties <-
   global_dict_parties |>
   mutate(across(where(is.character), \(x) enc2utf8(x)))
+
+global_dict_parties<- global_dict_parties |>
+  mutate(id_candidacies_unified = as.integer(factor(abbrev_candidacies_unified)))
 
 usethis::use_data(global_dict_parties, overwrite = TRUE,
                   compress = "xz")
