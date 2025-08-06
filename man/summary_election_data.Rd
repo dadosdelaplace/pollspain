@@ -14,13 +14,12 @@ summary_election_data(
   method = NULL,
   threshold = 0.03,
   short_version = TRUE,
-  CERA_remove = FALSE,
+  verbose = TRUE,
   filter_porc_ballots = NA,
   filter_candidacies = NA,
   prec_round = 3,
-  candidacies_data = NULL,
+  CERA_remove = FALSE,
   col_abbrev_candidacies = "abbrev_candidacies",
-  verbose = TRUE,
   col_id_elec = "id_elec",
   col_id_poll_station = "id_INE_poll_station",
   col_id_mun = "id_INE_mun",
@@ -77,9 +76,8 @@ given electoral district. Defaults to \code{0.03}.}
 a short version of the data (just key variables) or not.
 Defaults to \code{TRUE}.}
 
-\item{CERA_remove}{Flag to indicate whether it should be removed
-the ballots related to CERA constituencies. Defaults to
-\code{FALSE}.}
+\item{verbose}{Flag to indicate whether detailed messages should
+be printed during execution. Defaults to \code{TRUE}.}
 
 \item{filter_porc_ballots}{A numerical argument representing the
 vote percentage threshold (out of 100) that the user wants to use
@@ -93,19 +91,20 @@ them) containing party abbreviations which ballots will be filtered
 \item{prec_round}{Rounding accuracy. Defaults to
 \code{prec_round = 3}.}
 
-\item{candidacies_data}{A database containing the information of
-candidacies. Database should contain \code{col_abbrev_candidacies}
-and \code{col_id_candidacies} columns. Defaults to \code{NULL}.}
+\item{CERA_remove}{Flag to indicate whether it should be removed
+the ballots related to CERA constituencies. Defaults to
+\code{FALSE}.}
 
 \item{col_abbrev_candidacies}{Column name to uniquely identify the
 party abbreviations. Defaults to \code{"abbrev_candidacies"}.}
 
-\item{verbose}{Flag to indicate whether detailed messages should
-be printed during execution. Defaults to \code{TRUE}.}
-
 \item{col_id_elec, col_id_poll_station, col_id_mun, col_id_candidacies, cols_mun_var}{(Optional) Column names for election's id, poll station's id,
 municipalities' id, candidacies' id and column names for the
 variables just available at mun level or greater.}
+
+\item{candidacies_data}{A database containing the information of
+candidacies. Database should contain \code{col_abbrev_candidacies}
+and \code{col_id_candidacies} columns. Defaults to \code{NULL}.}
 }
 \value{
 A tibble with rows corresponding to the level of aggregation for

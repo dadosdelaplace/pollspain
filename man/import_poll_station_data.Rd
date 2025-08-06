@@ -128,6 +128,10 @@ poll_station_data <-
 # Invalid election type: "national" is not a valid election type
 import_poll_station_data(type_elec = "national", year = 2019)
 
+# Invalid verbose argument: verbose should be a logical variable
+import_poll_station_data(type_elec = "congress", year = 2023,
+                         verbose = "yes")
+
 # Invalid election: no congress elections are available in 2018
 # Please check dataset dates_elections_spain
 import_poll_station_data(type_elec = "congress", year = 2018)

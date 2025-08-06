@@ -687,9 +687,6 @@ aggregate_election_data <-
 #' @param filter_candidacies A string of characters (or vector of
 #' them) containing party abbreviations which ballots will be filtered
 #' (as long as \code{by_parties = TRUE}). Defaults to \code{NA}.
-#' @param candidacies_data A database containing the information of
-#' candidacies. Database should contain \code{col_abbrev_candidacies}
-#' and \code{col_id_candidacies} columns. Defaults to \code{NULL}.
 #' @param col_abbrev_candidacies Column name to uniquely identify the
 #' party abbreviations. Defaults to \code{"abbrev_candidacies"}.
 #' @param filter_porc_ballots A numerical argument representing the
@@ -848,13 +845,10 @@ aggregate_election_data <-
 summary_election_data <-
   function(type_elec, year = NULL, date = NULL,
            level = "all", by_parties = TRUE, method = NULL,
-           threshold = 0.03,
-           short_version = TRUE, CERA_remove = FALSE,
+           threshold = 0.03, short_version = TRUE, verbose = TRUE,
            filter_porc_ballots = NA, filter_candidacies = NA,
-           prec_round = 3,
-           candidacies_data = NULL,
+           prec_round = 3, CERA_remove = FALSE,
            col_abbrev_candidacies = "abbrev_candidacies",
-           verbose = TRUE,
            col_id_elec = "id_elec", col_id_poll_station = "id_INE_poll_station",
            col_id_mun = "id_INE_mun",
            cols_mun_var = c("pop_res_mun", "census_counting_mun"),
@@ -919,15 +913,7 @@ summary_election_data <-
 
     }
 
-    # check abbrev_candidacies
-    if (!is.null(candidacies_data) &
-        !all(c(col_abbrev_candidacies, col_id_candidacies) %in% colnames(candidacies_data))) {
-
-      stop(red("Ups! Variables names in `col_abbrev_candidacies` and `(id_candidacies, id_candidacies_nat)` should be matched with column names in candidacies_data"))
-
-    }
-
-
+    # Get election data
     election_data <-
       get_election_data(type_elec = type_elec, year = year, date = date,
                         prec_round = prec_round, short_version = FALSE,
@@ -954,7 +940,7 @@ summary_election_data <-
         filter(!str_detect(id_INE_poll_station, "-999-"))
     }
 
-
+    # Aggregate election data at level provided
     summary_data <-
       election_data |>
       aggregate_election_data(level = level, by_parties = by_parties,
@@ -970,7 +956,14 @@ summary_election_data <-
 
     }
 
+    # if by_parties --> summaries by candidacies
     if (by_parties) {
+
+      if (verbose) {
+
+        message(green("[x] Including candidacies info and summaries ..."))
+
+      }
 
       # Including some summaries
       census_var <-
@@ -984,32 +977,18 @@ summary_election_data <-
                "porc_candidacies_census" =
                  round(100*ballots/.data[[census_var]], prec_round))
 
-    }
-
-    if (short_version) {
-
-      summary_data  <-
-        summary_data |>
-        select(-any_of(c("ballots_1", "ballots_2", "n_poll_stations",
-                         cols_mun_var)), -contains("pop_res"))
-    }
-
-    if (by_parties) {
-
-      if (verbose) {
-
-        message(green("[x] Including candidacies info ..."))
-
-      }
-
+      # Depending on level, we get the properly id _candidacies
       id_party <- if_else(level %in% c("all", "ccaa"), col_id_candidacies[["id_nat"]],
                           col_id_candidacies[["id_prov"]])
+
+      # Filtering parties for the asked elections
       dict_parties <-
         global_dict_parties |>
         select(-color) |>
         filter(id_elec %in% unique(summary_data |> pull(col_id_elec))) |>
         distinct(.data[[col_id_elec]], .data[[id_party]], .keep_all = TRUE)
 
+      # Join candidacies to summary_data
       suppressWarnings(summary_data <-
         summary_data |>
         left_join(dict_parties,
@@ -1018,6 +997,7 @@ summary_election_data <-
         select(-contains(".rm")) |>
         relocate(col_abbrev_candidacies, .after = id_party))
 
+      # select, rename and relocate properly
       if (level == "all") {
 
         suppressWarnings(summary_data <-
@@ -1037,138 +1017,143 @@ summary_election_data <-
       }
     }
 
+    # if short_version --> remove some variables
     if (short_version) {
 
-      summary_data <-
+      summary_data  <-
         summary_data |>
-        select(-contains("census_counting"), -contains("pop_res"),
-               -any_of(c("ballots_1", "ballots_2", "n_poll_stations")))
-
+        select(-any_of(c("ballots_1", "ballots_2", "n_poll_stations",
+                         cols_mun_var)), -contains("pop_res"))
     }
 
-    if (!is.null(method) & level %in% c("all", "ccaa", "prov") & by_parties) {
+    if (!is.null(method)) {
 
+      if (!by_parties) {
 
-      if (level %in% c("ccaa", "all")){
+        message(yellow(paste0("Be careful! Since `by_parties` is FALSE, it is not possible to compute seat allocation")))
 
-        aux <- election_data |>
-          aggregate_election_data(level = "prov", by_parties = TRUE,
-                                  prec_round = prec_round,
-                                  verbose = FALSE, short_version = FALSE,
-                                  col_id_poll_station = col_id_poll_station,
-                                  col_id_mun = col_id_mun, cols_mun_var = cols_mun_var,
-                                  col_id_candidacies = col_id_candidacies)
+      } else {
 
-          id_party <- col_id_candidacies[["id_prov"]]
+        if (!(level %in% c("all", "ccaa", "prov"))) {
 
-          dict_parties <-
-            global_dict_parties |>
-            select(-color) |>
-            filter(id_elec %in% unique(aux |> pull(col_id_elec))) |>
-            distinct(.data[[col_id_elec]], .data[[id_party]], .keep_all = TRUE)
+          message(yellow(paste0("Be careful! It is not possible to compute seat allocation at ", level, " level")))
 
-          suppressWarnings(aux <-
-                             aux |>
-                             left_join(dict_parties,
-                                       by = c("id_elec" = col_id_elec, id_party),
-                                       suffix = c("", ".rm"), copy = TRUE) |>
-                             select(-contains(".rm")) |>
-                             relocate(col_abbrev_candidacies, .after = id_party))
+        } else {
+
+          if (verbose) {
+
+            message(green(paste0("[x] Obtaining the number of seats allocated to each party at ", level, " level and according to the ", method, " allocation method")))
+
+          }
+
+          if (level %in% c("ccaa", "all")) {
+
+            aux <- election_data |>
+              aggregate_election_data(level = "prov", by_parties = TRUE,
+                                      prec_round = prec_round,
+                                      verbose = FALSE, short_version = FALSE,
+                                      col_id_poll_station = col_id_poll_station,
+                                      col_id_mun = col_id_mun, cols_mun_var = cols_mun_var,
+                                      col_id_candidacies = col_id_candidacies)
+
+            id_party <- col_id_candidacies[["id_prov"]]
+
+            dict_parties <-
+              global_dict_parties |>
+              select(-color) |>
+              filter(id_elec %in% unique(aux |> pull(col_id_elec))) |>
+              distinct(.data[[col_id_elec]], .data[[id_party]], .keep_all = TRUE)
+
+            suppressWarnings(aux <-
+                               aux |>
+                               left_join(dict_parties,
+                                         by = c("id_elec" = col_id_elec, id_party),
+                                         suffix = c("", ".rm"), copy = TRUE) |>
+                               select(-contains(".rm")) |>
+                               relocate(col_abbrev_candidacies, .after = id_party))
 
             suppressWarnings(aux <-
                                aux |>
                                select(-any_of(c("name_candidacies_nat"))) |> # , col_id_candidacies[["id_nat"]] We want id_candidacies nat to appear at any level
                                relocate(name_candidacies, .after = col_abbrev_candidacies))
 
-        } else {
+          } else {
 
-      aux <- summary_data
+            aux <- summary_data
 
+          }
+
+          col_id_candidacies <- "id_candidacies_nat"
+          col_blank_ballots <- "blank_ballots"
+          col_id_electoral_district <- "id_INE_prov"
+          col_ballots <- "ballots"
+
+          id_election <- aux |>
+            pull(.data[[col_id_elec]]) |>
+            unique()
+
+          nseats_year <-
+            total_seats_spain |>
+            filter(.data[[col_id_elec]] %in% id_election) |>
+            select(all_of(c(col_id_electoral_district, col_id_elec, "nseats")))
+
+          aux <-
+            aux |>
+            left_join(nseats_year, by = c(col_id_elec, col_id_electoral_district))
+
+          suppressWarnings(seats_results <-
+            aux |>
+            select(all_of(c(col_id_elec, col_id_electoral_district,
+                            col_id_candidacies, col_ballots,
+                            col_blank_ballots, "nseats"))) |>
+            reframe(seat_allocation(candidacies = .data[[col_id_candidacies]],
+                                    ballots = .data[[col_ballots]],
+                                    blank_ballots = .data[[col_blank_ballots]],
+                                    n_seats = first(nseats),
+                                    threshold = threshold),
+                    .by = c(.data[[col_id_electoral_district]], .data[[col_id_elec]])) |>
+            select(all_of(c(col_id_elec, col_id_electoral_district,
+                            "candidacies", "seats"))))
+
+          aux <-
+            aux |>
+            distinct(
+              .data[[col_id_elec]],
+              .data[[col_id_electoral_district]],
+              .data[[col_id_candidacies]],
+              .keep_all = TRUE) |>
+            left_join(seats_results, by = c(col_id_elec,
+                                            col_id_electoral_district,
+                                            "id_candidacies_nat" = "candidacies")) |>
+            select(-nseats)
+
+          if (level == "all") {
+
+            aux <- aux |>
+              summarise(seats = sum(seats), .by = c(col_id_elec, col_id_candidacies))
+
+            summary_data <- summary_data |>
+              left_join(aux, by = c(col_id_elec, "id_candidacies" = col_id_candidacies))
+
+
+          } else if (level == "ccaa"){
+
+            aux <- aux |>
+              summarise(seats = sum(seats), .by = c(col_id_elec, col_id_candidacies, ccaa))
+
+            summary_data <- summary_data |>
+              left_join(aux, by = c(col_id_elec, "ccaa", "id_candidacies_nat" = col_id_candidacies))
+
+
+          } else {
+
+            summary_data <- aux
+
+          }
+        }
       }
-
-      if (verbose) {
-
-        message(green(paste0("[x] Obtaining the number of seats allocated to each party at ", level, " level and according to the allocation method ", method)))
-
-      }
-
-      col_id_candidacies <- "id_candidacies_nat"
-      col_blank_ballots <- "blank_ballots"
-      col_id_electoral_district <- "id_INE_prov"
-      col_ballots <- "ballots"
-
-      id_election <- aux |>
-        pull(.data[[col_id_elec]]) |>
-        unique()
-
-      nseats_year <-
-        total_seats_spain |>
-        filter(.data[[col_id_elec]] %in% id_election) |>
-        select(.data[[col_id_electoral_district]], .data[[col_id_elec]], nseats)
-
-      aux <-
-        aux |>
-        left_join(nseats_year, by = c(col_id_elec, col_id_electoral_district))
-
-      seats_results <-
-        aux |>
-        select(all_of(c(col_id_elec, col_id_electoral_district,
-                        col_id_candidacies, col_ballots,
-                        col_blank_ballots, "nseats"))) |>
-        reframe(seat_allocation(candidacies = .data[[col_id_candidacies]],
-                                ballots = .data[[col_ballots]],
-                                blank_ballots = .data[[col_blank_ballots]],
-                                n_seats = first(nseats),
-                                threshold = threshold),
-                .by = c(.data[[col_id_electoral_district]], .data[[col_id_elec]])) |>
-        select(all_of(c(col_id_elec, col_id_electoral_district,
-                        "candidacies", "seats")))
-
-      aux <-
-        aux |>
-        distinct(
-          .data[[col_id_elec]],
-          .data[[col_id_electoral_district]],
-          .data[[col_id_candidacies]],
-          .keep_all = TRUE) |>
-        left_join(seats_results, by = c(col_id_elec,
-                                        col_id_electoral_district,
-                                        "id_candidacies_nat" = "candidacies")) |>
-        select(-nseats)
-
-      if (level == "all") {
-
-        aux <- aux |>
-          summarise(seats = sum(seats), .by = c(col_id_elec, col_id_candidacies))
-
-        summary_data <- summary_data |>
-          left_join(aux, by = c(col_id_elec, "id_candidacies" = col_id_candidacies))
-
-
-      } else if (level == "ccaa"){
-
-        aux <- aux |>
-          summarise(seats = sum(seats), .by = c(col_id_elec, col_id_candidacies, ccaa))
-
-        summary_data <- summary_data |>
-          left_join(aux, by = c(col_id_elec, "ccaa", "id_candidacies_nat" = col_id_candidacies))
-
-
-      } else {
-
-        summary_data <- aux
-
-      }
-
-    } else if (!is.null(method) & by_parties) {
-
-      warning(yellow(paste0("It is not possible to compute seat allocation at ", level, " level")))
-
-    } else if (!by_parties) {
-
-      warning(yellow(paste0("It is not possible to compute seat allocation with `by_parties` equal to FALSE")))
-
     }
+
 
     if (!is.na(filter_porc_ballots)) {
 

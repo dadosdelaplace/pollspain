@@ -72,8 +72,7 @@
 #'
 #' # Fetch municipal census for congress elections in a single date
 #' mun_census <-
-#'   import_mun_census_data(type_elec = "congress",
-#'                          year = 2023)
+#'   import_mun_census_data(type_elec = "congress", year = 2023)
 #'
 #' # Fetch municipal census for congress elections in multiple dates
 #' mun_census <-
@@ -87,18 +86,22 @@
 #' # Wrong examples
 #'
 #' # Invalid election type: "national" is not a valid election type
-#' import_mun_census_data("national", 2019)
+#' import_mun_census_data(type_elec = "national", year = 2019)
+#'
+#' # Invalid verbose argument: verbose should be a logical variable
+#' import_mun_census_data(type_elec = "congress", year = 2023,
+#'                        verbose = "yes")
 #'
 #' # Invalid election: no congress elections are available in 5-2019.
 #' # Please check dataset dates_elections_spain
-#' import_mun_census_data("congress", date = "2019-05-01")
+#' import_mun_census_data(type_elec = "congress", date = "2019-05-01")
 #'
 #' #' # Invalid election: no congress elections are available in 2018.
 #' # Please check dataset dates_elections_spain
-#' import_mun_census_data("congress", year = 2018)
+#' import_mun_census_data(type_elec = "congress", year = 2018)
 #'
 #' # Invalid date format: date should be in %Y-%m-%d format
-#' import_mun_census_data("congress", date = "26-06-2016")
+#' import_mun_census_data(type_elec = "congress", date = "26-06-2016")
 #' }
 #' @export
 import_mun_census_data <-
@@ -290,6 +293,10 @@ import_mun_census_data <-
 #'
 #' # Invalid election type: "national" is not a valid election type
 #' import_poll_station_data(type_elec = "national", year = 2019)
+#'
+#' # Invalid verbose argument: verbose should be a logical variable
+#' import_poll_station_data(type_elec = "congress", year = 2023,
+#'                          verbose = "yes")
 #'
 #' # Invalid election: no congress elections are available in 2018
 #' # Please check dataset dates_elections_spain
@@ -626,12 +633,20 @@ import_poll_station_data <-
 #' # Invalid election type: "national" is not a valid election type
 #' import_candidacies_data(type_elec = "national", year = 2019)
 #'
+#' # Invalid verbose argument: verbose should be a logical variable
+#' import_candidacies_data(type_elec = "congress", year = 2023,
+#'                         verbose = "yes")
+#'
 #' # Invalid election: no congress elections are available in 2018.
 #' import_candidacies_data(type_elec = "congress", 2018)
 #'
 #' # Invalid date format: date should be in %Y-%m-%d format
 #' import_candidacies_data(type_elec = "congress", date = "26-06-2016")
 #'
+#' # Invalid short version flag: short_version should be a logical
+#' # variable
+#' import_candidacies_data(type_elec = "congress", year = 2019,
+#'                         short_version = "yes")
 #' }
 #'
 #' @export

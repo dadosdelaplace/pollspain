@@ -251,32 +251,35 @@ recod_mun <- function(mun_data) {
 
 }
 
-#' @title Detect election date
+#' @title Auxiliary function to get election date
 #'
-#' @description Given a year and/or date, this function
-#' returns the a data frame with information on the day of the elections.
+#' @description Given a year and/or date by the user, this function
+#' returns a data frame with information related to the date of the
+#' elections.
 #'
-#' @param type_elec Type of the election. Default \code{type_elec = "congress"}.
+#' @param type_elec Type of the election. Defaults to
+#' \code{"congress"}.
 #' @param year A vector or single value representing the years of the
 #' elections to be considered. Please, check in
-#' \code{dates_elections_spain} that elections of the specified type
+#' \code{dates_elections_spain} the elections of the specified type
 #' are available for the provided year.
 #' @param date A vector or single value representing the dates of
 #' the elections to be considered. If date was provided, it should be
 #' in format %Y-%m-%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
 #' If no date was provided, \code{year} should be provided as
 #' numerical variable. Please, check in \code{dates_elections_spain}
-#' that elections of the specified type are available.
+#' the elections of the specified type are available.
 #'
-#' @details This function is used as a helper function to select the dates
-#' asked for the users in the import and summary functions.
+#' @details This function is used as a helper function to select the
+#' dates asked for the users in the import and summary functions.
 #'
-#' @author David Pereiro Pol.
+#' @author David Pereiro-Pol.
 #' @keywords utils
 #' @name detect_years
 #'
 #' @export
-detect_years <- function(type_elec = "congress", year = NULL, date = NULL){
+detect_years <-
+  function(type_elec = "congress", year = NULL, date = NULL) {
 
   if(is.null(year) & is.null(date)){
 
@@ -314,7 +317,7 @@ detect_years <- function(type_elec = "congress", year = NULL, date = NULL){
              .before = everything())
 
     allowed_elections <-
-      dates_elections_spain |>
+      pollspain::dates_elections_spain |>
       inner_join(asked_elections,
                  by = c("cod_elec", "type_elec", "year"),
                  suffix = c("", ".rm")) |>
@@ -376,7 +379,7 @@ detect_years <- function(type_elec = "congress", year = NULL, date = NULL){
   if (length(ambiguous_years) > 0 & !explicit_2019) {
 
     normal_years <- setdiff(year, 2019)
-    normal_dates <- dates_elections_spain |>
+    normal_dates <- pollspain::dates_elections_spain |>
       filter(type_elec %in% !!type_elec & year %in% normal_years) |>
       pull(date)
 
@@ -404,7 +407,7 @@ detect_years <- function(type_elec = "congress", year = NULL, date = NULL){
 
   } else if (!is.null(year) | !is.null(date)) {
 
-    normal_dates <- dates_elections_spain |>
+    normal_dates <- pollspain::dates_elections_spain |>
       filter(type_elec %in% !!type_elec &
                year %in% allowed_elections$year) |>
       pull(date)

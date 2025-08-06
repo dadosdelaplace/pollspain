@@ -2,29 +2,36 @@
 % Please edit documentation in R/utils.R
 \name{detect_years}
 \alias{detect_years}
-\title{Detect election date}
+\title{Auxiliary function to get election date}
 \usage{
 detect_years(type_elec = "congress", year = NULL, date = NULL)
 }
 \arguments{
-\item{type_elec}{Type of the election. Default \code{type_elec = "congress"}.}
+\item{type_elec}{Type of the election. Defaults to
+\code{"congress"}.}
 
 \item{year}{A vector or single value representing the years of the
 elections to be considered. Please, check in
-\code{dates_elections_spain} that elections of the specified type
+\code{dates_elections_spain} the elections of the specified type
 are available for the provided year.}
 
-\item{date}{}
+\item{date}{A vector or single value representing the dates of
+the elections to be considered. If date was provided, it should be
+in format \%Y-\%m-\%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
+If no date was provided, \code{year} should be provided as
+numerical variable. Please, check in \code{dates_elections_spain}
+the elections of the specified type are available.}
 }
 \description{
-Given a year and/or date, this function
-returns the a data frame with information on the day of the elections.
+Given a year and/or date by the user, this function
+returns a data frame with information related to the date of the
+elections.
 }
 \details{
-This function is used as a helper function to select the dates
-asked for the users in the import and summary functions.
+This function is used as a helper function to select the
+dates asked for the users in the import and summary functions.
 }
 \author{
-David Pereiro Pol.
+David Pereiro-Pol.
 }
 \keyword{utils}
