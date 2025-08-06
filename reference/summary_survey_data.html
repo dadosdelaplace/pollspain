@@ -51,7 +51,7 @@
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  short_version <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  format <span class="op">=</span> <span class="st">"long"</span>,</span>
-<span>  forthcoming <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  forthcoming <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  filter_polling_firm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  filter_media <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  filter_n_field_days <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -208,19 +208,12 @@ is ready for analysis or visualisation.</p>
 <span class="r-in"><span><span class="fu">summary_survey_data</span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2019</span>, <span class="fl">2023</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Summary survey data</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   [x] Checking if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Import survey data</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   [x] Checking if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Importing survey data ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Computing some statistics...</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>There was 1 warning in `mutate()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In argument: `days_until_elec = ifelse(...)`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by warning:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>  3222 failed to parse.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Filtering surveys...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">! A short version was asked (if you want all variables, run with `short_version = FALSE`)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 16,521 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8,515 × 9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id_survey       id_elec polling_firm n_field_days sample_size fieldwork_start</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ElectoPanel-20… 02-202… ElectoPanel             4        <span style="text-decoration: underline;">1</span>250 2019-12-25     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ElectoPanel-20… 02-202… ElectoPanel             4        <span style="text-decoration: underline;">1</span>250 2019-12-25     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ElectoPanel-20… 02-202… ElectoPanel             4        <span style="text-decoration: underline;">1</span>250 2019-12-25     </span>
@@ -231,7 +224,7 @@ is ready for analysis or visualisation.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ElectoPanel-20… 02-202… ElectoPanel             4        <span style="text-decoration: underline;">1</span>250 2019-12-25     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ElectoPanel-20… 02-202… ElectoPanel             4        <span style="text-decoration: underline;">1</span>250 2019-12-25     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ElectoPanel-20… 02-202… ElectoPanel             4        <span style="text-decoration: underline;">1</span>250 2019-12-25     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16,511 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 8,505 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: fieldwork_end &lt;date&gt;, abbrev_candidacies &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   estimated_porc_ballots &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
@@ -244,18 +237,11 @@ is ready for analysis or visualisation.</p>
 <span class="r-in"><span>                    lower_sample_size <span class="op">=</span>  <span class="fl">500</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Summary survey data</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   [x] Checking if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Import survey data</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   [x] Checking if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Importing survey data ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Computing some statistics...</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>There was 1 warning in `mutate()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In argument: `days_until_elec = ifelse(...)`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by warning:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>  3222 failed to parse.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Filtering surveys...</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 430 × 14</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 299 × 14</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id_survey          id_elec polling_firm media n_polls_by_elec fieldwork_start</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> GAD3-2023-07-10-2… 02-202… GAD3         Medi…              47 2023-07-10     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> GAD3-2023-07-10-2… 02-202… GAD3         Medi…              47 2023-07-10     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> GAD3-2023-07-10-2… 02-202… GAD3         Medi…              47 2023-07-10     </span>
@@ -266,24 +252,21 @@ is ready for analysis or visualisation.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> GAD3-2023-07-10-2… 02-202… GAD3         Medi…              47 2023-07-10     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> GAD3-2023-07-10-2… 02-202… GAD3         Medi…              47 2023-07-10     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> GAD3-2023-07-10-2… 02-202… GAD3         Medi…              47 2023-07-10     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 420 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 289 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 8 more variables: fieldwork_end &lt;date&gt;, n_field_days &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   days_until_elec &lt;dbl&gt;, sample_size &lt;dbl&gt;, abbrev_candidacies &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   id_candidacies_nat &lt;chr&gt;, name_candidacies_nat &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   estimated_porc_ballots &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Summary for surveys for the forthcoming elections in, filtering</span></span></span>
-<span class="r-in"><span><span class="co"># by parties ("PP" and "PSOE") and with a sample size at least</span></span></span>
-<span class="r-in"><span><span class="co"># than 500 people</span></span></span>
+<span class="r-in"><span><span class="co"># by parties ("PP" and "PSOE") and with a sample size of at least</span></span></span>
+<span class="r-in"><span><span class="co"># 500 people</span></span></span>
 <span class="r-in"><span><span class="fu">summary_survey_data</span><span class="op">(</span>forthcoming <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                    filter_abbrev_candidacies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PP"</span>, <span class="st">"PSOE"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                    lower_sample_size <span class="op">=</span>  <span class="fl">500</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Summary survey data</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   [x] Checking if parameters are allowed...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Import survey data</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   [x] Checking if parameters are allowed...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">Be careful! No date neither year was provided: just surveys for the forthcoming elections were provided</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Importing survey data ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Computing some statistics...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Filtering surveys...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">! A short version was asked (if you want all variables, run with `short_version = FALSE`)</span></span>
@@ -303,6 +286,37 @@ is ready for analysis or visualisation.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 597 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: fieldwork_end &lt;date&gt;, abbrev_candidacies &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   estimated_porc_ballots &lt;dbl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Summary for 2023 surveys in a full version, filtering</span></span></span>
+<span class="r-in"><span><span class="co"># just 40DB and GAD3 polling firms, surveys that go from the</span></span></span>
+<span class="r-in"><span><span class="co"># first of March of 2020 to the first of August of the same year</span></span></span>
+<span class="r-in"><span><span class="fu">summary_survey_data</span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2023</span>, short_version <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                    filter_polling_firm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GAD3"</span>, <span class="st">"40DB"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    lower_fieldwork_date <span class="op">=</span> <span class="st">"2020-03-01"</span>,</span></span>
+<span class="r-in"><span>                    upper_fieldwork_date <span class="op">=</span> <span class="st">"2020-08-01"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Summary survey data</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">   [x] Checking if parameters are allowed...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Computing some statistics...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Filtering surveys...</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 12 × 14</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id_survey          id_elec polling_firm media n_polls_by_elec fieldwork_start</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> GAD3-2020-07-06-2… 02-202… GAD3         ABC                47 2020-07-06     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> GAD3-2020-07-06-2… 02-202… GAD3         ABC                47 2020-07-06     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> GAD3-2020-07-06-2… 02-202… GAD3         ABC                47 2020-07-06     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> GAD3-2020-07-06-2… 02-202… GAD3         ABC                47 2020-07-06     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> GAD3-2020-05-18-2… 02-202… GAD3         ABC                47 2020-05-18     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> GAD3-2020-05-18-2… 02-202… GAD3         ABC                47 2020-05-18     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> GAD3-2020-05-18-2… 02-202… GAD3         ABC                47 2020-05-18     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> GAD3-2020-05-18-2… 02-202… GAD3         ABC                47 2020-05-18     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> GAD3-2020-05-04-2… 02-202… GAD3         ABC                47 2020-05-04     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> GAD3-2020-05-04-2… 02-202… GAD3         ABC                47 2020-05-04     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> GAD3-2020-05-04-2… 02-202… GAD3         ABC                47 2020-05-04     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> GAD3-2020-05-04-2… 02-202… GAD3         ABC                47 2020-05-04     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 8 more variables: fieldwork_end &lt;date&gt;, n_field_days &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   days_until_elec &lt;dbl&gt;, sample_size &lt;dbl&gt;, abbrev_candidacies &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   id_candidacies_nat &lt;chr&gt;, name_candidacies_nat &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   estimated_porc_ballots &lt;dbl&gt;</span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># ----</span></span></span>
 <span class="r-in"><span><span class="co"># Incorrect examples</span></span></span>
@@ -317,8 +331,27 @@ is ready for analysis or visualisation.</p>
 <span class="r-in"><span><span class="co"># logical variable</span></span></span>
 <span class="r-in"><span><span class="fu">summary_survey_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2019</span>,</span></span>
 <span class="r-in"><span>                  short_version <span class="op">=</span> <span class="st">"yes"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># upper_fieldworkday prior to lower_fieldworkday</span></span></span>
+<span class="r-in"><span><span class="fu">summary_survey_data</span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                    lower_fieldwork_day <span class="op">=</span> <span class="st">"2020-08-01"</span>,</span></span>
+<span class="r-in"><span>                    upper_fieldwork_day <span class="op">=</span> <span class="st">"2020-03-01"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># upper_sample_size smaller than lower_sample-size</span></span></span>
+<span class="r-in"><span><span class="fu">summary_survey_data</span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                    lower_fieldwork_day <span class="op">=</span> <span class="fl">500</span>,</span></span>
+<span class="r-in"><span>                    upper_fieldwork_day <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Invalid class for argument filter_polling_firm</span></span></span>
+<span class="r-in"><span><span class="fu">summary_survey_data</span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                    filter_polling_firm <span class="op">=</span> <span class="fl">700</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Invalid class for argument filter_media</span></span></span>
+<span class="r-in"><span><span class="fu">summary_survey_data</span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                    filter_media <span class="op">=</span> <span class="fl">700</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

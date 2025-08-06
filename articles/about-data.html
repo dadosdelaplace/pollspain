@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Javier Álvarez
 Liébana</h4>
             
-            <h4 data-toc-skip class="date">2025-07-29</h4>
+            <h4 data-toc-skip class="date">2025-08-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dadosdelaplace/pollspain/blob/main/vignettes/about-data.Rmd" class="external-link"><code>vignettes/about-data.Rmd</code></a></small>
       <div class="d-none name"><code>about-data.Rmd</code></div>
@@ -83,21 +83,22 @@ Liébana</h4>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">global_dict_parties</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,124 × 7</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,124 × 9</span></span></span>
 <span><span class="co">#&gt;    id_elec abbrev_candidacies name_candidacies id_candidacies_nat id_candidacies</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 02-201… JF                 PARTIDO DE JUBI… 000047             000047        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 02-200… LIT-CI             LLUITA INTERNAC… 000145             000277        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 02-201… MAS                MUERTE AL SISTE… 000050             000050        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 02-201… MAS                MUERTE AL SISTE… 902601.0           000992        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 02-201… MAS                MUERTE AL SISTE… 000103             000103        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 02-202… RDS                REFERENDUM SIST… 000079             000079        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 02-202… T3EA               TERCERA EDAD EN… 000042             000042        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 02-200… A                  ASAMBLEA DE AND… 000001             000001        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02-200… A                  ASAMBLEA DE AND… 000001             000001        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02-200… A-IZ               ASAMBLEA DE IZQ… 000002             000002        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 02-200… A                  ASAMBLEA DE AND… 000001             000001        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 02-200… A                  ASAMBLEA DE AND… 000001             000001        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 02-200… A-IZ               ASAMBLEA DE IZQ… 000002             000002        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 02-202… AA                 ADELANTE ANDALU… 000012             000012        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 02-200… ABA                ALIANCA BALEAR   000010             000010        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 02-199… ABA                ALIANCA BALEAR   000001             000001        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 02-199… ABE                ALTERNATIVA BAL… 000092             000092        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 02-200… ABLA               ALTERNATIVA EN … 000012             000013        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02-200… ABLA               ALTERNATIVA EN … 000012             000012        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02-198… AC-CC              ASAMBLEA CANARI… 000001             000001        </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2,114 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: name_candidacies_nat &lt;chr&gt;, color &lt;chr&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: name_candidacies_nat &lt;chr&gt;, color &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   abbrev_candidacies_unified &lt;chr&gt;, id_candidacies_unified &lt;int&gt;</span></span></span></code></pre></div>
 <p>The dataset <code>global_dict_parties</code> contains, <span class="hl"><strong>for each election, the abbreviation and name for each
 candidacy, as well as the national id and province’s id</strong></span>.
 An hexadecimal code is proposed for the most important candidacies for
