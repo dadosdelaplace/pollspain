@@ -13,7 +13,7 @@ data for multiple elections at once."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -244,6 +244,10 @@ Gonzalez, Irene Bosque Gala and Mikaela De Smedt.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Invalid election type: "national" is not a valid election type</span></span></span>
 <span class="r-in"><span><span class="fu">import_poll_station_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"national"</span>, year <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Invalid verbose argument: verbose should be a logical variable</span></span></span>
+<span class="r-in"><span><span class="fu">import_poll_station_data</span><span class="op">(</span>type_elec <span class="op">=</span> <span class="st">"congress"</span>, year <span class="op">=</span> <span class="fl">2023</span>,</span></span>
+<span class="r-in"><span>                         verbose <span class="op">=</span> <span class="st">"yes"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Invalid election: no congress elections are available in 2018</span></span></span>
 <span class="r-in"><span><span class="co"># Please check dataset dates_elections_spain</span></span></span>

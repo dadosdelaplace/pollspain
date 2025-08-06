@@ -11,7 +11,7 @@ vote share threshold."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">pollspain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,13 +59,12 @@ vote share threshold.</p>
 <span>  method <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  threshold <span class="op">=</span> <span class="fl">0.03</span>,</span>
 <span>  short_version <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  CERA_remove <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  filter_porc_ballots <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  filter_candidacies <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  prec_round <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  candidacies_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  CERA_remove <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  col_abbrev_candidacies <span class="op">=</span> <span class="st">"abbrev_candidacies"</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  col_id_elec <span class="op">=</span> <span class="st">"id_elec"</span>,</span>
 <span>  col_id_poll_station <span class="op">=</span> <span class="st">"id_INE_poll_station"</span>,</span>
 <span>  col_id_mun <span class="op">=</span> <span class="st">"id_INE_mun"</span>,</span>
@@ -142,10 +141,9 @@ a short version of the data (just key variables) or not.
 Defaults to <code>TRUE</code>.</p></dd>
 
 
-<dt id="arg-cera-remove">CERA_remove<a class="anchor" aria-label="anchor" href="#arg-cera-remove"></a></dt>
-<dd><p>Flag to indicate whether it should be removed
-the ballots related to CERA constituencies. Defaults to
-<code>FALSE</code>.</p></dd>
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Flag to indicate whether detailed messages should
+be printed during execution. Defaults to <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-filter-porc-ballots">filter_porc_ballots<a class="anchor" aria-label="anchor" href="#arg-filter-porc-ballots"></a></dt>
@@ -166,10 +164,10 @@ them) containing party abbreviations which ballots will be filtered
 <code>prec_round = 3</code>.</p></dd>
 
 
-<dt id="arg-candidacies-data">candidacies_data<a class="anchor" aria-label="anchor" href="#arg-candidacies-data"></a></dt>
-<dd><p>A database containing the information of
-candidacies. Database should contain <code>col_abbrev_candidacies</code>
-and <code>col_id_candidacies</code> columns. Defaults to <code>NULL</code>.</p></dd>
+<dt id="arg-cera-remove">CERA_remove<a class="anchor" aria-label="anchor" href="#arg-cera-remove"></a></dt>
+<dd><p>Flag to indicate whether it should be removed
+the ballots related to CERA constituencies. Defaults to
+<code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-col-abbrev-candidacies">col_abbrev_candidacies<a class="anchor" aria-label="anchor" href="#arg-col-abbrev-candidacies"></a></dt>
@@ -177,15 +175,16 @@ and <code>col_id_candidacies</code> columns. Defaults to <code>NULL</code>.</p><
 party abbreviations. Defaults to <code>"abbrev_candidacies"</code>.</p></dd>
 
 
-<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>Flag to indicate whether detailed messages should
-be printed during execution. Defaults to <code>TRUE</code>.</p></dd>
-
-
 <dt id="arg-col-id-elec-col-id-poll-station-col-id-mun-col-id-candidacies-cols-mun-var">col_id_elec, col_id_poll_station, col_id_mun, col_id_candidacies, cols_mun_var<a class="anchor" aria-label="anchor" href="#arg-col-id-elec-col-id-poll-station-col-id-mun-col-id-candidacies-cols-mun-var"></a></dt>
 <dd><p>(Optional) Column names for election's id, poll station's id,
 municipalities' id, candidacies' id and column names for the
 variables just available at mun level or greater.</p></dd>
+
+
+<dt id="arg-candidacies-data">candidacies_data<a class="anchor" aria-label="anchor" href="#arg-candidacies-data"></a></dt>
+<dd><p>A database containing the information of
+candidacies. Database should contain <code>col_abbrev_candidacies</code>
+and <code>col_id_candidacies</code> columns. Defaults to <code>NULL</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -292,7 +291,7 @@ chosen date and aggregation level that is ready for analysis or visualisation.</
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">   [x] Aggregating data at prov level ...</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBBBB; background-color: #000000;">[x] Join information sources and last summaries ...</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">[x] Including candidacies info ...</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">[x] Including candidacies info and summaries ...</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span></span></span>
