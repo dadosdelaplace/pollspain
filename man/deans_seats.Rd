@@ -29,7 +29,7 @@ blank ballots (integer positive values).}
 seats that are going to distributed for a given electoral district.}
 
 \item{threshold}{A numerical value (between 0 and 1) indicating the
-minimal percentage of votes needed to obtain representation for a
+minimal percentage of ballots needed to obtain representation for a
 given electoral district. Defaults to \code{0.03}.}
 
 \item{short_version}{Flag to indicate whether it should be returned
@@ -52,11 +52,11 @@ just in long format}
 This function allocates seats to political parties in a given electoral district
 using the Dean method (also known as the Harmonic Mean method), a highest averages
 method for proportional representation. The method uses divisors based on the harmonic mean
-of consecutive integers: for each party, its vote total is divided by
+of consecutive integers: for each party, its ballots total is divided by
 \eqn{(2s(s+1))/(2s+1)}, where \eqn{s} is the current number of seats allocated to the party.
 Seats are assigned one at a time to the party with the highest resulting quotient
-until all seats are distributed. Only parties that exceed a vote threshold
-(expressed as a proportion of the total votes, including blank votes) are considered eligible.
+until all seats are distributed. Only parties that exceed a ballots threshold
+(expressed as a proportion of the total ballots, including blank ballots) are considered eligible.
 }
 \details{
 The purpose of this helper function is to be used in a general

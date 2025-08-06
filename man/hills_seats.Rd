@@ -30,7 +30,7 @@ blank ballots (integer positive values).}
 seats that are going to distributed for a given electoral district.}
 
 \item{threshold}{A numerical value (between 0 and 1) indicating the
-minimal percentage of votes needed to obtain representation for a
+minimal percentage of ballots needed to obtain representation for a
 given electoral district. Defaults to \code{0.03}.}
 
 \item{short_version}{Flag to indicate whether it should be returned
@@ -52,11 +52,11 @@ just in long format}
 \description{
 This function allocates seats to political parties in a given electoral district
 using the Hill method (also known as the Equal Proportions method), a highest averages
-approach for proportional representation. Each party's total number of votes is divided
+approach for proportional representation. Each party's total number of ballots is divided
 by the square root of the product of the number of seats already allocated plus one and
 that number itself (i.e., √n(n+1)), producing a list of quotients. Seats are assigned
 one at a time to the party with the highest quotient, repeating until all seats are allocated.
-Only candidacies surpassing a specified threshold (as a proportion of total votes including blank votes)
+Only candidacies surpassing a specified threshold (as a proportion of total ballots including blank ballots)
 are considered for allocation.
 }
 \details{

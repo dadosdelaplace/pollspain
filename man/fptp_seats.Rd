@@ -29,7 +29,7 @@ blank ballots (integer positive values).}
 seats that are going to distributed for a given electoral district.}
 
 \item{threshold}{A numerical value (between 0 and 1) indicating the
-minimal percentage of votes needed to obtain representation for a
+minimal percentage of ballots needed to obtain representation for a
 given electoral district. Defaults to \code{0.03}.}
 
 \item{short_version}{Flag to indicate whether it should be returned
@@ -48,7 +48,7 @@ just in long format}
 \description{
 This function allocates every seat in an electoral district to the
 candidacy that receives the largest number of ballots. In case of a tie in the number
-of votes the seats will be randomly allocated between those candidacies.
+of ballots the seats will be randomly allocated between those candidacies.
 }
 \details{
 The purpose of this helper function is to be used in a general

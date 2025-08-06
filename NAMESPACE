@@ -3,6 +3,7 @@
 export(adams_seats)
 export(aggregate_election_data)
 export(deans_seats)
+export(detect_years)
 export(dhondt_seats)
 export(extract_code)
 export(fptp_seats)
