@@ -217,14 +217,14 @@ summary_survey_data <-
 
     }
 
-    # check filter_n_field_days
+    # check filter_days_until_elec
     if (!all(is.na(filter_days_until_elec)) & !all(is.numeric(filter_days_until_elec))) {
 
       stop(red("Ups! `filter_days_until_elec` argument should be a single numeric value"))
 
     }
 
-    # check filter_n_field_days
+    # check lower and upper sample_size
     if (!all(is.na(c(lower_sample_size, upper_sample_size))) & !all(is.numeric(c(lower_sample_size, upper_sample_size)))) {
 
       stop(red("Ups! `lower_sample_size` and `upper_sample_size` arguments should be a single numeric value"))
@@ -239,6 +239,7 @@ summary_survey_data <-
 
     }
 
+    # check lower and upper fieldwork_date
     if (!all(str_detect(c(lower_fieldwork_date, upper_fieldwork_date), "^\\d{4}-\\d{2}-\\d{2}$")) & !all(is.na(c(lower_sample_size, upper_fieldwork_date)))) {
 
       stop(red("Ups! `lower_fieldwork_day` and `upper_fieldwork_day` arguments should be should be in format '2000-01-01' (%Y-%m-%d)"))
@@ -279,12 +280,19 @@ summary_survey_data <-
       distinct(id_survey, .keep_all = TRUE) |>
       count(polling_firm, id_elec) |>
       rename(n_polls_by_elec = n)
+
     survey_data <-
       survey_data |>
       left_join(number_polls, by = c("polling_firm", "id_elec")) |>
       relocate(n_polls_by_elec, .after = media)
 
-    if (verbose) {
+    filters <- list(
+  filter_polling_firm, filter_media, filter_n_field_days, filter_days_until_elec,
+  filter_abbrev_candidacies, lower_sample_size, upper_sample_size,
+  lower_fieldwork_date, upper_fieldwork_date
+)
+
+    if (verbose & any(!vapply(filters, is.null, logical(1)))) {
 
       message(blue("   [x] Filtering surveys..."))
 
@@ -435,8 +443,8 @@ summary_survey_data <-
 
       survey_data <- survey_data |>
         select(id_survey, id_elec, polling_firm, n_field_days, sample_size,
-               fieldwork_start, fieldwork_end, abbrev_candidacies,
-               estimated_porc_ballots)
+               fieldwork_start, fieldwork_end, abbrev_candidacies, id_candidacies_nat,
+               name_candidacies_nat, estimated_porc_ballots)
 
     }
 
@@ -450,6 +458,7 @@ summary_survey_data <-
       }
       survey_data <-
         survey_data |>
+        select(-c(id_candidacies_nat, name_candidacies_nat)) |>
         pivot_wider(names_from = "abbrev_candidacies",
                     values_from = "estimated_porc_ballots",
                     values_fn = sum,

@@ -16,10 +16,10 @@ test_that("summary_survey_data works", {
                  nrow(), 0)
 
   expect_error(summary_survey_data(year = 2023,
-                                   filter_media = 700))
+                                   filter_media = 700, verbose = FALSE))
   expect_error(summary_survey_data(year = 2023,
-                                   filter_media = 700))
+                                   filter_media = 700, verbose = FALSE))
   expect_error(summary_survey_data(type_elec = "congress", year = 2023,
-                                   short_version = "yes"))
-  expect_error(summary_survey_data(year = 2018, short_version = FALSE))
+                                   short_version = "yes", verbose = FALSE))
+  expect_error(summary_survey_data(year = 2018, short_version = FALSE, verbose = FALSE))
 })
