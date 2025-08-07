@@ -172,7 +172,8 @@ import_survey_data <-
     dict_parties <-
       global_dict_parties |>
       select(id_elec, abbrev_candidacies, id_candidacies_nat, name_candidacies_nat) |>
-      distinct(id_elec, abbrev_candidacies, id_candidacies_nat, .keep_all = TRUE)
+      arrange(id_elec, abbrev_candidacies) |>
+      distinct(id_elec, abbrev_candidacies, .keep_all = TRUE)
 
     if (forthcoming) {
 
@@ -180,7 +181,7 @@ import_survey_data <-
         dict_parties |>
         bind_rows(dict_parties |>
                     mutate("date" = as_date(str_sub(id_elec, start = 4))) |>
-                    slice_max(date, with_ties = TRUE) |>
+                    slice_max(date, with_ties = FALSE) |>
                     select(-date) |>
                     mutate("id_elec" = max(unique(pollspaindata::new_surveys$id_elec))))
     }
