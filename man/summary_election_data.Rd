@@ -139,7 +139,7 @@ each level section.}
 \item{seats}{number of seats}
 }
 \description{
-pending Import, preprocess and aggregate election data at the same time for
+Import, preprocess and aggregate election data at the same time for
 a given election and aggregation level. This function also lets remove parties below a given
 vote share threshold.
 }

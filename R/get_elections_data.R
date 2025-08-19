@@ -669,7 +669,7 @@ aggregate_election_data <-
 #' @title Summaries of the electoral and candidacies ballots data for
 #' a given aggregation level (ccaa, prov, etc)
 #'
-#' @description pending Import, preprocess and aggregate election data at the same time for
+#' @description Import, preprocess and aggregate election data at the same time for
 #' a given election and aggregation level. This function also lets remove parties below a given
 #' vote share threshold.
 #'
@@ -1092,8 +1092,7 @@ summary_election_data <-
                                         .by = col_id_elec))
 
             suppressWarnings(aux <- summary_data |>
-                              summarise("abbrev_candidacies" = list(sort(unique(.data[["abbrev_candidacies"]]))),
-                                        "id_candidacies" = list(sort(unique(.data[["id_candidacies"]]))),
+                              summarise("abbrev_candidacies" = first(.data[["abbrev_candidacies"]]),
                                         "ballots" = sum(ballots, na.rm = TRUE),
                                         "seats" = sum(seats, na.rm = TRUE),
                                         .by = c(col_id_elec, col_id_candidacies)))
@@ -1136,8 +1135,7 @@ summary_election_data <-
                                         .by = c(col_id_elec, id_INE_ccaa)))
 
             suppressWarnings(aux <- summary_data |>
-                            summarise("abbrev_candidacies" = list(sort(unique(.data[["abbrev_candidacies"]]))),
-                                       "id_candidacies" = list(sort(unique(.data[["id_candidacies"]]))),
+                            summarise("abbrev_candidacies" = first(.data[["abbrev_candidacies"]]),
                                        "ballots" = sum(ballots, na.rm = TRUE),
                                         "seats" = sum(seats, na.rm = TRUE),
                                         .by = c(col_id_elec, col_id_candidacies, id_INE_ccaa)))
@@ -1181,7 +1179,7 @@ summary_election_data <-
 
           suppressWarnings(summary_data <-
                              summary_data |>
-                             select(-any_of(c(col_id_candidacies[["id_prov"]]))) |>
+                             select(-any_of(c("name_candidacies", col_id_candidacies[["id_prov"]]))) |>
                              rename(id_candidacies = col_id_candidacies[["id_nat"]],
                                     name_candidacies = name_candidacies_nat) |>
                              relocate(name_candidacies, .after = col_abbrev_candidacies))

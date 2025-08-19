@@ -1,7 +1,7 @@
 ---
 title: "About data"
 output: rmarkdown::html_vignette
-author: "Javier Álvarez Liébana"
+author: "Javier Álvarez Liébana and David Pereiro-Pol"
 date: "`r Sys.Date()`"
 vignette: >
   %\VignetteIndexEntry{About data}
@@ -40,7 +40,7 @@ global_dict_parties
 
 The dataset `global_dict_parties` contains, [**for each election, the abbreviation and name for each candidacy, as well as the national id and province's id**]{.hl}. An hexadecimal code is proposed for the most important candidacies for dataviz purposes. The dataset is of our own creation and it was collected from all the election files by applying `import_candidacies_data()` function for each election.
 
-The dataset contains 7 columns:
+The dataset contains 9 columns:
 
 * `id_elec`: id of elections (type of elections + date).
 * `abbrev_candidacies`: party abbreviation.
@@ -48,6 +48,8 @@ The dataset contains 7 columns:
 * `id_candidacies_nat`: national id.
 * `id_candidacies`: id at each constituency.
 * `name_candidacies_nat`: party name (common at national level).
+* `id_candidacies_unified`: historical id.
+* `abbrev_candidacies_unified`: historical party abbreviation.
 * `color`: hexadecimal (color) code for some parties.
 
 [**Several clarifications should be made regarding the construction**]{.hl} of this dataset. Firstly, **multiple records are provided for each party within a given election**, as the `id_candidacies_nat` (which represents the national-level party identifier) is consistent across all entries. However, each party may appear under **different `id_candidacies`, corresponding to its provincial-level identifiers**. For instance, in the 2023 elections, the PSOE is assigned the national ID `id_candidacies_nat = "000002"` throughout the country, but it is listed under different `id_candidacies` in some provinces, reflecting its participation through various regional federations in the respective constituencies."
@@ -60,8 +62,9 @@ global_dict_parties |>
 
 If we examine the previous dataset, we can also observe a common name in the `name_candidacies_nat` variable, which is the one used when aggregating data at the national level—under the most widely recognized branding of the party.
 
+Secondly, we can observe that every party has a `id_candidacies_unified` and a `abbrev_candidacies_unified`, these two were added for comparability purposes across the elections.
 
-Secondly, [**certain groupings have been applied in order to simplify the dataset returned to the user**]{.hl}. These adjustments, while practical, are worth noting—particularly for political science experts:
+Lastly, [**certain groupings have been applied in order to simplify the dataset returned to the user**]{.hl}. These adjustments, while practical, are worth noting—particularly for political science experts:
 
 <details>
 <summary>Notes about acronyms</summary>
@@ -96,11 +99,46 @@ Last update: 2025/05/25. The code used to generate the dataset can be found at [
 
 ## Datasets about elections
 
-Pending to doc
+```{r}
+CEB_results
+```
 
-## Datasets about surveys
+The dataset `CEB_results` contains the [**province level electoral results from the 2008 election to the 2023 one corrected by the Central Election Board (CEB)**]{.hl}. This dataset is used for unit tests since the data provided by the Interior Ministry is not always corrected by the CEB data. The construction of this dataset was made with the data contained in the PDFs provided by the [ CEB](https://www.juntaelectoralcentral.es/cs/jec/elecciones) and it contains 312 rows and 15 varaibles:
 
-Pending to doc
+* `cod_elec`: code of the election.
+* `date`: date of the election.
+* `id_elec`: id for the election.
+* `cod_INE_ccaa`: code of region according INE.
+* `cod_MIR_ccaa`: code of region according Spanish Ministry of the Interior (MIR).
+* `ccaa`: name of region.
+* `cod_INE_prov`: code of province.
+* `prov`: name of province.
+* `id_INE_prov`: id for the province: (`cod_INE_ccaa` + `cod_INE_prov`)
+* `census_counting_prov`: census for each election and province.
+* `blank_ballots`: total number of blank ballots.
+* `party_ballots`: total number of ballots to candidacies.
+* `valid_ballots`: total number of ballots, as a sum of `blank_ballots` and `party_ballots`.
+* `invalid_ballots`: total number of invalid ballots.
+* `total_ballots`: total number of ballots, as a sum of `valid_ballots` and `invalid_ballots`.
+
+Last update: 2025/08/19. The code used to generate the dataset can be found at [`data-raw/CEB_results.R` script](https://github.com/dadosdelaplace/pollspain/tree/main/data-raw).
+
+```{r}
+total_seats_spain
+```
+
+The dataset `total_seats_spain` contains the [**number of parliament seats allocated to each province for the general Spanish elections**]{.hl} each electoral year. The data is of our own creation with the information extracted from the [CEB](https://www.juntaelectoralcentral.es/cs/jec/elecciones) and it contains 728 rows and 8 variables:
+
+* `id_elec`: id for the election.
+* `cod_INE_ccaa`: code of region according INE.
+* `cod_MIR_ccaa`: code of region according Spanish Ministry of the Interior (MIR).
+* `ccaa`: name of region.
+* `cod_INE_prov`: code of province.
+* `prov`: name of province.
+* `id_INE_prov`: id for the province: (`cod_INE_ccaa` + `cod_INE_prov`)
+* `nseats`: number of seats allocated to each province.
+
+Last update: 2025/08/19. The code used to generate the dataset can be found at [`data-raw/total_seats_spain.R` script](https://github.com/dadosdelaplace/pollspain/tree/main/data-raw).
 
 ## Auxiliary datasets
 

@@ -188,7 +188,7 @@
 #' @title Election results according to Central Election Board
 #'
 #' @description A dataset with the data contained on the PDF
-#' documents provided since 2004 by Central Election Board (CEB) in
+#' documents provided since 2008 by Central Election Board (CEB) in
 #' Spain. This dataset is used in the unit tests since the data
 #' provided by the Ministry of the Interior are not always corrected
 #' by the CEB data (which are always at the province level,
