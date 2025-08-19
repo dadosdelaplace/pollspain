@@ -177,8 +177,8 @@ global_dict_parties <-
                      str_detect(name_candidacies, "DEMOCRACIA Y LIBERTAD"),
                    "DIL", abbrev_candidacies),
          "abbrev_candidacies" =
-           if_else(str_detect(name_candidacies, "IZQUIERDA UNIDA|ESQUERRA UNIDA|EZKER ANITZA|UNITAT POPULAR|UNIDAD POPULAR") &
-                     str_detect(abbrev_candidacies, "IU|UP-UPEC|IU-UPEC|UPEC-IU|UNIDADPOPU|LV|UPEC|^EU"),
+           if_else(str_detect(name_candidacies, "IZQUIERDA UNIDA|ESQUERRA UNIDA|EZKER ANITZA|UNITAT POPULAR|UNIDAD POPULAR|ESQUERDA") &
+                     str_detect(abbrev_candidacies, "IU|UP-UPEC|IU-UPEC|UPEC-IU|UNIDADPOPU|LV|UPEC|^EU|-EU"),
                    "IU", abbrev_candidacies),
          "abbrev_candidacies" =
            if_else((str_detect(abbrev_candidacies, "COMPROMIS") |
