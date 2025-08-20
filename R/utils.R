@@ -282,16 +282,13 @@ recod_mun <- function(mun_data) {
 #'
 #' ## Correct examples
 #'
-#' # No congress elections in 2014
-#' detect_years(type_elec = "congress", year = 2014)
-#'
 #' # Multiple inputs
 #' detect_years(type_elec = "congress", year = 2011,
 #'              date = c("1982-10-28", "1986-06-22", "2016-06-26"))
 #'
 #' # Multiple inputs in 2019
 #' detect_years(type_elec = "congress", year = 2019,
-#'              date = c("1982-10-28", 2019-11-10"))
+#'              date = c("1982-10-28", "2019-11-10"))
 #'
 #' # ----
 #' # Incorrect examples
@@ -303,6 +300,9 @@ recod_mun <- function(mun_data) {
 #'
 #' # Incorrect date format
 #' detect_years(type_elec = "congress", date = 2019)
+#'
+#' # No congress elections in 2014
+#' detect_years(type_elec = "congress", year = 2014)
 #' }
 #'
 #' @export
@@ -448,6 +448,12 @@ detect_years <-
     dates_ok <- as_date(unique(c(date, normal_dates)))
 
     allowed_elections <- allowed_elections |> filter(date %in% dates_ok)
+
+  }
+
+  if (allowed_elections |> nrow() == 0) {
+
+    stop(red(glue("Ups! No {type_elec} elections are available. Please, be sure that arguments and dates are right")))
 
   }
 

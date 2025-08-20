@@ -31,7 +31,6 @@ test_that("detect_years() works", {
   expect_equal(as.Date("2019-04-28"), res_2019$date)
 
   # Non-existent election year
-  res_bad <- detect_years(year = 1900)
-  expect_s3_class(res_bad, "tbl_df")
-  expect_equal(nrow(res_bad), 0L)
+  expect_error(detect_years(year = 1900))
+
 })

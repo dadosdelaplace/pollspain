@@ -26,7 +26,7 @@ data(total_seats_spain)
 }
 \description{
 A dataset containing the parliament seats for each
-electoral district (province) and election, just consdering
+electoral district (province) and election, just considering
 congress seats.
 }
 \examples{
