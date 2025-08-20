@@ -235,7 +235,7 @@
 #' the general Spanish elections.
 #'
 #' @description A dataset containing the parliament seats for each
-#' electoral district (province) and election, just consdering
+#' electoral district (province) and election, just considering
 #' congress seats.
 #'
 #' @format A tibble with 8 columns
@@ -296,4 +296,39 @@
 #' # Load data
 #' data(apportionment_methods)
 "apportionment_methods"
+
+#' @title Number of parliament seats allocated to each part for 10 provinces
+#' for the general Spanish elections.
+#'
+#' @description A dataset containing the parliament seats for 10
+#' electoral districts (province) by party and election, just considering
+#' congress seats.
+#'
+#' @format A tibble with 11 columns
+#' \itemize{
+#'   \item \code{id_elec}: id of elections (type of elections + date).
+#'   \item \code{cod_INE_ccaa, cod_MIR_ccaa, ccaa}: codes and names
+#'   for ccaa.
+#'   \item \code{cod_INE_prov, prov}: codes and names for provinces.
+#'   \item \code{id_INE_prov}: id for prov (`cod_INE_ccaa` +
+#'   `cod_INE_prov`)
+#'   \item \code{abbrev_candidacies}: party abbreviation.
+#'   \item \code{id_candidacies_nat}: national id.
+#'   \item \code{id_candidacies}: id at each constituency.
+#'   \item \code{real_seats}: number of seats allocated to each party.
+#' }
+#'
+#' @author Javier Alvarez-Liebana and David Pereiro-Pol.
+#'
+#' @source Data extracted from
+#' \url{https://infoelectoral.interior.gob.es/es/inicio/}
+#' @docType data
+#' @keywords datasets
+#' @name seats_by_province
+#' @usage data(seats_by_province)
+#'
+#' @examples
+#' # Load data
+#' data(seats_by_province)
+"seats_by_province"
 

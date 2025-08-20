@@ -32,6 +32,34 @@ elections.
 This function is used as a helper function to select the
 dates asked for the users in the import and summary functions.
 }
+\examples{
+
+## Correct examples
+
+# Multiple inputs
+detect_years(type_elec = "congress", year = 2011,
+             date = c("1982-10-28", "1986-06-22", "2016-06-26"))
+
+# Multiple inputs in 2019
+detect_years(type_elec = "congress", year = 2019,
+             date = c("1982-10-28", "2019-11-10"))
+
+# ----
+# Incorrect examples
+# ----
+
+\dontrun{
+# Incorrect year format
+detect_years(type_elec = "congress", year = "a")
+
+# Incorrect date format
+detect_years(type_elec = "congress", date = 2019)
+
+# No congress elections in 2014
+detect_years(type_elec = "congress", year = 2014)
+}
+
+}
 \author{
 David Pereiro-Pol.
 }

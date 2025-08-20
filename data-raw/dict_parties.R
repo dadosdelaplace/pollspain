@@ -487,6 +487,9 @@ global_dict_parties <-
            if_else(name_candidacies == "UNION DE AUTONOMIAS",
                    "UAUTONOM", abbrev_candidacies),
          "abbrev_candidacies" =
+           if_else(name_candidacies == "CENTRISTES DE CATALUNYA",
+                   "UCD", abbrev_candidacies),
+         "abbrev_candidacies" =
            if_else(name_candidacies == "COMPROMISO POR GALICIA",
                    "CPGAL", abbrev_candidacies),
          "abbrev_candidacies" =
