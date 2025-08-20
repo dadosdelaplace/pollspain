@@ -177,8 +177,8 @@ global_dict_parties <-
                      str_detect(name_candidacies, "DEMOCRACIA Y LIBERTAD"),
                    "DIL", abbrev_candidacies),
          "abbrev_candidacies" =
-           if_else(str_detect(name_candidacies, "IZQUIERDA UNIDA|ESQUERRA UNIDA|EZKER ANITZA|UNITAT POPULAR|UNIDAD POPULAR") &
-                     str_detect(abbrev_candidacies, "IU|UP-UPEC|IU-UPEC|UPEC-IU|UNIDADPOPU|LV|UPEC"),
+           if_else(str_detect(name_candidacies, "IZQUIERDA UNIDA|ESQUERRA UNIDA|EZKER ANITZA|UNITAT POPULAR|UNIDAD POPULAR|ESQUERDA") &
+                     str_detect(abbrev_candidacies, "IU|UP-UPEC|IU-UPEC|UPEC-IU|UNIDADPOPU|LV|UPEC|^EU|-EU"),
                    "IU", abbrev_candidacies),
          "abbrev_candidacies" =
            if_else((str_detect(abbrev_candidacies, "COMPROMIS") |
@@ -755,7 +755,7 @@ global_dict_parties <-
                      abbrev_candidacies == "PNV" ~ "#2a8343",
                      abbrev_candidacies == "PSA-PA" ~ "#9cd4a4",
                      abbrev_candidacies == "HB" ~ "#633000",
-                     abbrev_candidacies == "ERC" ~ "#f3c54b",
+                     abbrev_candidacies %in% c("ERC", "ERC-CATSI") ~ "#f3c54b",
                      abbrev_candidacies == "CDS" ~ "#b1c444",
                      abbrev_candidacies == "IU" ~ "#a9272f",
                      abbrev_candidacies == "EA-EUE" ~ "#69ab60",

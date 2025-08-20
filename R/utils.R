@@ -399,6 +399,10 @@ detect_years <-
                "2019-11-10",
                c("2019-04-28", "2019-11-10"))
       )
+    } else {
+
+      chosen_dates <- c("2019-04-28", "2019-11-10")
+
     }
 
     dates_ok <- as_date(unique(c(date, normal_dates, chosen_dates)))

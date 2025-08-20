@@ -1,0 +1,313 @@
+---
+title: "About data"
+output: rmarkdown::html_vignette
+author: "David Pereiro Pol"
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{About data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 8,
+  fig.height = 7
+)
+```
+
+# Requiered packages
+
+Let's load the required packages for this tutorial.
+
+```{r packages}
+# library(pollspain)
+library(mapSpain)
+library(leaflet)
+library(tidyverse)
+library(leafpop)
+library(ggplot2)
+library(ggrepel)
+library(ggpol)
+```
+
+# Extracting the colors
+
+```{r}
+color <- global_dict_parties |> 
+  select(id_candidacies_nat, id_elec, abbrev_candidacies, color) |> 
+  distinct(id_elec, id_candidacies_nat, abbrev_candidacies, .keep_all = TRUE)
+```
+
+
+# Poll data estimated trend
+
+```{r, fig.width=12, fig.height=6.75, dpi=180}
+estimates_2023 <- summary_survey_data(year = 2023, 
+                                      filter_abbrev_candidacies = c("PP", "PSOE", "SUMAR", "VOX", "PODEMOS"))
+
+estimates_2023 <- estimates_2023 |> 
+  left_join(color, by = c("id_elec", 
+                          "id_candidacies_nat", 
+                          "abbrev_candidacies"))
+
+pal <- estimates_2023 |>  
+  distinct(abbrev_candidacies, color) |>   
+  drop_na(color) |> 
+  deframe()  
+  
+
+pal <- c(pal, "PODEMOS" = "#8f87d4")
+
+estimates_2023 |> 
+  ggplot() +
+  aes(x = fieldwork_start, y = estimated_porc_ballots, colour = abbrev_candidacies) +
+  scale_colour_manual(values = pal) +
+  scale_x_date(
+    date_breaks = "6 months"
+  ) + 
+  geom_point() + 
+  geom_smooth(se = FALSE) +
+  labs(x = "Dates", 
+       y = "Percentage of ballots", 
+       color = "Parties") + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        legend.position = c(0.05, 0.25),
+        legend.justification = c(0,1)) 
+```
+
+
+# Evolutive ballots graph
+
+```{r, fig.width=12, fig.height=6.75, dpi=180}
+
+years <- c(2000, 2004, 2008, 2011, 2015, 2016)
+
+pp_psoe_ballots <- summary_election_data(type_elec = "congress", 
+                                         year = years,
+                                         level = "all", 
+                                         filter_candidacies = c("PP", "PSOE"))
+
+pp_psoe_ballots <- pp_psoe_ballots |> 
+  left_join(color, by = c("id_elec", 
+                          "id_candidacies" = "id_candidacies_nat", 
+                          "abbrev_candidacies"))
+
+pp_psoe_ballots <- pp_psoe_ballots  |>  
+  mutate(
+    date = as_date(str_remove(id_elec, "^\\d{2}-"))  
+  )
+
+pal <- pp_psoe_ballots |> 
+  distinct(abbrev_candidacies, color) |>     
+  deframe()
+
+dates <- sort(unique(pp_psoe_ballots$date))
+
+ggplot(pp_psoe_ballots) +
+  aes(x = as_date(str_remove(pp_psoe_ballots$id_elec, "^\\d{2}-")), 
+      y = porc_candidacies_valid, 
+      colour = abbrev_candidacies) + 
+  scale_x_date(breaks = sort(unique(dates))) + 
+  scale_colour_manual(values = pal) + 
+  geom_line() + 
+  geom_point() + 
+  labs(x = "Elections dates", 
+       y = "Percentage of ballots", 
+       color = "Parties") + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        legend.position = c(0.05, 0.3),
+        legend.justification = c(0,1)) 
+
+```
+# Average two major parties vote shared
+
+```{r, fig.width=12, fig.height=6.75, dpi=180}
+
+years <- c(2000, 2004, 2008, 2011, 2015, 2016, 2019, 2023)
+
+elections <- summary_election_data(type_elec = "congress", 
+                                   year = years,
+                                   level = "all")
+
+top2_parties <- elections |> 
+  group_by(id_elec) |> 
+  slice_max(porc_candidacies_parties, n = 2, with_ties = FALSE) |>
+  ungroup()
+
+c2 <- top2_parties |> 
+  group_by(id_elec) |> 
+  summarise(c2_vote_share = sum(porc_candidacies_parties)) |> 
+  ungroup() |> 
+  mutate(date = as_date(str_remove(id_elec, "^\\d{2}-")))
+
+dates <- sort(unique(c2$date))
+
+graph_polar <- c2 |> 
+  ggplot() +
+  aes(x = date, y = c2_vote_share) +
+  geom_point(size = 2, shape = 1) +
+  geom_line()  +
+  scale_x_date(breaks = dates) +
+  labs(
+    x = "Date of Election",
+    y = "Concentration of the two largest parties"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45),
+    plot.margin = margin(15, 15, 15, 15)
+  ) 
+
+graph_polar 
+
+```
+
+
+# Synergy with ggpol
+
+```{r, fig.width=12, fig.height=6.75, dpi=180}
+
+elec_2008 <- summary_election_data(type_elec = "congress", 
+                                   year = 2008, 
+                                   level = "all",
+                                   method = "dhondt")
+
+elec_2008 <- elec_2008 |> 
+  left_join(color, by = c("id_elec", 
+                          "id_candidacies" = "id_candidacies_nat", 
+                          "abbrev_candidacies")) |> 
+  filter(seats > 0)
+
+ggplot(elec_2008) + 
+  geom_parliament(aes(seats = seats, fill = abbrev_candidacies)) + 
+  scale_fill_manual(values = elec_2008$color, labels = elec_2008$abbrev_candidacies) +
+  theme_void() + 
+  labs(fill = "Parties")
+
+```
+
+# Interactive maps
+
+```{r, fig.width=12, fig.height=6.75, dpi=180}
+
+elec_2023 <- summary_election_data(type_elec = "congress",
+                                   year = 2023, 
+                                   level = "mun")
+
+elec_2023 <- elec_2023 |> 
+  left_join(color, by = c("id_elec", "id_candidacies_nat", "abbrev_candidacies"))
+
+ganador_prov <- elec_2023 |>
+  group_by(id_INE_mun) |>
+  slice_max(ballots, n = 1, with_ties = FALSE) |>
+  ungroup()
+
+ganador_prov <- ganador_prov |> 
+  separate(id_INE_mun, into = c("ccaa_cod", "prov_cod", "mun_cod"), sep = "-", remove = FALSE) |> 
+  mutate(LAU_CODE = paste0(prov_cod, mun_cod))
+# We extract the province code to join the coordinates
+
+prov_sf <- esp_get_munic(moveCAN = TRUE)
+
+map <- prov_sf |>
+  left_join(ganador_prov, by = c("LAU_CODE")) |> 
+  drop_na(abbrev_candidacies)
+
+leaflet(map) |>
+  addProviderTiles("CartoDB.Positron") |>
+  setView(lng = -3.7, lat = 40, zoom = 6) |>
+  addPolygons(
+    fillColor       = ~color,          
+    color           = "#444444",
+    weight          = 1,
+    fillOpacity     = 0.8,
+    label           = ~ paste0(
+      mun, " Party: ", abbrev_candidacies,
+      " Ballots: ", format(ballots, big.mark = ".")
+    ),
+    highlightOptions = highlightOptions(
+      weight       = 3,
+      color        = "#666666",
+      bringToFront = TRUE
+    )
+  ) 
+```
+
+```{r, fig.width=12, fig.height=6.75, dpi=180}
+elec_2016 <- summary_election_data("congress", 
+                                   year = 2016, 
+                                   level = "prov")
+
+elec_2016 <- elec_2016 |> 
+  left_join(color, by = c("id_elec", "id_candidacies_nat", "abbrev_candidacies"))
+
+most_voted_parties <- elec_2016 |>
+  group_by(id_INE_prov) |>
+  slice_max(ballots, n = 2, with_ties = FALSE) |>
+  ungroup()
+
+most_voted_parties <- most_voted_parties |> 
+   mutate(id_INE_prov = str_extract(id_INE_prov, "\\d{2}$"))
+
+plots <- lapply(
+  split(most_voted_parties, most_voted_parties$id_INE_prov),
+  function(df) {
+    ggplot(df, aes(x = reorder(abbrev_candidacies, ballots), y = ballots, fill = color)) +
+      geom_col(width = .6) +
+      coord_flip() +
+      scale_fill_identity() +
+      geom_text(
+        aes(label = paste0(abbrev_candidacies, " – ", ballots)),
+        hjust  = 1.05,          
+        colour = "white",       
+        size   = 3
+      ) + 
+      theme_void(base_size = 8)
+  }
+)
+provincias_sf <- esp_get_prov() 
+
+names(plots) <- names(split(most_voted_parties, most_voted_parties$id_INE_prov))
+
+ganador <- most_voted_parties |>
+  group_by(id_INE_prov) |>
+  slice_max(ballots, n = 1, with_ties = FALSE) |>
+  ungroup() |>
+  select(id_INE_prov, color)        
+
+
+provincias_sf_col <- provincias_sf |>
+  mutate(cpro = sprintf("%02d", as.integer(cpro))) |>   
+  left_join(ganador, by = c("cpro" = "id_INE_prov"))
+
+plots <- plots[match(provincias_sf_col$cpro, names(plots))]
+
+leaflet(provincias_sf_col) |>
+  addProviderTiles("CartoDB.Positron") |>
+   setView(lng = -3.7, lat = 40, zoom = 6) |>
+  addPolygons(
+    fillColor   = ~color,      
+    fillOpacity = 0.85,
+    color       = "white",
+    weight      = 0.7,
+    popup       = leafpop::popupGraph(plots, width = 220, height = 130)
+  ) |>
+  htmlwidgets::onRender("
+    function(el,x){
+      this.eachLayer(function(l){
+        if(l.openPopup){
+          l.on('mouseover', function(){ this.openPopup(); });
+          l.on('mouseout',  function(){ this.closePopup(); });
+        }
+      });
+    }
+  ")
+
+```

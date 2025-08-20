@@ -220,6 +220,13 @@ get_election_data <-
 
     }
 
+    if (!all(c(col_id_mun) %in% colnames(election_data)) |
+        !all(c(col_id_mun, col_id_candidacies) %in% colnames(ballots_data))) {
+
+      stop(red("Ups! Columns provided in `col_id_mun`and `col_id_candidacies` should be available in raw files."))
+
+    }
+
     # id variables
     group_vars <- c(col_id_elec, col_id_poll_station)
 
@@ -240,7 +247,6 @@ get_election_data <-
     check_totals <-
       join_data |>
       summarise("sum_party_ballots" = sum(ballots),
-                # unique not available in duckdb
                 "party_ballots" = min(party_ballots),
                 .by = all_of(group_vars)) |>
       filter(sum_party_ballots != party_ballots)
@@ -446,6 +452,13 @@ aggregate_election_data <-
     }
 
     # Check if cols_mun_var exist within the data
+    if (!all(col_id_mun %in% colnames(election_data))) {
+
+      stop(red("Ups! Columns provided in `cols_id_mun` should be available in the table."))
+
+    }
+
+    # Check if cols_mun_var exist within the data
     if (!all(cols_mun_var %in% colnames(election_data))) {
 
       stop(red("Ups! Columns provided in `cols_mun_var` should be available in the table."))
@@ -611,7 +624,6 @@ aggregate_election_data <-
                     distinct(.keep_all = TRUE),
                   by = c(group_var[group_var %in%
                                      c("cod_INE_ccaa", "cod_INE_prov", "cod_INE_mun")])) |>
-        # collect() |>
         unite(!!paste0("id_INE_", level), group_var[group_var != col_id_elec],
               sep = "-") |>
         select(all_of(c(col_id_elec, paste0("id_INE_", level))),
@@ -657,7 +669,7 @@ aggregate_election_data <-
 #' @title Summaries of the electoral and candidacies ballots data for
 #' a given aggregation level (ccaa, prov, etc)
 #'
-#' @description pending Import, preprocess and aggregate election data at the same time for
+#' @description Import, preprocess and aggregate election data at the same time for
 #' a given election and aggregation level. This function also lets remove parties below a given
 #' vote share threshold.
 #'
@@ -941,14 +953,30 @@ summary_election_data <-
     }
 
     # Aggregate election data at level provided
+
+    if (level %in% c("all", "ccaa") & !is.null(method)){
+
     summary_data <-
       election_data |>
-      aggregate_election_data(level = level, by_parties = by_parties,
+      aggregate_election_data(level = "prov", by_parties = by_parties,
                               prec_round = prec_round,
                               verbose = verbose, short_version = FALSE,
                               col_id_poll_station = col_id_poll_station,
                               col_id_mun = col_id_mun, cols_mun_var = cols_mun_var,
                               col_id_candidacies = col_id_candidacies)
+
+    } else {
+
+      summary_data <-
+        election_data |>
+        aggregate_election_data(level = level, by_parties = by_parties,
+                                prec_round = prec_round,
+                                verbose = verbose, short_version = FALSE,
+                                col_id_poll_station = col_id_poll_station,
+                                col_id_mun = col_id_mun, cols_mun_var = cols_mun_var,
+                                col_id_candidacies = col_id_candidacies)
+
+    }
 
     if (verbose) {
 
@@ -965,17 +993,6 @@ summary_election_data <-
 
       }
 
-      # Including some summaries
-      census_var <-
-        colnames(summary_data)[str_detect(colnames(summary_data), "census_counting")]
-      summary_data  <-
-        summary_data  |>
-        mutate("porc_candidacies_parties" =
-                 round(100*ballots/party_ballots, prec_round),
-               "porc_candidacies_valid" =
-                 round(100*ballots/valid_ballots, prec_round),
-               "porc_candidacies_census" =
-                 round(100*ballots/.data[[census_var]], prec_round))
 
       # Depending on level, we get the properly id _candidacies
       id_party <- if_else(level %in% c("all", "ccaa"), col_id_candidacies[["id_nat"]],
@@ -984,7 +1001,7 @@ summary_election_data <-
       # Filtering parties for the asked elections
       dict_parties <-
         global_dict_parties |>
-        select(-color) |>
+        select(-c(color, abbrev_candidacies_unified, id_candidacies_unified)) |>
         filter(id_elec %in% unique(summary_data |> pull(col_id_elec))) |>
         distinct(.data[[col_id_elec]], .data[[id_party]], .keep_all = TRUE)
 
@@ -996,35 +1013,9 @@ summary_election_data <-
                   suffix = c("", ".rm"), copy = TRUE) |>
         select(-contains(".rm")) |>
         relocate(col_abbrev_candidacies, .after = id_party))
-
-      # select, rename and relocate properly
-      if (level == "all") {
-
-        suppressWarnings(summary_data <-
-          summary_data |>
-          select(-any_of(c("name_candidacies", col_id_candidacies[["id_prov"]]))) |>
-          rename(id_candidacies = col_id_candidacies[["id_nat"]],
-                 name_candidacies = name_candidacies_nat) |>
-          relocate(name_candidacies, .after = col_abbrev_candidacies))
-
-      } else {
-
-        suppressWarnings(summary_data <-
-          summary_data |>
-          select(-any_of(c("name_candidacies_nat"))) |> # , col_id_candidacies[["id_nat"]] We want id_candidacies nat to appear at any level
-          relocate(name_candidacies, .after = col_abbrev_candidacies))
-
-      }
     }
 
-    # if short_version --> remove some variables
-    if (short_version) {
 
-      summary_data  <-
-        summary_data |>
-        select(-any_of(c("ballots_1", "ballots_2", "n_poll_stations",
-                         cols_mun_var)), -contains("pop_res"))
-    }
 
     if (!is.null(method)) {
 
@@ -1046,49 +1037,12 @@ summary_election_data <-
 
           }
 
-          if (level %in% c("ccaa", "all")) {
-
-            aux <- election_data |>
-              aggregate_election_data(level = "prov", by_parties = TRUE,
-                                      prec_round = prec_round,
-                                      verbose = FALSE, short_version = FALSE,
-                                      col_id_poll_station = col_id_poll_station,
-                                      col_id_mun = col_id_mun, cols_mun_var = cols_mun_var,
-                                      col_id_candidacies = col_id_candidacies)
-
-            id_party <- col_id_candidacies[["id_prov"]]
-
-            dict_parties <-
-              global_dict_parties |>
-              select(-color) |>
-              filter(id_elec %in% unique(aux |> pull(col_id_elec))) |>
-              distinct(.data[[col_id_elec]], .data[[id_party]], .keep_all = TRUE)
-
-            suppressWarnings(aux <-
-                               aux |>
-                               left_join(dict_parties,
-                                         by = c("id_elec" = col_id_elec, id_party),
-                                         suffix = c("", ".rm"), copy = TRUE) |>
-                               select(-contains(".rm")) |>
-                               relocate(col_abbrev_candidacies, .after = id_party))
-
-            suppressWarnings(aux <-
-                               aux |>
-                               select(-any_of(c("name_candidacies_nat"))) |> # , col_id_candidacies[["id_nat"]] We want id_candidacies nat to appear at any level
-                               relocate(name_candidacies, .after = col_abbrev_candidacies))
-
-          } else {
-
-            aux <- summary_data
-
-          }
-
           col_id_candidacies <- "id_candidacies_nat"
           col_blank_ballots <- "blank_ballots"
           col_id_electoral_district <- "id_INE_prov"
           col_ballots <- "ballots"
 
-          id_election <- aux |>
+          id_election <- summary_data |>
             pull(.data[[col_id_elec]]) |>
             unique()
 
@@ -1097,12 +1051,12 @@ summary_election_data <-
             filter(.data[[col_id_elec]] %in% id_election) |>
             select(all_of(c(col_id_electoral_district, col_id_elec, "nseats")))
 
-          aux <-
-            aux |>
+          summary_data <-
+            summary_data |>
             left_join(nseats_year, by = c(col_id_elec, col_id_electoral_district))
 
           suppressWarnings(seats_results <-
-            aux |>
+            summary_data |>
             select(all_of(c(col_id_elec, col_id_electoral_district,
                             col_id_candidacies, col_ballots,
                             col_blank_ballots, "nseats"))) |>
@@ -1115,8 +1069,8 @@ summary_election_data <-
             select(all_of(c(col_id_elec, col_id_electoral_district,
                             "candidacies", "seats"))))
 
-          aux <-
-            aux |>
+          summary_data <-
+            summary_data |>
             distinct(
               .data[[col_id_elec]],
               .data[[col_id_electoral_district]],
@@ -1129,31 +1083,147 @@ summary_election_data <-
 
           if (level == "all") {
 
-            aux <- aux |>
-              summarise(seats = sum(seats), .by = c(col_id_elec, col_id_candidacies))
+            suppressWarnings(poll_data <- summary_data |> select(-seats) |>
+                              distinct(.data[[col_id_elec]],
+                                       .data[[col_id_electoral_district]],
+                                       .keep_all = TRUE) |>
+                              summarise(across(c(where(is.numeric), -ballots),
+                                        function(x) {sum(x, na.rm = TRUE)}),
+                                        .by = col_id_elec))
 
-            summary_data <- summary_data |>
-              left_join(aux, by = c(col_id_elec, "id_candidacies" = col_id_candidacies))
+            suppressWarnings(aux <- summary_data |>
+                              summarise("abbrev_candidacies" = first(.data[["abbrev_candidacies"]]),
+                                        "ballots" = sum(ballots, na.rm = TRUE),
+                                        "seats" = sum(seats, na.rm = TRUE),
+                                        .by = c(col_id_elec, col_id_candidacies)))
+
+            suppressWarnings(summary_data <- poll_data |>
+                              left_join(aux, by = c(col_id_elec)))
+
+            summary_data <-
+              summary_data |>
+              rename_with(~ str_replace_all(.x, "_prov", paste0("_", level)))
+
+            dict_parties <-
+              global_dict_parties |>
+              select(id_elec, id_candidacies_nat, name_candidacies_nat) |>
+              filter(id_elec %in% unique(summary_data |> pull(col_id_elec))) |>
+              distinct(.data[[col_id_elec]], .data[[col_id_candidacies]], .keep_all = TRUE)
+
+            suppressWarnings(summary_data <-
+                               summary_data |>
+                               left_join(dict_parties,
+                                         by = c("id_elec" = col_id_elec, col_id_candidacies),
+                                         suffix = c("", ".rm"), copy = TRUE) |>
+                               select(-contains(".rm")) |>
+                               relocate(name_candidacies_nat, .after = col_id_candidacies))
 
 
           } else if (level == "ccaa"){
 
-            aux <- aux |>
-              summarise(seats = sum(seats), .by = c(col_id_elec, col_id_candidacies, ccaa))
+            suppressWarnings(summary_data <- summary_data |>
+                              mutate("id_INE_ccaa" = str_extract(.data[[col_id_electoral_district]], "^\\d{2}"),
+                              .before = ccaa))
 
-            summary_data <- summary_data |>
-              left_join(aux, by = c(col_id_elec, "ccaa", "id_candidacies_nat" = col_id_candidacies))
+            suppressWarnings(poll_data <- summary_data |> select(-seats) |>
+                             distinct(.data[[col_id_elec]],
+                                      .data[[col_id_electoral_district]],
+                                      .keep_all = TRUE) |>
+                             summarise("ccaa" = list(sort(unique(.data[["ccaa"]]))),
+                                        across(c(where(is.numeric), -ballots),
+                                        function(x) {sum(x, na.rm = TRUE)}),
+                                        .by = c(col_id_elec, id_INE_ccaa)))
 
+            suppressWarnings(aux <- summary_data |>
+                            summarise("abbrev_candidacies" = first(.data[["abbrev_candidacies"]]),
+                                       "ballots" = sum(ballots, na.rm = TRUE),
+                                        "seats" = sum(seats, na.rm = TRUE),
+                                        .by = c(col_id_elec, col_id_candidacies, id_INE_ccaa)))
 
-          } else {
+            suppressWarnings(summary_data <- poll_data |>
+                             left_join(aux, by = c(col_id_elec, "id_INE_ccaa")))
 
-            summary_data <- aux
+            summary_data <-
+              summary_data |>
+              rename_with(~ str_replace_all(.x, "_prov", paste0("_", level)))
+
+            dict_parties <-
+              global_dict_parties |>
+              select(id_elec, id_candidacies_nat, name_candidacies_nat) |>
+              filter(id_elec %in% unique(summary_data |> pull(col_id_elec))) |>
+              distinct(.data[[col_id_elec]], .data[[col_id_candidacies]], .keep_all = TRUE)
+
+            suppressWarnings(summary_data <-
+                               summary_data |>
+                               left_join(dict_parties,
+                                         by = c("id_elec" = col_id_elec, col_id_candidacies),
+                                         suffix = c("", ".rm"), copy = TRUE) |>
+                               select(-contains(".rm")) |>
+                               relocate(name_candidacies_nat, .after = col_id_candidacies))
 
           }
         }
       }
     }
 
+      col_id_candidacies =
+        c("id_prov" = "id_candidacies", "id_nat" = "id_candidacies_nat")
+
+      census_var <-
+        colnames(summary_data)[str_detect(colnames(summary_data), "census_counting")]
+
+      if (by_parties) {
+
+        # select, rename and relocate properly
+        if (level %in% c("all", "ccaa") & is.null(method)) {
+
+          suppressWarnings(summary_data <-
+                             summary_data |>
+                             select(-any_of(c("name_candidacies", col_id_candidacies[["id_prov"]]))) |>
+                             rename(id_candidacies = col_id_candidacies[["id_nat"]],
+                                    name_candidacies = name_candidacies_nat) |>
+                             relocate(name_candidacies, .after = col_abbrev_candidacies))
+
+        } else if (level %in% c("all", "ccaa") & !is.null(method)) {
+
+          suppressWarnings(summary_data <-
+                             summary_data |>
+                             select(-any_of(c("name_candidacies", col_id_candidacies[["id_prov"]]))) |>
+                             rename(id_candidacies = col_id_candidacies[["id_nat"]],
+                                    name_candidacies = name_candidacies_nat) |>
+                             relocate(name_candidacies, .after = col_abbrev_candidacies))
+
+        } else {
+
+          suppressWarnings(summary_data <-
+                             summary_data |>
+                             select(-any_of(c("name_candidacies_nat"))) |> # , col_id_candidacies[["id_nat"]] We want id_candidacies nat to appear at any level
+                             relocate(name_candidacies, .after = col_abbrev_candidacies))
+
+        }
+
+        # Including some summaries
+
+        summary_data  <-
+          summary_data  |>
+          mutate("porc_candidacies_parties" =
+                   round(100*ballots/party_ballots, prec_round),
+                 "porc_candidacies_valid" =
+                   round(100*ballots/valid_ballots, prec_round),
+                 "porc_candidacies_census" =
+                   round(100*ballots/.data[[census_var]], prec_round))
+      }
+
+
+
+    # if short_version --> remove some variables
+    if (short_version) {
+
+      summary_data  <-
+        summary_data |>
+        select(-any_of(c("ballots_1", "ballots_2", "n_poll_stations",
+                         cols_mun_var, census_var)), -contains("pop_res"))
+    }
 
     if (!is.na(filter_porc_ballots)) {
 

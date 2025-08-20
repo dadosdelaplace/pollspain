@@ -101,10 +101,6 @@ party abbreviations. Defaults to \code{"abbrev_candidacies"}.}
 \item{col_id_elec, col_id_poll_station, col_id_mun, col_id_candidacies, cols_mun_var}{(Optional) Column names for election's id, poll station's id,
 municipalities' id, candidacies' id and column names for the
 variables just available at mun level or greater.}
-
-\item{candidacies_data}{A database containing the information of
-candidacies. Database should contain \code{col_abbrev_candidacies}
-and \code{col_id_candidacies} columns. Defaults to \code{NULL}.}
 }
 \value{
 A tibble with rows corresponding to the level of aggregation for
@@ -143,7 +139,7 @@ each level section.}
 \item{seats}{number of seats}
 }
 \description{
-pending Import, preprocess and aggregate election data at the same time for
+Import, preprocess and aggregate election data at the same time for
 a given election and aggregation level. This function also lets remove parties below a given
 vote share threshold.
 }

@@ -76,6 +76,7 @@
 #' @importFrom rvest read_html
 #' @importFrom stringi stri_escape_unicode
 #' @importFrom stringi stri_trans_general
+#' @importFrom stringr str_detect
 #' @importFrom stringr str_flatten
 #' @importFrom tidyr drop_na
 #' @importFrom tidyr expand_grid
