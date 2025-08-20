@@ -60,9 +60,9 @@
 
       <h1>About data</h1>
                         <h4 data-toc-skip class="author">Javier Álvarez
-Liébana</h4>
+Liébana and David Pereiro-Pol</h4>
             
-            <h4 data-toc-skip class="date">2025-08-06</h4>
+            <h4 data-toc-skip class="date">2025-08-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dadosdelaplace/pollspain/blob/main/vignettes/about-data.Rmd" class="external-link"><code>vignettes/about-data.Rmd</code></a></small>
       <div class="d-none name"><code>about-data.Rmd</code></div>
@@ -105,7 +105,7 @@ An hexadecimal code is proposed for the most important candidacies for
 dataviz purposes. The dataset is of our own creation and it was
 collected from all the election files by applying
 <code><a href="../reference/import_candidacies_data.html">import_candidacies_data()</a></code> function for each election.</p>
-<p>The dataset contains 7 columns:</p>
+<p>The dataset contains 9 columns:</p>
 <ul>
 <li>
 <code>id_elec</code>: id of elections (type of elections +
@@ -122,6 +122,11 @@ constituency).</li>
 <li>
 <code>name_candidacies_nat</code>: party name (common at national
 level).</li>
+<li>
+<code>id_candidacies_unified</code>: historical id.</li>
+<li>
+<code>abbrev_candidacies_unified</code>: historical party
+abbreviation.</li>
 <li>
 <code>color</code>: hexadecimal (color) code for some parties.</li>
 </ul>
@@ -156,10 +161,14 @@ constituencies.”</p>
 in the <code>name_candidacies_nat</code> variable, which is the one used
 when aggregating data at the national level—under the most widely
 recognized branding of the party.</p>
-<p>Secondly, <span class="hl"><strong>certain groupings have been
-applied in order to simplify the dataset returned to the
-user</strong></span>. These adjustments, while practical, are worth
-noting—particularly for political science experts:</p>
+<p>Secondly, we can observe that every party has a
+<code>id_candidacies_unified</code> and a
+<code>abbrev_candidacies_unified</code>, these two were added for
+comparability purposes across the elections.</p>
+<p>Lastly, <span class="hl"><strong>certain groupings have been applied
+in order to simplify the dataset returned to the user</strong></span>.
+These adjustments, while practical, are worth noting—particularly for
+political science experts:</p>
 <details><summary>
 Notes about acronyms
 </summary><ul>
@@ -223,12 +232,118 @@ script</a>.</p>
 <div class="section level2">
 <h2 id="datasets-about-elections">Datasets about elections<a class="anchor" aria-label="anchor" href="#datasets-about-elections"></a>
 </h2>
-<p>Pending to doc</p>
-</div>
-<div class="section level2">
-<h2 id="datasets-about-surveys">Datasets about surveys<a class="anchor" aria-label="anchor" href="#datasets-about-surveys"></a>
-</h2>
-<p>Pending to doc</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">CEB_results</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 312 × 15</span></span></span>
+<span><span class="co">#&gt;    cod_elec date       id_elec       prov     census_counting_prov total_ballots</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 02       2011-11-20 02-2011-11-20 Albacete               <span style="text-decoration: underline;">309</span>456        <span style="text-decoration: underline;">235</span>515</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 02       2011-11-20 02-2011-11-20 Alicant…              1<span style="text-decoration: underline;">222</span>109        <span style="text-decoration: underline;">898</span>402</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 02       2011-11-20 02-2011-11-20 Almería                <span style="text-decoration: underline;">469</span>594        <span style="text-decoration: underline;">315</span>504</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 02       2011-11-20 02-2011-11-20 Álava/A…               <span style="text-decoration: underline;">250</span>743        <span style="text-decoration: underline;">172</span>154</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 02       2011-11-20 02-2011-11-20 Asturias               <span style="text-decoration: underline;">989</span>045        <span style="text-decoration: underline;">638</span>629</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 02       2011-11-20 02-2011-11-20 Ávila                  <span style="text-decoration: underline;">142</span>578        <span style="text-decoration: underline;">107</span>457</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 02       2011-11-20 02-2011-11-20 Badajoz                <span style="text-decoration: underline;">557</span>468        <span style="text-decoration: underline;">414</span>102</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 02       2011-11-20 02-2011-11-20 Islas B…               <span style="text-decoration: underline;">730</span>740        <span style="text-decoration: underline;">445</span>488</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 02       2011-11-20 02-2011-11-20 Barcelo…              4<span style="text-decoration: underline;">028</span>117       2<span style="text-decoration: underline;">654</span>927</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 02       2011-11-20 02-2011-11-20 Vizcaya…               <span style="text-decoration: underline;">949</span>471        <span style="text-decoration: underline;">646</span>432</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 302 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 9 more variables: valid_ballots &lt;dbl&gt;, party_ballots &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   blank_ballots &lt;dbl&gt;, invalid_ballots &lt;dbl&gt;, cod_INE_ccaa &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   cod_MIR_ccaa &lt;chr&gt;, ccaa &lt;chr&gt;, cod_INE_prov &lt;chr&gt;, id_INE_prov &lt;glue&gt;</span></span></span></code></pre></div>
+<p>The dataset <code>CEB_results</code> contains the <span class="hl"><strong>province level electoral results from the 2008
+election to the 2023 one corrected by the Central Election Board
+(CEB)</strong></span>. This dataset is used for unit tests since the
+data provided by the Interior Ministry is not always corrected by the
+CEB data. The construction of this dataset was made with the data
+contained in the PDFs provided by the <a href="https://www.juntaelectoralcentral.es/cs/jec/elecciones" class="external-link">CEB</a>
+and it contains 312 rows and 15 varaibles:</p>
+<ul>
+<li>
+<code>cod_elec</code>: code of the election.</li>
+<li>
+<code>date</code>: date of the election.</li>
+<li>
+<code>id_elec</code>: id for the election.</li>
+<li>
+<code>cod_INE_ccaa</code>: code of region according INE.</li>
+<li>
+<code>cod_MIR_ccaa</code>: code of region according Spanish Ministry
+of the Interior (MIR).</li>
+<li>
+<code>ccaa</code>: name of region.</li>
+<li>
+<code>cod_INE_prov</code>: code of province.</li>
+<li>
+<code>prov</code>: name of province.</li>
+<li>
+<code>id_INE_prov</code>: id for the province:
+(<code>cod_INE_ccaa</code> + <code>cod_INE_prov</code>)</li>
+<li>
+<code>census_counting_prov</code>: census for each election and
+province.</li>
+<li>
+<code>blank_ballots</code>: total number of blank ballots.</li>
+<li>
+<code>party_ballots</code>: total number of ballots to
+candidacies.</li>
+<li>
+<code>valid_ballots</code>: total number of ballots, as a sum of
+<code>blank_ballots</code> and <code>party_ballots</code>.</li>
+<li>
+<code>invalid_ballots</code>: total number of invalid ballots.</li>
+<li>
+<code>total_ballots</code>: total number of ballots, as a sum of
+<code>valid_ballots</code> and <code>invalid_ballots</code>.</li>
+</ul>
+<p>Last update: 2025/08/19. The code used to generate the dataset can be
+found at <a href="https://github.com/dadosdelaplace/pollspain/tree/main/data-raw" class="external-link"><code>data-raw/CEB_results.R</code>
+script</a>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">total_seats_spain</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 728 × 8</span></span></span>
+<span><span class="co">#&gt;    prov  nseats id_elec cod_INE_ccaa cod_MIR_ccaa ccaa  cod_INE_prov id_INE_prov</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Alme…      5 02-198… 01           01           Anda… 04           01-04      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Cádiz      8 02-198… 01           01           Anda… 11           01-11      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Córd…      7 02-198… 01           01           Anda… 14           01-14      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Gran…      7 02-198… 01           01           Anda… 18           01-18      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Huel…      5 02-198… 01           01           Anda… 21           01-21      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Jaén       7 02-198… 01           01           Anda… 23           01-23      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Mála…      8 02-198… 01           01           Anda… 29           01-29      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Sevi…     12 02-198… 01           01           Anda… 41           01-41      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Hues…      3 02-198… 02           02           Arag… 22           02-22      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Teru…      3 02-198… 02           02           Arag… 44           02-44      </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 718 more rows</span></span></span></code></pre></div>
+<p>The dataset <code>total_seats_spain</code> contains the <span class="hl"><strong>number of parliament seats allocated to each province
+for the general Spanish elections</strong></span> each electoral year.
+The data is of our own creation with the information extracted from the
+<a href="https://www.juntaelectoralcentral.es/cs/jec/elecciones" class="external-link">CEB</a>
+and it contains 728 rows and 8 variables:</p>
+<ul>
+<li>
+<code>id_elec</code>: id for the election.</li>
+<li>
+<code>cod_INE_ccaa</code>: code of region according INE.</li>
+<li>
+<code>cod_MIR_ccaa</code>: code of region according Spanish Ministry
+of the Interior (MIR).</li>
+<li>
+<code>ccaa</code>: name of region.</li>
+<li>
+<code>cod_INE_prov</code>: code of province.</li>
+<li>
+<code>prov</code>: name of province.</li>
+<li>
+<code>id_INE_prov</code>: id for the province:
+(<code>cod_INE_ccaa</code> + <code>cod_INE_prov</code>)</li>
+<li>
+<code>nseats</code>: number of seats allocated to each
+province.</li>
+</ul>
+<p>Last update: 2025/08/19. The code used to generate the dataset can be
+found at <a href="https://github.com/dadosdelaplace/pollspain/tree/main/data-raw" class="external-link"><code>data-raw/total_seats_spain.R</code>
+script</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="auxiliary-datasets">Auxiliary datasets<a class="anchor" aria-label="anchor" href="#auxiliary-datasets"></a>
@@ -236,7 +351,7 @@ script</a>.</p>
 <div class="section level3">
 <h3 id="dates-of-spanish-elections">Dates of Spanish elections<a class="anchor" aria-label="anchor" href="#dates-of-spanish-elections"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dates_elections_spain</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 62 × 8</span></span></span>
 <span><span class="co">#&gt;    cod_elec type_elec  date        year month   day topic                pdf_CEB</span></span>
@@ -277,7 +392,7 @@ script</a>.</p>
 <div class="section level3">
 <h3 id="ines-code-for-ccaa-and-provinces">INE’s code for ccaa and provinces<a class="anchor" aria-label="anchor" href="#ines-code-for-ccaa-and-provinces"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cod_INE_prov_ccaa</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 52 × 5</span></span></span>
 <span><span class="co">#&gt;    cod_INE_ccaa cod_MIR_ccaa ccaa      cod_INE_prov prov   </span></span>
@@ -317,7 +432,7 @@ script</a>.</p>
 <div class="section level3">
 <h3 id="ines-code-for-municipalities">INE’s code for municipalities<a class="anchor" aria-label="anchor" href="#ines-code-for-municipalities"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cod_INE_mun</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8,131 × 10</span></span></span>
 <span><span class="co">#&gt;    id_INE_mun id_MIR_mun cod_INE_ccaa cod_MIR_ccaa cod_INE_prov cod_INE_mun</span></span>
