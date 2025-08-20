@@ -14,9 +14,39 @@ test_that("summary_survey_data works", {
                                      verbose = FALSE) |>
                  filter(is.na(id_survey)) |>
                  nrow(), 0)
+  expect_equal(summary_survey_data(type_elec = "congress",
+                                   date = random_dates,
+                                   short_version = FALSE,
+                                   verbose = FALSE, forthcoming = TRUE) |>
+                 filter(is.na(id_survey)) |>
+                 nrow(), 0)
 
-  expect_error(summary_survey_data(year = 2023,
-                                   filter_media = 700, verbose = FALSE))
+  # no negative n_field_days
+  expect_equal(summary_survey_data(type_elec = "congress",
+                                   date = random_dates,
+                                   short_version = FALSE,
+                                   verbose = FALSE) |>
+                 filter(n_field_days <= 0) |>
+                 nrow(), 0)
+
+  # no negative sample_size
+  expect_equal(summary_survey_data(type_elec = "congress",
+                                   date = random_dates,
+                                   short_version = FALSE,
+                                   verbose = FALSE) |>
+                 drop_na(sample_size) |>
+                 filter(sample_size <= 0) |>
+                 nrow(), 0)
+
+  # no negative days_until_elec
+  expect_equal(summary_survey_data(type_elec = "congress",
+                                   date = random_dates,
+                                   short_version = FALSE,
+                                   verbose = FALSE) |>
+                 drop_na(days_until_elec) |>
+                 filter(days_until_elec < 0) |>
+                 nrow(), 0)
+
   expect_error(summary_survey_data(year = 2023,
                                    filter_media = 700, verbose = FALSE))
   expect_error(summary_survey_data(type_elec = "congress", year = 2023,

@@ -20,7 +20,8 @@ the elections to be considered. If date was provided, it should be
 in format \%Y-\%m-\%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
 If no date was provided, \code{year} should be provided as
 numerical variable. Please, check in \code{dates_elections_spain}
-the elections of the specified type are available.}
+the elections of the specified type are available. If no date
+neither year were provided, \code{NULL} is provided as output.}
 }
 \description{
 Given a year and/or date by the user, this function

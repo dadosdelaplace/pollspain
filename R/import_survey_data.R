@@ -6,8 +6,8 @@
 #' elections at once.
 #'
 #' @inheritParams import_mun_census_data
-#' @param format Do you want the output in long or wide format?
-#' Defaults to \code{"long"}
+#' @param format Do you want the output in \code{format = "long"} or
+#' \code{format = "wide"} format? Defaults to \code{"long"}
 #' @param forthcoming A flag indicates whether user wants to include
 #' surveys for the forthcoming elections. Defaults to \code{TRUE}. If
 #' \code{TRUE}, no date neither year are required (in that case, just
@@ -15,7 +15,7 @@
 #'
 #' @return A tibble with rows corresponding to the estimated results
 #' for each party for each election given by a particular pollster,
-#' including the following variables:
+#' including the following variables (long format):
 #'
 #'   \item{id_survey}{survey's id constructed from the polling
 #'   firm and the dates for the start and end of the fieldwork.}
@@ -32,10 +32,11 @@
 #'   \item{estimated_porc_ballots}{estimated percentage of ballots
 #'    for each party.}
 #'
-#' @details This function fetches survey data for the
-#' specified elections' date by loading the corresponding files from
+#' @details This function fetches survey data for the specified
+#' elections' date by loading the corresponding files from
 #' `{pollspaindata}` and processing them by joining the ids and name
-#' of the different political parties.
+#' of the different political parties. Note that dates and years
+#' should be associated with years of elections.
 #'
 #' @author Javier Alvarez-Liebana and David Pereiro Pol
 #' @keywords import_survey_data
@@ -48,6 +49,18 @@
 #' # Fetch survey data for congress elections in multiple dates
 #' poll_station_data <-
 #'   import_survey_data(year = 2023, date = "2019-04-28")
+#'
+#' # Fetch survey data for congress elections in multiple dates
+#' # and for the forthcoming elections
+#' poll_station_data <-
+#'   import_survey_data(year = c(2011, 2016), date = "2019-04-28",
+#'                      forthcoming = TRUE)
+#'
+#' ## Fetch survey data for congress elections in multiple dates
+#' # and for the forthcoming elections, in wide format
+#' poll_station_data <-
+#'   import_survey_data(year = c(2011, 2016), date = "2019-04-28",
+#'                      forthcoming = TRUE, format = "wide")
 #'
 #' # ----
 #' # Incorrect examples

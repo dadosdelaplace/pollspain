@@ -253,7 +253,6 @@ test_that("summary_elections_data works", {
                  filter(seats_difference > 0) |> nrow(), 0)
 
 
-
   # is tibble?
   expect_equal(summary_election_data(type_elec = "congress",
                                      date = random_dates,

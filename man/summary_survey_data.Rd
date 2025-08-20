@@ -12,6 +12,8 @@ summary_survey_data(
   short_version = TRUE,
   format = "long",
   forthcoming = FALSE,
+  rm_exit_polls = TRUE,
+  rm_unpublish_polls = FALSE,
   filter_polling_firm = NULL,
   filter_media = NULL,
   filter_n_field_days = NULL,
@@ -48,13 +50,22 @@ be printed during execution. Defaults to \code{TRUE}.}
 a short version of the data (just key variables) or not.
 Defaults to \code{TRUE}.}
 
-\item{format}{Do you want the output in long or wide format?
-Defaults to \code{"long"}}
+\item{format}{Do you want the output in \code{format = "long"} or
+\code{format = "wide"} format? Defaults to \code{"long"}}
 
 \item{forthcoming}{A flag indicates whether user wants to include
 surveys for the forthcoming elections. Defaults to \code{TRUE}. If
 \code{TRUE}, no date neither year are required (in that case, just
 surveys for the next elections are provided).}
+
+\item{rm_exit_polls}{Flag to indicate whether exit polls should be
+removed or not. Defaults to \code{TRUE}.}
+
+\item{rm_unpublish_polls}{Flag to indicate whether unpublished
+polls before elections should be removed or not. In Spain, the
+Electoral Law (LOREG) establishes that it is forbidden to publish,
+disseminate, or reproduce electoral polls during the five days
+prior to election day. Defaults to \code{FALSE}.}
 
 \item{filter_polling_firm, filter_media, filter_abbrev_candidacies}{Do you want to filter surveys by polling firm, media or abbrev of
 candidacies? A string vector should be introduced. Defaults to
@@ -100,22 +111,29 @@ available for short version.}
 for each party.}
 }
 \description{
-Import, preprocess and summary survey data.
+Import, preprocess and summary survey data, for given
+election types and dates. This function supports both single values
+and vector inputs for fetching and combining data for multiple
+elections at once. Surveys for the forthcoming elections can be
+also asked. Different filtering arguments (polling firm, days
+until elections, candidacies, sample size, etc) are also included
+to design a properly query.
 }
 \details{
-This function uses the helper function \code{import_survey_data()},
-which imports and cleans survey data, and adds other relevant variables for
-analysis. This function gives a tidy table of the survey data that
-is ready for analysis or visualisation.
+This function uses the helper function
+\code{import_survey_data()}, which imports and cleans survey data,
+and adds other relevant variables for analysis. This function gives
+a tidy table of the survey data for analysis or visualization. Note
+that dates and years should be associated with years of elections.
 }
 \examples{
 
 ## Correct examples
 
-# Summary for all 2019-2023 surveys
-summary_survey_data(year = c(2019, 2023))
+# Summary of surveys for 2016 and 2023, and 2019-04-28 elections.
+summary_survey_data(year = c(2016, 2023), date = "2019-04-28")
 
-# Summary for 2019-2023 surveys in a full version, filtering
+# Summary for all 2019-2023 surveys in a full version, filtering
 # just 40DB and GAD3 polling firms, the last 30 days before elec,
 # and with a sample size at least than 500 people
 summary_survey_data(year = c(2019, 2023), short_version = FALSE,
@@ -150,26 +168,25 @@ summary_survey_data(year = 2018, short_version = FALSE)
 # Invalid short version flag: short_version should be a
 # logical variable
 summary_survey_data(type_elec = "congress", year = 2019,
-                  short_version = "yes")
+                   short_version = "yes")
 
-# upper_fieldworkday prior to lower_fieldworkday
+# upper_fieldwork_date prior to lower_fieldwork_date
 summary_survey_data(year = 2023,
-                    lower_fieldwork_day = "2020-08-01",
-                    upper_fieldwork_day = "2020-03-01")
+                    lower_fieldwork_date = "2020-08-01",
+                    upper_fieldwork_date = "2020-03-01")
 
 # upper_sample_size smaller than lower_sample-size
-summary_survey_data(year = 2023,
-                    lower_fieldwork_day = 500,
-                    upper_fieldwork_day = 200)
+summary_survey_data(year = 2023, lower_sample_size = 500,
+                    upper_sample_size = 200)
 
 # Invalid class for argument filter_polling_firm
-summary_survey_data(year = 2023,
-                    filter_polling_firm = 700)
+summary_survey_data(year = 2023, filter_polling_firm = 700)
 
 # Invalid class for argument filter_media
-summary_survey_data(year = 2023,
-                    filter_media = 700)
+summary_survey_data(year = 2023, filter_media = 700)
 
+# Invalid n_fields_days
+summary_survey_data(year = 2023, filter_n_field_days = -1)
 
 }
 }

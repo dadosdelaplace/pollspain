@@ -268,7 +268,8 @@ recod_mun <- function(mun_data) {
 #' in format %Y-%m-%d (e.g., '2000-01-01'). Defaults to \code{NULL}.
 #' If no date was provided, \code{year} should be provided as
 #' numerical variable. Please, check in \code{dates_elections_spain}
-#' the elections of the specified type are available.
+#' the elections of the specified type are available. If no date
+#' neither year were provided, \code{NULL} is provided as output.
 #'
 #' @details This function is used as a helper function to select the
 #' dates asked for the users in the import and summary functions.
@@ -277,11 +278,38 @@ recod_mun <- function(mun_data) {
 #' @keywords utils
 #' @name detect_years
 #'
+#' @examples
+#'
+#' ## Correct examples
+#'
+#' # No congress elections in 2014
+#' detect_years(type_elec = "congress", year = 2014)
+#'
+#' # Multiple inputs
+#' detect_years(type_elec = "congress", year = 2011,
+#'              date = c("1982-10-28", "1986-06-22", "2016-06-26"))
+#'
+#' # Multiple inputs in 2019
+#' detect_years(type_elec = "congress", year = 2019,
+#'              date = c("1982-10-28", 2019-11-10"))
+#'
+#' # ----
+#' # Incorrect examples
+#' # ----
+#'
+#' \dontrun{
+#' # Incorrect year format
+#' detect_years(type_elec = "congress", year = "a")
+#'
+#' # Incorrect date format
+#' detect_years(type_elec = "congress", date = 2019)
+#' }
+#'
 #' @export
 detect_years <-
   function(type_elec = "congress", year = NULL, date = NULL) {
 
-  if(is.null(year) & is.null(date)){
+  if (is.null(year) & is.null(date)) {
 
     return(NULL)
 
